@@ -1,65 +1,190 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useState, useEffect } from 'react';
+import { useLang } from '@/lib/lang-context';
+import { Swords, Map, Castle, Sparkles, Shield, Users } from 'lucide-react';
+
+/* ─── Shared UI Components ─── */
+import ScrollProgress from '@/components/ui/ScrollProgress';
+import RevealSection from '@/components/ui/RevealSection';
+import LoadingScreen from '@/components/ui/LoadingScreen';
+
+/* ─── Section Components ─── */
+import HeroSection from '@/components/sections/HeroSection';
+import CharacterShowcase from '@/components/sections/CharacterShowcase';
+import NewsSection from '@/components/sections/NewsSection';
+
+/* ─── Layout Components ─── */
+import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
+
+/* ═══════════════════════════════════════════════
+   CMS Types
+   ═══════════════════════════════════════════════ */
+interface CMSSettings {
+  site: {
+    name: string;
+    description: string;
+    logo: string | null;
+    socialLinks: Record<string, string | null>;
+    footer: { copyrightText: string; termsUrl: string; privacyUrl: string; supportUrl: string };
+  };
+  hero: {
+    taglineEn: string;
+    taglineTh: string;
+    ctaTextEn: string;
+    ctaTextTh: string;
+    ctaLink: string;
+    backgroundImage: string | null;
+    videoUrl: string | null;
+    mercenarySection: {
+      titleEn: string;
+      titleTh: string;
+      subtitleEn: string;
+      subtitleTh: string;
+      artImage: string | null;
+    };
+    features: Array<{ icon: string; titleEn: string; titleTh: string; descriptionEn: string; descriptionTh: string }>;
+  };
+  event: { enabled: boolean; titleEn: string; titleTh: string };
+  storeButtons: Array<{ platform: string; label: string; sublabel: string; url: string }>;
+}
+
+interface CMSCharacter {
+  id: number;
+  nameEn: string;
+  nameTh: string;
+  classEn: string;
+  classTh: string;
+  weaponClass: string;
+  descriptionEn: string;
+  descriptionTh: string;
+  accentColor: string;
+  portrait: string | null;
+}
+
+interface CMSNews {
+  id: number;
+  titleEn: string;
+  titleTh: string;
+  slug: string;
+  category: string;
+  publishDate: string;
+  featuredImage: string | null;
+}
+
+/* ─── Feature highlight icons (Lucide) ─── */
+const HIGHLIGHT_ICONS: Record<string, React.ReactNode> = {
+  mercenary: <Swords size={28} />,
+  explore: <Map size={28} />,
+  tower: <Castle size={28} />,
+  upgrade: <Sparkles size={28} />,
+  pvp: <Shield size={28} />,
+  guilds: <Users size={28} />,
+};
+
+/* ═══════════════════════════════════════════════
+   MAIN LANDING PAGE — Compact & Professional
+   5 sections: Hero → Characters → Highlights → News → Footer
+   ═══════════════════════════════════════════════ */
+export default function LandingPage() {
+  const { t } = useLang();
+
+  const [settings, setSettings] = useState<CMSSettings | null>(null);
+  const [characters, setCharacters] = useState<CMSCharacter[]>([]);
+  const [news, setNews] = useState<CMSNews[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [settingsRes, charsRes, newsRes] = await Promise.all([
+          fetch('/api/settings').then((r) => r.json()).catch(() => null),
+          fetch('/api/characters').then((r) => r.json()).catch(() => ({ characters: [] })),
+          fetch('/api/news?limit=3').then((r) => r.json()).catch(() => ({ articles: [] })),
+        ]);
+        if (settingsRes) setSettings(settingsRes);
+        if (charsRes?.characters) setCharacters(charsRes.characters);
+        if (newsRes?.articles) setNews(newsRes.articles);
+      } catch {
+        // CMS fetch failed — fall back to defaults
+      }
+    }
+    fetchData();
+  }, []);
+
+  /* Derived data */
+  const socialLinks = settings?.site?.socialLinks || {};
+  const footer = settings?.site?.footer || {
+    copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
+    termsUrl: '/terms',
+    privacyUrl: '/privacy',
+    supportUrl: '#',
+  };
+
+  /* Compact feature highlights — 6 items shown as horizontal strip */
+  const highlights = settings?.hero?.features?.slice(0, 6).map((feat, i) => ({
+    key: i,
+    icon: Object.values(HIGHLIGHT_ICONS)[i] || <Sparkles size={28} />,
+    title: t(feat.titleTh, feat.titleEn || feat.titleTh),
+    desc: t(feat.descriptionTh, feat.descriptionEn || feat.descriptionTh),
+  })) || [
+    { key: 0, icon: HIGHLIGHT_ICONS.mercenary, title: t('Mercenary Companion', 'Mercenary Companion'), desc: t('สหายร่วมรบผู้ทรงพลัง 4 คลาส', 'Fight alongside 4 powerful companion classes') },
+    { key: 1, icon: HIGHLIGHT_ICONS.explore, title: t('สำรวจโลก Arcatea', 'Explore Arcatea'), desc: t('ดินแดนกว้างใหญ่ไพศาล', 'Vast open world to explore') },
+    { key: 2, icon: HIGHLIGHT_ICONS.tower, title: t('หอคอยนิรันดร์', 'Eternal Tower'), desc: t('ท้าทายดันเจี้ยนสุดโหด', 'Conquer deadly dungeons') },
+    { key: 3, icon: HIGHLIGHT_ICONS.pvp, title: t('PvP Arena', 'PvP Arena'), desc: t('ต่อสู้แบบเรียลไทม์', 'Real-time battle arena') },
+    { key: 4, icon: HIGHLIGHT_ICONS.upgrade, title: t('อัพเกรดตัวละคร', 'Upgrade Characters'), desc: t('พัฒนาทักษะและอุปกรณ์', 'Enhance skills & equipment') },
+    { key: 5, icon: HIGHLIGHT_ICONS.guilds, title: t('กิลด์ & ทีม', 'Guilds & Teams'), desc: t('ร่วมมือพิชิตบอส', 'Team up to defeat bosses') },
+  ];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="landing-page">
+      <LoadingScreen />
+      <ScrollProgress />
+
+      {/* ═══ NAVIGATION — Always visible, with logo ═══ */}
+      <Navigation socialLinks={socialLinks} />
+
+      <main>
+        {/* ═══ SECTION 1: HERO ═══ */}
+        <HeroSection settings={settings} />
+
+        {/* ═══ SECTION 2: CHARACTERS — Full-width cinematic ═══ */}
+        <section id="characters" className="section-transition-top">
+          <RevealSection>
+            <CharacterShowcase characters={characters} />
+          </RevealSection>
+        </section>
+
+        {/* ═══ SECTION 3: HIGHLIGHTS STRIP — Compact feature showcase ═══ */}
+        <section id="features" className="section-highlights">
+          <div className="container-custom">
+            <RevealSection>
+              <div className="section-header">
+                <span className="section-badge">GAME FEATURES</span>
+                <h2 className="section-title-gold">{t('ไฮไลท์เกม', 'Game Highlights')}</h2>
+              </div>
+            </RevealSection>
+
+            <div className="highlights-grid">
+              {highlights.map((item, i) => (
+                <RevealSection key={item.key} delay={i * 0.06}>
+                  <div className="highlight-card">
+                    <div className="highlight-icon">{item.icon}</div>
+                    <h3 className="highlight-title">{item.title}</h3>
+                    <p className="highlight-desc">{item.desc}</p>
+                  </div>
+                </RevealSection>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ SECTION 4: NEWS — Compact 3-card grid ═══ */}
+        <NewsSection news={news} />
       </main>
+
+      {/* ═══ FOOTER — Includes community links, FAQ link, newsletter ═══ */}
+      <Footer socialLinks={socialLinks} footer={footer} />
     </div>
   );
 }
