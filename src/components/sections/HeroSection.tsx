@@ -1,0 +1,269 @@
+'use client';
+
+import React, { useCallback, useState, useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useLang } from '@/lib/lang-context';
+import FloatingParticles from '@/components/ui/FloatingParticles';
+import LightRays from '@/components/ui/LightRays';
+import { STORE_ICONS } from '@/components/ui/StoreIcons';
+
+interface HeroProps {
+  settings: {
+    hero?: {
+      taglineEn?: string;
+      taglineTh?: string;
+      ctaTextEn?: string;
+      ctaTextTh?: string;
+      ctaLink?: string;
+      backgroundImage?: string | null;
+      videoUrl?: string | null;
+    };
+    storeButtons?: Array<{ platform: string; label: string; sublabel: string; url: string }>;
+  } | null;
+}
+
+export default function HeroSection({ settings }: HeroProps) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const smoothX = useSpring(mouseX, { stiffness: 50, damping: 30 });
+  const smoothY = useSpring(mouseY, { stiffness: 50, damping: 30 });
+
+  const bgX = useTransform(smoothX, [-0.5, 0.5], [15, -15]);
+  const bgY = useTransform(smoothY, [-0.5, 0.5], [10, -10]);
+  const logoX = useTransform(smoothX, [-0.5, 0.5], [-8, 8]);
+  const logoY = useTransform(smoothY, [-0.5, 0.5], [-5, 5]);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      const { clientX, clientY, currentTarget } = e;
+      const { width, height } = currentTarget.getBoundingClientRect();
+      mouseX.set(clientX / width - 0.5);
+      mouseY.set(clientY / height - 0.5);
+    },
+    [mouseX, mouseY],
+  );
+
+  const { t } = useLang();
+  const tagline = t(
+    settings?.hero?.taglineTh || 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย',
+    settings?.hero?.taglineEn || 'Rise Together, Conquer the Tower',
+  );
+  const ctaText = t(
+    settings?.hero?.ctaTextTh || 'ลงทะเบียนล่วงหน้าเลย',
+    settings?.hero?.ctaTextEn || 'Pre-Register Now',
+  );
+  const ctaLink = settings?.hero?.ctaLink || '/event';
+
+  const storeButtons = settings?.storeButtons || [
+    { platform: 'ios', label: 'App Store', sublabel: 'Pre-order on the', url: '#' },
+    { platform: 'android', label: 'Google Play', sublabel: 'PRE-REGISTER ON', url: '#' },
+    { platform: 'pc', label: 'Windows', sublabel: 'Coming soon', url: '#' },
+  ];
+
+  const videoUrl = settings?.hero?.videoUrl || null;
+
+  return (
+    <section
+      className="hero-section"
+      style={{ height: '100dvh', minHeight: '600px' }}
+      onMouseMove={handleMouseMove}
+    >
+      {/* Video Background Layer */}
+      {videoUrl && (
+        <div className="hero-video-layer">
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            onLoadedData={() => setVideoLoaded(true)}
+            className={`hero-video ${videoLoaded ? 'loaded' : ''}`}
+          >
+            <source src={videoUrl} type="video/mp4" />
+          </video>
+          <div className="hero-video-overlay" />
+        </div>
+      )}
+
+      {/* Parallax Background (fallback or additional layer) */}
+      <motion.div
+        className={`hero-bg-layer hero-bg-far ${videoUrl && videoLoaded ? 'hero-bg-hidden' : ''}`}
+        style={{ x: bgX, y: bgY }}
+      >
+        <Image src="/images/hero-bg.png" alt="" fill className="object-cover" priority />
+      </motion.div>
+
+      <LightRays />
+      <FloatingParticles count={15} />
+
+      {/* Gradient overlays */}
+      <div className="hero-gradient-top" />
+      <div className="hero-gradient-bottom" />
+      <div className="hero-vignette" />
+
+      {/* Content */}
+      <div className="hero-content">
+        <motion.div
+          style={{ x: logoX, y: logoY }}
+          initial={{ opacity: 0, scale: 0.7, y: 40 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          className="hero-logo-container"
+        >
+          <Image
+            src="/images/logo.png"
+            alt="Eternal Tower Saga"
+            width={450}
+            height={320}
+            className="hero-logo"
+            priority
+          />
+        </motion.div>
+
+        {/* Single tagline using active language */}
+        <motion.p
+          className="hero-tagline"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+        >
+          {tagline}
+        </motion.p>
+
+        {/* CTA + Trailer side by side */}
+        <motion.div
+          className="hero-actions-row"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9 }}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '1rem',
+            flexWrap: 'wrap',
+          }}
+        >
+          <Link href={ctaLink} className="hero-cta hero-cta-primary">
+            <span className="hero-cta-glow" />
+            <span className="hero-cta-shimmer" />
+            <span className="hero-cta-text">{ctaText}</span>
+          </Link>
+
+          <TrailerButton />
+        </motion.div>
+
+        {/* Store Buttons - smaller, bottom-positioned */}
+        <motion.div
+          className="hero-stores hero-stores-compact"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          style={{
+            position: 'absolute',
+            bottom: '4rem',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem',
+          }}
+        >
+          {storeButtons.map((btn) => (
+            <a
+              key={btn.platform}
+              href={btn.url}
+              className="store-btn store-btn-sm"
+              style={{
+                padding: '0.4rem 0.75rem',
+                fontSize: '0.75rem',
+                gap: '0.4rem',
+                opacity: 0.7,
+                transform: 'scale(0.85)',
+              }}
+            >
+              {STORE_ICONS[btn.platform] || null}
+              <div>
+                <small style={{ fontSize: '0.5rem' }}>{btn.sublabel}</small>
+                <strong style={{ fontSize: '0.75rem' }}>{btn.label}</strong>
+              </div>
+            </a>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        className="scroll-indicator"
+        animate={{ y: [0, 12, 0] }}
+        transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2">
+          <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
+        </svg>
+      </motion.div>
+    </section>
+  );
+}
+
+/* --- Trailer Popup Button --- */
+function TrailerButton() {
+  const [showTrailer, setShowTrailer] = useState(false);
+  const { t } = useLang();
+
+  return (
+    <>
+      <button
+        className="trailer-play-btn"
+        onClick={() => setShowTrailer(true)}
+        aria-label="Watch Trailer"
+      >
+        <span className="trailer-play-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+            <polygon points="6,3 20,12 6,21" />
+          </svg>
+        </span>
+        <span className="trailer-play-text">{t('ดูตัวอย่าง', 'Watch Trailer')}</span>
+      </button>
+
+      {/* Trailer Modal */}
+      {showTrailer && (
+        <div className="trailer-modal" onClick={() => setShowTrailer(false)}>
+          <motion.div
+            className="trailer-modal-content"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="trailer-modal-close" onClick={() => setShowTrailer(false)}>
+              ✕
+            </button>
+            <div className="trailer-video-wrapper">
+              <div className="trailer-placeholder">
+                <div className="trailer-placeholder-inner">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)">
+                    <polygon points="6,3 20,12 6,21" />
+                  </svg>
+                  <p style={{ marginTop: '1rem', opacity: 0.6, fontSize: '0.9rem' }}>
+                    {t('เร็ว ๆ นี้', 'Coming Soon')}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </>
+  );
+}
