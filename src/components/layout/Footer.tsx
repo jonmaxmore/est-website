@@ -53,7 +53,7 @@ export default function Footer({ socialLinks, footer }: FooterProps) {
       <div className="footer-inner-enhanced">
         {/* Column 1: Brand */}
         <div className="footer-col footer-brand-col">
-          <Image src="/images/logo.png" alt="Eternal Tower Saga" width={180} height={120} className="footer-logo" />
+          <Image src="/images/logo.webp" alt="Eternal Tower Saga" width={180} height={120} className="footer-logo" />
           <p className="footer-brand-desc">
             {t(
               'เกม Casual MMORPG ผจญภัยกับสหายร่วมรบ พิชิตหอคอยนิรันดร์',

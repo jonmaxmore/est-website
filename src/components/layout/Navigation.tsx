@@ -119,7 +119,7 @@ export default function Navigation({ socialLinks }: NavProps) {
           {/* Logo */}
           <Link href="/" className="nav-logo" aria-label="Home">
             <Image
-              src="/images/logo.png"
+              src="/images/logo.webp"
               alt="Game Logo"
               width={120}
               height={40}

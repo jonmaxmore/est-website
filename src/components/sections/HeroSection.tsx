@@ -97,7 +97,7 @@ export default function HeroSection({ settings }: HeroProps) {
         className={`hero-bg-layer hero-bg-far ${videoUrl && videoLoaded ? 'hero-bg-hidden' : ''}`}
         style={{ x: bgX, y: bgY }}
       >
-        <Image src="/images/hero-bg.png" alt="" fill className="object-cover" priority />
+        <Image src="/images/hero-bg.webp" alt="" fill className="object-cover" priority />
       </motion.div>
 
       <LightRays />

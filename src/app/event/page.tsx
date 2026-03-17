@@ -291,7 +291,7 @@ export default function EventPage() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <Image src="/images/logo.png" alt="Eternal Tower Saga" width={380} height={250} className="event-logo" priority />
+          <Image src="/images/logo.webp" alt="Eternal Tower Saga" width={380} height={250} className="event-logo" priority />
         </motion.div>
 
         {/* Pre-register Badge */}
@@ -479,7 +479,7 @@ export default function EventPage() {
       {/* ═══ FOOTER ═══ */}
       <footer className="event-footer">
         <div className="event-footer-inner">
-          <Image src="/images/logo.png" alt="EST" width={120} height={80} className="footer-logo" />
+          <Image src="/images/logo.webp" alt="EST" width={120} height={80} className="footer-logo" />
           <p className="event-footer-copy">© 2026 Eternal Tower Saga. All rights reserved.</p>
         </div>
       </footer>

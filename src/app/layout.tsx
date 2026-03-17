@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     alternateLocale: "en_US",
     siteName: "Eternal Tower Saga",
     images: [{
-      url: '/images/og-cover.png',
+      url: '/images/og-cover.webp',
       width: 1200,
       height: 630,
       alt: 'Eternal Tower Saga — Rise Together, Conquer the Tower',
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Eternal Tower Saga',
     description: 'Rise Together. Conquer the Tower. Pre-register now!',
-    images: ['/images/og-cover.png'],
+    images: ['/images/og-cover.webp'],
   },
   robots: {
     index: true,
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: '/favicon.ico',
-    apple: '/images/logo.png',
+    apple: '/images/logo.webp',
   },
   other: {
     'theme-color': '#040E21',
@@ -96,8 +96,8 @@ export default function RootLayout({
                   "operatingSystem": ["iOS 14+", "Android 8+", "Windows 10+"],
                   "inLanguage": ["th", "en"],
                   "url": "http://178.128.127.161",
-                  "image": "http://178.128.127.161/images/og-cover.png",
-                  "screenshot": "http://178.128.127.161/images/hero-bg.png",
+                  "image": "http://178.128.127.161/images/og-cover.webp",
+                  "screenshot": "http://178.128.127.161/images/hero-bg.webp",
                   "datePublished": "2026-04-02",
                   "offers": {
                     "@type": "Offer",
@@ -115,7 +115,7 @@ export default function RootLayout({
                   "name": "อัลติเมตเกม จำกัด",
                   "alternateName": "Ultimate Game Co., Ltd.",
                   "url": "http://178.128.127.161",
-                  "logo": "http://178.128.127.161/images/logo.png",
+                  "logo": "http://178.128.127.161/images/logo.webp",
                   "sameAs": [
                     "https://facebook.com/EternalTowerSaga",
                     "https://tiktok.com/@EternalTowerSaga",

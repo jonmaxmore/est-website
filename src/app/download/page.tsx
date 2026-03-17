@@ -105,7 +105,7 @@ export default function DownloadPage() {
         <section className="download-hero">
           <div className="download-hero-content">
             <Image
-              src="/images/logo.png"
+              src="/images/logo.webp"
               alt="Eternal Tower Saga"
               width={200}
               height={133}

@@ -78,7 +78,7 @@ export default function CharacterShowcase({ characters }: { characters: CMSChara
                 style={{ background: `radial-gradient(ellipse at center, ${accent}, transparent 70%)` }}
               />
               <Image
-                src={active.portrait || `/images/characters/${portraitSlug}.png`}
+                src={active.portrait || `/images/characters/${portraitSlug}.webp`}
                 alt={active.nameEn}
                 width={500}
                 height={600}
@@ -143,7 +143,7 @@ export default function CharacterShowcase({ characters }: { characters: CMSChara
                   style={i === activeIdx ? { borderColor: c, boxShadow: `0 0 25px ${c}44` } : {}}
                 >
                   <Image
-                    src={char.portrait || `/images/characters/${thumbSlug}.png`}
+                    src={char.portrait || `/images/characters/${thumbSlug}.webp`}
                     alt={char.nameEn}
                     width={60}
                     height={60}
