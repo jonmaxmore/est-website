@@ -68,7 +68,11 @@ export default function HeroSection({ settings }: HeroProps) {
   const videoUrl = settings?.hero?.videoUrl || null;
 
   return (
-    <section className="hero-section" onMouseMove={handleMouseMove}>
+    <section
+      className="hero-section"
+      style={{ height: '100dvh', minHeight: '600px' }}
+      onMouseMove={handleMouseMove}
+    >
       {/* Video Background Layer */}
       {videoUrl && (
         <div className="hero-video-layer">
@@ -97,7 +101,7 @@ export default function HeroSection({ settings }: HeroProps) {
       </motion.div>
 
       <LightRays />
-      <FloatingParticles count={50} />
+      <FloatingParticles count={15} />
 
       {/* Gradient overlays */}
       <div className="hero-gradient-top" />
@@ -123,6 +127,7 @@ export default function HeroSection({ settings }: HeroProps) {
           />
         </motion.div>
 
+        {/* Single tagline using active language */}
         <motion.p
           className="hero-tagline"
           initial={{ opacity: 0, y: 20 }}
@@ -132,50 +137,65 @@ export default function HeroSection({ settings }: HeroProps) {
           {tagline}
         </motion.p>
 
-        <motion.p
-          className="hero-tagline-en"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.8 }}
-        >
-          {settings?.hero?.taglineEn || 'Rise Together. Conquer the Tower.'}
-        </motion.p>
-
+        {/* CTA + Trailer side by side */}
         <motion.div
+          className="hero-actions-row"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9 }}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '1rem',
+            flexWrap: 'wrap',
+          }}
         >
-          <Link href={ctaLink} className="hero-cta">
+          <Link href={ctaLink} className="hero-cta hero-cta-primary">
             <span className="hero-cta-glow" />
             <span className="hero-cta-shimmer" />
             <span className="hero-cta-text">{ctaText}</span>
           </Link>
-        </motion.div>
 
-        {/* Trailer Play Button */}
-        <motion.div
-          className="hero-trailer-btn-wrap"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1.0, duration: 0.6 }}
-        >
           <TrailerButton />
         </motion.div>
 
-        {/* Store Buttons */}
+        {/* Store Buttons - smaller, bottom-positioned */}
         <motion.div
-          className="hero-stores"
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
+          className="hero-stores hero-stores-compact"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
+          style={{
+            position: 'absolute',
+            bottom: '4rem',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem',
+          }}
         >
           {storeButtons.map((btn) => (
-            <a key={btn.platform} href={btn.url} className="store-btn">
+            <a
+              key={btn.platform}
+              href={btn.url}
+              className="store-btn store-btn-sm"
+              style={{
+                padding: '0.4rem 0.75rem',
+                fontSize: '0.75rem',
+                gap: '0.4rem',
+                opacity: 0.7,
+                transform: 'scale(0.85)',
+              }}
+            >
               {STORE_ICONS[btn.platform] || null}
               <div>
-                <small>{btn.sublabel}</small>
-                <strong>{btn.label}</strong>
+                <small style={{ fontSize: '0.5rem' }}>{btn.sublabel}</small>
+                <strong style={{ fontSize: '0.75rem' }}>{btn.label}</strong>
               </div>
             </a>
           ))}
@@ -196,7 +216,7 @@ export default function HeroSection({ settings }: HeroProps) {
   );
 }
 
-/* ─── Trailer Popup Button ─── */
+/* --- Trailer Popup Button --- */
 function TrailerButton() {
   const [showTrailer, setShowTrailer] = useState(false);
   const { t } = useLang();
@@ -209,11 +229,11 @@ function TrailerButton() {
         aria-label="Watch Trailer"
       >
         <span className="trailer-play-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
             <polygon points="6,3 20,12 6,21" />
           </svg>
         </span>
-        <span className="trailer-play-text">{t('ดูตัวอย่างเกม', 'Watch Trailer')}</span>
+        <span className="trailer-play-text">{t('ดูตัวอย่าง', 'Watch Trailer')}</span>
       </button>
 
       {/* Trailer Modal */}
@@ -230,18 +250,13 @@ function TrailerButton() {
               ✕
             </button>
             <div className="trailer-video-wrapper">
-              {/* Placeholder - replace with actual YouTube embed or video */}
               <div className="trailer-placeholder">
                 <div className="trailer-placeholder-inner">
-                  <svg width="80" height="80" viewBox="0 0 24 24" fill="rgba(255,255,255,0.3)">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)">
                     <polygon points="6,3 20,12 6,21" />
                   </svg>
-                  <p>{t('วิดีโอตัวอย่างเกมจะแสดงที่นี่', 'Game trailer will be displayed here')}</p>
-                  <p className="trailer-placeholder-hint">
-                    {t(
-                      'เพิ่ม YouTube Video ID ใน CMS เพื่อแสดงวิดีโอจริง',
-                      'Add YouTube Video ID in CMS to display actual video',
-                    )}
+                  <p style={{ marginTop: '1rem', opacity: 0.6, fontSize: '0.9rem' }}>
+                    {t('เร็ว ๆ นี้', 'Coming Soon')}
                   </p>
                 </div>
               </div>

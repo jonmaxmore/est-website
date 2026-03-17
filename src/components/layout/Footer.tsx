@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { MessageCircle, Facebook, Youtube, Music } from 'lucide-react';
 import { useLang } from '@/lib/lang-context';
 import SocialIcons from '@/components/ui/SocialIcons';
 
@@ -19,16 +19,32 @@ interface FooterProps {
 
 export default function Footer({ socialLinks, footer }: FooterProps) {
   const { t } = useLang();
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleNewsletter = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      setSubscribed(true);
-      setEmail('');
-    }
-  };
+  const communityLinks = [
+    {
+      icon: MessageCircle,
+      name: 'Discord',
+      desc: t('เข้าร่วมชุมชน Discord ของเรา', 'Join our Discord community'),
+      url: socialLinks.discord || '#',
+    },
+    {
+      icon: Facebook,
+      name: 'Facebook',
+      desc: t('ติดตามข่าวสารบน Facebook', 'Follow us on Facebook'),
+      url: socialLinks.facebook || '#',
+    },
+    {
+      icon: Youtube,
+      name: 'YouTube',
+      desc: t('ดูวิดีโอและไลฟ์สตรีม', 'Watch videos and livestreams'),
+      url: socialLinks.youtube || '#',
+    },
+    {
+      icon: Music,
+      name: 'TikTok',
+      desc: t('ติดตามเราบน TikTok', 'Follow us on TikTok'),
+      url: socialLinks.tiktok || '#',
+    },
+  ];
 
   return (
     <footer className="main-footer">
@@ -55,7 +71,7 @@ export default function Footer({ socialLinks, footer }: FooterProps) {
             <Link href="/news">{t('ข่าวสาร', 'News')}</Link>
             <Link href="/event">{t('ลงทะเบียน', 'Pre-Register')}</Link>
             <Link href="/download">{t('ดาวน์โหลด', 'Download')}</Link>
-            <Link href="/gallery">{t('แกลเลอรี่', 'Gallery')}</Link>
+            <Link href="/faq">{t('คำถามที่พบบ่อย', 'FAQ')}</Link>
           </nav>
         </div>
 
@@ -66,39 +82,37 @@ export default function Footer({ socialLinks, footer }: FooterProps) {
             <Link href={footer.termsUrl}>{t('ข้อกำหนดการใช้งาน', 'Terms of Service')}</Link>
             <Link href={footer.privacyUrl}>{t('นโยบายความเป็นส่วนตัว', 'Privacy Policy')}</Link>
             <a href={footer.supportUrl}>{t('ฝ่ายบริการลูกค้า', 'Customer Service')}</a>
-            <a href="#faq">{t('คำถามที่พบบ่อย', 'FAQ')}</a>
+            <Link href="/faq">{t('คำถามที่พบบ่อย', 'FAQ')}</Link>
           </nav>
         </div>
 
-        {/* Column 4: Newsletter */}
+        {/* Column 4: Join Our Community */}
         <div className="footer-col">
-          <h4 className="footer-col-title">{t('รับข่าวสาร', 'Newsletter')}</h4>
-          <p className="footer-newsletter-desc">
-            {t('รับข่าวสารและอัพเดตเกมก่อนใคร', 'Get the latest news and game updates first')}
-          </p>
-          {subscribed ? (
-            <motion.div
-              className="footer-subscribed"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              {t('สมัครสำเร็จ!', 'Subscribed!')} ✓
-            </motion.div>
-          ) : (
-            <form className="footer-newsletter-form" onSubmit={handleNewsletter}>
-              <input
-                type="email"
-                placeholder={t('อีเมลของคุณ', 'Your email')}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="footer-newsletter-input"
-                required
-              />
-              <button type="submit" className="footer-newsletter-btn">
-                {t('สมัคร', 'Subscribe')}
-              </button>
-            </form>
-          )}
+          <h4 className="footer-col-title">{t('เข้าร่วมชุมชน', 'Join Our Community')}</h4>
+          <div className="footer-community-links">
+            {communityLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-community-link"
+              >
+                <link.icon size={20} className="footer-community-icon" />
+                <div>
+                  <span className="footer-community-name">{link.name}</span>
+                  <span className="footer-community-desc">{link.desc}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <div className="footer-newsletter-coming-soon">
+            <h5 className="footer-col-subtitle">{t('รับข่าวสาร', 'Newsletter')}</h5>
+            <p className="footer-newsletter-desc">
+              {t('เร็วๆ นี้ — สมัครรับข่าวสารและอัพเดตเกมก่อนใคร', 'Coming Soon — Subscribe for the latest news and game updates')}
+            </p>
+          </div>
         </div>
       </div>
 

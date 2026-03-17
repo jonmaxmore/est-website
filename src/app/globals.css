@@ -793,6 +793,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    overflow: hidden;
   }
 
   .news-card-emoji { font-size: 3rem; }
@@ -1140,16 +1142,6 @@
   }
 
   /* ─── NEWS CARD THUMB OVERLAY ─── */
-  .news-card-thumb {
-    aspect-ratio: 16 / 9;
-    background: linear-gradient(135deg, var(--dark-navy), var(--royal-blue));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-
   .news-card-thumb-overlay {
     position: absolute;
     inset: 0;
@@ -4033,5 +4025,156 @@
 
   .footer-newsletter-btn {
     border-radius: 6px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION TRANSITIONS — smooth gradient bleed
+   Replaces OrnamentDivider for cleaner look
+   ═══════════════════════════════════════════════════ */
+.section-transition-top {
+  position: relative;
+}
+
+.section-transition-top::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(180deg, transparent, var(--midnight));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════
+   HIGHLIGHTS STRIP — Compact feature grid
+   Replaces the old 6-card features section
+   ═══════════════════════════════════════════════════ */
+.section-highlights {
+  padding: 4rem 0;
+  background: linear-gradient(180deg, var(--midnight) 0%, var(--deeper-navy) 50%, var(--midnight) 100%);
+  position: relative;
+}
+
+.highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.highlight-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s var(--ease-out-expo);
+  cursor: default;
+}
+
+.highlight-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(212, 168, 67, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.highlight-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(212, 168, 67, 0.15), rgba(212, 168, 67, 0.05));
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.highlight-title {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.4rem;
+}
+
+.highlight-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Highlights responsive */
+@media (max-width: 768px) {
+  .highlights-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .highlight-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .highlights-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .highlight-card {
+    padding: 1rem;
+  }
+
+  .highlight-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .highlight-title {
+    font-size: 0.85rem;
+  }
+
+  .highlight-desc {
+    font-size: 0.7rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   NAV ENHANCEMENTS — Always visible, 64px height
+   ═══════════════════════════════════════════════════ */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.mobile-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* ═══════════════════════════════════════════════════
+   REDUCED MOTION — Accessibility
+   ═══════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .particle-field,
+  .light-rays,
+  .scroll-progress-bar {
+    display: none !important;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
