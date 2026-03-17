@@ -1,0 +1,70 @@
+{
+  "nav": {
+    "home": "Home",
+    "characters": "Characters",
+    "world": "World",
+    "features": "Features",
+    "news": "News",
+    "follow": "Follow Us",
+    "support": "Support"
+  },
+  "hero": {
+    "tagline": "Rise Together. Conquer the Tower.",
+    "cta": "Pre-Register Now"
+  },
+  "mercenary": {
+    "title": "Mercenary Companion System",
+    "subtitle": "Battle Partners — Not Pets",
+    "description": "Fight side-by-side with powerful mercenary companions. The Mercenary Companion system pairs you with elite warriors who fight alongside you in every battle."
+  },
+  "characters": {
+    "title": "Characters",
+    "warrior": "Swordsman",
+    "archer": "Archer",
+    "mage": "Mage",
+    "healer": "Healer"
+  },
+  "event": {
+    "title": "Pre-Registration",
+    "preRegister": "Pre-Register Now",
+    "countdown": "Time Remaining",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "milestoneTitle": "Event Rewards",
+    "registeredUsers": "Registered Users",
+    "start": "Start",
+    "emailPlaceholder": "Enter your email",
+    "selectPlatform": "Select your platform",
+    "selectRegion": "Select your region",
+    "registerButton": "Register",
+    "successTitle": "Registration Successful!",
+    "successMessage": "You have successfully pre-registered!",
+    "referralTitle": "Share with Friends",
+    "referralDesc": "Invite friends to register for bonus rewards",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
+    "share": "Share"
+  },
+  "store": {
+    "preOrderOn": "Pre-order on the",
+    "appStore": "App Store",
+    "preRegisterOn": "PRE-REGISTER ON",
+    "googlePlay": "Google Play",
+    "comingSoon": "Coming soon",
+    "windows": "Windows"
+  },
+  "footer": {
+    "copyright": "© 2026 Eternal Tower Saga. All rights reserved.",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "fanpage": "Facebook Fanpage",
+    "customerService": "Customer Service"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Try Again"
+  }
+}
