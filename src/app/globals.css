@@ -1859,12 +1859,15 @@
     align-items: center;
     text-align: center;
     padding: 2rem 1.5rem 3rem;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .event-logo-wrap {
     position: relative;
-    width: 300px;
-    max-width: 80vw;
+    width: 240px;
+    max-width: 60vw;
     margin-bottom: 1.5rem;
   }
 
@@ -1879,18 +1882,20 @@
   .event-badge {
     position: relative;
     display: inline-flex;
-    padding: 0.6rem 2.5rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 2rem;
     background: linear-gradient(135deg, var(--orange-accent), var(--amber-glow));
-    border-radius: 0 0 20px 20px;
-    margin-bottom: 2rem;
+    border-radius: 0 0 16px 16px;
+    margin-bottom: 1.5rem;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(245, 166, 35, 0.4);
   }
 
   .event-badge-text {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
     font-weight: 800;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   }
 
@@ -1907,40 +1912,38 @@
   /* ─── COUNTDOWN ─── */
   .event-countdown {
     display: flex;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .countdown-unit {
     text-align: center;
+    min-width: 72px;
   }
 
   .countdown-value {
     display: block;
     font-family: var(--font-heading);
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: 900;
-    background: linear-gradient(180deg, var(--gold-light), var(--gold));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    padding: 0.5rem 1rem;
-    min-width: 70px;
-    border-radius: 12px;
-    background-color: rgba(255,255,255,0.06);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    min-width: 64px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    /* Glass card effect - need to use a wrapper for gradient text */
+    backdrop-filter: blur(10px);
   }
 
   .countdown-label {
     display: block;
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.5);
-    margin-top: 0.4rem;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.45);
+    margin-top: 0.35rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
   }
 
   /* ─── REGISTRATION COUNTER ─── */
@@ -1948,12 +1951,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.25rem;
-    margin: 1.5rem 0;
+    gap: 0.15rem;
+    margin: 0.75rem 0 1.25rem;
   }
 
   .event-reg-count-number {
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: 900;
     background: linear-gradient(135deg, #FFD700, #FFA500, #FFD700);
     -webkit-background-clip: text;
@@ -1966,19 +1969,19 @@
   }
 
   .event-reg-count-label {
-    font-size: 1rem;
-    color: rgba(255,255,255,0.7);
-    font-weight: 500;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.55);
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.18em;
   }
 
   @media (max-width: 768px) {
     .event-reg-count-number {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
     }
     .event-reg-count-label {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
     }
   }
 
@@ -1988,14 +1991,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem 3.5rem;
+    padding: 0.9rem 3rem;
     border-radius: 50px;
     background: linear-gradient(135deg, var(--cta-blue), var(--medium-blue));
     border: 2px solid rgba(255,255,255,0.3);
     cursor: pointer;
     overflow: hidden;
     transition: all 0.4s var(--ease-out-expo);
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   .event-cta:hover { border-color: rgba(255,255,255,0.6); }
@@ -2067,14 +2070,15 @@
   /* ─── MILESTONE SECTION (Dark Theme) ─── */
   .event-milestones {
     position: relative;
-    padding: 3rem 0 4rem;
+    padding: 2.5rem 1.5rem 3.5rem;
     z-index: 10;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .milestone-progress-wrap {
-    max-width: 900px;
-    margin: 0 auto 2.5rem;
-    padding: 0 1rem;
+    margin: 0 auto 2rem;
   }
 
   .milestone-progress-header {
@@ -2130,16 +2134,13 @@
 
   .milestone-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 1rem;
   }
 
   .milestone-card {
     text-align: center;
-    padding: 1.5rem 1rem;
+    padding: 1.5rem 1rem 1.25rem;
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 14px;
@@ -2147,70 +2148,66 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    gap: 0.35rem;
   }
 
   .milestone-card.unlocked {
-    border-color: rgba(245,166,35,0.3);
-    background: rgba(245,166,35,0.08);
+    border-color: rgba(245,166,35,0.25);
+    background: rgba(245,166,35,0.06);
   }
 
   .milestone-card-icon {
     font-size: 2rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 88px;
+    height: 88px;
   }
 
   .milestone-reward-img {
-    width: 80px;
-    height: 80px;
+    width: 88px;
+    height: 88px;
     object-fit: contain;
     border-radius: 10px;
     display: block;
-    margin: 0 auto;
   }
 
   .milestone-card-threshold {
     font-weight: 800;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: var(--gold-light);
-    margin-bottom: 0.4rem;
   }
 
   .milestone-card-reward {
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.6);
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.55);
     line-height: 1.4;
   }
 
   /* Responsive milestone grid */
-  @media (max-width: 900px) {
+  @media (max-width: 640px) {
     .milestone-grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 0.75rem;
     }
+    .milestone-card-icon,
     .milestone-reward-img {
-      width: 64px;
-      height: 64px;
+      width: 72px;
+      height: 72px;
     }
   }
 
-  @media (max-width: 480px) {
-    .milestone-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.6rem;
-    }
+  @media (max-width: 400px) {
     .milestone-card {
       padding: 1rem 0.5rem;
     }
+    .milestone-card-icon,
     .milestone-reward-img {
-      width: 56px;
-      height: 56px;
-    }
-    .milestone-card-icon {
-      font-size: 1.5rem;
+      width: 60px;
+      height: 60px;
     }
     .milestone-card-threshold {
       font-size: 0.8rem;
