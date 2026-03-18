@@ -120,7 +120,10 @@ export default function LandingPage() {
           fetch('/api/news?limit=3').then((r) => r.json()).catch(() => ({ articles: [] })),
         ]);
         if (settingsRes) setSettings(settingsRes);
-        if (charsRes?.characters) setCharacters(charsRes.characters);
+        if (charsRes?.characters) setCharacters(charsRes.characters.map((c: Record<string, unknown>) => ({
+          ...c,
+          portrait: typeof c.portrait === 'object' && c.portrait ? (c.portrait as { url: string }).url : (c.portrait as string | null),
+        })));
         if (newsRes?.articles) setNews(newsRes.articles);
       } catch {
         // CMS fetch failed — fall back to defaults
