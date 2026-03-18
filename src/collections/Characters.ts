@@ -98,6 +98,14 @@ export const Characters: CollectionConfig = {
       type: 'upload',
       relationTo: 'media',
       label: 'Character Portrait',
+      admin: { description: 'Full-body character art shown in the showcase' },
+    },
+    {
+      name: 'backgroundImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Character Background Image',
+      admin: { description: 'Full-screen background shown when this character is active' },
     },
     {
       name: 'accentColor',

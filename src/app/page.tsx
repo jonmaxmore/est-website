@@ -78,6 +78,7 @@ interface CMSCharacter {
   descriptionTh: string;
   accentColor: string;
   portrait: string | null;
+  backgroundImage?: string | null;
 }
 
 interface CMSNews {
@@ -123,6 +124,7 @@ export default function LandingPage() {
         if (charsRes?.characters) setCharacters(charsRes.characters.map((c: Record<string, unknown>) => ({
           ...c,
           portrait: typeof c.portrait === 'object' && c.portrait ? (c.portrait as { url: string }).url : (c.portrait as string | null),
+          backgroundImage: typeof c.backgroundImage === 'object' && c.backgroundImage ? (c.backgroundImage as { url: string }).url : (c.backgroundImage as string | null),
         })));
         if (newsRes?.articles) setNews(newsRes.articles);
       } catch {

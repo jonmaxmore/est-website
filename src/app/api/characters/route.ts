@@ -31,6 +31,9 @@ export async function GET() {
         url: char.portrait.url,
         alt: char.portrait.alt,
       } : null,
+      backgroundImage: typeof char.backgroundImage === 'object' && char.backgroundImage ? {
+        url: (char.backgroundImage as { url: string }).url,
+      } : null,
       accentColor: char.accentColor,
       sortOrder: char.sortOrder,
     }))
