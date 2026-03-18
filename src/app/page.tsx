@@ -142,7 +142,7 @@ export default function LandingPage() {
       <ScrollProgress />
 
       {/* ═══ NAVIGATION — Always visible, with logo ═══ */}
-      <Navigation socialLinks={socialLinks} />
+      <Navigation />
 
       <main>
         {/* ═══ SECTION 1: HERO ═══ */}

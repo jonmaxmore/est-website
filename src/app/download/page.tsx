@@ -4,10 +4,13 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLang } from '@/lib/lang-context';
+import { STORE_ICONS } from '@/components/ui/StoreIcons';
+import FloatingParticles from '@/components/ui/FloatingParticles';
+import { Monitor, Smartphone, Tablet, HardDrive, Cpu, MemoryStick, Layers } from 'lucide-react';
 
 /* ═══════════════════════════════════════════════════
    DOWNLOAD PAGE — /download
-   Platform buttons, system requirements, dark fantasy theme
+   Premium platform download cards with system requirements
    ═══════════════════════════════════════════════════ */
 
 interface StoreButton {
@@ -17,36 +20,40 @@ interface StoreButton {
   icon: string;
 }
 
+/* Platform SVG icons for system requirements tabs */
+const PLATFORM_TAB_ICONS: Record<string, React.ReactElement> = {
+  ios: <Smartphone size={18} />,
+  android: <Tablet size={18} />,
+  pc: <Monitor size={18} />,
+};
+
 const SYSTEM_REQUIREMENTS = {
   ios: {
     platform: 'iOS',
-    icon: '🍎',
     specs: [
-      { labelTh: 'ระบบปฏิบัติการ', labelEn: 'OS', value: 'iOS 14.0+' },
-      { labelTh: 'เครื่อง', labelEn: 'Device', value: 'iPhone 8+' },
-      { labelTh: 'พื้นที่', labelEn: 'Storage', value: '2.5 GB' },
-      { labelTh: 'แรม', labelEn: 'RAM', value: '3 GB' },
+      { labelTh: 'ระบบปฏิบัติการ', labelEn: 'OS', value: 'iOS 14.0+', icon: <Layers size={16} /> },
+      { labelTh: 'เครื่อง', labelEn: 'Device', value: 'iPhone 8+', icon: <Smartphone size={16} /> },
+      { labelTh: 'พื้นที่', labelEn: 'Storage', value: '2.5 GB', icon: <HardDrive size={16} /> },
+      { labelTh: 'แรม', labelEn: 'RAM', value: '3 GB', icon: <MemoryStick size={16} /> },
     ],
   },
   android: {
     platform: 'Android',
-    icon: '🤖',
     specs: [
-      { labelTh: 'ระบบปฏิบัติการ', labelEn: 'OS', value: 'Android 8.0+' },
-      { labelTh: 'โปรเซสเซอร์', labelEn: 'CPU', value: 'Snapdragon 660+' },
-      { labelTh: 'พื้นที่', labelEn: 'Storage', value: '2.5 GB' },
-      { labelTh: 'แรม', labelEn: 'RAM', value: '3 GB' },
+      { labelTh: 'ระบบปฏิบัติการ', labelEn: 'OS', value: 'Android 8.0+', icon: <Layers size={16} /> },
+      { labelTh: 'โปรเซสเซอร์', labelEn: 'CPU', value: 'Snapdragon 660+', icon: <Cpu size={16} /> },
+      { labelTh: 'พื้นที่', labelEn: 'Storage', value: '2.5 GB', icon: <HardDrive size={16} /> },
+      { labelTh: 'แรม', labelEn: 'RAM', value: '3 GB', icon: <MemoryStick size={16} /> },
     ],
   },
   pc: {
     platform: 'PC',
-    icon: '🖥️',
     specs: [
-      { labelTh: 'ระบบปฏิบัติการ', labelEn: 'OS', value: 'Windows 10 64-bit' },
-      { labelTh: 'โปรเซสเซอร์', labelEn: 'CPU', value: 'Intel i5 / AMD Ryzen 5' },
-      { labelTh: 'การ์ดจอ', labelEn: 'GPU', value: 'GTX 1050 / RX 560' },
-      { labelTh: 'แรม', labelEn: 'RAM', value: '8 GB' },
-      { labelTh: 'พื้นที่', labelEn: 'Storage', value: '5 GB' },
+      { labelTh: 'ระบบปฏิบัติการ', labelEn: 'OS', value: 'Windows 10 64-bit', icon: <Layers size={16} /> },
+      { labelTh: 'โปรเซสเซอร์', labelEn: 'CPU', value: 'Intel i5 / AMD Ryzen 5', icon: <Cpu size={16} /> },
+      { labelTh: 'การ์ดจอ', labelEn: 'GPU', value: 'GTX 1050 / RX 560', icon: <Monitor size={16} /> },
+      { labelTh: 'แรม', labelEn: 'RAM', value: '8 GB', icon: <MemoryStick size={16} /> },
+      { labelTh: 'พื้นที่', labelEn: 'Storage', value: '5 GB', icon: <HardDrive size={16} /> },
     ],
   },
 };
@@ -67,7 +74,6 @@ export default function DownloadPage() {
       try {
         const res = await fetch('/api/settings');
         const data = await res.json();
-        // Override '#' with real store URLs
         const buttons = (data.storeButtons || []).map((btn: StoreButton) => ({
           ...btn,
           url: btn.url === '#' ? (REAL_STORE_URLS[btn.platform] || '#') : btn.url,
@@ -86,7 +92,7 @@ export default function DownloadPage() {
   return (
     <div className="download-page">
       {/* Navigation */}
-      <nav className="main-nav" style={{ backgroundColor: 'rgba(4,14,33,0.95)', opacity: 1 }}>
+      <nav className="main-nav download-nav-solid">
         <div className="nav-inner">
           <div className="nav-links">
             <Link href="/" className="nav-link">{t('หน้าหลัก', 'Home')}</Link>
@@ -101,8 +107,10 @@ export default function DownloadPage() {
       </nav>
 
       <main className="download-main">
-        {/* Hero */}
+        {/* Hero with visual depth */}
         <section className="download-hero">
+          <FloatingParticles count={10} />
+          <div className="download-hero-glow" />
           <div className="download-hero-content">
             <Image
               src="/images/logo.webp"
@@ -119,7 +127,7 @@ export default function DownloadPage() {
           </div>
         </section>
 
-        {/* Platform Buttons */}
+        {/* Platform Buttons — with SVG store icons */}
         <section className="download-platforms">
           <h2 className="download-section-title">{t('เลือกแพลตฟอร์ม', 'Choose Platform')}</h2>
           <div className="download-buttons">
@@ -131,24 +139,26 @@ export default function DownloadPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="download-platform-icon">{btn.icon || '📱'}</span>
+                <span className="download-platform-icon">
+                  {STORE_ICONS[btn.platform] || <Smartphone size={32} />}
+                </span>
                 <span className="download-platform-name">{btn.label}</span>
                 <span className="download-platform-action">{t('ดาวน์โหลด', 'Download')}</span>
               </a>
             )) : (
               <>
-                <div className="download-platform-card coming-soon">
-                  <span className="download-platform-icon">🍎</span>
+                <a href={REAL_STORE_URLS.ios} className="download-platform-card" target="_blank" rel="noopener noreferrer">
+                  <span className="download-platform-icon">{STORE_ICONS.ios}</span>
                   <span className="download-platform-name">App Store</span>
-                  <span className="download-platform-action">{t('เร็วๆ นี้', 'Coming Soon')}</span>
-                </div>
-                <div className="download-platform-card coming-soon">
-                  <span className="download-platform-icon">🤖</span>
+                  <span className="download-platform-action">{t('Pre-order', 'Pre-order')}</span>
+                </a>
+                <a href={REAL_STORE_URLS.android} className="download-platform-card" target="_blank" rel="noopener noreferrer">
+                  <span className="download-platform-icon">{STORE_ICONS.android}</span>
                   <span className="download-platform-name">Google Play</span>
-                  <span className="download-platform-action">{t('เร็วๆ นี้', 'Coming Soon')}</span>
-                </div>
+                  <span className="download-platform-action">{t('ลงทะเบียนล่วงหน้า', 'Pre-Register')}</span>
+                </a>
                 <div className="download-platform-card coming-soon">
-                  <span className="download-platform-icon">🖥️</span>
+                  <span className="download-platform-icon">{STORE_ICONS.pc}</span>
                   <span className="download-platform-name">PC Client</span>
                   <span className="download-platform-action">{t('เร็วๆ นี้', 'Coming Soon')}</span>
                 </div>
@@ -157,7 +167,7 @@ export default function DownloadPage() {
           </div>
         </section>
 
-        {/* System Requirements */}
+        {/* System Requirements — with SVG tab icons */}
         <section className="download-requirements">
           <h2 className="download-section-title">{t('สเปคขั้นต่ำ', 'Minimum Requirements')}</h2>
 
@@ -168,7 +178,7 @@ export default function DownloadPage() {
                 className={`download-req-tab ${activePlatform === key ? 'active' : ''}`}
                 onClick={() => setActivePlatform(key)}
               >
-                {req.icon} {req.platform}
+                {PLATFORM_TAB_ICONS[key]} {req.platform}
               </button>
             ))}
           </div>
@@ -176,6 +186,7 @@ export default function DownloadPage() {
           <div className="download-req-table">
             {currentReq.specs.map((spec, i) => (
               <div key={i} className="download-req-row">
+                <span className="download-req-icon">{spec.icon}</span>
                 <span className="download-req-label">{t(spec.labelTh, spec.labelEn)}</span>
                 <span className="download-req-value">{spec.value}</span>
               </div>

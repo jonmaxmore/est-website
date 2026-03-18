@@ -4,6 +4,8 @@ import { LangProvider } from "@/lib/lang-context";
 import { BackToTop, CookieConsent } from "@/components/ui-overlays";
 import "./globals.css";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://178.128.127.161';
+
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
@@ -95,16 +97,16 @@ export default function RootLayout({
                   "applicationCategory": "GameApplication",
                   "operatingSystem": ["iOS 14+", "Android 8+", "Windows 10+"],
                   "inLanguage": ["th", "en"],
-                  "url": "http://178.128.127.161",
-                  "image": "http://178.128.127.161/images/og-cover.webp",
-                  "screenshot": "http://178.128.127.161/images/hero-bg.webp",
+                  "url": SITE_URL,
+                  "image": `${SITE_URL}/images/og-cover.webp`,
+                  "screenshot": `${SITE_URL}/images/hero-bg.webp`,
                   "datePublished": "2026-04-02",
                   "offers": {
                     "@type": "Offer",
                     "price": "0",
                     "priceCurrency": "THB",
                     "availability": "https://schema.org/PreOrder",
-                    "url": "http://178.128.127.161/event"
+                    "url": `${SITE_URL}/event`
                   },
                   "publisher": { "@id": "https://eternaltowersaga.com/#publisher" },
                   "author": { "@id": "https://eternaltowersaga.com/#publisher" }
@@ -114,8 +116,8 @@ export default function RootLayout({
                   "@id": "https://eternaltowersaga.com/#publisher",
                   "name": "อัลติเมตเกม จำกัด",
                   "alternateName": "Ultimate Game Co., Ltd.",
-                  "url": "http://178.128.127.161",
-                  "logo": "http://178.128.127.161/images/logo.webp",
+                  "url": SITE_URL,
+                  "logo": `${SITE_URL}/images/logo.webp`,
                   "sameAs": [
                     "https://facebook.com/EternalTowerSaga",
                     "https://tiktok.com/@EternalTowerSaga",
@@ -127,7 +129,7 @@ export default function RootLayout({
                   "@type": "WebSite",
                   "@id": "https://eternaltowersaga.com/#website",
                   "name": "Eternal Tower Saga",
-                  "url": "http://178.128.127.161",
+                  "url": SITE_URL,
                   "publisher": { "@id": "https://eternaltowersaga.com/#publisher" },
                   "inLanguage": ["th", "en"]
                 },

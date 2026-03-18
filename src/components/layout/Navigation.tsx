@@ -16,9 +16,7 @@ import {
   Download,
 } from 'lucide-react';
 
-interface NavProps {
-  socialLinks: Record<string, string | null>;
-}
+/* socialLinks prop removed — unused in this component */
 
 interface MegaMenuItem {
   href: string;
@@ -84,7 +82,7 @@ const MEGA_MENUS: Record<string, MegaMenuItem[]> = {
   ],
 };
 
-export default function Navigation({ socialLinks }: NavProps) {
+export default function Navigation() {
   const { lang, toggle, t } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [activeMega, setActiveMega] = useState<string | null>(null);
@@ -96,7 +94,6 @@ export default function Navigation({ socialLinks }: NavProps) {
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
@@ -104,18 +101,8 @@ export default function Navigation({ socialLinks }: NavProps) {
 
   return (
     <header>
-      <nav
-        className="main-nav"
-        style={{
-          backgroundColor: scrolled
-            ? 'rgba(4, 14, 33, 0.85)'
-            : 'transparent',
-          backdropFilter: scrolled ? 'blur(16px)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
-          height: '64px',
-        }}
-      >
-        <div className="nav-inner" style={{ height: '64px' }}>
+      <nav className={`main-nav ${scrolled ? 'nav-scrolled' : ''}`}>
+        <div className="nav-inner">
           {/* Logo */}
           <Link href="/" className="nav-logo" aria-label="Home">
             <Image
@@ -255,7 +242,7 @@ export default function Navigation({ socialLinks }: NavProps) {
               className="nav-mobile-toggle"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Menu"
-              aria-expanded={mobileOpen}
+              aria-expanded={mobileOpen ? 'true' : 'false'}
             >
               <span className={`hamburger ${mobileOpen ? 'open' : ''}`}>
                 <span />
@@ -271,20 +258,12 @@ export default function Navigation({ socialLinks }: NavProps) {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            className="mobile-menu-backdrop"
+            className="mobile-menu-backdrop-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={closeMobile}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 998,
-              backgroundColor: 'rgba(0, 0, 0, 0.6)',
-              backdropFilter: 'blur(4px)',
-              WebkitBackdropFilter: 'blur(4px)',
-            }}
           />
         )}
       </AnimatePresence>

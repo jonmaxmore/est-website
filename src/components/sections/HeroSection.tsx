@@ -70,7 +70,6 @@ export default function HeroSection({ settings }: HeroProps) {
   return (
     <section
       className="hero-section"
-      style={{ height: '100dvh', minHeight: '600px' }}
       onMouseMove={handleMouseMove}
     >
       {/* Video Background Layer */}
@@ -118,7 +117,7 @@ export default function HeroSection({ settings }: HeroProps) {
           className="hero-logo-container"
         >
           <Image
-            src="/images/logo.png"
+            src="/images/logo.webp"
             alt="Eternal Tower Saga"
             width={450}
             height={320}
@@ -143,14 +142,6 @@ export default function HeroSection({ settings }: HeroProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9 }}
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '1rem',
-            flexWrap: 'wrap',
-          }}
         >
           <Link href={ctaLink} className="hero-cta hero-cta-primary">
             <span className="hero-cta-glow" />
@@ -163,39 +154,21 @@ export default function HeroSection({ settings }: HeroProps) {
 
         {/* Store Buttons - smaller, bottom-positioned */}
         <motion.div
-          className="hero-stores hero-stores-compact"
+          className="hero-stores hero-stores-compact hero-stores-bottom"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          style={{
-            position: 'absolute',
-            bottom: '4rem',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '0.5rem',
-          }}
         >
           {storeButtons.map((btn) => (
             <a
               key={btn.platform}
               href={btn.url}
-              className="store-btn store-btn-sm"
-              style={{
-                padding: '0.4rem 0.75rem',
-                fontSize: '0.75rem',
-                gap: '0.4rem',
-                opacity: 0.7,
-                transform: 'scale(0.85)',
-              }}
+              className="store-btn store-btn-sm store-btn-hero"
             >
               {STORE_ICONS[btn.platform] || null}
               <div>
-                <small style={{ fontSize: '0.5rem' }}>{btn.sublabel}</small>
-                <strong style={{ fontSize: '0.75rem' }}>{btn.label}</strong>
+                <small className="store-sublabel">{btn.sublabel}</small>
+                <strong className="store-label">{btn.label}</strong>
               </div>
             </a>
           ))}
@@ -255,7 +228,7 @@ function TrailerButton() {
                   <svg width="64" height="64" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)">
                     <polygon points="6,3 20,12 6,21" />
                   </svg>
-                  <p style={{ marginTop: '1rem', opacity: 0.6, fontSize: '0.9rem' }}>
+                  <p className="trailer-coming-soon">
                     {t('เร็ว ๆ นี้', 'Coming Soon')}
                   </p>
                 </div>

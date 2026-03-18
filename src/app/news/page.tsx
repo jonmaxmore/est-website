@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLang } from '@/lib/lang-context';
+import { Calendar, RefreshCw, Video, Megaphone, Wrench, Newspaper } from 'lucide-react';
 
 /* ═══════════════════════════════════════════════════
    NEWS LISTING PAGE — /news
@@ -28,6 +29,14 @@ const CATEGORY_COLORS: Record<string, string> = {
   media: '#9B59B6',
   maintenance: '#E74C3C',
   announcement: '#2ECC71',
+};
+
+const CATEGORY_ICONS: Record<string, React.ReactElement> = {
+  event: <Calendar size={32} />,
+  update: <RefreshCw size={32} />,
+  media: <Video size={32} />,
+  maintenance: <Wrench size={32} />,
+  announcement: <Megaphone size={32} />,
 };
 
 const CATEGORIES = [
@@ -67,7 +76,7 @@ export default function NewsPage() {
   return (
     <div className="news-page">
       {/* Navigation */}
-      <nav className="main-nav" style={{ backgroundColor: 'rgba(4,14,33,0.95)', opacity: 1 }}>
+      <nav className="main-nav download-nav-solid">
         <div className="nav-inner">
           <div className="nav-links">
             <Link href="/" className="nav-link">{t('หน้าหลัก', 'Home')}</Link>
@@ -133,7 +142,9 @@ export default function NewsPage() {
                         className="object-cover"
                       />
                     ) : (
-                      <span className="news-article-emoji">{article.emoji || '📰'}</span>
+                      <span className="news-article-category-icon" style={{ color: CATEGORY_COLORS[article.category] || '#5BC0EB' }}>
+                        {CATEGORY_ICONS[article.category] || <Newspaper size={32} />}
+                      </span>
                     )}
                     <div className="news-article-thumb-overlay" />
                     <span

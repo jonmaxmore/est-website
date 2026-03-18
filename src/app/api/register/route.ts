@@ -4,10 +4,12 @@ import { nanoid } from 'nanoid'
 
 export const dynamic = 'force-dynamic'
 
-// Rate limit store
+// Rate limit store (NOTE: in-memory — resets on PM2 restart; use Redis for production-grade limiting)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
 const RATE_LIMIT = 5
 const WINDOW_MS = 60 * 1000
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function checkRateLimit(ip: string): boolean {
   const now = Date.now()
@@ -36,12 +38,22 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { email, platform, region, referredByCode } = body
+    const { platform, region, referredByCode } = body
+
+    // Sanitize email
+    const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''
 
     // Validate
     if (!email || !platform || !region) {
       return NextResponse.json(
         { error: 'Email, platform, and region are required' },
+        { status: 400 }
+      )
+    }
+
+    if (!EMAIL_REGEX.test(email)) {
+      return NextResponse.json(
+        { error: 'Please enter a valid email address' },
         { status: 400 }
       )
     }

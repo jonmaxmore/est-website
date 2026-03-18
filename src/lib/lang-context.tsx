@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, useSyncExternalStore } from 'react';
+import React, { createContext, useContext, useCallback, useSyncExternalStore } from 'react';
 
 type Lang = 'th' | 'en';
 
