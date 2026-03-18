@@ -5,12 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
 /* ──────────────────────────────────────────────
-   Image-Only Character Showcase
-   No text from CMS — everything is images:
-   1. Portrait (60% left)
-   2. Weapon info image (right)
-   3. Background (full section)
-   4. Selector icons (bottom-right)
+   Character Showcase — Image-Only, Reference-Matched
+   Layout: Portrait(60%) | Movie Clip + Weapon Info | Icons
    ────────────────────────────────────────────── */
 
 interface CharacterData {
@@ -19,10 +15,9 @@ interface CharacterData {
   infoImage: string;
   backgroundImage: string;
   icon: string;
-  name: string; // admin-only, for alt text
+  name: string;
 }
 
-// Mockup data — will be replaced by CMS when images are uploaded
 const MOCKUP_CHARACTERS: CharacterData[] = [
   {
     id: 1,
@@ -72,7 +67,6 @@ export default function CharacterShowcase({ characters }: { characters?: CMSChar
   const [hovered, setHovered] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Use CMS data if available, otherwise mockup
   const charList: CharacterData[] = (characters && characters.length > 0)
     ? characters.map((c, i) => ({
         id: c.id || i,
@@ -122,9 +116,8 @@ export default function CharacterShowcase({ characters }: { characters?: CMSChar
         </motion.div>
       </AnimatePresence>
 
-      {/* White gradient top */}
+      {/* Gradients */}
       <div className="char-gradient-top" />
-      {/* Dark gradient bottom */}
       <div className="char-gradient-bottom" />
 
       {/* ─── Layer 2: Character Portrait (60% left) ─── */}
@@ -132,10 +125,10 @@ export default function CharacterShowcase({ characters }: { characters?: CMSChar
         <motion.div
           key={`portrait-${active.id}`}
           className="char-portrait-layer"
-          initial={{ opacity: 0, x: -60, scale: 0.95 }}
+          initial={{ opacity: 0, x: -40, scale: 0.97 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
-          exit={{ opacity: 0, x: 60, scale: 0.95 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          exit={{ opacity: 0, x: 40, scale: 0.97 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
           <Image
             src={active.portrait}
@@ -148,27 +141,29 @@ export default function CharacterShowcase({ characters }: { characters?: CMSChar
         </motion.div>
       </AnimatePresence>
 
-      {/* ─── Layer 3: Weapon Info Image (right side) ─── */}
-      <div className="char-info-layer">
-        {/* Video/Play button card */}
-        <div className="char-play-card">
-          <button className="char-play-circle" aria-label="Play character video">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10" />
-              <polygon points="10,8 16,12 10,16" fill="currentColor" />
-            </svg>
-          </button>
+      {/* ─── Layer 3: Right Panel (Movie Clip + Weapon Info) ─── */}
+      <div className="char-right-panel">
+        {/* Movie Clip Player */}
+        <div className="char-movie-clip">
+          <div className="char-movie-clip-inner">
+            <button className="char-movie-play-btn" aria-label="Play character movie clip">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="12" cy="12" r="10" />
+                <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        {/* Weapon info image */}
+        {/* Weapon Info Image */}
         <AnimatePresence mode="wait">
           <motion.div
             key={`info-${active.id}`}
-            className="char-weapon-info-img-wrapper"
-            initial={{ opacity: 0, y: 20 }}
+            className="char-weapon-info"
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
           >
             <Image
               src={active.infoImage}
@@ -188,7 +183,7 @@ export default function CharacterShowcase({ characters }: { characters?: CMSChar
             key={char.id}
             className={`char-icon-btn ${i === activeIdx ? 'active' : ''}`}
             onClick={() => setActiveIdx(i)}
-            whileHover={{ scale: 1.15 }}
+            whileHover={{ scale: 1.12 }}
             whileTap={{ scale: 0.9 }}
             aria-label={`Select ${char.name}`}
           >
@@ -199,14 +194,10 @@ export default function CharacterShowcase({ characters }: { characters?: CMSChar
               height={60}
               className="char-icon-img"
             />
+            {/* Compass ring decoration */}
+            <div className="char-icon-ring" />
           </motion.button>
         ))}
-      </div>
-
-      {/* Terms & Policy link */}
-      <div className="char-terms">
-        <span className="char-terms-icon">📋</span>
-        <span>Terms &amp; Policy</span>
       </div>
     </section>
   );

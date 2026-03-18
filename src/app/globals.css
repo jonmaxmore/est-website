@@ -954,16 +954,17 @@
     line-height: 1.5;
   }
 
-  /* ═══ CHARACTER SHOWCASE — Image-Only Layout ═══ */
+  /* ═══ CHARACTER SHOWCASE — Polished Reference Layout ═══ */
   .char-showcase {
     position: relative;
-    min-height: 100vh;
+    width: 100%;
+    height: 100vh;
+    min-height: 700px;
     overflow: hidden;
-    padding: 0;
     background: #0a0e21;
   }
 
-  /* Layer 1: Background */
+  /* ── Layer 1: Background ── */
   .char-bg-layer {
     position: absolute;
     inset: 0;
@@ -973,17 +974,16 @@
   .char-bg-img {
     object-fit: cover;
     object-position: center;
-    opacity: 0.8;
+    opacity: 0.75;
   }
 
-  /* Gradients */
   .char-gradient-top {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 25%;
-    background: linear-gradient(180deg, rgba(10,14,33,0.6) 0%, transparent 100%);
+    height: 20%;
+    background: linear-gradient(180deg, rgba(10,14,33,0.5) 0%, transparent 100%);
     z-index: 1;
     pointer-events: none;
   }
@@ -993,129 +993,131 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 20%;
-    background: linear-gradient(0deg, rgba(10,14,33,0.8) 0%, transparent 100%);
+    height: 15%;
+    background: linear-gradient(0deg, rgba(10,14,33,0.7) 0%, transparent 100%);
     z-index: 1;
     pointer-events: none;
   }
 
-  /* Layer 2: Portrait — 60% left side, anchored bottom */
+  /* ── Layer 2: Portrait — 60% left, FULL HEIGHT top to bottom ── */
   .char-portrait-layer {
     position: absolute;
+    top: 0;
     bottom: 0;
     left: 0;
     width: 60%;
-    height: 100%;
     display: flex;
-    align-items: flex-end;
+    align-items: stretch;
     justify-content: center;
     z-index: 2;
     pointer-events: none;
   }
 
   .char-portrait-img {
-    width: auto;
-    height: 90%;
-    max-height: 90vh;
-    object-fit: contain;
-    object-position: bottom center;
-    filter: drop-shadow(0 10px 40px rgba(0,0,0,0.5));
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+    filter: drop-shadow(8px 0 30px rgba(0,0,0,0.4));
   }
 
-  /* Layer 3: Info panel (right side) */
-  .char-info-layer {
+  /* ── Layer 3: Right Panel (Movie Clip + Weapon Info) ── */
+  .char-right-panel {
     position: absolute;
-    right: 5%;
+    right: 3%;
     top: 50%;
     transform: translateY(-50%);
     z-index: 3;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 1.5rem;
-    max-width: 40%;
+    gap: 1.2rem;
+    width: 35%;
+    max-width: 480px;
   }
 
-  /* Play card */
-  .char-play-card {
-    background: rgba(255,255,255,0.95);
+  /* Movie Clip Player Card */
+  .char-movie-clip {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: rgba(255,255,255,0.97);
     border-radius: 20px;
-    padding: 2rem 3rem;
+    overflow: hidden;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.2);
+    position: relative;
+  }
+
+  .char-movie-clip-inner {
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    background: linear-gradient(135deg, #f8f9fc 0%, #e8ecf4 100%);
   }
 
-  .char-play-circle {
-    width: 60px;
-    height: 60px;
+  .char-movie-play-btn {
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
-    border: 2px solid rgba(50,80,160,0.5);
+    border: 2px solid rgba(60,90,160,0.35);
     background: transparent;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(50,80,160,0.7);
-    transition: all 0.3s;
+    color: rgba(60,90,160,0.6);
+    transition: all 0.3s ease;
   }
 
-  .char-play-circle:hover {
-    background: rgba(50,80,160,0.08);
-    border-color: rgba(50,80,160,0.8);
-    transform: scale(1.1);
+  .char-movie-play-btn:hover {
+    background: rgba(60,90,160,0.06);
+    border-color: rgba(60,90,160,0.6);
+    color: rgba(60,90,160,0.85);
+    transform: scale(1.08);
   }
 
-  /* Weapon info image */
-  .char-weapon-info-img-wrapper {
+  /* Weapon Info */
+  .char-weapon-info {
     width: 100%;
-    background: rgba(10, 14, 33, 0.75);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 1.5rem 2rem;
-    border: 1px solid rgba(255,255,255,0.08);
   }
 
   .char-weapon-info-img {
     width: 100%;
     height: auto;
     object-fit: contain;
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
   }
 
-  /* Layer 4: Icon selector (bottom-right) */
+  /* ── Layer 4: Character Icon Selectors (bottom-right) ── */
   .char-icon-selector {
     position: absolute;
-    bottom: 2rem;
-    right: 5%;
+    bottom: 2.5rem;
+    right: 3%;
     z-index: 4;
     display: flex;
-    gap: 0.8rem;
+    gap: 0.7rem;
   }
 
   .char-icon-btn {
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    border: 2.5px solid rgba(255,255,255,0.25);
-    background: rgba(255,255,255,0.08);
+    border: none;
+    background: transparent;
     cursor: pointer;
-    overflow: hidden;
+    overflow: visible;
     transition: all 0.3s;
     padding: 0;
+    position: relative;
   }
 
   .char-icon-btn:hover {
-    border-color: rgba(255,255,255,0.5);
-    background: rgba(255,255,255,0.15);
+    transform: scale(1.1);
   }
 
   .char-icon-btn.active {
-    border-color: rgba(100,180,255,0.8);
-    box-shadow: 0 0 20px rgba(100,180,255,0.4);
-    transform: scale(1.12);
+    transform: scale(1.15);
   }
 
   .char-icon-img {
@@ -1123,94 +1125,96 @@
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    transition: border-color 0.3s;
   }
 
-  /* Terms & Policy (bottom-left) */
-  .char-terms {
+  .char-icon-btn:hover .char-icon-img {
+    border-color: rgba(255,255,255,0.6);
+  }
+
+  .char-icon-btn.active .char-icon-img {
+    border-color: rgba(140,200,255,0.9);
+    box-shadow: 0 0 16px rgba(140,200,255,0.4);
+  }
+
+  /* Compass ring decoration */
+  .char-icon-ring {
     position: absolute;
-    bottom: 2rem;
-    left: 2rem;
-    z-index: 4;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: rgba(0,0,0,0.4);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    border-radius: 8px;
-    color: rgba(255,255,255,0.8);
-    font-size: 0.8rem;
-    cursor: pointer;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1.5px solid transparent;
+    pointer-events: none;
     transition: all 0.3s;
   }
 
-  .char-terms:hover {
-    background: rgba(0,0,0,0.6);
-  }
-
-  .char-terms-icon {
-    font-size: 1rem;
+  .char-icon-btn.active .char-icon-ring {
+    border-color: rgba(140,200,255,0.5);
+    /* compass points */
+    background: radial-gradient(circle at 50% 0%, rgba(140,200,255,0.8) 2px, transparent 2px),
+                radial-gradient(circle at 100% 50%, rgba(140,200,255,0.8) 2px, transparent 2px),
+                radial-gradient(circle at 50% 100%, rgba(140,200,255,0.8) 2px, transparent 2px),
+                radial-gradient(circle at 0% 50%, rgba(140,200,255,0.8) 2px, transparent 2px);
   }
 
   /* ── Mobile Responsive ── */
   @media (max-width: 768px) {
     .char-showcase {
-      min-height: 100vh;
-      max-height: 100vh;
+      height: 100vh;
+      min-height: 600px;
     }
 
     .char-portrait-layer {
       width: 100%;
       height: 55%;
-      bottom: auto;
       top: 0;
-      justify-content: center;
+      bottom: auto;
     }
 
     .char-portrait-img {
-      height: 100%;
-      max-height: 50vh;
+      object-position: center top;
     }
 
-    .char-info-layer {
+    .char-right-panel {
       position: absolute;
+      right: auto;
       left: 1rem;
       right: 1rem;
       top: auto;
       bottom: 5rem;
       transform: none;
+      width: auto;
       max-width: 100%;
-      align-items: flex-start;
-      gap: 0.8rem;
       flex-direction: row;
-      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 0.8rem;
     }
 
-    .char-play-card {
-      padding: 0.6rem 1.2rem;
+    .char-movie-clip {
+      width: 80px;
+      height: 60px;
+      aspect-ratio: auto;
       border-radius: 12px;
+      flex-shrink: 0;
     }
 
-    .char-play-circle {
+    .char-movie-play-btn {
       width: 36px;
       height: 36px;
     }
 
-    .char-play-circle svg {
+    .char-movie-play-btn svg {
       width: 20px;
       height: 20px;
     }
 
-    .char-weapon-info-img-wrapper {
-      padding: 0.8rem 1rem;
-      border-radius: 12px;
+    .char-weapon-info {
       flex: 1;
       min-width: 0;
     }
 
     .char-weapon-info-img {
-      max-height: 20vh;
+      max-height: 18vh;
     }
 
     .char-icon-selector {
@@ -1220,20 +1224,12 @@
     }
 
     .char-icon-btn {
-      width: 40px;
-      height: 40px;
-    }
-
-    .char-terms {
-      display: none;
-    }
-
-    .char-gradient-top {
-      height: 15%;
+      width: 42px;
+      height: 42px;
     }
 
     .char-gradient-bottom {
-      height: 30%;
+      height: 25%;
     }
   }
 
