@@ -395,8 +395,27 @@
   }
 
   @media (max-width: 480px) {
+    .hero-store-badges {
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 260px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-store-badge-link {
+      width: 100%;
+    }
     .hero-store-badge-img {
-      height: 56px;
+      width: 100%;
+      height: auto;
+    }
+    .store-btn-hero {
+      width: 100%;
+      height: auto;
+      min-width: unset;
+      padding: 0.5rem 1rem;
+      justify-content: center;
     }
   }
 
@@ -487,6 +506,13 @@
     filter: drop-shadow(0 8px 30px rgba(0,0,0,0.5));
     max-width: 560px;
     width: 80vw;
+  }
+
+  @media (max-width: 480px) {
+    .hero-logo-container {
+      max-width: 200px;
+      width: 55vw;
+    }
   }
 
   .hero-logo {
