@@ -1305,16 +1305,10 @@
   /* Footer responsive */
   @media (max-width: 768px) {
     .footer-inner-enhanced {
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .footer-inner-enhanced {
       grid-template-columns: 1fr;
-      gap: 1.5rem;
+      gap: 2rem;
       text-align: center;
+      padding: 2rem 1.5rem;
     }
     .footer-brand-col {
       align-items: center;
@@ -1325,8 +1319,18 @@
     .footer-nav {
       align-items: center;
     }
+    .footer-community-links {
+      align-items: center;
+    }
     .footer-community-link {
       justify-content: center;
+    }
+    .footer-newsletter-coming-soon {
+      text-align: center;
+    }
+    .footer-platforms {
+      flex-direction: column;
+      gap: 0.5rem;
     }
   }
 
