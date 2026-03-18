@@ -114,6 +114,32 @@ export async function GET() {
           descriptionTh: f.descriptionTh,
         })) || [],
       },
+      characters: {
+        bgImage: typeof heroSection.charactersBgImage === 'object' && heroSection.charactersBgImage ? {
+          url: (heroSection.charactersBgImage as { url: string }).url,
+        } : null,
+        badgeEn: heroSection.charactersBadgeEn || 'CHOOSE YOUR HERO',
+        badgeTh: heroSection.charactersBadgeTh || 'เลือกฮีโร่ของคุณ',
+        titleEn: heroSection.charactersTitleEn || 'Heroes of Arcatea',
+        titleTh: heroSection.charactersTitleTh || 'ฮีโร่แห่ง Arcatea',
+        voiceButtonEn: heroSection.voiceButtonEn || 'Listen to Voice Line',
+        voiceButtonTh: heroSection.voiceButtonTh || 'ฟังเสียงตัวละคร',
+      },
+      highlights: {
+        badgeEn: heroSection.highlightsBadgeEn || 'GAME FEATURES',
+        badgeTh: heroSection.highlightsBadgeTh || 'ฟีเจอร์เกม',
+        titleEn: heroSection.highlightsTitleEn || 'Game Highlights',
+        titleTh: heroSection.highlightsTitleTh || 'ไฮไลท์เกม',
+        bgImage: typeof heroSection.highlightsBgImage === 'object' && heroSection.highlightsBgImage ? {
+          url: (heroSection.highlightsBgImage as { url: string }).url,
+        } : null,
+      },
+      news: {
+        badgeEn: heroSection.newsBadgeEn || 'LATEST NEWS',
+        badgeTh: heroSection.newsBadgeTh || 'ข่าวล่าสุด',
+        titleEn: heroSection.newsTitleEn || 'News & Updates',
+        titleTh: heroSection.newsTitleTh || 'ข่าวสารและอัพเดท',
+      },
       storeButtons: storeButtons.docs.map((btn) => ({
         id: btn.id,
         platform: btn.platform,

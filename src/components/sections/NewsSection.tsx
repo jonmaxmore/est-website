@@ -27,7 +27,12 @@ const CATEGORY_PLACEHOLDERS: Record<string, { gradient: string; icon: string }> 
   announcement: { gradient: 'linear-gradient(135deg, #2ECC71 0%, #27AE60 50%, #219A52 100%)', icon: '📢' },
 };
 
-export default function NewsSection({ news }: { news: CMSNews[] }) {
+interface NewsSectionConfig {
+  badgeEn: string; badgeTh: string;
+  titleEn: string; titleTh: string;
+}
+
+export default function NewsSection({ news, sectionConfig }: { news: CMSNews[]; sectionConfig?: NewsSectionConfig }) {
   const { t } = useLang();
 
   const items =
@@ -56,8 +61,8 @@ export default function NewsSection({ news }: { news: CMSNews[] }) {
       <div className="container-custom">
         <RevealSection>
           <div className="section-header">
-            <span className="section-badge">LATEST NEWS</span>
-            <h2 className="section-title-gold">{t('ข่าวสาร', 'News')}</h2>
+            <span className="section-badge">{sectionConfig ? t(sectionConfig.badgeTh, sectionConfig.badgeEn) : 'LATEST NEWS'}</span>
+            <h2 className="section-title-gold">{sectionConfig ? t(sectionConfig.titleTh, sectionConfig.titleEn) : t('ข่าวสาร', 'News')}</h2>
             <div className="title-ornament"><span /><span /><span /></div>
           </div>
         </RevealSection>

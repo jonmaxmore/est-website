@@ -49,6 +49,21 @@ interface CMSSettings {
     features: Array<{ icon: string; titleEn: string; titleTh: string; descriptionEn: string; descriptionTh: string }>;
   };
   event: { enabled: boolean; titleEn: string; titleTh: string };
+  characters: {
+    bgImage: { url: string } | null;
+    badgeEn: string; badgeTh: string;
+    titleEn: string; titleTh: string;
+    voiceButtonEn: string; voiceButtonTh: string;
+  };
+  highlights: {
+    badgeEn: string; badgeTh: string;
+    titleEn: string; titleTh: string;
+    bgImage: { url: string } | null;
+  };
+  news: {
+    badgeEn: string; badgeTh: string;
+    titleEn: string; titleTh: string;
+  };
   storeButtons: Array<{ platform: string; label: string; sublabel: string; url: string }>;
 }
 
@@ -153,7 +168,7 @@ export default function LandingPage() {
         {/* ═══ SECTION 2: CHARACTERS — Full-width cinematic ═══ */}
         <section id="characters" className="section-transition-top">
           <RevealSection>
-            <CharacterShowcase characters={characters} />
+            <CharacterShowcase characters={characters} sectionConfig={settings?.characters} />
           </RevealSection>
         </section>
 
@@ -162,8 +177,8 @@ export default function LandingPage() {
           <div className="container-custom">
             <RevealSection>
               <div className="section-header">
-                <span className="section-badge">GAME FEATURES</span>
-                <h2 className="section-title-gold">{t('ไฮไลท์เกม', 'Game Highlights')}</h2>
+                <span className="section-badge">{settings?.highlights ? t(settings.highlights.badgeTh, settings.highlights.badgeEn) : 'GAME FEATURES'}</span>
+                <h2 className="section-title-gold">{settings?.highlights ? t(settings.highlights.titleTh, settings.highlights.titleEn) : t('ไฮไลท์เกม', 'Game Highlights')}</h2>
               </div>
             </RevealSection>
 
@@ -182,7 +197,7 @@ export default function LandingPage() {
         </section>
 
         {/* ═══ SECTION 4: NEWS — Compact 3-card grid ═══ */}
-        <NewsSection news={news} />
+        <NewsSection news={news} sectionConfig={settings?.news} />
       </main>
 
       {/* ═══ FOOTER — Includes community links, FAQ link, newsletter ═══ */}

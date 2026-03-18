@@ -21,12 +21,19 @@ interface CMSCharacter {
   portrait: string | null;
 }
 
+interface SectionConfig {
+  bgImage: { url: string } | null;
+  badgeEn: string; badgeTh: string;
+  titleEn: string; titleTh: string;
+  voiceButtonEn: string; voiceButtonTh: string;
+}
+
 /** Slugify a name for use in image paths */
 function slugify(name: string): string {
   return name.toLowerCase().replace(/\s+/g, '-');
 }
 
-export default function CharacterShowcase({ characters }: { characters: CMSCharacter[] }) {
+export default function CharacterShowcase({ characters, sectionConfig }: { characters: CMSCharacter[]; sectionConfig?: SectionConfig }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [hovered, setHovered] = useState(false);
   const { t } = useLang();
@@ -58,8 +65,21 @@ export default function CharacterShowcase({ characters }: { characters: CMSChara
       className="section-characters"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      style={sectionConfig?.bgImage ? {
+        backgroundImage: `linear-gradient(180deg, rgba(10,14,33,0.85) 0%, rgba(10,14,33,0.7) 50%, rgba(10,14,33,0.9) 100%), url(${sectionConfig.bgImage.url})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      } : undefined}
     >
       <FloatingParticles count={8} />
+
+      {/* Section Header */}
+      {sectionConfig && (
+        <div className="section-header" style={{ textAlign: 'center', paddingTop: '2rem' }}>
+          <span className="section-badge">{t(sectionConfig.badgeTh, sectionConfig.badgeEn)}</span>
+          <h2 className="section-title-gold">{t(sectionConfig.titleTh, sectionConfig.titleEn)}</h2>
+        </div>
+      )}
 
       <div className="char-layout">
         {/* Left: Portrait */}
@@ -122,7 +142,7 @@ export default function CharacterShowcase({ characters }: { characters: CMSChara
                   <svg width="16" height="16" viewBox="0 0 24 24" fill={color}>
                     <polygon points="6,3 20,12 6,21" />
                   </svg>
-                  <span style={{ color }}>{t('ฟังเสียงตัวละคร', 'Listen to Voice Line')}</span>
+                  <span style={{ color }}>{t(sectionConfig?.voiceButtonTh || 'ฟังเสียงตัวละคร', sectionConfig?.voiceButtonEn || 'Listen to Voice Line')}</span>
                 </button>
               </div>
             </motion.div>
