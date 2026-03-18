@@ -959,9 +959,9 @@
     position: relative;
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     overflow: hidden;
-    padding: 2rem 0;
+    padding: 0;
   }
 
   .char-showcase-bg {
@@ -973,46 +973,62 @@
 
   .char-showcase-bg-img {
     object-fit: cover;
-    object-position: center;
-    opacity: 0.35;
+    object-position: center bottom;
+    opacity: 0.7;
     z-index: 0;
+  }
+
+  /* White gradient at top (like ref image) */
+  .char-showcase::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 30%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%);
+    z-index: 1;
+    pointer-events: none;
   }
 
   .char-showcase-inner {
     position: relative;
     z-index: 2;
+    width: 100%;
     max-width: var(--container-max);
     margin: 0 auto;
     padding: 0 1.5rem;
     display: grid;
     grid-template-columns: 1.2fr 1fr;
-    gap: 2rem;
-    align-items: center;
-    width: 100%;
-    min-height: 80vh;
+    gap: 0;
+    align-items: end;
+    min-height: 100vh;
   }
 
   /* ── Portrait Zone ── */
   .char-portrait-zone {
     position: relative;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-end;
+    justify-content: flex-start;
     min-height: 550px;
+    padding-bottom: 0;
   }
 
   .char-portrait-full {
     position: relative;
     width: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-end;
+    justify-content: flex-start;
   }
 
   .char-portrait-glow {
     position: absolute;
     width: 130%;
     height: 130%;
+    bottom: -15%;
+    left: -15%;
     border-radius: 50%;
     filter: blur(80px);
     z-index: 0;
@@ -1023,7 +1039,8 @@
     position: relative;
     z-index: 1;
     object-fit: contain;
-    max-height: 650px;
+    object-position: bottom left;
+    max-height: 85vh;
     width: auto;
     filter: drop-shadow(0 15px 40px rgba(0,0,0,0.6));
   }
