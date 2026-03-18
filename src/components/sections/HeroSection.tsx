@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useLang } from '@/lib/lang-context';
 import FloatingParticles from '@/components/ui/FloatingParticles';
 import LightRays from '@/components/ui/LightRays';
+import { STORE_ICONS } from '@/components/ui/StoreIcons';
 
 interface HeroProps {
   settings: {
@@ -61,6 +62,7 @@ export default function HeroSection({ settings }: HeroProps) {
   const storeButtons = settings?.storeButtons || [
     { platform: 'ios', label: 'App Store', sublabel: 'Pre-order on the', url: '#' },
     { platform: 'android', label: 'Google Play', sublabel: 'PRE-REGISTER ON', url: '#' },
+    { platform: 'pc', label: 'Windows', sublabel: 'Coming soon', url: '#' },
   ];
 
   const videoUrl = settings?.hero?.videoUrl || null;
@@ -173,6 +175,22 @@ export default function HeroSection({ settings }: HeroProps) {
               </a>
             );
           })}
+          {/* PC/Windows Coming Soon — text style */}
+          {storeButtons
+            .filter((btn) => btn.platform !== 'ios' && btn.platform !== 'android')
+            .map((btn) => (
+              <a
+                key={btn.platform}
+                href={btn.url}
+                className="store-btn store-btn-sm store-btn-hero"
+              >
+                {STORE_ICONS[btn.platform] || null}
+                <div>
+                  <small className="store-sublabel">{btn.sublabel}</small>
+                  <strong className="store-label">{btn.label}</strong>
+                </div>
+              </a>
+            ))}
         </motion.div>
       </div>
 
