@@ -36,13 +36,29 @@ export const HeroSection: GlobalConfig = {
       ],
     },
     {
-      name: 'taglineImage',
-      type: 'upload',
-      relationTo: 'media',
-      label: 'Tagline Image (optional)',
-      admin: {
-        description: 'Upload an image to replace the text tagline. If set, the image will be displayed instead of the text above.',
-      },
+      type: 'row',
+      fields: [
+        {
+          name: 'taglineImageEn',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Tagline Image — English (optional)',
+          admin: {
+            width: '50%',
+            description: 'Replaces English text tagline with this image',
+          },
+        },
+        {
+          name: 'taglineImageTh',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Tagline Image — Thai (optional)',
+          admin: {
+            width: '50%',
+            description: 'Replaces Thai text tagline with this image',
+          },
+        },
+      ],
     },
     {
       type: 'row',

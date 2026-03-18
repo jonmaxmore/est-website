@@ -14,7 +14,8 @@ interface HeroProps {
     hero?: {
       taglineEn?: string;
       taglineTh?: string;
-      taglineImage?: { url: string } | null;
+      taglineImageEn?: { url: string } | null;
+      taglineImageTh?: { url: string } | null;
       ctaTextEn?: string;
       ctaTextTh?: string;
       ctaLink?: string;
@@ -54,7 +55,10 @@ export default function HeroSection({ settings }: HeroProps) {
     settings?.hero?.taglineTh || 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย',
     settings?.hero?.taglineEn || 'Rise Together, Conquer the Tower',
   );
-  const taglineImageUrl = settings?.hero?.taglineImage?.url || null;
+  const taglineImageUrl = t(
+    settings?.hero?.taglineImageTh?.url || '',
+    settings?.hero?.taglineImageEn?.url || '',
+  ) || null;
   const ctaText = t(
     settings?.hero?.ctaTextTh || 'ลงทะเบียนล่วงหน้าเลย',
     settings?.hero?.ctaTextEn || 'Pre-Register Now',

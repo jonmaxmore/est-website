@@ -51,8 +51,11 @@ export async function GET() {
       hero: {
         taglineEn: heroSection.taglineEn,
         taglineTh: heroSection.taglineTh,
-        taglineImage: typeof heroSection.taglineImage === 'object' && heroSection.taglineImage ? {
-          url: heroSection.taglineImage.url,
+        taglineImageEn: typeof heroSection.taglineImageEn === 'object' && heroSection.taglineImageEn ? {
+          url: heroSection.taglineImageEn.url,
+        } : null,
+        taglineImageTh: typeof heroSection.taglineImageTh === 'object' && heroSection.taglineImageTh ? {
+          url: heroSection.taglineImageTh.url,
         } : null,
         ctaTextEn: heroSection.ctaTextEn,
         ctaTextTh: heroSection.ctaTextTh,
