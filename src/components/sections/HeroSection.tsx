@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLang } from '@/lib/lang-context';
 import FloatingParticles from '@/components/ui/FloatingParticles';
 import LightRays from '@/components/ui/LightRays';
-import { STORE_ICONS } from '@/components/ui/StoreIcons';
 
 interface HeroProps {
   settings: {
@@ -62,7 +61,6 @@ export default function HeroSection({ settings }: HeroProps) {
   const storeButtons = settings?.storeButtons || [
     { platform: 'ios', label: 'App Store', sublabel: 'Pre-order on the', url: '#' },
     { platform: 'android', label: 'Google Play', sublabel: 'PRE-REGISTER ON', url: '#' },
-    { platform: 'pc', label: 'Windows', sublabel: 'Coming soon', url: '#' },
   ];
 
   const videoUrl = settings?.hero?.videoUrl || null;
@@ -136,7 +134,7 @@ export default function HeroSection({ settings }: HeroProps) {
           {tagline}
         </motion.p>
 
-        {/* CTA + Trailer side by side */}
+        {/* CTA Button */}
         <motion.div
           className="hero-actions-row"
           initial={{ opacity: 0, y: 20 }}
@@ -148,30 +146,31 @@ export default function HeroSection({ settings }: HeroProps) {
             <span className="hero-cta-shimmer" />
             <span className="hero-cta-text">{ctaText}</span>
           </Link>
-
-          <TrailerButton />
         </motion.div>
 
-        {/* Store Buttons - smaller, bottom-positioned */}
+        {/* Store Badge Images */}
         <motion.div
-          className="hero-stores hero-stores-compact hero-stores-bottom"
+          className="hero-store-badges"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
         >
-          {storeButtons.map((btn) => (
-            <a
-              key={btn.platform}
-              href={btn.url}
-              className="store-btn store-btn-sm store-btn-hero"
-            >
-              {STORE_ICONS[btn.platform] || null}
-              <div>
-                <small className="store-sublabel">{btn.sublabel}</small>
-                <strong className="store-label">{btn.label}</strong>
-              </div>
-            </a>
-          ))}
+          {storeButtons.map((btn) => {
+            const badgeSrc = btn.platform === 'android'
+              ? '/images/badge-google-play.webp'
+              : '/images/badge-app-store.webp';
+            return (
+              <a key={btn.platform} href={btn.url} className="hero-store-badge-link">
+                <Image
+                  src={badgeSrc}
+                  alt={`${btn.sublabel} ${btn.label}`}
+                  width={188}
+                  height={56}
+                  className="hero-store-badge-img"
+                />
+              </a>
+            );
+          })}
         </motion.div>
       </div>
 
@@ -189,54 +188,3 @@ export default function HeroSection({ settings }: HeroProps) {
   );
 }
 
-/* --- Trailer Popup Button --- */
-function TrailerButton() {
-  const [showTrailer, setShowTrailer] = useState(false);
-  const { t } = useLang();
-
-  return (
-    <>
-      <button
-        className="trailer-play-btn"
-        onClick={() => setShowTrailer(true)}
-        aria-label="Watch Trailer"
-      >
-        <span className="trailer-play-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-            <polygon points="6,3 20,12 6,21" />
-          </svg>
-        </span>
-        <span className="trailer-play-text">{t('ดูตัวอย่าง', 'Watch Trailer')}</span>
-      </button>
-
-      {/* Trailer Modal */}
-      {showTrailer && (
-        <div className="trailer-modal" onClick={() => setShowTrailer(false)}>
-          <motion.div
-            className="trailer-modal-content"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button className="trailer-modal-close" onClick={() => setShowTrailer(false)}>
-              ✕
-            </button>
-            <div className="trailer-video-wrapper">
-              <div className="trailer-placeholder">
-                <div className="trailer-placeholder-inner">
-                  <svg width="64" height="64" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)">
-                    <polygon points="6,3 20,12 6,21" />
-                  </svg>
-                  <p className="trailer-coming-soon">
-                    {t('เร็ว ๆ นี้', 'Coming Soon')}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </>
-  );
-}

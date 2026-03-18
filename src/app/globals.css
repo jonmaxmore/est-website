@@ -256,6 +256,42 @@
     margin-top: 0.5rem;
   }
 
+  /* Store badge images (Google Play / App Store) */
+  .hero-store-badges {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-store-badge-link {
+    display: block;
+    transition: transform 0.3s var(--ease-out-expo), opacity 0.3s;
+    opacity: 0.92;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .hero-store-badge-link:hover {
+    transform: translateY(-3px) scale(1.03);
+    opacity: 1;
+  }
+
+  .hero-store-badge-img {
+    display: block;
+    width: auto;
+    height: 48px;
+    border-radius: 10px;
+  }
+
+  @media (max-width: 480px) {
+    .hero-store-badge-img {
+      height: 40px;
+    }
+  }
+
   .store-btn-hero {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
