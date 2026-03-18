@@ -60,7 +60,9 @@ export async function GET() {
         ctaTextEn: heroSection.ctaTextEn,
         ctaTextTh: heroSection.ctaTextTh,
         ctaLink: heroSection.ctaLink,
-        videoUrl: heroSection.videoUrl,
+        backgroundVideo: typeof heroSection.backgroundVideo === 'object' && heroSection.backgroundVideo ? {
+          url: heroSection.backgroundVideo.url,
+        } : null,
         backgroundImage: typeof heroSection.backgroundImage === 'object' && heroSection.backgroundImage ? {
           url: heroSection.backgroundImage.url,
         } : null,

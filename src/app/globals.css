@@ -424,7 +424,7 @@
     font-size: 0.85rem;
     gap: 0.5rem;
     opacity: 0.9;
-    height: 56px;
+    height: 70px;
     min-width: 188px;
     box-sizing: border-box;
     border-radius: 10px;
@@ -526,11 +526,11 @@
   .hero-store-badge-link {
     display: flex;
     align-items: center;
-    height: 56px;
+    height: 70px;
   }
 
   .hero-store-badge-img {
-    height: 56px;
+    height: 70px;
     width: auto;
     object-fit: contain;
   }
@@ -543,15 +543,41 @@
     margin-bottom: 1.5rem;
   }
 
-  @media (max-width: 480px) {
+  /* Mobile: stack vertically, same size, slightly smaller */
+  @media (max-width: 768px) {
     .hero-store-badges {
-      gap: 0.75rem;
+      flex-direction: column;
+      gap: 0.6rem;
+      align-items: center;
     }
     .hero-store-badge-link {
       height: 48px;
+      width: 220px;
+      justify-content: center;
     }
     .hero-store-badge-img {
       height: 48px;
+    }
+    .store-btn-hero {
+      height: 48px;
+      min-width: 220px;
+      width: 220px;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-store-badge-link {
+      height: 44px;
+      width: 200px;
+    }
+    .hero-store-badge-img {
+      height: 44px;
+    }
+    .store-btn-hero {
+      height: 44px;
+      min-width: 200px;
+      width: 200px;
     }
     .hero-tagline {
       margin-bottom: 1rem;

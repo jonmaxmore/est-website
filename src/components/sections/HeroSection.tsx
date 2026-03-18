@@ -20,7 +20,7 @@ interface HeroProps {
       ctaTextTh?: string;
       ctaLink?: string;
       backgroundImage?: string | null;
-      videoUrl?: string | null;
+      backgroundVideo?: { url: string } | null;
     };
     storeButtons?: Array<{ platform: string; label: string; sublabel: string; url: string }>;
   } | null;
@@ -71,7 +71,7 @@ export default function HeroSection({ settings }: HeroProps) {
     { platform: 'pc', label: 'Windows', sublabel: 'Coming soon', url: '#' },
   ];
 
-  const videoUrl = settings?.hero?.videoUrl || null;
+  const videoUrl = settings?.hero?.backgroundVideo?.url || null;
 
   return (
     <section

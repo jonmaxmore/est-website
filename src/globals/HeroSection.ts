@@ -86,10 +86,13 @@ export const HeroSection: GlobalConfig = {
       label: 'CTA Button Link',
     },
     {
-      name: 'videoUrl',
-      type: 'text',
-      label: 'Background Video URL (optional)',
-      admin: { description: 'YouTube/Vimeo embed or MP4 URL for hero video background' },
+      name: 'backgroundVideo',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Hero Background Video (optional)',
+      admin: {
+        description: 'Upload MP4/WebM video for hero background. If set, displays behind the hero content instead of static image.',
+      },
     },
     {
       type: 'group',

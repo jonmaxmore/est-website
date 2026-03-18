@@ -60,7 +60,7 @@ export default buildConfig({
   sharp,
   upload: {
     limits: {
-      fileSize: 10000000, // 10MB
+      fileSize: 100000000, // 100MB — allows video uploads
     },
   },
 })
