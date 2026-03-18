@@ -4,10 +4,23 @@ import { nanoid } from 'nanoid'
 
 export const dynamic = 'force-dynamic'
 
-// Rate limit store (NOTE: in-memory — resets on PM2 restart; use Redis for production-grade limiting)
+// Rate limit store
+// NOTE: In-memory — resets on PM2/server restart. For production-grade limiting,
+// consider Redis, Upstash, or Payload CMS's RateLimitLog collection.
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
 const RATE_LIMIT = 5
 const WINDOW_MS = 60 * 1000
+
+// Periodic cleanup to prevent unbounded memory growth (every 5 min)
+if (typeof globalThis !== 'undefined') {
+  const CLEANUP_INTERVAL_MS = 5 * 60 * 1000
+  setInterval(() => {
+    const now = Date.now()
+    for (const [key, record] of rateLimitMap) {
+      if (now > record.resetTime) rateLimitMap.delete(key)
+    }
+  }, CLEANUP_INTERVAL_MS).unref?.()
+}
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 

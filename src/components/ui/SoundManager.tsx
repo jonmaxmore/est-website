@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
 
 interface SoundContextType {
   isMuted: boolean;
@@ -31,13 +31,15 @@ function createAudioContext() {
 }
 
 export function SoundProvider({ children }: { children: React.ReactNode }) {
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    try {
+      return localStorage.getItem('est-sound') !== 'on';
+    } catch {
+      return true;
+    }
+  });
   const audioCtxRef = useRef<AudioContext | null>(null);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('est-sound');
-    if (saved === 'on') setIsMuted(false);
-  }, []);
 
   const getCtx = useCallback(() => {
     if (!audioCtxRef.current) {

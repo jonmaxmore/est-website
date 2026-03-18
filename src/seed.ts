@@ -87,7 +87,7 @@ async function seed() {
       // Create character without portrait for now (will be added via CMS upload)
       await payload.create({
         collection: 'characters',
-        data: { ...char, portrait: undefined } as any,
+        data: { ...char, portrait: undefined } as Record<string, unknown>,
       })
     } catch { /* skip if exists */ }
   }

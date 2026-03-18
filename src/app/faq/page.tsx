@@ -2,7 +2,6 @@
 
 import { useLang } from '@/lib/lang-context';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 const faqItems = [

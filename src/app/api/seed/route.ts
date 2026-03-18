@@ -42,7 +42,7 @@ export async function POST() {
     ]
     let cCount = 0
     for (const c of charsData) {
-      try { await payload.create({ collection: 'characters', data: c as any }); cCount++ } catch { /* exists */ }
+      try { await payload.create({ collection: 'characters', data: c as Record<string, unknown> }); cCount++ } catch { /* exists */ }
     }
     results.push(`✅ ${cCount} characters seeded`)
 

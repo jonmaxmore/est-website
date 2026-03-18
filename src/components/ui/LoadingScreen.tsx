@@ -38,18 +38,22 @@ export default function LoadingScreen() {
         >
           {/* Background particles */}
           <div className="loading-particles">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div
-                key={i}
-                className="loading-particle"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 3}s`,
-                  animationDuration: `${Math.random() * 4 + 3}s`,
-                }}
-              />
-            ))}
+            {Array.from({ length: 20 }).map((_, i) => {
+              // Deterministic seeded random for SSR/hydration safety
+              const sr = (seed: number) => { const x = Math.sin(seed) * 10000; return x - Math.floor(x); };
+              return (
+                <div
+                  key={i}
+                  className="loading-particle"
+                  style={{
+                    left: `${sr(i * 7 + 1) * 100}%`,
+                    top: `${sr(i * 13 + 2) * 100}%`,
+                    animationDelay: `${sr(i * 17 + 3) * 3}s`,
+                    animationDuration: `${sr(i * 23 + 4) * 4 + 3}s`,
+                  }}
+                />
+              );
+            })}
           </div>
 
           {/* Logo */}

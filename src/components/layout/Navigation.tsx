@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,7 +12,6 @@ import {
   Newspaper,
   MessageSquare,
   Palette,
-  Gamepad2,
   Download,
 } from 'lucide-react';
 
@@ -87,6 +86,7 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [activeMega, setActiveMega] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = useCallback(() => {
     setScrolled(window.scrollY > 20);
@@ -96,6 +96,21 @@ export default function Navigation() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
+
+  // Close mobile menu on Escape key
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileOpen(false);
+    };
+    document.addEventListener('keydown', handleEsc);
+    // Lock body scroll when menu is open
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = '';
+    };
+  }, [mobileOpen]);
 
   const closeMobile = () => setMobileOpen(false);
 
@@ -126,8 +141,10 @@ export default function Navigation() {
               className="nav-mega-trigger"
               onMouseEnter={() => setActiveMega('game')}
               onMouseLeave={() => setActiveMega(null)}
+              onFocus={() => setActiveMega('game')}
+              onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setActiveMega(null); }}
             >
-              <span className="nav-link">
+              <span className="nav-link" role="button" tabIndex={0} aria-expanded={activeMega === 'game'} aria-haspopup="true">
                 {t('แนะนำเกม', 'Game')}
                 <svg
                   width="10"
@@ -177,8 +194,10 @@ export default function Navigation() {
               className="nav-mega-trigger"
               onMouseEnter={() => setActiveMega('community')}
               onMouseLeave={() => setActiveMega(null)}
+              onFocus={() => setActiveMega('community')}
+              onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setActiveMega(null); }}
             >
-              <span className="nav-link">
+              <span className="nav-link" role="button" tabIndex={0} aria-expanded={activeMega === 'community'} aria-haspopup="true">
                 {t('ชุมชน', 'Community')}
                 <svg
                   width="10"
@@ -272,7 +291,11 @@ export default function Navigation() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            ref={mobileMenuRef}
             className="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation menu"
             initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}

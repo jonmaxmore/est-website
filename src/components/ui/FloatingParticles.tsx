@@ -1,21 +1,28 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useState } from 'react';
+
+// Seeded pseudo-random to ensure deterministic particle positions (avoids hydration mismatch)
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+function generateParticles(count: number) {
+  return Array.from({ length: count }, (_, i) => ({
+    id: i,
+    x: seededRandom(i * 7 + 1) * 100,
+    y: seededRandom(i * 13 + 2) * 100,
+    size: seededRandom(i * 17 + 3) * 4 + 1,
+    duration: seededRandom(i * 23 + 4) * 15 + 10,
+    delay: seededRandom(i * 29 + 5) * 5,
+    opacity: seededRandom(i * 31 + 6) * 0.5 + 0.1,
+  }));
+}
 
 export default function FloatingParticles({ count = 30 }: { count?: number }) {
-  const particles = useMemo(
-    () =>
-      Array.from({ length: count }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: Math.random() * 4 + 1,
-        duration: Math.random() * 15 + 10,
-        delay: Math.random() * 5,
-        opacity: Math.random() * 0.5 + 0.1,
-      })),
-    [count],
-  );
+  // useState initializer runs once — safe, pure, and deterministic
+  const [particles] = useState(() => generateParticles(count));
 
   return (
     <div className="particle-field">

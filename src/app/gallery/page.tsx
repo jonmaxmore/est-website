@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useLang } from '@/lib/lang-context';
 
@@ -36,7 +35,7 @@ const GALLERY_ITEMS = {
 };
 
 export default function GalleryPage() {
-  const { t, lang, toggle } = useLang();
+  const { t } = useLang();
   const [activeTab, setActiveTab] = useState('screenshots');
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
 
