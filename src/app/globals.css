@@ -1306,9 +1306,13 @@
   @media (max-width: 768px) {
     .footer-inner-enhanced {
       grid-template-columns: 1fr;
-      gap: 2rem;
+      gap: 1.5rem;
       text-align: center;
       padding: 2rem 1.5rem;
+    }
+    /* Hide Links, Support, Community columns on mobile */
+    .footer-col:not(.footer-brand-col) {
+      display: none;
     }
     .footer-brand-col {
       align-items: center;
@@ -1316,21 +1320,9 @@
     .footer-social {
       justify-content: center;
     }
-    .footer-nav {
-      align-items: center;
-    }
-    .footer-community-links {
-      align-items: center;
-    }
-    .footer-community-link {
-      justify-content: center;
-    }
-    .footer-newsletter-coming-soon {
-      text-align: center;
-    }
     .footer-platforms {
-      flex-direction: column;
-      gap: 0.5rem;
+      flex-direction: row;
+      gap: 0.75rem;
     }
   }
 
