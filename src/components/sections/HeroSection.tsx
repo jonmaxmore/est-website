@@ -155,7 +155,9 @@ export default function HeroSection({ settings }: HeroProps) {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
         >
-          {storeButtons.map((btn) => {
+          {storeButtons
+            .filter((btn) => btn.platform === 'ios' || btn.platform === 'android')
+            .map((btn) => {
             const badgeSrc = btn.platform === 'android'
               ? '/images/badge-google-play.webp'
               : '/images/badge-app-store.webp';
