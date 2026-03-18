@@ -1070,6 +1070,12 @@
   /* Weapon info image */
   .char-weapon-info-img-wrapper {
     width: 100%;
+    background: rgba(10, 14, 33, 0.75);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    border: 1px solid rgba(255,255,255,0.08);
   }
 
   .char-weapon-info-img {
