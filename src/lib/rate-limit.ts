@@ -1,54 +1,34 @@
-// In-memory sliding window rate limiter
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+/**
+ * Basic in-memory rate limiter for public API endpoints.
+ * Note: Reset on server restart. In a distributed environment or edge, 
+ * use Redis or Vercel KV for a persistent distributed rate limiter.
+ */
 
-export interface RateLimitConfig {
-  windowMs: number;
-  maxRequests: number;
+interface RateLimitTracker {
+  count: number;
+  resetTime: number;
 }
 
-const RATE_LIMITS: Record<string, RateLimitConfig> = {
-  register: { windowMs: 60 * 1000, maxRequests: 10 },
-  read: { windowMs: 60 * 1000, maxRequests: 60 },
-  referral: { windowMs: 60 * 1000, maxRequests: 30 },
-};
+const rateLimitMap = new Map<string, RateLimitTracker>();
 
-export function checkRateLimit(
-  key: string,
-  endpoint: string = 'read'
-): { allowed: boolean; remaining: number; resetIn: number } {
-  const config = RATE_LIMITS[endpoint] || RATE_LIMITS.read;
+export function checkRateLimit(ip: string, limit: number, windowMs: number): boolean {
   const now = Date.now();
-  const identifier = `${key}:${endpoint}`;
+  const tracker = rateLimitMap.get(ip);
 
-  const existing = rateLimitMap.get(identifier);
-
-  if (!existing || now > existing.resetTime) {
-    rateLimitMap.set(identifier, { count: 1, resetTime: now + config.windowMs });
-    return { allowed: true, remaining: config.maxRequests - 1, resetIn: config.windowMs };
+  // If new IP or reset time has passed
+  if (!tracker || tracker.resetTime < now) {
+    rateLimitMap.set(ip, {
+      count: 1,
+      resetTime: now + windowMs,
+    });
+    return true; // Allowed
   }
 
-  if (existing.count >= config.maxRequests) {
-    return {
-      allowed: false,
-      remaining: 0,
-      resetIn: existing.resetTime - now,
-    };
+  // If within window, increment count
+  tracker.count++;
+  if (tracker.count > limit) {
+    return false; // Rate limited
   }
 
-  existing.count++;
-  return {
-    allowed: true,
-    remaining: config.maxRequests - existing.count,
-    resetIn: existing.resetTime - now,
-  };
+  return true; // Allowed
 }
-
-// Cleanup old entries periodically
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, value] of rateLimitMap.entries()) {
-    if (now > value.resetTime) {
-      rateLimitMap.delete(key);
-    }
-  }
-}, 60 * 1000);

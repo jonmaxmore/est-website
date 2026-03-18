@@ -4,46 +4,17 @@ import { nanoid } from 'nanoid'
 
 export const dynamic = 'force-dynamic'
 
-// Rate limit store
-// NOTE: In-memory — resets on PM2/server restart. For production-grade limiting,
-// consider Redis, Upstash, or Payload CMS's RateLimitLog collection.
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
-const RATE_LIMIT = 5
-const WINDOW_MS = 60 * 1000
-
-// Periodic cleanup to prevent unbounded memory growth (every 5 min)
-if (typeof globalThis !== 'undefined') {
-  const CLEANUP_INTERVAL_MS = 5 * 60 * 1000
-  setInterval(() => {
-    const now = Date.now()
-    for (const [key, record] of rateLimitMap) {
-      if (now > record.resetTime) rateLimitMap.delete(key)
-    }
-  }, CLEANUP_INTERVAL_MS).unref?.()
-}
+import { checkRateLimit } from '@/lib/rate-limit'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now()
-  const record = rateLimitMap.get(ip)
-
-  if (!record || now > record.resetTime) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + WINDOW_MS })
-    return true
-  }
-
-  if (record.count >= RATE_LIMIT) return false
-  record.count++
-  return true
-}
 
 export async function POST(request: NextRequest) {
   try {
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
 
     // Rate limit
-    if (!checkRateLimit(ip)) {
+    // Rate limit: 5 requests per minute
+    if (!checkRateLimit(ip, 5, 60000)) {
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
         { status: 429 }
