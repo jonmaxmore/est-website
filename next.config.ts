@@ -14,6 +14,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Allow 100MB uploads for video files
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '100mb',
+    },
+  },
   // Suppress specific harmless warnings
   typescript: {
     ignoreBuildErrors: false,
