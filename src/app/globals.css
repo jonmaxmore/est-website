@@ -205,8 +205,46 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
+    gap: 1.25rem;
+    flex-wrap: nowrap;
+  }
+
+  /* Watch Trailer button — glassmorphism, clearly visible */
+  .trailer-play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.5rem;
+    border-radius: 50px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.35);
+    color: white;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s var(--ease-out-expo);
+  }
+  .trailer-play-btn:hover {
+    background: rgba(255,255,255,0.22);
+    border-color: rgba(255,255,255,0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .trailer-play-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    flex-shrink: 0;
+  }
+  .trailer-play-text {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
   }
 
   .hero-stores-bottom {
@@ -279,9 +317,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.25rem;
+    gap: 1rem;
     text-align: center;
-    padding: 5rem 1rem 6rem;
+    padding: 6rem 1rem 6rem;
     max-width: 900px;
     width: 100%;
   }
@@ -289,8 +327,8 @@
   .hero-logo-container {
     position: relative;
     filter: drop-shadow(0 8px 30px rgba(0,0,0,0.5));
-    max-width: 420px;
-    width: 80vw;
+    max-width: 280px;
+    width: 60vw;
   }
 
   .hero-logo {
