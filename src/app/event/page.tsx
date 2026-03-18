@@ -44,6 +44,7 @@ interface Milestone {
   threshold: number;
   label: string;
   rewards: string[];
+  rewardImage?: string | null;
 }
 
 interface StoreButton {
@@ -65,6 +66,18 @@ interface EventSettings {
   heroImage?: { url: string } | null;
   backgroundImage?: { url: string } | null;
   contentSections?: Array<{ contentType: string; textEn?: string; textTh?: string; image?: { url: string } | null }>;
+  ctaButtonEn?: string;
+  ctaButtonTh?: string;
+  modalTitleEn?: string;
+  modalTitleTh?: string;
+  emailPlaceholderEn?: string;
+  emailPlaceholderTh?: string;
+  storeLabelEn?: string;
+  storeLabelTh?: string;
+  submitButtonEn?: string;
+  submitButtonTh?: string;
+  successTitleEn?: string;
+  successTitleTh?: string;
 }
 
 /* ═══════════════════════════════════════════════
@@ -113,10 +126,11 @@ export default function EventPage() {
       .then(data => {
         setRegistrationCount(data.totalRegistrations || 0);
         if (data.milestones?.length) {
-          setMilestones(data.milestones.map((m: { threshold: number; rewardNameEn: string; rewardNameTh: string }) => ({
+          setMilestones(data.milestones.map((m: { threshold: number; rewardEn: string; rewardTh: string; rewardImage?: { url: string } | null }) => ({
             threshold: m.threshold,
             label: m.threshold.toLocaleString(),
-            rewards: [m.rewardNameTh || m.rewardNameEn],
+            rewards: [m.rewardTh || m.rewardEn],
+            rewardImage: m.rewardImage?.url || null,
           })));
         }
       })
@@ -329,7 +343,7 @@ export default function EventPage() {
             whileTap={{ scale: 0.98 }}
           >
             <span className="hero-cta-shimmer" />
-            <span className="event-cta-text">{t('ลงทะเบียนล่วงหน้าเลย', 'Pre-Register Now')}</span>
+            <span className="event-cta-text">{t(eventSettings.ctaButtonTh || 'ลงทะเบียนล่วงหน้าเลย', eventSettings.ctaButtonEn || 'Pre-Register Now')}</span>
           </motion.button>
         ) : (
           <motion.div
@@ -337,7 +351,7 @@ export default function EventPage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
           >
-            <p className="event-success-title">✅ {t('ลงทะเบียนสำเร็จ!', 'Registration Successful!')}</p>
+            <p className="event-success-title">✅ {t(eventSettings.successTitleTh || 'ลงทะเบียนสำเร็จ!', eventSettings.successTitleEn || 'Registration Successful!')}</p>
             <p className="event-success-sub">{t('แชร์ให้เพื่อนเพื่อรับรางวัลพิเศษ', 'Share with friends for bonus rewards')}</p>
 
             {/* Store redirect button */}
@@ -447,7 +461,11 @@ export default function EventPage() {
                   whileHover={{ y: -4, boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
                 >
                   <div className="milestone-card-icon">
-                    {registrationCount >= m.threshold ? '🎁' : '🔒'}
+                    {m.rewardImage ? (
+                      <Image src={m.rewardImage} alt="reward" width={64} height={64} className="milestone-reward-img" />
+                    ) : (
+                      registrationCount >= m.threshold ? '🎁' : '🔒'
+                    )}
                   </div>
                   <div className="milestone-card-threshold">{m.label}</div>
                   {m.rewards.map((r, j) => (
@@ -486,12 +504,12 @@ export default function EventPage() {
             >
               <button onClick={() => setShowModal(false)} className="event-modal-close">×</button>
 
-              <h2 className="event-modal-title">{t('ลงทะเบียนล่วงหน้า', 'Pre-Register')}</h2>
+              <h2 className="event-modal-title">{t(eventSettings.modalTitleTh || 'ลงทะเบียนล่วงหน้า', eventSettings.modalTitleEn || 'Pre-Register')}</h2>
 
               <form onSubmit={handleRegister} className="event-modal-form">
                 <input
                   type="email"
-                  placeholder={t('กรอก Email ของท่าน', 'Enter your email')}
+                  placeholder={t(eventSettings.emailPlaceholderTh || 'กรอก Email ของท่าน', eventSettings.emailPlaceholderEn || 'Enter your email')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -499,7 +517,7 @@ export default function EventPage() {
                 />
 
                 {/* Store Selection Cards — Must select before submit */}
-                <label className="event-store-label">{t('เลือกสโตร์ที่ต้องการ', 'Choose your store')} <span className="required">*</span></label>
+                <label className="event-store-label">{t(eventSettings.storeLabelTh || 'เลือกสโตร์ที่ต้องการ', eventSettings.storeLabelEn || 'Choose your store')} <span className="required">*</span></label>
                 <div className="event-store-cards">
                   {displayStoreButtons.map((btn) => (
                     <button
@@ -529,7 +547,7 @@ export default function EventPage() {
                 </select>
                 {error && <p className="event-error">{error}</p>}
                 <button type="submit" disabled={loading || !platform} className={`event-submit-btn ${!platform ? 'disabled' : ''}`}>
-                  {loading ? t('กำลังลงทะเบียน...', 'Registering...') : t('ลงทะเบียนและไปที่สโตร์', 'Register & Go to Store')}
+                  {loading ? t('กำลังลงทะเบียน...', 'Registering...') : t(eventSettings.submitButtonTh || 'ลงทะเบียนและไปที่สโตร์', eventSettings.submitButtonEn || 'Register & Go to Store')}
                 </button>
               </form>
             </motion.div>

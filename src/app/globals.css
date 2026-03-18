@@ -2156,6 +2156,13 @@
     margin-bottom: 0.5rem;
   }
 
+  .milestone-reward-img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
   .milestone-card-threshold {
     font-weight: 800;
     font-size: 0.85rem;

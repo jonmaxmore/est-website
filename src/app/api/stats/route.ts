@@ -36,6 +36,7 @@ export async function GET() {
       rewardEn: m.rewardEn,
       rewardTh: m.rewardTh,
       icon: m.icon,
+      rewardImage: typeof m.rewardImage === 'object' && m.rewardImage ? { url: m.rewardImage.url } : null,
       unlocked: m.unlocked || (displayCount >= (m.threshold || 0)),
     }))
 
