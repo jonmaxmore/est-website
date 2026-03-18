@@ -29,14 +29,6 @@ interface MegaMenuItem {
 const MEGA_MENUS: Record<string, MegaMenuItem[]> = {
   game: [
     {
-      href: '/#story',
-      icon: <Swords size={20} />,
-      labelTh: 'ระบบ Mercenary',
-      labelEn: 'Mercenary System',
-      descTh: 'สหายร่วมรบ 4 คลาส',
-      descEn: '4 companion classes',
-    },
-    {
       href: '/#characters',
       icon: <Users size={20} />,
       labelTh: 'ตัวละคร',
@@ -57,26 +49,26 @@ const MEGA_MENUS: Record<string, MegaMenuItem[]> = {
     {
       href: '/news',
       icon: <Newspaper size={20} />,
-      labelTh: 'ข่าวสาร',
-      labelEn: 'News',
-      descTh: 'อัพเดตล่าสุด',
-      descEn: 'Latest updates',
+      labelTh: 'ข่าวสารทั้งหมด',
+      labelEn: 'All News',
+      descTh: 'อัพเดตล่าสุดและประกาศ',
+      descEn: 'Latest updates & announcements',
     },
     {
-      href: '#',
-      icon: <MessageSquare size={20} />,
-      labelTh: 'Discord',
-      labelEn: 'Discord',
-      descTh: 'เข้าร่วมชุมชน',
-      descEn: 'Join the community',
+      href: '/news?category=event',
+      icon: <Sparkles size={20} />,
+      labelTh: 'อีเว้นท์',
+      labelEn: 'Events',
+      descTh: 'กิจกรรมและโปรโมชั่น',
+      descEn: 'Activities & promotions',
     },
     {
-      href: '#',
-      icon: <Palette size={20} />,
-      labelTh: 'แฟนอาร์ต',
-      labelEn: 'Fan Art',
-      descTh: 'ผลงานจากชุมชน',
-      descEn: 'Community creations',
+      href: '/news?category=update',
+      icon: <Swords size={20} />,
+      labelTh: 'อัพเดตเกม',
+      labelEn: 'Game Updates',
+      descTh: 'แพทช์โน้ตและฟีเจอร์ใหม่',
+      descEn: 'Patch notes & new features',
     },
   ],
 };
@@ -243,7 +235,6 @@ export default function Navigation() {
             </div>
 
             <Link href="/download" className="nav-link">
-              <Download size={16} style={{ marginRight: '4px', verticalAlign: 'middle' }} />
               {t('ดาวน์โหลด', 'Download')}
             </Link>
           </div>
