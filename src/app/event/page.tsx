@@ -462,7 +462,7 @@ export default function EventPage() {
                 >
                   <div className="milestone-card-icon">
                     {m.rewardImage ? (
-                      <Image src={m.rewardImage} alt="reward" width={64} height={64} className="milestone-reward-img" />
+                      <img src={m.rewardImage} alt="reward" width={64} height={64} className="milestone-reward-img" />
                     ) : (
                       registrationCount >= m.threshold ? '🎁' : '🔒'
                     )}
