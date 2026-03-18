@@ -20,6 +20,40 @@ export const EventConfig: GlobalConfig = {
       type: 'row',
       fields: [
         {
+          name: 'countMultiplier',
+          type: 'number',
+          defaultValue: 1,
+          label: 'Count Multiplier',
+          admin: {
+            width: '33%',
+            description: 'Multiply real registration count (e.g. 2 = double). Set to 1 for real count.',
+          },
+        },
+        {
+          name: 'countOffset',
+          type: 'number',
+          defaultValue: 0,
+          label: 'Count Offset',
+          admin: {
+            width: '33%',
+            description: 'Add this number to the multiplied count. Set to 0 for no offset.',
+          },
+        },
+        {
+          name: 'countOverride',
+          type: 'number',
+          label: 'Count Override (optional)',
+          admin: {
+            width: '33%',
+            description: 'If set, this exact number will be displayed instead of the calculated count. Leave blank to use formula.',
+          },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
           name: 'titleEn',
           type: 'text',
           defaultValue: 'Pre-Register Now',
