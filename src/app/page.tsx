@@ -32,11 +32,13 @@ interface CMSSettings {
   hero: {
     taglineEn: string;
     taglineTh: string;
+    taglineImageEn?: { url: string } | null;
+    taglineImageTh?: { url: string } | null;
     ctaTextEn: string;
     ctaTextTh: string;
     ctaLink: string;
-    backgroundImage: string | null;
-    videoUrl: string | null;
+    backgroundImage: { url: string } | null;
+    backgroundVideo?: { url: string } | null;
     mercenarySection: {
       titleEn: string;
       titleTh: string;
