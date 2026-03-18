@@ -5,75 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLang } from '@/lib/lang-context';
-import {
-  Swords,
-  Users,
-  Sparkles,
-  Newspaper,
-} from 'lucide-react';
-
-/* socialLinks prop removed — unused in this component */
-
-interface MegaMenuItem {
-  href: string;
-  icon: React.ReactNode;
-  labelTh: string;
-  labelEn: string;
-  descTh: string;
-  descEn: string;
-}
-
-const MEGA_MENUS: Record<string, MegaMenuItem[]> = {
-  game: [
-    {
-      href: '/#characters',
-      icon: <Users size={20} />,
-      labelTh: 'ตัวละคร',
-      labelEn: 'Characters',
-      descTh: 'พบกับสหายทั้งหมด',
-      descEn: 'Meet all companions',
-    },
-    {
-      href: '/#features',
-      icon: <Sparkles size={20} />,
-      labelTh: 'ฟีเจอร์เกม',
-      labelEn: 'Game Features',
-      descTh: 'PvP, กิลด์, ดันเจี้ยน',
-      descEn: 'PvP, Guilds, Dungeons',
-    },
-  ],
-  community: [
-    {
-      href: '/news',
-      icon: <Newspaper size={20} />,
-      labelTh: 'ข่าวสารทั้งหมด',
-      labelEn: 'All News',
-      descTh: 'อัพเดตล่าสุดและประกาศ',
-      descEn: 'Latest updates & announcements',
-    },
-    {
-      href: '/news?category=event',
-      icon: <Sparkles size={20} />,
-      labelTh: 'อีเว้นท์',
-      labelEn: 'Events',
-      descTh: 'กิจกรรมและโปรโมชั่น',
-      descEn: 'Activities & promotions',
-    },
-    {
-      href: '/news?category=update',
-      icon: <Swords size={20} />,
-      labelTh: 'อัพเดตเกม',
-      labelEn: 'Game Updates',
-      descTh: 'แพทช์โน้ตและฟีเจอร์ใหม่',
-      descEn: 'Patch notes & new features',
-    },
-  ],
-};
 
 export default function Navigation() {
   const { lang, toggle, t } = useLang();
   const [scrolled, setScrolled] = useState(false);
-  const [activeMega, setActiveMega] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
@@ -119,120 +54,22 @@ export default function Navigation() {
             />
           </Link>
 
-          {/* Desktop Nav */}
+          {/* Desktop Nav — 5 direct links matching reference site */}
           <div className="nav-links">
             <Link href="/" className="nav-link active">
               {t('หน้าหลัก', 'Home')}
             </Link>
-
-            {/* Game Mega Menu */}
-            <div
-              className="nav-mega-trigger"
-              onMouseEnter={() => setActiveMega('game')}
-              onMouseLeave={() => setActiveMega(null)}
-              onFocus={() => setActiveMega('game')}
-              onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setActiveMega(null); }}
-            >
-              <span className="nav-link" role="button" tabIndex={0} aria-expanded={activeMega === 'game'} aria-haspopup="true">
-                {t('แนะนำเกม', 'Game')}
-                <svg
-                  width="10"
-                  height="10"
-                  viewBox="0 0 10 10"
-                  fill="currentColor"
-                  className="nav-chevron"
-                >
-                  <path
-                    d="M2 3.5L5 6.5L8 3.5"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    fill="none"
-                  />
-                </svg>
-              </span>
-
-              <AnimatePresence>
-                {activeMega === 'game' && (
-                  <motion.div
-                    className="mega-menu"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {MEGA_MENUS.game.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="mega-menu-item"
-                      >
-                        <span className="mega-menu-icon">{item.icon}</span>
-                        <div>
-                          <strong>{t(item.labelTh, item.labelEn)}</strong>
-                          <small>{t(item.descTh, item.descEn)}</small>
-                        </div>
-                      </Link>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Community Mega Menu */}
-            <div
-              className="nav-mega-trigger"
-              onMouseEnter={() => setActiveMega('community')}
-              onMouseLeave={() => setActiveMega(null)}
-              onFocus={() => setActiveMega('community')}
-              onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setActiveMega(null); }}
-            >
-              <span className="nav-link" role="button" tabIndex={0} aria-expanded={activeMega === 'community'} aria-haspopup="true">
-                {t('ชุมชน', 'Community')}
-                <svg
-                  width="10"
-                  height="10"
-                  viewBox="0 0 10 10"
-                  fill="currentColor"
-                  className="nav-chevron"
-                >
-                  <path
-                    d="M2 3.5L5 6.5L8 3.5"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    fill="none"
-                  />
-                </svg>
-              </span>
-
-              <AnimatePresence>
-                {activeMega === 'community' && (
-                  <motion.div
-                    className="mega-menu"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {MEGA_MENUS.community.map((item) => (
-                      <Link
-                        key={item.href + item.labelEn}
-                        href={item.href}
-                        className="mega-menu-item"
-                      >
-                        <span className="mega-menu-icon">{item.icon}</span>
-                        <div>
-                          <strong>{t(item.labelTh, item.labelEn)}</strong>
-                          <small>{t(item.descTh, item.descEn)}</small>
-                        </div>
-                      </Link>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <Link href="/download" className="nav-link">
-              {t('ดาวน์โหลด', 'Download')}
+            <Link href="/game-guide" className="nav-link">
+              {t('แนะนำเกม', 'Game Guide')}
+            </Link>
+            <Link href="/story" className="nav-link">
+              {t('เนื้อเรื่อง', 'Story')}
+            </Link>
+            <Link href="/character" className="nav-link">
+              {t('ตัวละคร', 'Characters')}
+            </Link>
+            <Link href="/news" className="nav-link">
+              {t('ข่าวสาร', 'News')}
             </Link>
           </div>
 
@@ -293,20 +130,17 @@ export default function Navigation() {
               <Link href="/" onClick={closeMobile}>
                 {t('หน้าหลัก', 'Home')}
               </Link>
-              <Link href="/#story" onClick={closeMobile}>
-                {t('ระบบ Mercenary', 'Mercenary System')}
+              <Link href="/game-guide" onClick={closeMobile}>
+                {t('แนะนำเกม', 'Game Guide')}
               </Link>
-              <Link href="/#characters" onClick={closeMobile}>
+              <Link href="/story" onClick={closeMobile}>
+                {t('เนื้อเรื่อง', 'Story')}
+              </Link>
+              <Link href="/character" onClick={closeMobile}>
                 {t('ตัวละคร', 'Characters')}
-              </Link>
-              <Link href="/#features" onClick={closeMobile}>
-                {t('ฟีเจอร์เกม', 'Features')}
               </Link>
               <Link href="/news" onClick={closeMobile}>
                 {t('ข่าวสาร', 'News')}
-              </Link>
-              <Link href="/download" onClick={closeMobile}>
-                {t('ดาวน์โหลด', 'Download')}
               </Link>
               <Link
                 href="/event"

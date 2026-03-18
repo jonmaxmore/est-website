@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
         hostname: '178.128.127.161',
       },
       {
+        protocol: 'https',
+        hostname: 'www.eternaltowersaga.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'eternaltowersaga.com',
+      },
+      {
         protocol: 'http',
         hostname: 'localhost',
       },

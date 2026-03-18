@@ -99,15 +99,13 @@ export default function HeroSection({ settings }: HeroProps) {
         </div>
       )}
 
-      {/* Parallax Background — CMS image only, no hardcoded fallback */}
-      {bgImageUrl && (
-        <motion.div
-          className={`hero-bg-layer hero-bg-far ${videoUrl && videoLoaded ? 'hero-bg-hidden' : ''}`}
-          style={{ x: bgX, y: bgY }}
-        >
-          <Image src={bgImageUrl} alt="" fill className="object-cover" priority />
-        </motion.div>
-      )}
+      {/* Parallax Background — CMS image with static fallback */}
+      <motion.div
+        className={`hero-bg-layer hero-bg-far ${videoUrl && videoLoaded ? 'hero-bg-hidden' : ''}`}
+        style={{ x: bgX, y: bgY }}
+      >
+        <Image src={bgImageUrl || '/images/hero-bg.webp'} alt="" fill className="object-cover" priority />
+      </motion.div>
 
       <LightRays />
       <FloatingParticles count={15} />

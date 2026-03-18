@@ -82,7 +82,7 @@ interface CMSNews {
   titleTh: string;
   slug: string;
   category: string;
-  publishDate: string;
+  publishedAt: string;
   featuredImage: string | null;
 }
 
