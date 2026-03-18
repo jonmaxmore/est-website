@@ -10,9 +10,6 @@ import {
   Users,
   Sparkles,
   Newspaper,
-  MessageSquare,
-  Palette,
-  Download,
 } from 'lucide-react';
 
 /* socialLinks prop removed — unused in this component */
