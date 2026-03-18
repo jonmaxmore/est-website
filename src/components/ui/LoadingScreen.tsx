@@ -14,13 +14,13 @@ export default function LoadingScreen() {
           clearInterval(interval);
           return 100;
         }
-        return prev + Math.random() * 15 + 5;
+        return prev + Math.random() * 20 + 10;
       });
-    }, 200);
+    }, 150);
 
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 1200);
 
     return () => {
       clearInterval(interval);
