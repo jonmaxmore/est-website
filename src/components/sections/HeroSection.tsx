@@ -14,6 +14,7 @@ interface HeroProps {
     hero?: {
       taglineEn?: string;
       taglineTh?: string;
+      taglineImage?: { url: string } | null;
       ctaTextEn?: string;
       ctaTextTh?: string;
       ctaLink?: string;
@@ -53,6 +54,7 @@ export default function HeroSection({ settings }: HeroProps) {
     settings?.hero?.taglineTh || 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย',
     settings?.hero?.taglineEn || 'Rise Together, Conquer the Tower',
   );
+  const taglineImageUrl = settings?.hero?.taglineImage?.url || null;
   const ctaText = t(
     settings?.hero?.ctaTextTh || 'ลงทะเบียนล่วงหน้าเลย',
     settings?.hero?.ctaTextEn || 'Pre-Register Now',
@@ -126,15 +128,26 @@ export default function HeroSection({ settings }: HeroProps) {
           />
         </motion.div>
 
-        {/* Single tagline using active language */}
-        <motion.p
+        {/* Tagline: image or text */}
+        <motion.div
           className="hero-tagline"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
         >
-          {tagline}
-        </motion.p>
+          {taglineImageUrl ? (
+            <Image
+              src={taglineImageUrl}
+              alt={tagline}
+              width={700}
+              height={100}
+              className="hero-tagline-img"
+              style={{ width: 'auto', height: 'auto', maxWidth: '90%', maxHeight: '120px' }}
+            />
+          ) : (
+            <p style={{ margin: 0 }}>{tagline}</p>
+          )}
+        </motion.div>
 
         {/* CTA Button */}
         <motion.div

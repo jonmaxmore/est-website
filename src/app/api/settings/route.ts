@@ -51,6 +51,9 @@ export async function GET() {
       hero: {
         taglineEn: heroSection.taglineEn,
         taglineTh: heroSection.taglineTh,
+        taglineImage: typeof heroSection.taglineImage === 'object' && heroSection.taglineImage ? {
+          url: heroSection.taglineImage.url,
+        } : null,
         ctaTextEn: heroSection.ctaTextEn,
         ctaTextTh: heroSection.ctaTextTh,
         ctaLink: heroSection.ctaLink,

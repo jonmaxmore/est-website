@@ -36,6 +36,15 @@ export const HeroSection: GlobalConfig = {
       ],
     },
     {
+      name: 'taglineImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Tagline Image (optional)',
+      admin: {
+        description: 'Upload an image to replace the text tagline. If set, the image will be displayed instead of the text above.',
+      },
+    },
+    {
       type: 'row',
       fields: [
         {
