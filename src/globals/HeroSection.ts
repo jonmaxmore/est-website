@@ -195,5 +195,125 @@ export const HeroSection: GlobalConfig = {
         },
       ],
     },
+    /* ═══════════════════════════════════════════════
+       SECTION 5: STORY PAGE
+       ═══════════════════════════════════════════════ */
+    {
+      type: 'collapsible',
+      label: '5️⃣ Story Page — Hero, Sections',
+      admin: { initCollapsed: true },
+      fields: [
+        {
+          name: 'storyPageHeroImage',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Story Page Hero Background',
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'storyPageBadgeEn', type: 'text', defaultValue: 'LORE', label: 'Badge (EN)', admin: { width: '50%' } },
+            { name: 'storyPageBadgeTh', type: 'text', defaultValue: 'เนื้อเรื่อง', label: 'Badge (TH)', admin: { width: '50%' } },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'storyPageTitleEn', type: 'text', defaultValue: 'Story', label: 'Title (EN)', admin: { width: '50%' } },
+            { name: 'storyPageTitleTh', type: 'text', defaultValue: 'เนื้อเรื่อง', label: 'Title (TH)', admin: { width: '50%' } },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'storyPageSubtitleEn', type: 'text', defaultValue: 'The tale of Arcatéa and The Boundless Spire', label: 'Subtitle (EN)', admin: { width: '50%' } },
+            { name: 'storyPageSubtitleTh', type: 'text', defaultValue: 'เรื่องราวแห่งดินแดน Arcatéa และหอคอยไร้ขอบเขต', label: 'Subtitle (TH)', admin: { width: '50%' } },
+          ],
+        },
+        {
+          name: 'storySections',
+          type: 'array',
+          label: 'Story Sections',
+          admin: { description: 'Chapters/sections of the story narrative' },
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                { name: 'titleEn', type: 'text', required: true, label: 'Title (EN)', admin: { width: '50%' } },
+                { name: 'titleTh', type: 'text', required: true, label: 'Title (TH)', admin: { width: '50%' } },
+              ],
+            },
+            {
+              type: 'row',
+              fields: [
+                { name: 'contentEn', type: 'textarea', required: true, label: 'Content (EN)', admin: { width: '50%' } },
+                { name: 'contentTh', type: 'textarea', required: true, label: 'Content (TH)', admin: { width: '50%' } },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+
+    /* ═══════════════════════════════════════════════
+       SECTION 6: GAME GUIDE PAGE
+       ═══════════════════════════════════════════════ */
+    {
+      type: 'collapsible',
+      label: '6️⃣ Game Guide Page — Hero, Features',
+      admin: { initCollapsed: true },
+      fields: [
+        {
+          name: 'gameGuideHeroImage',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Game Guide Hero Background',
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'gameGuideBadgeEn', type: 'text', defaultValue: 'GAME GUIDE', label: 'Badge (EN)', admin: { width: '50%' } },
+            { name: 'gameGuideBadgeTh', type: 'text', defaultValue: 'แนะนำเกม', label: 'Badge (TH)', admin: { width: '50%' } },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'gameGuideTitleEn', type: 'text', defaultValue: 'Game Guide', label: 'Title (EN)', admin: { width: '50%' } },
+            { name: 'gameGuideTitleTh', type: 'text', defaultValue: 'แนะนำเกม', label: 'Title (TH)', admin: { width: '50%' } },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'gameGuideSubtitleEn', type: 'text', defaultValue: 'Experience the new era of Eternal Tower Saga — Switch your weapon, shift the battlefield', label: 'Subtitle (EN)', admin: { width: '50%' } },
+            { name: 'gameGuideSubtitleTh', type: 'text', defaultValue: 'สัมผัสประสบการณ์ใหม่ใน Eternal Tower Saga — อาวุธเปลี่ยน เกมเปลี่ยน', label: 'Subtitle (TH)', admin: { width: '50%' } },
+          ],
+        },
+        {
+          name: 'gameGuideFeatures',
+          type: 'array',
+          label: 'Game Guide Feature Items',
+          admin: { description: 'Features displayed on the Game Guide page' },
+          fields: [
+            { name: 'icon', type: 'text', required: true, label: 'Icon (Lucide icon name)', admin: { description: 'e.g. swords, map, castle, shield, sparkles, users' } },
+            {
+              type: 'row',
+              fields: [
+                { name: 'titleEn', type: 'text', required: true, admin: { width: '50%' } },
+                { name: 'titleTh', type: 'text', required: true, admin: { width: '50%' } },
+              ],
+            },
+            {
+              type: 'row',
+              fields: [
+                { name: 'descriptionEn', type: 'text', required: true, admin: { width: '50%' } },
+                { name: 'descriptionTh', type: 'text', required: true, admin: { width: '50%' } },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 }

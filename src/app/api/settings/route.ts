@@ -140,6 +140,41 @@ export async function GET() {
         titleEn: heroSection.newsTitleEn || 'News & Updates',
         titleTh: heroSection.newsTitleTh || 'ข่าวสารและอัพเดท',
       },
+      storyPage: {
+        heroImage: typeof heroSection.storyPageHeroImage === 'object' && heroSection.storyPageHeroImage ? {
+          url: (heroSection.storyPageHeroImage as { url: string }).url,
+        } : null,
+        badgeEn: heroSection.storyPageBadgeEn || 'LORE',
+        badgeTh: heroSection.storyPageBadgeTh || 'เนื้อเรื่อง',
+        titleEn: heroSection.storyPageTitleEn || 'Story',
+        titleTh: heroSection.storyPageTitleTh || 'เนื้อเรื่อง',
+        subtitleEn: heroSection.storyPageSubtitleEn || 'The tale of Arcatéa and The Boundless Spire',
+        subtitleTh: heroSection.storyPageSubtitleTh || 'เรื่องราวแห่งดินแดน Arcatéa และหอคอยไร้ขอบเขต',
+        sections: (heroSection.storySections as Array<Record<string, string>>)?.map((s) => ({
+          titleEn: s.titleEn,
+          titleTh: s.titleTh,
+          contentEn: s.contentEn,
+          contentTh: s.contentTh,
+        })) || [],
+      },
+      gameGuidePage: {
+        heroImage: typeof heroSection.gameGuideHeroImage === 'object' && heroSection.gameGuideHeroImage ? {
+          url: (heroSection.gameGuideHeroImage as { url: string }).url,
+        } : null,
+        badgeEn: heroSection.gameGuideBadgeEn || 'GAME GUIDE',
+        badgeTh: heroSection.gameGuideBadgeTh || 'แนะนำเกม',
+        titleEn: heroSection.gameGuideTitleEn || 'Game Guide',
+        titleTh: heroSection.gameGuideTitleTh || 'แนะนำเกม',
+        subtitleEn: heroSection.gameGuideSubtitleEn || 'Experience the new era of Eternal Tower Saga',
+        subtitleTh: heroSection.gameGuideSubtitleTh || 'สัมผัสประสบการณ์ใหม่ใน Eternal Tower Saga',
+        features: (heroSection.gameGuideFeatures as Array<Record<string, string>>)?.map((f) => ({
+          icon: f.icon,
+          titleEn: f.titleEn,
+          titleTh: f.titleTh,
+          descriptionEn: f.descriptionEn,
+          descriptionTh: f.descriptionTh,
+        })) || [],
+      },
       storeButtons: storeButtons.docs.map((btn) => ({
         id: btn.id,
         platform: btn.platform,

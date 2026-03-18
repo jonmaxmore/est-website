@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Swords, Map, Castle, Shield, Sparkles, Users } from 'lucide-react';
+import { Swords, Map, Castle, Shield, Sparkles, Users, type LucideIcon } from 'lucide-react';
 import { useLang } from '@/lib/lang-context';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
@@ -10,57 +10,67 @@ import ScrollProgress from '@/components/ui/ScrollProgress';
 import RevealSection from '@/components/ui/RevealSection';
 
 /* ═══════════════════════════════════════════════
-   GAME GUIDE PAGE — แนะนำเกม
-   Showcases game features, systems, and mechanics
+   GAME GUIDE PAGE — แนะนำเกม (API-First)
+   All content fetched from CMS via /api/settings
    ═══════════════════════════════════════════════ */
 
-const GAME_FEATURES = [
-  {
-    icon: <Swords size={28} />,
-    titleTh: 'ระบบ Mercenary Companion',
-    titleEn: 'Mercenary Companion System',
-    descTh: 'ต่อสู้เคียงข้างสหายร่วมรบผู้ทรงพลัง 4 คลาส — ไม่ใช่แค่สัตว์เลี้ยง แต่เป็นสหายที่มี AI ร่วมรบจริงๆ',
-    descEn: 'Fight alongside 4 powerful companion classes — not just pets, but real AI battle companions',
-  },
-  {
-    icon: <Map size={28} />,
-    titleTh: 'สำรวจโลก Arcatéa',
-    titleEn: 'Explore Arcatéa',
-    descTh: 'ผจญภัยในดินแดน Arcatéa อันกว้างใหญ่ไพศาล สำรวจแท่นลอยฟ้าที่เชื่อมกันเป็นชั้นๆ',
-    descEn: 'Explore the vast lands of Arcatéa — discover floating platforms connected in layers',
-  },
-  {
-    icon: <Castle size={28} />,
-    titleTh: 'หอคอยนิรันดร์',
-    titleEn: 'The Boundless Spire',
-    descTh: 'ปีนหอคอยนิรันดร์ The Boundless Spire — ท้าทายดันเจี้ยนสุดโหดในแต่ละชั้น',
-    descEn: 'Climb The Boundless Spire — conquer deadly dungeons on each floor',
-  },
-  {
-    icon: <Shield size={28} />,
-    titleTh: 'PvP Arena',
-    titleEn: 'PvP Arena',
-    descTh: 'ต่อสู้กับผู้เล่นคนอื่นในสนามประลองแบบเรียลไทม์ พิสูจน์ความแกร่ง',
-    descEn: 'Challenge other players in real-time arena battles — prove your strength',
-  },
-  {
-    icon: <Sparkles size={28} />,
-    titleTh: 'อัพเกรดตัวละคร',
-    titleEn: 'Character Upgrades',
-    descTh: 'พัฒนาทักษะ อุปกรณ์ และรูปลักษณ์ให้แข็งแกร่ง เปลี่ยนอาวุธเปลี่ยนเกม',
-    descEn: 'Develop skills, gear, and appearances — switch weapons, shift the battlefield',
-  },
-  {
-    icon: <Users size={28} />,
-    titleTh: 'กิลด์ & เพื่อน',
-    titleEn: 'Guilds & Friends',
-    descTh: 'สร้างกิลด์ ร่วมมือกับเพื่อนเพื่อพิชิตบอสสุดโหดในดันเจี้ยนพิเศษ',
-    descEn: 'Build guilds and team up with friends to conquer deadly bosses in special dungeons',
-  },
-];
+/* Map icon name strings from CMS → Lucide components */
+const ICON_MAP: Record<string, LucideIcon> = {
+  swords: Swords,
+  map: Map,
+  castle: Castle,
+  shield: Shield,
+  sparkles: Sparkles,
+  users: Users,
+};
+
+interface GameGuideFeature {
+  icon: string;
+  titleEn: string;
+  titleTh: string;
+  descriptionEn: string;
+  descriptionTh: string;
+}
+
+interface GameGuidePageConfig {
+  heroImage: { url: string } | null;
+  badgeEn: string;
+  badgeTh: string;
+  titleEn: string;
+  titleTh: string;
+  subtitleEn: string;
+  subtitleTh: string;
+  features: GameGuideFeature[];
+}
 
 export default function GameGuidePage() {
   const { t } = useLang();
+  const [config, setConfig] = useState<GameGuidePageConfig | null>(null);
+  const [socialLinks, setSocialLinks] = useState<Record<string, string | null>>({});
+  const [footer, setFooter] = useState({
+    copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
+    termsUrl: '/terms',
+    privacyUrl: '/privacy',
+    supportUrl: '#',
+  });
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.gameGuidePage) setConfig(data.gameGuidePage);
+        if (data?.site?.socialLinks) setSocialLinks(data.site.socialLinks);
+        if (data?.site?.footer) setFooter(data.site.footer);
+      })
+      .catch(() => {});
+  }, []);
+
+  const badge = config ? t(config.badgeTh, config.badgeEn) : t('แนะนำเกม', 'GAME GUIDE');
+  const title = config ? t(config.titleTh, config.titleEn) : t('แนะนำเกม', 'Game Guide');
+  const subtitle = config
+    ? t(config.subtitleTh, config.subtitleEn)
+    : t('สัมผัสประสบการณ์ใหม่ใน Eternal Tower Saga', 'Experience the new era of Eternal Tower Saga');
+  const features = config?.features || [];
 
   return (
     <div className="landing-page">
@@ -71,19 +81,23 @@ export default function GameGuidePage() {
         {/* Hero Banner */}
         <section className="page-hero">
           <div className="page-hero-bg">
+            {config?.heroImage?.url && (
+              <Image
+                src={config.heroImage.url}
+                alt=""
+                fill
+                className="object-cover"
+                priority
+              />
+            )}
             <div className="page-hero-overlay" />
           </div>
           <div className="container-custom">
             <RevealSection>
               <div className="page-hero-content">
-                <span className="section-badge">GAME GUIDE</span>
-                <h1 className="page-hero-title">{t('แนะนำเกม', 'Game Guide')}</h1>
-                <p className="page-hero-subtitle">
-                  {t(
-                    'สัมผัสประสบการณ์ใหม่ใน Eternal Tower Saga — อาวุธเปลี่ยน เกมเปลี่ยน',
-                    'Experience the new era of Eternal Tower Saga — Switch your weapon, shift the battlefield',
-                  )}
-                </p>
+                <span className="section-badge">{badge}</span>
+                <h1 className="page-hero-title">{title}</h1>
+                <p className="page-hero-subtitle">{subtitle}</p>
               </div>
             </RevealSection>
           </div>
@@ -101,29 +115,31 @@ export default function GameGuidePage() {
             </RevealSection>
 
             <div className="highlights-grid">
-              {GAME_FEATURES.map((feat, i) => (
-                <RevealSection key={i} delay={i * 0.08}>
-                  <div className="highlight-card highlight-card-lg">
-                    <div className="highlight-icon">{feat.icon}</div>
-                    <h3 className="highlight-title">{t(feat.titleTh, feat.titleEn)}</h3>
-                    <p className="highlight-desc">{t(feat.descTh, feat.descEn)}</p>
-                  </div>
-                </RevealSection>
-              ))}
+              {features.map((feat, i) => {
+                const IconComponent = ICON_MAP[feat.icon?.toLowerCase()] || Sparkles;
+                return (
+                  <RevealSection key={i} delay={i * 0.08}>
+                    <div className="highlight-card highlight-card-lg">
+                      <div className="highlight-icon">
+                        <IconComponent size={28} />
+                      </div>
+                      <h3 className="highlight-title">{t(feat.titleTh, feat.titleEn)}</h3>
+                      <p className="highlight-desc">{t(feat.descriptionTh, feat.descriptionEn)}</p>
+                    </div>
+                  </RevealSection>
+                );
+              })}
+              {features.length === 0 && (
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', opacity: 0.5, padding: '3rem' }}>
+                  <p>{t('กำลังโหลด...', 'Loading...')}</p>
+                </div>
+              )}
             </div>
           </div>
         </section>
       </main>
 
-      <Footer
-        socialLinks={{}}
-        footer={{
-          copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
-          termsUrl: '/terms',
-          privacyUrl: '/privacy',
-          supportUrl: '#',
-        }}
-      />
+      <Footer socialLinks={socialLinks} footer={footer} />
     </div>
   );
 }

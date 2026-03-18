@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useLang } from '@/lib/lang-context';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
@@ -8,40 +9,56 @@ import ScrollProgress from '@/components/ui/ScrollProgress';
 import RevealSection from '@/components/ui/RevealSection';
 
 /* ═══════════════════════════════════════════════
-   STORY PAGE — เนื้อเรื่อง
-   Lore and background story of Eternal Tower Saga
-   Content from reference site
+   STORY PAGE — เนื้อเรื่อง (API-First)
+   All content fetched from CMS via /api/settings
    ═══════════════════════════════════════════════ */
 
-const STORY_SECTIONS = [
-  {
-    titleTh: 'หอคอยไร้ขอบเขต',
-    titleEn: 'The Boundless Spire',
-    contentTh: 'ณ ดินแดนลอยฟ้าแห่งอาร์คาเทีย (Arcatea) กลางเวหามีหอคอยลึกลับลอยเด่นอยู่เหนือเมฆา ผู้คนเรียกมันว่า "หอคอยไร้ขอบเขต" (The Boundless Spire) หอคอยที่ไม่มีผนัง ไม่มีหลังคา ไม่มีขอบเขตจำกัด มีเพียง "แท่นลอยฟ้า" ที่ต่อเนื่องกันเป็นชั้น ๆ ไต่ขึ้นไปบนท้องฟ้าเหมือนไม่มีที่สิ้นสุด',
-    contentEn: 'In the floating realm of Arcatea, a mysterious tower hovers above the clouds. People call it "The Boundless Spire" — a tower with no walls, no roof, no limits. Only floating platforms stacked in layers, climbing endlessly into the sky.',
-  },
-  {
-    titleTh: 'โลกเล็กๆ บนหอคอย',
-    titleEn: 'Small Worlds on the Tower',
-    contentTh: 'แต่ละชั้นของหอคอยคือ "โลกเล็ก ๆ" ที่ลอยแยกกันอยู่เหนือหุบเหวเวหา เชื่อมกันด้วยสะพานเวทมนตร์, ประตูมิติ, หรือทางเดินที่ปรากฏเพียงชั่วขณะเดียว ผู้คนเคยพยายามบินขึ้นไปแต่ทุกคนหายไปโดยไร้ร่องรอย...',
-    contentEn: 'Each floor of the tower is a "small world" floating above the void, connected by magical bridges, dimensional gates, or pathways that appear for only a moment. People have tried to fly up, but everyone disappeared without a trace...',
-  },
-  {
-    titleTh: 'การตื่นขึ้น',
-    titleEn: 'The Awakening',
-    contentTh: 'คุณคือนักโทษผู้ตื่นขึ้นมาบนแท่นหินลอยฟ้าชั้นล่างสุดโดยไม่รู้ว่าถูกจับมาเมื่อไหร่ หรือทำไม เสื้อผ้าขาดวิ่น มีเพียงกิ่งไม้แห้งที่คุณหยิบขึ้นมาจากพื้นดิน',
-    contentEn: 'You are a prisoner who awakens on the lowest floating platform, not knowing when or why you were captured. Clothes torn, with only a dry branch picked up from the ground.',
-  },
-  {
-    titleTh: 'เสียงเรียก',
-    titleEn: 'The Calling',
-    contentTh: '...และเสียงลึกลับที่กระซิบในใจว่า "ผู้ถูกเลือกแห่งเส้นทางท้องฟ้า จงไต่ขึ้น!! หากเจ้าต้องการอิสรภาพหรือ... ความจริง"',
-    contentEn: '...and a mysterious voice whispers in your mind: "Chosen one of the sky path, climb up!! If you seek freedom... or the truth."',
-  },
-];
+interface StorySection {
+  titleEn: string;
+  titleTh: string;
+  contentEn: string;
+  contentTh: string;
+}
+
+interface StoryPageConfig {
+  heroImage: { url: string } | null;
+  badgeEn: string;
+  badgeTh: string;
+  titleEn: string;
+  titleTh: string;
+  subtitleEn: string;
+  subtitleTh: string;
+  sections: StorySection[];
+}
 
 export default function StoryPage() {
   const { t } = useLang();
+  const [config, setConfig] = useState<StoryPageConfig | null>(null);
+  const [socialLinks, setSocialLinks] = useState<Record<string, string | null>>({});
+  const [footer, setFooter] = useState({
+    copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
+    termsUrl: '/terms',
+    privacyUrl: '/privacy',
+    supportUrl: '#',
+  });
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.storyPage) setConfig(data.storyPage);
+        if (data?.site?.socialLinks) setSocialLinks(data.site.socialLinks);
+        if (data?.site?.footer) setFooter(data.site.footer);
+      })
+      .catch(() => {});
+  }, []);
+
+  const badge = config ? t(config.badgeTh, config.badgeEn) : 'LORE';
+  const title = config ? t(config.titleTh, config.titleEn) : t('เนื้อเรื่อง', 'Story');
+  const subtitle = config
+    ? t(config.subtitleTh, config.subtitleEn)
+    : t('เรื่องราวแห่งดินแดน Arcatéa และหอคอยไร้ขอบเขต', 'The tale of Arcatéa and The Boundless Spire');
+  const sections = config?.sections || [];
 
   return (
     <div className="landing-page">
@@ -52,19 +69,23 @@ export default function StoryPage() {
         {/* Hero Banner */}
         <section className="page-hero page-hero-story">
           <div className="page-hero-bg">
+            {config?.heroImage?.url && (
+              <Image
+                src={config.heroImage.url}
+                alt=""
+                fill
+                className="object-cover"
+                priority
+              />
+            )}
             <div className="page-hero-overlay" />
           </div>
           <div className="container-custom">
             <RevealSection>
               <div className="page-hero-content">
-                <span className="section-badge">LORE</span>
-                <h1 className="page-hero-title">{t('เนื้อเรื่อง', 'Story')}</h1>
-                <p className="page-hero-subtitle">
-                  {t(
-                    'เรื่องราวแห่งดินแดน Arcatéa และหอคอยไร้ขอบเขต',
-                    'The tale of Arcatéa and The Boundless Spire',
-                  )}
-                </p>
+                <span className="section-badge">{badge}</span>
+                <h1 className="page-hero-title">{title}</h1>
+                <p className="page-hero-subtitle">{subtitle}</p>
               </div>
             </RevealSection>
           </div>
@@ -73,7 +94,7 @@ export default function StoryPage() {
         {/* Story Content */}
         <section className="section-story-content">
           <div className="container-custom">
-            {STORY_SECTIONS.map((section, i) => (
+            {sections.map((section, i) => (
               <RevealSection key={i} delay={i * 0.1}>
                 <div className="story-block">
                   <h2 className="story-block-title">{t(section.titleTh, section.titleEn)}</h2>
@@ -81,19 +102,16 @@ export default function StoryPage() {
                 </div>
               </RevealSection>
             ))}
+            {sections.length === 0 && (
+              <div className="story-block" style={{ textAlign: 'center', opacity: 0.5 }}>
+                <p>{t('กำลังโหลดเนื้อเรื่อง...', 'Loading story...')}</p>
+              </div>
+            )}
           </div>
         </section>
       </main>
 
-      <Footer
-        socialLinks={{}}
-        footer={{
-          copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
-          termsUrl: '/terms',
-          privacyUrl: '/privacy',
-          supportUrl: '#',
-        }}
-      />
+      <Footer socialLinks={socialLinks} footer={footer} />
     </div>
   );
 }
