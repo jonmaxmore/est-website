@@ -19,7 +19,7 @@ interface HeroProps {
       ctaTextEn?: string;
       ctaTextTh?: string;
       ctaLink?: string;
-      backgroundImage?: string | null;
+      backgroundImage?: { url: string } | null;
       backgroundVideo?: { url: string } | null;
     };
     storeButtons?: Array<{ platform: string; label: string; sublabel: string; url: string }>;
@@ -72,6 +72,8 @@ export default function HeroSection({ settings }: HeroProps) {
   ];
 
   const videoUrl = settings?.hero?.backgroundVideo?.url || null;
+  const bgImageUrl = settings?.hero?.backgroundImage?.url || null;
+  const isWebM = videoUrl?.endsWith('.webm');
 
   return (
     <section
@@ -91,19 +93,21 @@ export default function HeroSection({ settings }: HeroProps) {
             onLoadedData={() => setVideoLoaded(true)}
             className={`hero-video ${videoLoaded ? 'loaded' : ''}`}
           >
-            <source src={videoUrl} type="video/mp4" />
+            <source src={videoUrl} type={isWebM ? 'video/webm' : 'video/mp4'} />
           </video>
           <div className="hero-video-overlay" />
         </div>
       )}
 
-      {/* Parallax Background (fallback or additional layer) */}
-      <motion.div
-        className={`hero-bg-layer hero-bg-far ${videoUrl && videoLoaded ? 'hero-bg-hidden' : ''}`}
-        style={{ x: bgX, y: bgY }}
-      >
-        <Image src="/images/hero-bg.webp" alt="" fill className="object-cover" priority />
-      </motion.div>
+      {/* Parallax Background — CMS image only, no hardcoded fallback */}
+      {bgImageUrl && (
+        <motion.div
+          className={`hero-bg-layer hero-bg-far ${videoUrl && videoLoaded ? 'hero-bg-hidden' : ''}`}
+          style={{ x: bgX, y: bgY }}
+        >
+          <Image src={bgImageUrl} alt="" fill className="object-cover" priority />
+        </motion.div>
+      )}
 
       <LightRays />
       <FloatingParticles count={15} />

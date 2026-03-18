@@ -75,5 +75,107 @@ export const EventConfig: GlobalConfig = {
       relationTo: 'media',
       label: 'Event Page Background',
     },
+    {
+      name: 'heroImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Event Hero Image (optional)',
+      admin: { description: 'Displayed in the event hero section' },
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'badgeTextEn',
+          type: 'text',
+          defaultValue: 'PRE-REGISTER',
+          label: 'Badge Text (English)',
+          admin: { width: '50%' },
+        },
+        {
+          name: 'badgeTextTh',
+          type: 'text',
+          defaultValue: 'ลงทะเบียนล่วงหน้า',
+          label: 'Badge Text (Thai)',
+          admin: { width: '50%' },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'milestoneBadgeEn',
+          type: 'text',
+          defaultValue: 'MILESTONE REWARDS',
+          label: 'Milestone Badge (English)',
+          admin: { width: '50%' },
+        },
+        {
+          name: 'milestoneBadgeTh',
+          type: 'text',
+          defaultValue: 'รางวัลสะสม',
+          label: 'Milestone Badge (Thai)',
+          admin: { width: '50%' },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'milestoneTitleEn',
+          type: 'text',
+          defaultValue: 'Milestone Rewards',
+          label: 'Milestone Title (English)',
+          admin: { width: '50%' },
+        },
+        {
+          name: 'milestoneTitleTh',
+          type: 'text',
+          defaultValue: 'รางวัลสะสม Pre-Register',
+          label: 'Milestone Title (Thai)',
+          admin: { width: '50%' },
+        },
+      ],
+    },
+    {
+      name: 'footerText',
+      type: 'text',
+      defaultValue: '© 2026 Eternal Tower Saga. All rights reserved.',
+      label: 'Footer Text',
+    },
+    {
+      name: 'contentSections',
+      type: 'array',
+      label: 'Content Sections',
+      admin: { description: 'Flexible content blocks — text or image' },
+      fields: [
+        {
+          name: 'contentType',
+          type: 'select',
+          options: [
+            { label: 'Text', value: 'text' },
+            { label: 'Image', value: 'image' },
+          ],
+          defaultValue: 'text',
+          label: 'Content Type',
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'textEn', type: 'textarea', label: 'Text (English)', admin: { width: '50%', condition: (_, siblingData) => siblingData?.contentType === 'text' } },
+            { name: 'textTh', type: 'textarea', label: 'Text (Thai)', admin: { width: '50%', condition: (_, siblingData) => siblingData?.contentType === 'text' } },
+          ],
+        },
+        {
+          name: 'image',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Image',
+          admin: { condition: (_, siblingData) => siblingData?.contentType === 'image' },
+        },
+      ],
+    },
   ],
 }

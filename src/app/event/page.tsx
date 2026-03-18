@@ -53,6 +53,19 @@ interface StoreButton {
   url: string;
 }
 
+interface EventSettings {
+  badgeTextEn?: string;
+  badgeTextTh?: string;
+  milestoneBadgeEn?: string;
+  milestoneBadgeTh?: string;
+  milestoneTitleEn?: string;
+  milestoneTitleTh?: string;
+  footerText?: string;
+  countdownTarget?: string;
+  heroImage?: { url: string } | null;
+  backgroundImage?: { url: string } | null;
+  contentSections?: Array<{ contentType: string; textEn?: string; textTh?: string; image?: { url: string } | null }>;
+}
 
 /* ═══════════════════════════════════════════════
    DEFAULT MILESTONES (fallback if CMS unavailable)
@@ -66,8 +79,7 @@ const DEFAULT_MILESTONES: Milestone[] = [
   { threshold: 200000, label: '200,000', rewards: ['Fortune House ×1', 'Reset Potions ×4'] },
 ];
 
-// Stable target timestamp outside component
-const TARGET_DATE_TIMESTAMP = new Date('2026-04-02T23:59:59+07:00').getTime();
+const DEFAULT_TARGET = new Date('2026-04-02T23:59:59+07:00').getTime();
 
 /* ═══════════════════════════════════════════════
    EVENT PAGE — Premium Pre-Registration
@@ -86,10 +98,12 @@ export default function EventPage() {
   const [milestones, setMilestones] = useState<Milestone[]>(DEFAULT_MILESTONES);
   const [storeButtons, setStoreButtons] = useState<StoreButton[]>([]);
   const [socialLinks, setSocialLinks] = useState<Record<string, string | null>>({});
+  const [eventSettings, setEventSettings] = useState<EventSettings>({});
+  const [countdownTarget, setCountdownTarget] = useState(DEFAULT_TARGET);
 
   const { lang, toggle, t } = useLang();
 
-  const countdown = useCountdown(TARGET_DATE_TIMESTAMP);
+  const countdown = useCountdown(countdownTarget);
 
   // Fetch CMS data
   useEffect(() => {
@@ -114,6 +128,12 @@ export default function EventPage() {
       .then(data => {
         if (data.storeButtons) setStoreButtons(data.storeButtons);
         if (data.site?.socialLinks) setSocialLinks(data.site.socialLinks);
+        if (data.event) {
+          setEventSettings(data.event);
+          if (data.event.countdownTarget) {
+            setCountdownTarget(new Date(data.event.countdownTarget).getTime());
+          }
+        }
       })
       .catch(() => {});
   }, []);
@@ -254,7 +274,7 @@ export default function EventPage() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          <span className="event-badge-text">PRE-REGISTER</span>
+          <span className="event-badge-text">{t(eventSettings.badgeTextTh || 'ลงทะเบียนล่วงหน้า', eventSettings.badgeTextEn || 'PRE-REGISTER')}</span>
           <span className="event-badge-shimmer" />
         </motion.div>
 
@@ -284,6 +304,17 @@ export default function EventPage() {
               <span className="countdown-label">{item.label}</span>
             </div>
           ))}
+        </motion.div>
+
+        {/* === REGISTRATION COUNT — Large Prominent Display === */}
+        <motion.div
+          className="event-reg-counter"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.7 }}
+        >
+          <span className="event-reg-count-number">{registrationCount.toLocaleString()}</span>
+          <span className="event-reg-count-label">{t('ผู้ลงทะเบียนล่วงหน้าแล้ว', 'Pre-Registered')}</span>
         </motion.div>
 
         {/* CTA / Success State */}
@@ -374,8 +405,8 @@ export default function EventPage() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="section-header">
-              <span className="section-badge">MILESTONE REWARDS</span>
-              <h2 className="section-title-gold">{t('รางวัลสะสม Pre-Register', 'Milestone Rewards')}</h2>
+              <span className="section-badge">{t(eventSettings.milestoneBadgeTh || 'รางวัลสะสม', eventSettings.milestoneBadgeEn || 'MILESTONE REWARDS')}</span>
+              <h2 className="section-title-gold">{t(eventSettings.milestoneTitleTh || 'รางวัลสะสม Pre-Register', eventSettings.milestoneTitleEn || 'Milestone Rewards')}</h2>
               <div className="title-ornament"><span /><span /><span /></div>
             </div>
 
@@ -433,7 +464,7 @@ export default function EventPage() {
       <footer className="event-footer">
         <div className="event-footer-inner">
           <Image src="/images/logo.webp" alt="EST" width={120} height={80} className="footer-logo" />
-          <p className="event-footer-copy">© 2026 Eternal Tower Saga. All rights reserved.</p>
+          <p className="event-footer-copy">{eventSettings.footerText || '© 2026 Eternal Tower Saga. All rights reserved.'}</p>
         </div>
       </footer>
 

@@ -47,6 +47,25 @@ export async function GET() {
         descriptionTh: eventConfig.descriptionTh,
         countdownTarget: eventConfig.countdownTarget,
         registrationOpen: eventConfig.registrationOpen,
+        badgeTextEn: eventConfig.badgeTextEn,
+        badgeTextTh: eventConfig.badgeTextTh,
+        milestoneBadgeEn: eventConfig.milestoneBadgeEn,
+        milestoneBadgeTh: eventConfig.milestoneBadgeTh,
+        milestoneTitleEn: eventConfig.milestoneTitleEn,
+        milestoneTitleTh: eventConfig.milestoneTitleTh,
+        footerText: eventConfig.footerText,
+        heroImage: typeof eventConfig.heroImage === 'object' && eventConfig.heroImage ? {
+          url: eventConfig.heroImage.url,
+        } : null,
+        backgroundImage: typeof eventConfig.backgroundImage === 'object' && eventConfig.backgroundImage ? {
+          url: eventConfig.backgroundImage.url,
+        } : null,
+        contentSections: (eventConfig.contentSections as Array<Record<string, unknown>>)?.map((s) => ({
+          contentType: s.contentType,
+          textEn: s.textEn,
+          textTh: s.textTh,
+          image: typeof s.image === 'object' && s.image ? { url: (s.image as Record<string, string>).url } : null,
+        })) || [],
       },
       hero: {
         taglineEn: heroSection.taglineEn,
