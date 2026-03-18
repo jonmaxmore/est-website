@@ -69,16 +69,11 @@ interface CMSSettings {
 
 interface CMSCharacter {
   id: number;
-  nameEn: string;
-  nameTh: string;
-  classEn: string;
-  classTh: string;
-  weaponClass: string;
-  descriptionEn: string;
-  descriptionTh: string;
-  accentColor: string;
-  portrait: string | null;
+  name?: string;
+  portrait?: string | null;
+  infoImage?: string | null;
   backgroundImage?: string | null;
+  icon?: string | null;
 }
 
 interface CMSNews {
@@ -121,11 +116,21 @@ export default function LandingPage() {
           fetch('/api/news?limit=3').then((r) => r.json()).catch(() => ({ articles: [] })),
         ]);
         if (settingsRes) setSettings(settingsRes);
-        if (charsRes?.characters) setCharacters(charsRes.characters.map((c: Record<string, unknown>) => ({
-          ...c,
-          portrait: typeof c.portrait === 'object' && c.portrait ? (c.portrait as { url: string }).url : (c.portrait as string | null),
-          backgroundImage: typeof c.backgroundImage === 'object' && c.backgroundImage ? (c.backgroundImage as { url: string }).url : (c.backgroundImage as string | null),
-        })));
+        if (charsRes?.characters) setCharacters(charsRes.characters.map((c: Record<string, unknown>) => {
+          const extractUrl = (field: unknown): string | null => {
+            if (typeof field === 'object' && field && 'url' in (field as Record<string, unknown>)) return (field as { url: string }).url;
+            if (typeof field === 'string') return field;
+            return null;
+          };
+          return {
+            id: c.id as number,
+            name: c.name as string,
+            portrait: extractUrl(c.portrait),
+            infoImage: extractUrl(c.infoImage),
+            backgroundImage: extractUrl(c.backgroundImage),
+            icon: extractUrl(c.icon),
+          };
+        }));
         if (newsRes?.articles) setNews(newsRes.articles);
       } catch {
         // CMS fetch failed — fall back to defaults
@@ -173,7 +178,7 @@ export default function LandingPage() {
         {/* ═══ SECTION 2: CHARACTERS — Full-width cinematic ═══ */}
         <section id="characters" className="section-transition-top">
           <RevealSection>
-            <CharacterShowcase characters={characters} sectionConfig={settings?.characters} />
+            <CharacterShowcase characters={characters} />
           </RevealSection>
         </section>
 

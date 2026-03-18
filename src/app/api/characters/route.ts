@@ -1,46 +1,27 @@
 import { NextResponse } from 'next/server'
-import { getPayloadClient } from '@/lib/payload'
-
-export const dynamic = 'force-dynamic'
+import { getPayload } from 'payload'
+import config from '@payload-config'
 
 export async function GET() {
   try {
-    const payload = await getPayloadClient()
-
-    // Get characters from CMS, sorted by sortOrder
+    const payload = await getPayload({ config })
     const result = await payload.find({
       collection: 'characters',
-      where: {
-        visible: { equals: true },
-      },
+      where: { visible: { equals: true } },
       sort: 'sortOrder',
-      limit: 50,
+      limit: 20,
     })
 
     const characters = result.docs.map((char) => ({
       id: char.id,
-      nameEn: char.nameEn,
-      nameTh: char.nameTh,
-      classEn: char.classEn,
-      classTh: char.classTh,
-      weaponClass: char.weaponClass,
-      faction: char.faction,
-      descriptionEn: char.descriptionEn,
-      descriptionTh: char.descriptionTh,
-      portrait: typeof char.portrait === 'object' && char.portrait ? {
-        url: char.portrait.url,
-        alt: char.portrait.alt,
-      } : null,
-      backgroundImage: typeof char.backgroundImage === 'object' && char.backgroundImage ? {
-        url: (char.backgroundImage as { url: string }).url,
-      } : null,
-      accentColor: char.accentColor,
-      sortOrder: char.sortOrder,
+      name: char.name || '',
+      portrait: typeof char.portrait === 'object' && char.portrait ? (char.portrait as { url?: string }).url || null : null,
+      infoImage: typeof char.infoImage === 'object' && char.infoImage ? (char.infoImage as { url?: string }).url || null : null,
+      backgroundImage: typeof char.backgroundImage === 'object' && char.backgroundImage ? (char.backgroundImage as { url?: string }).url || null : null,
+      icon: typeof char.icon === 'object' && char.icon ? (char.icon as { url?: string }).url || null : null,
     }))
 
-    return NextResponse.json({ characters }, {
-      headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120' },
-    })
+    return NextResponse.json({ characters })
   } catch (error) {
     console.error('Characters API error:', error)
     return NextResponse.json({ error: 'Failed to fetch characters' }, { status: 500 })

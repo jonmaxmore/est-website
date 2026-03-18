@@ -3,58 +3,98 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { useLang } from '@/lib/lang-context';
-import { hexToRgba } from '@/lib/color-utils';
-import FloatingParticles from '@/components/ui/FloatingParticles';
-import { WEAPON_ICONS, CLASS_COLORS } from '@/components/ui/StoreIcons';
+
+/* ──────────────────────────────────────────────
+   Image-Only Character Showcase
+   No text from CMS — everything is images:
+   1. Portrait (60% left)
+   2. Weapon info image (right)
+   3. Background (full section)
+   4. Selector icons (bottom-right)
+   ────────────────────────────────────────────── */
+
+interface CharacterData {
+  id: number;
+  portrait: string;
+  infoImage: string;
+  backgroundImage: string;
+  icon: string;
+  name: string; // admin-only, for alt text
+}
+
+// Mockup data — will be replaced by CMS when images are uploaded
+const MOCKUP_CHARACTERS: CharacterData[] = [
+  {
+    id: 1,
+    name: 'Arthur',
+    portrait: '/images/characters/arthur.png',
+    infoImage: '/images/characters/weapon-info-sword.png',
+    backgroundImage: '/images/hero-bg.png',
+    icon: '/images/characters/arthur.png',
+  },
+  {
+    id: 2,
+    name: 'Elena',
+    portrait: '/images/characters/elena.png',
+    infoImage: '/images/characters/weapon-info-bow.png',
+    backgroundImage: '/images/hero-bg.png',
+    icon: '/images/characters/elena.png',
+  },
+  {
+    id: 3,
+    name: 'Kaelen',
+    portrait: '/images/characters/kaelen.png',
+    infoImage: '/images/characters/weapon-info-wand.png',
+    backgroundImage: '/images/hero-bg.png',
+    icon: '/images/characters/kaelen.png',
+  },
+  {
+    id: 4,
+    name: 'Lyra',
+    portrait: '/images/characters/lyra.png',
+    infoImage: '/images/characters/weapon-info-axe.png',
+    backgroundImage: '/images/hero-bg.png',
+    icon: '/images/characters/lyra.png',
+  },
+];
 
 interface CMSCharacter {
   id: number;
-  nameEn: string;
-  nameTh: string;
-  classEn: string;
-  classTh: string;
-  weaponClass: string;
-  descriptionEn: string;
-  descriptionTh: string;
-  accentColor: string;
-  portrait: string | null;
+  portrait?: string | null;
+  infoImage?: string | null;
   backgroundImage?: string | null;
+  icon?: string | null;
+  name?: string;
 }
 
-interface SectionConfig {
-  bgImage: { url: string } | null;
-  badgeEn: string; badgeTh: string;
-  titleEn: string; titleTh: string;
-  voiceButtonEn: string; voiceButtonTh: string;
-}
-
-export default function CharacterShowcase({ characters, sectionConfig }: { characters: CMSCharacter[]; sectionConfig?: SectionConfig }) {
+export default function CharacterShowcase({ characters }: { characters?: CMSCharacter[] }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [hovered, setHovered] = useState(false);
-  const { t } = useLang();
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Auto-rotation
-  const nextCharacter = useCallback(() => {
-    setActiveIdx((prev) => (prev + 1) % characters.length);
-  }, [characters.length]);
+  // Use CMS data if available, otherwise mockup
+  const charList: CharacterData[] = (characters && characters.length > 0)
+    ? characters.map((c, i) => ({
+        id: c.id || i,
+        name: c.name || `Character ${i + 1}`,
+        portrait: c.portrait || MOCKUP_CHARACTERS[i % MOCKUP_CHARACTERS.length].portrait,
+        infoImage: c.infoImage || MOCKUP_CHARACTERS[i % MOCKUP_CHARACTERS.length].infoImage,
+        backgroundImage: c.backgroundImage || MOCKUP_CHARACTERS[i % MOCKUP_CHARACTERS.length].backgroundImage,
+        icon: c.icon || c.portrait || MOCKUP_CHARACTERS[i % MOCKUP_CHARACTERS.length].icon,
+      }))
+    : MOCKUP_CHARACTERS;
+
+  const nextChar = useCallback(() => {
+    setActiveIdx((prev) => (prev + 1) % charList.length);
+  }, [charList.length]);
 
   useEffect(() => {
-    if (hovered || characters.length <= 1) return;
-    timerRef.current = setInterval(nextCharacter, 6000);
+    if (hovered || charList.length <= 1) return;
+    timerRef.current = setInterval(nextChar, 6000);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [hovered, nextCharacter, characters.length]);
+  }, [hovered, nextChar, charList.length]);
 
-  if (!characters.length) return null;
-
-  const active = characters[activeIdx];
-  const color = active.accentColor || CLASS_COLORS[active.weaponClass] || '#FFD700';
-  const accent30 = hexToRgba(color, 0.3);
-  const accent15 = hexToRgba(color, 0.15);
-
-  // Determine background: per-character BG image → section BG → accent gradient
-  const bgImageUrl = active.backgroundImage || sectionConfig?.bgImage?.url || null;
+  const active = charList[activeIdx];
 
   return (
     <section
@@ -62,150 +102,111 @@ export default function CharacterShowcase({ characters, sectionConfig }: { chara
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* ─── Animated Background ─── */}
+      {/* ─── Layer 1: Full Background ─── */}
       <AnimatePresence mode="wait">
         <motion.div
           key={`bg-${active.id}`}
-          className="char-showcase-bg"
+          className="char-bg-layer"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8 }}
-          style={{
-            background: bgImageUrl
-              ? `linear-gradient(135deg, ${accent30} 0%, rgba(10,14,33,0.4) 50%, ${accent15} 100%)`
-              : `linear-gradient(135deg, ${accent30} 0%, rgba(10,14,33,0.95) 50%, ${accent15} 100%)`,
-          }}
         >
-          {bgImageUrl && (
-            <Image
-              src={bgImageUrl}
-              alt=""
-              fill
-              className="char-showcase-bg-img"
-              priority
-            />
-          )}
+          <Image
+            src={active.backgroundImage}
+            alt=""
+            fill
+            className="char-bg-img"
+            priority
+          />
         </motion.div>
       </AnimatePresence>
 
-      <FloatingParticles count={6} />
+      {/* White gradient top */}
+      <div className="char-gradient-top" />
+      {/* Dark gradient bottom */}
+      <div className="char-gradient-bottom" />
 
-      <div className="char-showcase-inner">
-        {/* ─── LEFT: Full-bleed Portrait ─── */}
-        <div className="char-portrait-zone">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active.id}
-              className="char-portrait-full"
-              initial={{ opacity: 0, scale: 0.92, x: -40 }}
-              animate={{ opacity: 1, scale: 1, x: 0 }}
-              exit={{ opacity: 0, scale: 0.92, x: 40 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {/* Glow behind character */}
-              <div
-                className="char-portrait-glow"
-                style={{ background: `radial-gradient(ellipse at 50% 60%, ${accent30}, transparent 70%)` }}
-              />
-              {active.portrait && (
-                <Image
-                  src={active.portrait}
-                  alt={active.nameEn}
-                  width={600}
-                  height={720}
-                  className="char-portrait-img-full"
-                  priority
-                />
-              )}
-            </motion.div>
-          </AnimatePresence>
+      {/* ─── Layer 2: Character Portrait (60% left) ─── */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`portrait-${active.id}`}
+          className="char-portrait-layer"
+          initial={{ opacity: 0, x: -60, scale: 0.95 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          exit={{ opacity: 0, x: 60, scale: 0.95 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Image
+            src={active.portrait}
+            alt={active.name}
+            width={800}
+            height={900}
+            className="char-portrait-img"
+            priority
+          />
+        </motion.div>
+      </AnimatePresence>
 
-          {/* Play button overlay */}
-          <button className="char-play-btn" aria-label="Play character voice line" style={{ borderColor: `${color}66` }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill={color}>
-              <polygon points="6,3 20,12 6,21" />
+      {/* ─── Layer 3: Weapon Info Image (right side) ─── */}
+      <div className="char-info-layer">
+        {/* Video/Play button card */}
+        <div className="char-play-card">
+          <button className="char-play-circle" aria-label="Play character video">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <polygon points="10,8 16,12 10,16" fill="currentColor" />
             </svg>
           </button>
         </div>
 
-        {/* ─── RIGHT: Info Panel ─── */}
-        <div className="char-info-zone">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active.id}
-              className="char-info-inner"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -30 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              {/* Weapon label */}
-              <div className="char-weapon-label">
-                <span className="char-weapon-prefix">Weapon :</span>
-                <h2 className="char-weapon-name" style={{ color }}>{active.weaponClass.replace(/_/g, ' ')}</h2>
-              </div>
+        {/* Weapon info image */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`info-${active.id}`}
+            className="char-weapon-info-img-wrapper"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+          >
+            <Image
+              src={active.infoImage}
+              alt={`${active.name} weapon info`}
+              width={500}
+              height={250}
+              className="char-weapon-info-img"
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
-              {/* Character name */}
-              <div className="char-name-block">
-                <span className="char-class-tag">
-                  {WEAPON_ICONS[active.weaponClass] || '⚔️'} {active.classEn}
-                </span>
-                <h3 className="char-hero-name" style={{ color }}>{active.nameEn}</h3>
-                <p className="char-hero-name-th">{active.nameTh} — {active.classTh}</p>
-              </div>
+      {/* ─── Layer 4: Character Selector Icons ─── */}
+      <div className="char-icon-selector">
+        {charList.map((char, i) => (
+          <motion.button
+            key={char.id}
+            className={`char-icon-btn ${i === activeIdx ? 'active' : ''}`}
+            onClick={() => setActiveIdx(i)}
+            whileHover={{ scale: 1.15 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label={`Select ${char.name}`}
+          >
+            <Image
+              src={char.icon}
+              alt={char.name}
+              width={60}
+              height={60}
+              className="char-icon-img"
+            />
+          </motion.button>
+        ))}
+      </div>
 
-              {/* Divider */}
-              <div className="char-divider">
-                <span className="char-divider-diamond" style={{ background: color }} />
-                <span className="char-divider-line" style={{ background: `linear-gradient(90deg, ${color}, transparent)` }} />
-                <span className="char-divider-diamond" style={{ background: color }} />
-              </div>
-
-              {/* Description */}
-              <p className="char-description">
-                {t(active.descriptionTh, active.descriptionEn) || active.descriptionEn}
-              </p>
-
-              {/* Voice line */}
-              <button className="char-voice-action" style={{ borderColor: `${color}44`, color }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill={color}>
-                  <polygon points="6,3 20,12 6,21" />
-                </svg>
-                {t(sectionConfig?.voiceButtonTh || 'ฟังเสียงตัวละคร', sectionConfig?.voiceButtonEn || 'Listen to Voice Line')}
-              </button>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* ─── Character Selector Avatars ─── */}
-          <div className="char-avatar-row">
-            {characters.map((char, i) => {
-              const c = char.accentColor || CLASS_COLORS[char.weaponClass] || '#FFD700';
-              return (
-                <motion.button
-                  key={char.id}
-                  className={`char-avatar-btn ${i === activeIdx ? 'active' : ''}`}
-                  onClick={() => setActiveIdx(i)}
-                  whileHover={{ scale: 1.12 }}
-                  whileTap={{ scale: 0.92 }}
-                  style={i === activeIdx ? { borderColor: c, boxShadow: `0 0 20px ${c}55` } : {}}
-                >
-                  {char.portrait ? (
-                    <Image
-                      src={char.portrait}
-                      alt={char.nameEn}
-                      width={56}
-                      height={56}
-                      className="char-avatar-img"
-                    />
-                  ) : (
-                    <span className="char-avatar-fallback">{WEAPON_ICONS[char.weaponClass] || '⚔️'}</span>
-                  )}
-                </motion.button>
-              );
-            })}
-          </div>
-        </div>
+      {/* Terms & Policy link */}
+      <div className="char-terms">
+        <span className="char-terms-icon">📋</span>
+        <span>Terms &amp; Policy</span>
       </div>
     </section>
   );
