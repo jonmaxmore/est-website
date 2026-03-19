@@ -52,8 +52,8 @@ export default function CharacterShowcase({ characters }: { characters?: Charact
   // UI panels: front layer, moves fastest → creates pop-up depth
   const uiY = useTransform(scrollYProgress, [0, 1], ['20%', '-20%']);
 
-  // If no CMS data, render nothing
-  if (charList.length === 0) return null;
+  // If no CMS data, render minimal container (ref must stay attached for useScroll)
+  if (charList.length === 0) return <section ref={containerRef} className="char-showcase" style={{ display: 'none' }} />;
 
   const active = charList[activeIdx];
 
