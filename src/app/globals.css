@@ -1,13 +1,13 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
-/* ═══════════════════════════════════════════════════
-   Eternal Tower Saga — Premium Game Design System
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   Eternal Tower Saga â€” Premium Game Design System
    Theme: Stylized 3D Game Art (matching existing site)
-   ═══════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 @layer base {
   :root {
-    /* Primary Palette — from existing site */
+    /* Primary Palette â€” from existing site */
     --sky-blue: #87CEEB;
     --royal-blue: #1E6FBF;
     --medium-blue: #2B7FC9;
@@ -76,9 +76,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    L A Y O U T
-   ═══════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 @layer components {
   .container-custom {
@@ -89,7 +89,7 @@
 
   .landing-page { position: relative; }
 
-  /* ─── NAVIGATION ─── */
+  /* â”€â”€â”€ NAVIGATION â”€â”€â”€ */
   .main-nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -311,7 +311,7 @@
     transform: translateY(-7px) rotate(-45deg);
   }
 
-  /* ─── HERO SECTION ─── */
+  /* â”€â”€â”€ HERO SECTION â”€â”€â”€ */
   .hero-section {
     position: relative;
     height: 100dvh;
@@ -332,7 +332,7 @@
     flex-wrap: nowrap;
   }
 
-  /* Watch Trailer button — glassmorphism, clearly visible */
+  /* Watch Trailer button â€” glassmorphism, clearly visible */
   .trailer-play-btn {
     display: inline-flex;
     align-items: center;
@@ -379,7 +379,7 @@
     margin-top: 0.5rem;
   }
 
-  /* Store badge images — see canonical .hero-store-badges below (~line 520) */
+  /* Store badge images â€” see canonical .hero-store-badges below (~line 520) */
 
   @media (max-width: 480px) {
     .hero-store-badges {
@@ -523,7 +523,7 @@
     min-height: 100dvh;
   }
 
-  /* Bottom action zone — no box, natural flow over gradient */
+  /* Bottom action zone â€” no box, natural flow over gradient */
   .hero-bottom-actions {
     display: flex;
     flex-direction: column;
@@ -659,7 +659,7 @@
     max-width: 520px;
   }
 
-  /* CTA Button — premium with glow */
+  /* CTA Button â€” premium with glow */
   .hero-cta {
     position: relative;
     display: inline-flex;
@@ -742,7 +742,7 @@
     opacity: 0.6;
   }
 
-  /* ─── FLOATING PARTICLES ─── */
+  /* â”€â”€â”€ FLOATING PARTICLES â”€â”€â”€ */
   .particle-field {
     position: absolute;
     inset: 0;
@@ -766,7 +766,7 @@
     100% { transform: translateY(-80vh) translateX(-10px) scale(0.2); opacity: 0; }
   }
 
-  /* ─── LIGHT RAYS ─── */
+  /* â”€â”€â”€ LIGHT RAYS â”€â”€â”€ */
   .light-rays {
     position: absolute;
     inset: 0;
@@ -794,7 +794,7 @@
     50% { opacity: 0.7; }
   }
 
-  /* ─── SECTION STYLING ─── */
+  /* â”€â”€â”€ SECTION STYLING â”€â”€â”€ */
   .section-bg-overlay {
     position: absolute;
     inset: 0;
@@ -862,7 +862,7 @@
   }
 
 
-  /* ═══ CHARACTER SHOWCASE — Polished Reference Layout ═══ */
+  /* â•â•â• CHARACTER SHOWCASE â€” Polished Reference Layout â•â•â• */
   .char-showcase {
     position: relative;
     width: 100%;
@@ -872,7 +872,7 @@
     background: #0a0e21;
   }
 
-  /* ── Layer 1: Background ── */
+  /* â”€â”€ Layer 1: Background â”€â”€ */
   .char-bg-layer {
     position: absolute;
     inset: 0;
@@ -907,7 +907,7 @@
     pointer-events: none;
   }
 
-  /* ── Layer 2: Portrait — Centered on triangle background ── */
+  /* â”€â”€ Layer 2: Portrait â€” Centered on triangle background â”€â”€ */
   .char-portrait-layer {
     position: absolute;
     top: 0;
@@ -930,7 +930,7 @@
     filter: drop-shadow(8px 0 30px rgba(0,0,0,0.4));
   }
 
-  /* ── Layer 3: Right Panel (Movie Clip + Weapon Info) — Centered, 3x larger ── */
+  /* â”€â”€ Layer 3: Right Panel (Movie Clip + Weapon Info) â€” Centered, 3x larger â”€â”€ */
   .char-right-panel {
     position: absolute;
     left: 50%;
@@ -986,7 +986,7 @@
     transform: scale(1.08);
   }
 
-  /* Weapon Info — 3x larger, centered */
+  /* Weapon Info â€” 3x larger, centered */
   .char-weapon-info {
     width: 100%;
   }
@@ -998,7 +998,7 @@
     filter: drop-shadow(0 4px 16px rgba(0,0,0,0.3));
   }
 
-  /* ── Layer 4: Character Icon Selectors — Centered bottom, 2x larger ── */
+  /* â”€â”€ Layer 4: Character Icon Selectors â€” Centered bottom, 2x larger â”€â”€ */
   .char-icon-selector {
     position: absolute;
     bottom: 2.5rem;
@@ -1067,7 +1067,7 @@
                 radial-gradient(circle at 0% 50%, rgba(140,200,255,0.8) 3px, transparent 3px);
   }
 
-  /* ── Mobile Responsive ── */
+  /* â”€â”€ Mobile Responsive â”€â”€ */
   @media (max-width: 768px) {
     .char-showcase {
       height: 100vh;
@@ -1144,7 +1144,7 @@
     }
   }
 
-  /* ─── FEATURES SECTION ─── */
+  /* â”€â”€â”€ FEATURES SECTION â”€â”€â”€ */
   .section-features {
     position: relative;
     padding: 6rem 0;
@@ -1218,7 +1218,7 @@
     line-height: 1.5;
   }
 
-  /* ─── NEWS SECTION ─── */
+  /* â”€â”€â”€ NEWS SECTION â”€â”€â”€ */
   .section-news {
     position: relative;
     padding: 6rem 0;
@@ -1246,7 +1246,7 @@
     border-color: rgba(255,255,255,0.15);
   }
 
-  /* .news-card-thumb — see canonical version below with position:relative + overflow:hidden */
+  /* .news-card-thumb â€” see canonical version below with position:relative + overflow:hidden */
 
   .news-card-emoji { font-size: 3rem; }
 
@@ -1276,7 +1276,7 @@
     color: rgba(255,255,255,0.4);
   }
 
-  /* ─── FOOTER ─── */
+  /* â”€â”€â”€ FOOTER â”€â”€â”€ */
   .main-footer {
     padding: 0;
     border-top: 1px solid rgba(255,255,255,0.06);
@@ -1501,7 +1501,7 @@
     }
   }
 
-  /* ─── ORNATE FRAME (event page milestone) ─── */
+  /* â”€â”€â”€ ORNATE FRAME (event page milestone) â”€â”€â”€ */
   .ornate-frame {
     position: relative;
     background: rgba(255, 255, 255, 0.95);
@@ -1532,7 +1532,7 @@
     border-radius: 0 0 5px 0;
   }
 
-  /* ─── BUTTONS (shared) ─── */
+  /* â”€â”€â”€ BUTTONS (shared) â”€â”€â”€ */
   .btn-cta {
     display: inline-flex;
     align-items: center;
@@ -1646,7 +1646,7 @@
 
   .milestone-node.unlocked { background: var(--gold); }
 
-  /* ─── SCROLL PROGRESS BAR ─── */
+  /* â”€â”€â”€ SCROLL PROGRESS BAR â”€â”€â”€ */
   .scroll-progress-bar {
     position: fixed;
     top: 0;
@@ -1659,7 +1659,7 @@
     box-shadow: 0 0 10px rgba(212, 168, 67, 0.5);
   }
 
-  /* ─── ORNAMENTAL DIVIDER ─── */
+  /* â”€â”€â”€ ORNAMENTAL DIVIDER â”€â”€â”€ */
   .ornament-divider {
     display: flex;
     align-items: center;
@@ -1697,7 +1697,7 @@
     50% { opacity: 1; text-shadow: 0 0 10px rgba(212,168,67,0.5); }
   }
 
-  /* ─── HERO TAGLINE EN ─── */
+  /* â”€â”€â”€ HERO TAGLINE EN â”€â”€â”€ */
   .hero-tagline-en {
     font-size: clamp(0.8rem, 1.5vw, 1rem);
     color: rgba(255,255,255,0.5);
@@ -1707,7 +1707,7 @@
     text-shadow: 0 2px 8px rgba(0,0,0,0.4);
   }
 
-  /* ─── CTA SHIMMER ─── */
+  /* â”€â”€â”€ CTA SHIMMER â”€â”€â”€ */
   .hero-cta-shimmer {
     position: absolute;
     top: 0;
@@ -1730,9 +1730,7 @@
     100% { left: 100%; }
   }
 
-  /* (old char-class-badge / char-name-display moved to .char-showcase block above) */
-
-  /* ─── NEWS CARD THUMB OVERLAY ─── */
+  /* â”€â”€â”€ NEWS CARD THUMB OVERLAY â”€â”€â”€ */
   .news-card-thumb {
     aspect-ratio: 16 / 9;
     background: linear-gradient(135deg, var(--dark-navy), var(--royal-blue));
@@ -1750,15 +1748,15 @@
     pointer-events: none;
   }
 
-  /* ─── FOOTER BRAND ─── */
+  /* â”€â”€â”€ FOOTER BRAND â”€â”€â”€ */
   .footer-brand {
     margin-bottom: 0.5rem;
   }
 
-  /* .footer-logo — merged into canonical declaration above */
+  /* .footer-logo â€” merged into canonical declaration above */
 }
 
-/* ─── Utilities ─── */
+/* â”€â”€â”€ Utilities â”€â”€â”€ */
 @layer utilities {
   .text-gradient-gold {
     background: linear-gradient(135deg, var(--gold-light), var(--gold));
@@ -1776,7 +1774,7 @@
   }
 }
 
-/* ─── RESPONSIVE ─── */
+/* â”€â”€â”€ RESPONSIVE â”€â”€â”€ */
 @media (max-width: 1024px) {
   .nav-links { display: none; }
   .char-layout { grid-template-columns: 1fr; }
@@ -1798,9 +1796,9 @@
   .event-modal { margin: 1rem; padding: 1.5rem; }
 }
 
-/* ═══════════════════════════════════════════════════
-   E V E N T   P A G E   —   Premium Dark Fantasy
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   E V E N T   P A G E   â€”   Premium Dark Fantasy
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @layer components {
   .event-page {
     position: relative;
@@ -1811,7 +1809,7 @@
     font-family: var(--font-body);
   }
 
-  /* ─── EVENT NAV ─── */
+  /* â”€â”€â”€ EVENT NAV â”€â”€â”€ */
   .event-nav {
     position: relative;
     z-index: 20;
@@ -1840,7 +1838,7 @@
   }
   .event-back-link:hover { color: white; }
 
-  /* ─── EVENT HERO ─── */
+  /* â”€â”€â”€ EVENT HERO â”€â”€â”€ */
   .event-hero {
     position: relative;
     z-index: 10;
@@ -1868,7 +1866,7 @@
     filter: drop-shadow(0 8px 30px rgba(0,0,0,0.5));
   }
 
-  /* ─── PRE-REGISTER BADGE ─── */
+  /* â”€â”€â”€ PRE-REGISTER BADGE â”€â”€â”€ */
   .event-badge {
     position: relative;
     display: inline-flex;
@@ -1899,7 +1897,7 @@
     animation: ctaShimmer 3s ease-in-out infinite;
   }
 
-  /* ─── COUNTDOWN ─── */
+  /* â”€â”€â”€ COUNTDOWN â”€â”€â”€ */
   .event-countdown {
     display: flex;
     justify-content: center;
@@ -1936,7 +1934,7 @@
     letter-spacing: 0.08em;
   }
 
-  /* ─── REGISTRATION COUNTER ─── */
+  /* â”€â”€â”€ REGISTRATION COUNTER â”€â”€â”€ */
   .event-reg-counter {
     display: flex;
     flex-direction: column;
@@ -1975,493 +1973,11 @@
     }
   }
 
-  /* ─── EVENT CTA ─── */
-  .event-cta {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.9rem 3rem;
-    border-radius: 50px;
-    background: linear-gradient(135deg, var(--cta-blue), var(--medium-blue));
-    border: 2px solid rgba(255,255,255,0.3);
-    cursor: pointer;
-    overflow: hidden;
-    transition: all 0.4s var(--ease-out-expo);
-    margin-bottom: 1.5rem;
-  }
 
-  .event-cta:hover { border-color: rgba(255,255,255,0.6); }
 
-  .event-cta-text {
-    position: relative;
-    z-index: 2;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: white;
-    letter-spacing: 0.02em;
-  }
-
-  /* ─── SUCCESS CARD ─── */
-  .event-success-card {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 16px;
-    padding: 1.5rem 2rem;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    margin-bottom: 2rem;
-    max-width: 500px;
-    width: 100%;
-  }
-
-  .event-success-title {
-    color: #4CAF50;
-    font-weight: 700;
-    font-size: 1.2rem;
-    margin-bottom: 0.4rem;
-  }
-
-  .event-success-sub {
-    color: rgba(255,255,255,0.5);
-    font-size: 0.85rem;
-    margin-bottom: 1rem;
-  }
-
-  .event-referral-row {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .event-referral-input {
-    flex: 1;
-    padding: 0.5rem 0.75rem;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 8px;
-    color: rgba(255,255,255,0.7);
-    font-size: 0.8rem;
-    outline: none;
-  }
-
-  .event-referral-btn {
-    padding: 0.5rem 1rem;
-    background: var(--gold);
-    color: var(--midnight);
-    font-weight: 700;
-    font-size: 0.85rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .event-referral-btn:hover { background: var(--gold-light); }
-
-  /* ─── MILESTONE SECTION (Dark Theme) ─── */
-  .event-milestones {
-    position: relative;
-    padding: 2.5rem 1.5rem 3.5rem;
-    z-index: 10;
-    max-width: 800px;
-    margin: 0 auto;
-    width: 100%;
-  }
-
-  .milestone-progress-wrap {
-    margin: 0 auto 2rem;
-  }
-
-  .milestone-progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.6);
-  }
-
-  .milestone-count {
-    font-weight: 700;
-    color: var(--gold-light);
-  }
-
-  .milestone-bar-dark {
-    position: relative;
-    width: 100%;
-    height: 12px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 100px;
-    overflow: visible;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-
-  .milestone-bar-fill-dark {
-    height: 100%;
-    background: linear-gradient(90deg, var(--orange-accent), var(--amber-glow));
-    border-radius: 100px;
-    box-shadow: 0 0 15px rgba(245,166,35,0.4);
-    transition: width 1.5s var(--ease-out-expo);
-  }
-
-  .milestone-node-dark {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 3px solid rgba(255,255,255,0.2);
-    background: var(--deeper-navy);
-    z-index: 2;
-    transition: all 0.3s;
-  }
-
-  .milestone-node-dark.unlocked {
-    border-color: var(--gold);
-    background: var(--gold);
-    box-shadow: 0 0 10px rgba(212,168,67,0.5);
-  }
-
-  .milestone-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-  }
-
-  .milestone-card {
-    text-align: center;
-    padding: 1.5rem 1rem 1.25rem;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    transition: all 0.3s var(--ease-out-expo);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.35rem;
-  }
-
-  .milestone-card.unlocked {
-    border-color: rgba(245,166,35,0.25);
-    background: rgba(245,166,35,0.06);
-  }
-
-  .milestone-card-icon {
-    font-size: 2rem;
-    margin-bottom: 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 88px;
-    height: 88px;
-  }
-
-  .milestone-reward-img {
-    width: 88px;
-    height: 88px;
-    object-fit: contain;
-    border-radius: 10px;
-    display: block;
-  }
-
-  .milestone-card-threshold {
-    font-weight: 800;
-    font-size: 0.9rem;
-    color: var(--gold-light);
-  }
-
-  .milestone-card-reward {
-    font-size: 0.72rem;
-    color: rgba(255,255,255,0.55);
-    line-height: 1.4;
-  }
-
-  /* Responsive milestone grid */
-  @media (max-width: 640px) {
-    .milestone-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
-    }
-    .milestone-card-icon,
-    .milestone-reward-img {
-      width: 72px;
-      height: 72px;
-    }
-  }
-
-  @media (max-width: 400px) {
-    .milestone-card {
-      padding: 1rem 0.5rem;
-    }
-    .milestone-card-icon,
-    .milestone-reward-img {
-      width: 60px;
-      height: 60px;
-    }
-    .milestone-card-threshold {
-      font-size: 0.8rem;
-    }
-  }
-
-  /* ─── EVENT FOOTER ─── */
-  .event-footer {
-    padding: 2rem 0;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    position: relative;
-    z-index: 10;
-  }
-
-  .event-footer-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .event-footer-copy {
-    color: rgba(255,255,255,0.3);
-    font-size: 0.8rem;
-  }
-
-  /* ─── REGISTRATION MODAL ─── */
-  .event-modal-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-  }
-
-  .event-modal-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-
-  .event-modal {
-    position: relative;
-    max-width: 420px;
-    width: 100%;
-    padding: 2rem;
-    background: rgba(13, 43, 92, 0.95);
-    border: 2px solid rgba(255,255,255,0.15);
-    border-radius: 20px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    z-index: 10;
-  }
-
-  .event-modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    color: rgba(255,255,255,0.4);
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-  .event-modal-close:hover { color: white; }
-
-  .event-modal-title {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    font-weight: 800;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .event-modal-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .event-input,
-  .event-select {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px;
-    color: white;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.2s;
-    font-family: var(--font-body);
-  }
-
-  .event-input::placeholder { color: rgba(255,255,255,0.35); }
-  .event-input:focus,
-  .event-select:focus { border-color: var(--cta-blue); }
-
-  .event-select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='rgba(255,255,255,0.5)' d='M1.41.59L6 5.17 10.59.59 12 2 6 8 0 2z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    padding-right: 2.5rem;
-  }
-
-  .event-select option {
-    background: var(--dark-navy);
-    color: white;
-  }
-
-  .event-error {
-    color: #E74C3C;
-    font-size: 0.85rem;
-    text-align: center;
-  }
-
-  .event-submit-btn {
-    width: 100%;
-    padding: 0.85rem;
-    background: linear-gradient(135deg, var(--cta-blue), var(--medium-blue));
-    color: white;
-    font-size: 1.1rem;
-    font-weight: 700;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s var(--ease-out-expo);
-  }
-
-  .event-submit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(91, 192, 235, 0.4);
-    border-color: rgba(255, 255, 255, 0.6);
-  }
-
-  .event-submit-btn.disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-  .event-submit-btn.disabled:hover {
-    transform: none;
-    box-shadow: none;
-  }
-
-  /* Store Selection Cards */
-  .event-store-label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    margin-bottom: -0.5rem;
-  }
-  .event-store-label .required {
-    color: #E74C3C;
-  }
-
-  .event-store-cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
-  }
-
-  .event-store-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.75rem 0.5rem;
-    background: rgba(255, 255, 255, 0.04);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s;
-    color: var(--text-muted);
-  }
-
-  .event-store-card:hover {
-    border-color: rgba(212, 168, 67, 0.4);
-    background: rgba(212, 168, 67, 0.05);
-  }
-
-  .event-store-card.selected {
-    border-color: var(--gold);
-    background: rgba(212, 168, 67, 0.12);
-    color: var(--gold-light);
-    box-shadow: 0 0 20px rgba(212, 168, 67, 0.15);
-  }
-
-  .event-store-card-icon {
-    width: 28px;
-    height: 28px;
-  }
-  .event-store-card-icon svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  .event-store-card-name {
-    font-size: 0.8rem;
-    font-weight: 700;
-  }
-
-  .event-store-hint {
-    font-size: 0.8rem;
-    color: rgba(212, 168, 67, 0.6);
-    text-align: center;
-    margin-top: -0.5rem;
-  }
-
-  /* Store Redirect Button (after success) */
-  .event-store-redirect-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    width: 100%;
-    padding: 0.85rem 1.5rem;
-    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-    color: var(--midnight);
-    font-size: 1rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 50px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.3s var(--ease-out-expo);
-    margin-bottom: 0.75rem;
-  }
-
-  .event-store-redirect-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(212, 168, 67, 0.4);
-  }
-
-  .event-store-redirect-btn svg {
-    width: 22px;
-    height: 22px;
-  }
-
-  .event-store-redirect-arrow {
-    font-size: 1.2rem;
-  }
-
-  .event-submit-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
-}
-
-/* ═══════════════════════════════════════════════════
-   HIGHLIGHTS SECTION — Feature Cards Grid
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   HIGHLIGHTS SECTION â€” Feature Cards Grid
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .section-highlights {
   position: relative;
   padding: 5rem 0;
@@ -2557,9 +2073,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   FAQ SECTION — GEO Optimized Accordion
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   FAQ SECTION â€” GEO Optimized Accordion
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .section-faq {
   position: relative;
   padding: 5rem 0;
@@ -2658,9 +2174,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   FAB — Back to Top Button
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   FAB â€” Back to Top Button
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .fab-back-to-top {
   position: fixed;
   bottom: 2rem;
@@ -2687,9 +2203,9 @@
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 168, 67, 0.25);
 }
 
-/* ═══════════════════════════════════════════════════
-   COOKIE CONSENT — PDPA Banner
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   COOKIE CONSENT â€” PDPA Banner
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .cookie-banner {
   position: fixed;
   bottom: 0;
@@ -2745,9 +2261,9 @@
   box-shadow: 0 4px 16px rgba(212, 168, 67, 0.4);
 }
 
-/* ═══════════════════════════════════════════════════
-   MOBILE RESPONSIVE — Tablet (≤1024px)
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   MOBILE RESPONSIVE â€” Tablet (â‰¤1024px)
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @media (max-width: 1024px) {
   .nav-links {
     gap: 1rem;
@@ -2767,11 +2283,11 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   MOBILE RESPONSIVE — Phone (≤768px)
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   MOBILE RESPONSIVE â€” Phone (â‰¤768px)
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @media (max-width: 768px) {
-  /* Navigation — keep visible, make compact */
+  /* Navigation â€” keep visible, make compact */
   .nav-links {
     gap: 0.5rem;
     overflow-x: auto;
@@ -2865,9 +2381,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   MOBILE RESPONSIVE — Small Phone (≤480px)
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   MOBILE RESPONSIVE â€” Small Phone (â‰¤480px)
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @media (max-width: 480px) {
   .hero-tagline {
     font-size: 1.5rem;
@@ -2896,9 +2412,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   LEGAL PAGES — Terms & Privacy
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   LEGAL PAGES â€” Terms & Privacy
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .legal-page {
   min-height: 100vh;
   background: linear-gradient(180deg, var(--midnight) 0%, var(--deeper-navy) 100%);
@@ -3001,9 +2517,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   NEWS PAGE — Listing + Article
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   NEWS PAGE â€” Listing + Article
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .news-page {
   min-height: 100vh;
   background: linear-gradient(180deg, var(--midnight) 0%, var(--deeper-navy) 100%);
@@ -3174,9 +2690,9 @@
   color: var(--text-muted);
 }
 
-/* ═══════════════════════════════════════════════════
-   NEWS ARTICLE — Detail
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   NEWS ARTICLE â€” Detail
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .article-main {
   max-width: 800px;
   margin: 0 auto;
@@ -3328,9 +2844,9 @@
   gap: 1rem;
 }
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    DOWNLOAD PAGE
-   ═══════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .download-page {
   min-height: 100vh;
   background: linear-gradient(180deg, var(--midnight) 0%, var(--deeper-navy) 100%);
@@ -3569,9 +3085,9 @@
   box-shadow: 0 6px 25px rgba(91, 192, 235, 0.4);
 }
 
-/* ═══════════════════════════════════════════════════
-   NEWS + DOWNLOAD — Responsive
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   NEWS + DOWNLOAD â€” Responsive
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @media (max-width: 768px) {
   .news-hero-title,
   .download-title {
@@ -3599,9 +3115,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    ACCESSIBILITY: Reduced Motion
-   ═══════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -3624,9 +3140,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    MOBILE: Hero Store Buttons
-   ═══════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @media (max-width: 640px) {
   .hero-stores-bottom {
     flex-direction: column;
@@ -3647,9 +3163,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   PAGE HERO — Shared banner for sub-pages
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   PAGE HERO â€” Shared banner for sub-pages
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .page-hero {
   position: relative;
   padding: 8rem 0 4rem;
@@ -3700,9 +3216,9 @@
   margin: 0 auto;
 }
 
-/* ═══════════════════════════════════════════════════
-   STORY PAGE — Immersive Lore Narrative
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   STORY PAGE â€” Immersive Lore Narrative
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .section-story-content {
   position: relative;
   padding: 5rem 0 6rem;
@@ -3772,7 +3288,7 @@
   margin-bottom: 4rem;
 }
 
-/* Connecting timeline — blocks are naturally spaced */
+/* Connecting timeline â€” blocks are naturally spaced */
 
 .story-block:hover {
   border-color: rgba(212, 168, 67, 0.3);
@@ -3847,9 +3363,9 @@
   color: var(--text-muted);
 }
 
-/* ═══════════════════════════════════════════════════
-   CHARACTER PAGE — Detail View
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   CHARACTER PAGE â€” Detail View
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .section-character-detail {
   padding: 4rem 0 6rem;
   background: var(--midnight);
@@ -4027,10 +3543,10 @@
     font-size: 1.5rem;
   }
 }
-/* ═══════════════════════════════════════════════════
-   EVENT PAGE — Pre-Registration (Figma Design)
-   3 Screens: Hero → Registration Form → Milestones
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   EVENT PAGE â€” Pre-Registration (Figma Design)
+   3 Screens: Hero â†’ Registration Form â†’ Milestones
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 .event-page {
   position: relative;
@@ -4039,7 +3555,7 @@
   overflow-x: hidden;
 }
 
-/* ─── EVENT NAV BAR ─── */
+/* â”€â”€â”€ EVENT NAV BAR â”€â”€â”€ */
 .event-nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -4073,7 +3589,7 @@
 }
 .event-back-link:hover { color: white; }
 
-/* ─── PRE-REGISTER TAB (Orange Banner) ─── */
+/* â”€â”€â”€ PRE-REGISTER TAB (Orange Banner) â”€â”€â”€ */
 .event-prereg-tab {
   position: absolute;
   top: 0;
@@ -4097,7 +3613,7 @@
   text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
-/* ─── EVENT HERO (Screen 1) ─── */
+/* â”€â”€â”€ EVENT HERO (Screen 1) â”€â”€â”€ */
 .event-hero {
   position: relative;
   min-height: 100dvh;
@@ -4187,7 +3703,7 @@
   100% { left: 100%; }
 }
 
-/* CTA Button — Orange */
+/* CTA Button â€” Orange */
 .event-cta {
   position: relative;
   display: inline-flex;
@@ -4277,7 +3793,7 @@
   letter-spacing: 0.1em;
 }
 
-/* ─── EVENT FORM SECTION (Screen 2) ─── */
+/* â”€â”€â”€ EVENT FORM SECTION (Screen 2) â”€â”€â”€ */
 .event-form-section {
   position: relative;
   padding: 5rem 1.5rem;
@@ -4436,7 +3952,7 @@
 }
 .event-form-store-btn svg { width: 18px; height: 18px; }
 
-/* Submit button — Orange */
+/* Submit button â€” Orange */
 .event-submit-btn {
   display: block;
   width: 100%;
@@ -4509,7 +4025,7 @@
 }
 .event-select:focus { border-color: #1E6FBF; }
 
-/* ─── EVENT MILESTONES (Screen 3) ─── */
+/* â”€â”€â”€ EVENT MILESTONES (Screen 3) â”€â”€â”€ */
 .event-milestones {
   position: relative;
   padding: 5rem 1.5rem;
@@ -4638,7 +4154,7 @@
   line-height: 1.4;
 }
 
-/* ─── EVENT FOOTER ─── */
+/* â”€â”€â”€ EVENT FOOTER â”€â”€â”€ */
 .event-footer {
   padding: 2rem 1.5rem;
   background: rgba(0,0,0,0.3);
@@ -4661,7 +4177,7 @@
   opacity: 0.7;
 }
 
-/* ─── SUCCESS POPUP (POP UP 1) ─── */
+/* â”€â”€â”€ SUCCESS POPUP (POP UP 1) â”€â”€â”€ */
 .event-modal-overlay {
   position: fixed;
   inset: 0;
@@ -4877,7 +4393,7 @@
 .event-store-card-icon svg { width: 24px; height: 24px; color: #2A1F14; }
 .event-store-card-name { font-size: 0.75rem; font-weight: 600; }
 
-/* ─── EVENT RESPONSIVE ─── */
+/* â”€â”€â”€ EVENT RESPONSIVE â”€â”€â”€ */
 @media (max-width: 768px) {
   .event-prereg-tab-inner { font-size: 0.9rem; padding: 0.4rem 1.5rem 0.55rem; }
   .event-hero { padding: 4rem 1rem 2.5rem; gap: 0.75rem; }
@@ -4907,9 +4423,9 @@
   .event-referral-row { flex-direction: column; }
 }
 
-/* ═══════════════════════════════════════════════════
-   ACCESSIBILITY — Reduced Motion Support
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   ACCESSIBILITY â€” Reduced Motion Support
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -4934,9 +4450,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    SKELETON LOADING UI
-   ═══════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .skeleton-pulse {
   background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
   background-size: 200% 100%;
