@@ -1800,44 +1800,6 @@
    E V E N T   P A G E   â€”   Premium Dark Fantasy
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @layer components {
-  .event-page {
-    position: relative;
-    min-height: 100vh;
-    background: linear-gradient(180deg, var(--midnight) 0%, var(--deeper-navy) 40%, var(--dark-navy) 70%, var(--midnight) 100%);
-    overflow: hidden;
-    color: var(--white);
-    font-family: var(--font-body);
-  }
-
-  /* â”€â”€â”€ EVENT NAV â”€â”€â”€ */
-  .event-nav {
-    position: relative;
-    z-index: 20;
-    padding: 0.75rem 1.5rem;
-  }
-
-  .event-nav-inner {
-    max-width: var(--container-max);
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .event-nav-right {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .event-back-link {
-    color: rgba(255,255,255,0.7);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.2s;
-  }
-  .event-back-link:hover { color: white; }
-
   /* â”€â”€â”€ EVENT HERO â”€â”€â”€ */
   .event-hero {
     position: relative;
@@ -3548,71 +3510,6 @@
    3 Screens: Hero â†’ Registration Form â†’ Milestones
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-.event-page {
-  position: relative;
-  min-height: 100dvh;
-  background: var(--midnight);
-  overflow-x: hidden;
-}
-
-/* â”€â”€â”€ EVENT NAV BAR â”€â”€â”€ */
-.event-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  height: 56px;
-  background: rgba(4, 14, 33, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.event-nav-inner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.event-nav-right {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-.event-back-link {
-  color: rgba(255,255,255,0.7);
-  text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-.event-back-link:hover { color: white; }
-
-/* â”€â”€â”€ PRE-REGISTER TAB (Orange Banner) â”€â”€â”€ */
-.event-prereg-tab {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 101;
-}
-.event-prereg-tab-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 2.5rem 0.65rem;
-  background: linear-gradient(135deg, #F5A623, #E8941A);
-  color: white;
-  font-family: var(--font-heading);
-  font-size: 1.1rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  border-radius: 0 0 16px 16px;
-  box-shadow: 0 4px 20px rgba(245, 166, 35, 0.35);
-  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-}
-
 /* â”€â”€â”€ EVENT HERO (Screen 1) â”€â”€â”€ */
 .event-hero {
   position: relative;
@@ -3682,8 +3579,8 @@
 .event-badge-text {
   display: inline-block;
   padding: 0.35rem 1.5rem;
-  background: rgba(245, 166, 35, 0.2);
-  border: 1px solid rgba(245, 166, 35, 0.4);
+  background: rgba(212, 168, 67, 0.15);
+  border: 1px solid rgba(212, 168, 67, 0.4);
   border-radius: 100px;
   color: var(--amber-glow);
   font-weight: 700;
@@ -3711,17 +3608,17 @@
   justify-content: center;
   padding: 1rem 3rem;
   border-radius: 50px;
-  background: linear-gradient(135deg, #F5A623, #E8941A, #D4890F);
+  background: linear-gradient(135deg, var(--gold), var(--gold-light), var(--gold));
   border: 2px solid rgba(255,255,255,0.25);
   cursor: pointer;
   overflow: hidden;
   font-family: inherit;
   transition: all 0.4s var(--ease-out-expo);
-  box-shadow: 0 4px 25px rgba(245, 166, 35, 0.3);
+  box-shadow: 0 4px 25px rgba(212, 168, 67, 0.3);
 }
 .event-cta:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 40px rgba(245, 166, 35, 0.45);
+  box-shadow: 0 8px 40px rgba(212, 168, 67, 0.45);
   border-color: rgba(255,255,255,0.5);
 }
 .event-cta:active { transform: translateY(0); }
@@ -3730,9 +3627,9 @@
   z-index: 1;
   font-size: 1.2rem;
   font-weight: 700;
-  color: white;
+  color: var(--midnight);
   letter-spacing: 0.02em;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  text-shadow: none;
 }
 .hero-cta-shimmer {
   position: absolute;
@@ -3802,26 +3699,27 @@
   background: linear-gradient(180deg, var(--midnight), var(--deeper-navy), var(--midnight));
 }
 
-/* Parchment / Ornamental Card */
+/* Dark Glass Card — unified with site theme */
 .event-parchment-card {
   position: relative;
   width: 100%;
   max-width: 680px;
   padding: 3rem 2.5rem;
-  background: linear-gradient(145deg, rgba(255,248,235,0.97), rgba(245,235,215,0.95));
+  background: rgba(255,255,255,0.04);
   border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow:
-    0 0 0 3px rgba(180, 150, 100, 0.3),
-    0 0 0 6px rgba(100, 80, 50, 0.15),
     0 20px 60px rgba(0,0,0,0.4),
-    inset 0 1px 0 rgba(255,255,255,0.8);
-  color: #2A1F14;
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  color: var(--white);
 }
 .event-parchment-card::before {
   content: '';
   position: absolute;
   inset: 8px;
-  border: 2px solid rgba(140, 110, 70, 0.2);
+  border: 1px solid rgba(255,255,255,0.06);
   border-radius: 14px;
   pointer-events: none;
 }
@@ -3829,17 +3727,17 @@
   content: '';
   position: absolute;
   inset: 14px;
-  border: 1px solid rgba(140, 110, 70, 0.1);
+  border: 1px solid rgba(255,255,255,0.03);
   border-radius: 10px;
   pointer-events: none;
 }
 
-/* Corner ornaments */
+/* Corner ornaments — gold accents */
 .parchment-corner {
   position: absolute;
   width: 24px;
   height: 24px;
-  border: 2px solid rgba(140, 110, 70, 0.25);
+  border: 2px solid rgba(212, 168, 67, 0.3);
   z-index: 2;
 }
 .parchment-corner.top-left { top: 18px; left: 18px; border-right: none; border-bottom: none; border-radius: 4px 0 0 0; }
@@ -3851,37 +3749,37 @@
   font-family: var(--font-heading);
   font-size: 1.6rem;
   font-weight: 800;
-  color: #1E6FBF;
+  color: var(--white);
   text-align: center;
   margin-bottom: 0.5rem;
 }
 .event-form-step {
   font-size: 0.9rem;
-  color: #5A4A3A;
+  color: var(--text-muted);
   text-align: center;
   margin-bottom: 1.5rem;
   line-height: 1.6;
 }
-.event-form-step strong { color: #E8941A; }
+.event-form-step strong { color: var(--gold-light); }
 
 /* Form inputs */
 .event-input {
   width: 100%;
   padding: 0.85rem 1.2rem;
   border-radius: 10px;
-  border: 2px solid rgba(140, 110, 70, 0.25);
-  background: rgba(255,255,255,0.7);
-  color: #2A1F14;
+  border: 2px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: var(--white);
   font-size: 0.95rem;
   font-family: inherit;
   transition: border-color 0.2s, box-shadow 0.2s;
   outline: none;
 }
 .event-input:focus {
-  border-color: #1E6FBF;
-  box-shadow: 0 0 0 3px rgba(30, 111, 191, 0.15);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.15);
 }
-.event-input::placeholder { color: rgba(42, 31, 20, 0.4); }
+.event-input::placeholder { color: rgba(255,255,255,0.3); }
 
 /* Country Radio Buttons */
 .event-radio-group {
@@ -3897,23 +3795,23 @@
   gap: 0.4rem;
   cursor: pointer;
   font-size: 0.85rem;
-  color: #5A4A3A;
+  color: var(--text-muted);
   transition: color 0.2s;
 }
-.event-radio-label:hover { color: #2A1F14; }
+.event-radio-label:hover { color: var(--white); }
 .event-radio-input {
   appearance: none;
   -webkit-appearance: none;
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(140, 110, 70, 0.35);
+  border: 2px solid rgba(255,255,255,0.2);
   border-radius: 50%;
-  background: white;
+  background: rgba(255,255,255,0.06);
   cursor: pointer;
   position: relative;
   transition: border-color 0.2s;
 }
-.event-radio-input:checked { border-color: #1E6FBF; }
+.event-radio-input:checked { border-color: var(--gold); }
 .event-radio-input:checked::after {
   content: '';
   position: absolute;
@@ -3921,7 +3819,7 @@
   transform: translate(-50%, -50%);
   width: 8px; height: 8px;
   border-radius: 50%;
-  background: #1E6FBF;
+  background: var(--gold);
 }
 
 /* Store Selection (in form) */
@@ -3947,8 +3845,8 @@
 }
 .event-form-store-btn:hover { border-color: rgba(255,255,255,0.3); }
 .event-form-store-btn.selected {
-  border-color: #1E6FBF;
-  box-shadow: 0 0 0 2px rgba(30, 111, 191, 0.2);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(212, 168, 67, 0.2);
 }
 .event-form-store-btn svg { width: 18px; height: 18px; }
 
@@ -3960,20 +3858,20 @@
   margin: 1.5rem auto 0;
   padding: 0.9rem 2rem;
   border-radius: 50px;
-  background: linear-gradient(135deg, #F5A623, #E8941A);
-  color: white;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light), var(--gold));
+  color: var(--midnight);
   font-family: inherit;
   font-size: 1.1rem;
   font-weight: 700;
-  border: none;
+  border: 2px solid rgba(255,255,255,0.2);
   cursor: pointer;
   transition: all 0.3s var(--ease-out-expo);
-  box-shadow: 0 4px 20px rgba(245, 166, 35, 0.3);
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 20px rgba(212, 168, 67, 0.3);
+  text-shadow: none;
 }
 .event-submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(245, 166, 35, 0.45);
+  box-shadow: 0 8px 30px rgba(212, 168, 67, 0.45);
 }
 .event-submit-btn:disabled,
 .event-submit-btn.disabled {
@@ -3984,20 +3882,20 @@
 }
 .event-store-label {
   font-size: 0.85rem;
-  color: #5A4A3A;
+  color: var(--text-muted);
   text-align: center;
   margin-bottom: 0.5rem;
   display: block;
 }
-.event-store-label .required { color: #E8941A; }
+.event-store-label .required { color: var(--gold-light); }
 .event-store-hint {
   font-size: 0.78rem;
-  color: rgba(90, 74, 58, 0.6);
+  color: rgba(255,255,255,0.35);
   text-align: center;
   margin-top: 0.5rem;
 }
 .event-error {
-  color: #D32F2F;
+  color: #FF6B6B;
   font-size: 0.85rem;
   text-align: center;
   margin-top: 0.5rem;
@@ -4007,15 +3905,15 @@
   margin: 1.5rem auto;
   border: none;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(140, 110, 70, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
 }
 .event-select {
   width: 100%;
   padding: 0.85rem 1.2rem;
   border-radius: 10px;
-  border: 2px solid rgba(140, 110, 70, 0.25);
-  background: rgba(255,255,255,0.7);
-  color: #2A1F14;
+  border: 2px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: var(--white);
   font-size: 0.95rem;
   font-family: inherit;
   outline: none;
@@ -4023,7 +3921,7 @@
   cursor: pointer;
   transition: border-color 0.2s;
 }
-.event-select:focus { border-color: #1E6FBF; }
+.event-select:focus { border-color: var(--gold); }
 
 /* â”€â”€â”€ EVENT MILESTONES (Screen 3) â”€â”€â”€ */
 .event-milestones {
@@ -4155,23 +4053,6 @@
 }
 
 /* â”€â”€â”€ EVENT FOOTER â”€â”€â”€ */
-.event-footer {
-  padding: 2rem 1.5rem;
-  background: rgba(0,0,0,0.3);
-  border-top: 1px solid rgba(255,255,255,0.06);
-}
-.event-footer-inner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-}
-.event-footer-copy {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-}
 .footer-logo {
   object-fit: contain;
   opacity: 0.7;
@@ -4227,14 +4108,14 @@
   font-family: var(--font-heading);
   font-size: 1.2rem;
   font-weight: 700;
-  color: #1E6FBF;
+  color: var(--gold-light);
   text-align: center;
   margin-bottom: 0.75rem;
 }
 .event-success-body {
   font-size: 1.15rem;
   font-weight: 700;
-  color: #2A1F14;
+  color: var(--white);
   text-align: center;
   margin-bottom: 1.5rem;
   line-height: 1.6;
@@ -4257,7 +4138,7 @@
 .store-btn-modal { min-width: 200px; }
 .event-success-pc-note {
   text-align: center;
-  color: #5A4A3A;
+  color: var(--text-muted);
   font-size: 0.9rem;
   opacity: 0.7;
 }
@@ -4272,9 +4153,9 @@
   flex: 1;
   padding: 0.6rem 0.8rem;
   border-radius: 8px;
-  border: 2px solid rgba(140, 110, 70, 0.2);
-  background: rgba(255,255,255,0.6);
-  color: #2A1F14;
+  border: 2px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: var(--white);
   font-size: 0.78rem;
   font-family: inherit;
   outline: none;
@@ -4282,8 +4163,8 @@
 .event-referral-btn {
   padding: 0.6rem 1rem;
   border-radius: 8px;
-  background: #1E6FBF;
-  color: white;
+  background: var(--gold);
+  color: var(--midnight);
   border: none;
   font-family: inherit;
   font-size: 0.85rem;
@@ -4292,7 +4173,7 @@
   transition: background 0.2s;
   white-space: nowrap;
 }
-.event-referral-btn:hover { background: #1A5CA3; }
+.event-referral-btn:hover { background: var(--gold-light); }
 
 /* Store redirect button */
 .event-store-redirect-btn {
@@ -4372,30 +4253,29 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.75rem 1.2rem;
-  background: rgba(0,0,0,0.05);
-  border: 2px solid rgba(140, 110, 70, 0.2);
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(255,255,255,0.12);
   border-radius: 12px;
   cursor: pointer;
   font-family: inherit;
   transition: all 0.2s;
   min-width: 90px;
-  color: #2A1F14;
+  color: var(--white);
 }
 .event-store-card:hover {
-  border-color: rgba(140, 110, 70, 0.4);
-  background: rgba(0,0,0,0.08);
+  border-color: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.08);
 }
 .event-store-card.selected {
-  border-color: #1E6FBF;
-  background: rgba(30, 111, 191, 0.08);
+  border-color: var(--gold);
+  background: rgba(212, 168, 67, 0.08);
 }
 .event-store-card-icon { font-size: 1.5rem; }
-.event-store-card-icon svg { width: 24px; height: 24px; color: #2A1F14; }
+.event-store-card-icon svg { width: 24px; height: 24px; color: var(--white); }
 .event-store-card-name { font-size: 0.75rem; font-weight: 600; }
 
 /* â”€â”€â”€ EVENT RESPONSIVE â”€â”€â”€ */
 @media (max-width: 768px) {
-  .event-prereg-tab-inner { font-size: 0.9rem; padding: 0.4rem 1.5rem 0.55rem; }
   .event-hero { padding: 4rem 1rem 2.5rem; gap: 0.75rem; }
   .event-logo { max-width: 260px; }
   .event-cta { padding: 0.85rem 2rem; }
@@ -4409,7 +4289,6 @@
   .event-radio-group { gap: 0.4rem 0.75rem; }
   .event-milestones { padding: 3rem 1rem; }
   .milestone-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-  .event-footer-inner { flex-direction: column; gap: 0.75rem; }
   .event-store-badges { flex-direction: column; align-items: center; }
   .event-success-body { font-size: 1rem; }
   .event-store-cards { flex-wrap: wrap; }

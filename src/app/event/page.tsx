@@ -1,21 +1,25 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { useLang } from '@/lib/lang-context';
 import FloatingParticles from '@/components/ui/FloatingParticles';
+import LightRays from '@/components/ui/LightRays';
+import ScrollProgress from '@/components/ui/ScrollProgress';
 
-/* ─── Sub-components ─── */
-import EventNav from './components/EventNav';
+/* Shared layout */
+import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
+
+/* Event sub-components */
 import EventHero from './components/EventHero';
 import EventForm from './components/EventForm';
 import EventMilestones from './components/EventMilestones';
 import SuccessModal from './components/SuccessModal';
 
-/* ─── Hooks ─── */
+/* Hooks */
 import { useEventForm } from '@/hooks/useEventForm';
 
-/* ─── Types & Constants ─── */
+/* Types & Constants */
 import type { Milestone, StoreButton, EventSettings } from '@/types/event';
 import {
   DEFAULT_MILESTONES,
@@ -25,7 +29,7 @@ import {
 
 /* ═══════════════════════════════════════════════
    EVENT PAGE — Orchestrator
-   Composes: EventNav → EventHero → EventForm → EventMilestones → SuccessModal
+   Uses shared Navigation + Footer for consistent UX
    ═══════════════════════════════════════════════ */
 export default function EventPage() {
   const { t } = useLang();
@@ -37,6 +41,12 @@ export default function EventPage() {
   const [socialLinks, setSocialLinks] = useState<Record<string, string | null>>({});
   const [eventSettings, setEventSettings] = useState<EventSettings>({});
   const [countdownTarget, setCountdownTarget] = useState(DEFAULT_COUNTDOWN_TARGET);
+  const [footer, setFooter] = useState({
+    copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
+    termsUrl: '/terms',
+    privacyUrl: '/privacy',
+    supportUrl: '#',
+  });
 
   /* ─── Fetch CMS data ─── */
   useEffect(() => {
@@ -60,6 +70,7 @@ export default function EventPage() {
       .then(data => {
         if (data.storeButtons) setStoreButtons(data.storeButtons);
         if (data.site?.socialLinks) setSocialLinks(data.site.socialLinks);
+        if (data.site?.footer) setFooter(data.site.footer);
         if (data.event) {
           setEventSettings(data.event);
           if (data.event.countdownTarget) {
@@ -87,90 +98,74 @@ export default function EventPage() {
   );
 
   return (
-    <main className="event-page">
-      <FloatingParticles count={35} />
+    <div className="landing-page">
+      <ScrollProgress />
+      <Navigation />
 
-      {/* ═══ LIGHT RAYS ═══ */}
-      <div className="light-rays">
-        <div className="ray ray-1" />
-        <div className="ray ray-2" />
-      </div>
+      <main>
+        <FloatingParticles count={25} />
+        <LightRays />
 
-      {/* ═══ ORANGE PRE-REGISTER TAB ═══ */}
-      <div className="event-prereg-tab">
-        <div className="event-prereg-tab-inner">
-          {t('Pre-register', 'Pre-register')}
+        {/* ═══ SCREEN 1: HERO ═══ */}
+        <EventHero
+          eventSettings={eventSettings}
+          countdownTarget={countdownTarget}
+          registrationCount={registrationCount}
+          displayStoreButtons={displayStoreButtons}
+        />
+
+        {/* ═══ ORNAMENT DIVIDER ═══ */}
+        <div className="ornament-divider">
+          <span className="ornament-line" />
+          <span className="ornament-diamond" />
+          <span className="ornament-center" aria-hidden="true">✦</span>
+          <span className="ornament-diamond" />
+          <span className="ornament-line" />
         </div>
-      </div>
 
-      {/* ═══ NAV ═══ */}
-      <EventNav socialLinks={socialLinks} />
+        {/* ═══ SCREEN 2: REGISTRATION FORM ═══ */}
+        <EventForm
+          eventSettings={eventSettings}
+          displayStoreButtons={displayStoreButtons}
+          email={form.email}
+          platform={form.platform}
+          region={form.region}
+          loading={form.loading}
+          error={form.error}
+          registered={form.registered}
+          referralCode={form.referralCode}
+          copied={form.copied}
+          setEmail={form.setEmail}
+          setPlatform={form.setPlatform}
+          setRegion={form.setRegion}
+          handleRegister={form.handleRegister}
+          copyReferralLink={form.copyReferralLink}
+        />
 
-      {/* ═══ SCREEN 1: HERO ═══ */}
-      <EventHero
-        eventSettings={eventSettings}
-        countdownTarget={countdownTarget}
-        registrationCount={registrationCount}
-        displayStoreButtons={displayStoreButtons}
-      />
-
-      {/* ═══ ORNAMENT DIVIDER ═══ */}
-      <div className="ornament-divider">
-        <span className="ornament-line" />
-        <span className="ornament-diamond" />
-        <span className="ornament-center">✦</span>
-        <span className="ornament-diamond" />
-        <span className="ornament-line" />
-      </div>
-
-      {/* ═══ SCREEN 2: REGISTRATION FORM ═══ */}
-      <EventForm
-        eventSettings={eventSettings}
-        displayStoreButtons={displayStoreButtons}
-        email={form.email}
-        platform={form.platform}
-        region={form.region}
-        loading={form.loading}
-        error={form.error}
-        registered={form.registered}
-        referralCode={form.referralCode}
-        copied={form.copied}
-        setEmail={form.setEmail}
-        setPlatform={form.setPlatform}
-        setRegion={form.setRegion}
-        handleRegister={form.handleRegister}
-        copyReferralLink={form.copyReferralLink}
-      />
-
-      {/* ═══ ORNAMENT DIVIDER ═══ */}
-      <div className="ornament-divider">
-        <span className="ornament-line" />
-        <span className="ornament-diamond" />
-        <span className="ornament-center">✦</span>
-        <span className="ornament-diamond" />
-        <span className="ornament-line" />
-      </div>
-
-      {/* ═══ SCREEN 3: MILESTONES ═══ */}
-      <EventMilestones
-        eventSettings={eventSettings}
-        milestones={milestones}
-        registrationCount={registrationCount}
-      />
-
-      {/* ═══ FOOTER ═══ */}
-      <footer className="event-footer">
-        <div className="event-footer-inner">
-          <Image src="/images/logo.webp" alt="EST" width={120} height={80} className="footer-logo" />
-          <p className="event-footer-copy">{eventSettings.footerText || '© 2026 Eternal Tower Saga. All rights reserved.'}</p>
+        {/* ═══ ORNAMENT DIVIDER ═══ */}
+        <div className="ornament-divider">
+          <span className="ornament-line" />
+          <span className="ornament-diamond" />
+          <span className="ornament-center" aria-hidden="true">✦</span>
+          <span className="ornament-diamond" />
+          <span className="ornament-line" />
         </div>
-      </footer>
+
+        {/* ═══ SCREEN 3: MILESTONES ═══ */}
+        <EventMilestones
+          eventSettings={eventSettings}
+          milestones={milestones}
+          registrationCount={registrationCount}
+        />
+      </main>
+
+      <Footer socialLinks={socialLinks} footer={footer} />
 
       {/* ═══ SUCCESS MODAL ═══ */}
       <SuccessModal
         show={form.showSuccessModal}
         onClose={() => form.setShowSuccessModal(false)}
       />
-    </main>
+    </div>
   );
 }

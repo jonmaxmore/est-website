@@ -50,6 +50,9 @@ COPY --from=builder /app/package.json ./package.json
 COPY docker-start.sh ./docker-start.sh
 RUN chmod +x ./docker-start.sh
 
+# Create .next/cache for ISR/image optimization (writable by nextjs user)
+RUN mkdir -p .next/cache && chown nextjs:nodejs .next/cache
+
 USER nextjs
 EXPOSE 3000
 
