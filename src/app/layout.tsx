@@ -23,12 +23,16 @@ import "./styles/faq.css";
 
 /* Modular CSS — Page-Specific */
 import "./styles/pages/event-part1.css";
-import "./styles/pages/event-part2.css";
+import "./styles/pages/event-page.css";
 import "./styles/pages/news-page.css";
 import "./styles/pages/news-download-responsive.css";
 import "./styles/pages/download.css";
 import "./styles/pages/story.css";
 import "./styles/pages/legal.css";
+
+/* Modular CSS — Utility */
+import "./styles/accessibility.css";
+import "./styles/skeleton.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com';
 
