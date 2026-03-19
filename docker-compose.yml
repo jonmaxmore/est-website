@@ -9,13 +9,13 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: est
-      POSTGRES_PASSWORD: est_secret
-      POSTGRES_DB: est_db
+      POSTGRES_USER: ${POSTGRES_USER:-est}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required - set it in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-est_db}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U est -d est_db"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-est} -d $${POSTGRES_DB:-est_db}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -26,13 +26,13 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        PAYLOAD_SECRET: ${PAYLOAD_SECRET:-est-prod-s3cr3t-k3y-2026}
-        DATABASE_URI: postgresql://est:est_secret@db:5432/est_db
+        PAYLOAD_SECRET: ${PAYLOAD_SECRET:?PAYLOAD_SECRET is required - set it in .env}
+        DATABASE_URI: postgresql://${POSTGRES_USER:-est}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@db:5432/${POSTGRES_DB:-est_db}
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      PAYLOAD_SECRET: ${PAYLOAD_SECRET:-est-prod-s3cr3t-k3y-2026}
-      DATABASE_URI: postgresql://est:est_secret@db:5432/est_db
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?PAYLOAD_SECRET is required - set it in .env}
+      DATABASE_URI: postgresql://${POSTGRES_USER:-est}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@db:5432/${POSTGRES_DB:-est_db}
     ports:
       - "3000:3000"
     depends_on:

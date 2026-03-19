@@ -50,13 +50,13 @@ export default buildConfig({
     HeroSection,
   ],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || (() => { throw new Error('PAYLOAD_SECRET environment variable is required') })(),
+  secret: process.env.PAYLOAD_SECRET ?? (() => { throw new Error('PAYLOAD_SECRET environment variable is required') })(),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI || 'postgresql://est:est_secret@localhost:5432/est_db',
+      connectionString: process.env.DATABASE_URI ?? (() => { throw new Error('DATABASE_URI environment variable is required') })(),
     },
     push: true,
   }),

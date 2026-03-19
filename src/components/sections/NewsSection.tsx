@@ -8,16 +8,7 @@ import { useLang } from '@/lib/lang-context';
 import RevealSection from '@/components/ui/RevealSection';
 import { CATEGORY_COLORS } from '@/components/ui/StoreIcons';
 import { Calendar, RefreshCw, Video, Wrench, Megaphone } from 'lucide-react';
-
-interface CMSNews {
-  id: number;
-  titleEn: string;
-  titleTh: string;
-  slug: string;
-  category: string;
-  publishedAt: string;
-  featuredImage: string | null;
-}
+import type { CMSNewsArticle, CMSNewsSectionConfig } from '@/types/cms';
 
 /* Category placeholders — Lucide icons with gradient backgrounds */
 const CATEGORY_PLACEHOLDERS: Record<string, { gradient: string; Icon: React.ComponentType<{ size?: number; className?: string }> }> = {
@@ -28,12 +19,7 @@ const CATEGORY_PLACEHOLDERS: Record<string, { gradient: string; Icon: React.Comp
   announcement: { gradient: 'linear-gradient(135deg, #2ECC71 0%, #27AE60 50%, #219A52 100%)', Icon: Megaphone },
 };
 
-interface NewsSectionConfig {
-  badgeEn: string; badgeTh: string;
-  titleEn: string; titleTh: string;
-}
-
-export default function NewsSection({ news, sectionConfig }: { news: CMSNews[]; sectionConfig?: NewsSectionConfig }) {
+export default function NewsSection({ news, sectionConfig }: { news: CMSNewsArticle[]; sectionConfig?: CMSNewsSectionConfig }) {
   const { t } = useLang();
 
   const items =

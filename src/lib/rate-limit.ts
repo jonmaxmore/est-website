@@ -1,7 +1,7 @@
 /**
- * Basic in-memory rate limiter for public API endpoints.
- * Note: Reset on server restart. In a distributed environment or edge, 
- * use Redis or Vercel KV for a persistent distributed rate limiter.
+ * In-memory rate limiter with automatic cleanup.
+ * Note: Resets on server restart. For distributed environments,
+ * use Redis or Upstash for persistent rate limiting.
  */
 
 interface RateLimitTracker {
@@ -10,6 +10,31 @@ interface RateLimitTracker {
 }
 
 const rateLimitMap = new Map<string, RateLimitTracker>();
+
+// Cleanup expired entries every 60 seconds to prevent memory leak
+const CLEANUP_INTERVAL_MS = 60_000;
+let cleanupTimer: ReturnType<typeof setInterval> | null = null;
+
+function startCleanup() {
+  if (cleanupTimer) return;
+  cleanupTimer = setInterval(() => {
+    const now = Date.now();
+    for (const [key, tracker] of rateLimitMap) {
+      if (tracker.resetTime < now) {
+        rateLimitMap.delete(key);
+      }
+    }
+    // Stop cleanup if map is empty to avoid unnecessary work
+    if (rateLimitMap.size === 0 && cleanupTimer) {
+      clearInterval(cleanupTimer);
+      cleanupTimer = null;
+    }
+  }, CLEANUP_INTERVAL_MS);
+  // Allow process to exit even if timer is active
+  if (cleanupTimer && typeof cleanupTimer === 'object' && 'unref' in cleanupTimer) {
+    cleanupTimer.unref();
+  }
+}
 
 export function checkRateLimit(ip: string, limit: number, windowMs: number): boolean {
   const now = Date.now();
@@ -21,14 +46,15 @@ export function checkRateLimit(ip: string, limit: number, windowMs: number): boo
       count: 1,
       resetTime: now + windowMs,
     });
-    return true; // Allowed
+    startCleanup();
+    return true;
   }
 
   // If within window, increment count
   tracker.count++;
   if (tracker.count > limit) {
-    return false; // Rate limited
+    return false;
   }
 
-  return true; // Allowed
+  return true;
 }

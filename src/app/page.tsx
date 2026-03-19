@@ -1,39 +1,23 @@
 import { getPayloadClient } from '@/lib/payload';
 import HomeContent from './HomeContent';
+import {
+  extractMediaUrl,
+  extractMedia,
+  type CMSSettings,
+  type CMSCharacter,
+  type CMSNewsArticle,
+  type CMSFeature,
+} from '@/types/cms';
 
 /* ═══════════════════════════════════════════════
    MAIN LANDING PAGE — Server Component (SSR)
    Fetches CMS data at request time, passes to client
    ═══════════════════════════════════════════════ */
 
-// Data extraction helper
-function extractUrl(field: unknown): string | null {
-  if (typeof field === 'object' && field && 'url' in (field as Record<string, unknown>)) {
-    return (field as { url: string }).url || null;
-  }
-  if (typeof field === 'string') return field;
-  return null;
-}
-
 export default async function LandingPage() {
-  let settings = null;
-  let characters: Array<{
-    id: number;
-    name: string;
-    portrait: string | null;
-    infoImage: string | null;
-    backgroundImage: string | null;
-    icon: string | null;
-  }> = [];
-  let news: Array<{
-    id: number;
-    titleEn: string;
-    titleTh: string;
-    slug: string;
-    category: string;
-    publishedAt: string;
-    featuredImage: string | null;
-  }> = [];
+  let settings: CMSSettings | null = null;
+  let characters: CMSCharacter[] = [];
+  let news: CMSNewsArticle[] = [];
 
   try {
     const payload = await getPayloadClient();
@@ -41,24 +25,30 @@ export default async function LandingPage() {
     // Fetch all data in parallel — direct DB access, no API round-trip
     const [siteSettings, eventConfig, heroSection, storeButtonsRes, charsRes, newsRes] =
       await Promise.all([
-        payload.findGlobal({ slug: 'site-settings' }).catch(() => null),
-        payload.findGlobal({ slug: 'event-config' }).catch(() => null),
-        payload.findGlobal({ slug: 'hero-section' }).catch(() => null),
+        payload.findGlobal({ slug: 'site-settings' }).catch((e) => { console.error('Failed to fetch site-settings:', e); return null; }),
+        payload.findGlobal({ slug: 'event-config' }).catch((e) => { console.error('Failed to fetch event-config:', e); return null; }),
+        payload.findGlobal({ slug: 'hero-section' }).catch((e) => { console.error('Failed to fetch hero-section:', e); return null; }),
         payload.find({ collection: 'store-buttons', where: { visible: { equals: true } }, sort: 'sortOrder' }).catch(() => ({ docs: [] })),
         payload.find({ collection: 'characters', where: { visible: { equals: true } }, sort: 'sortOrder', limit: 20 }).catch(() => ({ docs: [] })),
         payload.find({ collection: 'news', where: { status: { equals: 'published' } }, sort: '-publishedAt', limit: 3 }).catch(() => ({ docs: [] })),
       ]);
 
-    // Build settings object matching the CMSSettings interface
+    // Build settings object
     if (siteSettings && heroSection) {
-      const hs = heroSection as Record<string, unknown>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ss = siteSettings as any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const hs = heroSection as any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ec = eventConfig as any;
+
       settings = {
         site: {
-          name: (siteSettings as Record<string, unknown>).siteName as string || 'Eternal Tower Saga',
-          description: (siteSettings as Record<string, unknown>).siteDescription as string || '',
-          logo: extractUrl((siteSettings as Record<string, unknown>).logo),
-          socialLinks: (siteSettings as Record<string, unknown>).socialLinks as Record<string, string | null> || {},
-          footer: (siteSettings as Record<string, unknown>).footer as { copyrightText: string; termsUrl: string; privacyUrl: string; supportUrl: string } || {
+          name: ss.siteName || 'Eternal Tower Saga',
+          description: ss.siteDescription || '',
+          logo: extractMediaUrl(ss.logo),
+          socialLinks: ss.socialLinks || {},
+          footer: ss.footer || {
             copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
             termsUrl: '/terms',
             privacyUrl: '/privacy',
@@ -66,48 +56,46 @@ export default async function LandingPage() {
           },
         },
         hero: {
-          taglineEn: hs.taglineEn as string || 'Rise Together, Conquer the Tower',
-          taglineTh: hs.taglineTh as string || 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย',
-          taglineImageEn: typeof hs.taglineImageEn === 'object' && hs.taglineImageEn ? { url: (hs.taglineImageEn as { url: string }).url } : null,
-          taglineImageTh: typeof hs.taglineImageTh === 'object' && hs.taglineImageTh ? { url: (hs.taglineImageTh as { url: string }).url } : null,
-          ctaTextEn: hs.ctaTextEn as string || 'Pre-Register Now',
-          ctaTextTh: hs.ctaTextTh as string || 'ลงทะเบียนล่วงหน้าเลย',
-          ctaLink: hs.ctaLink as string || '/event',
-          backgroundImage: typeof hs.backgroundImage === 'object' && hs.backgroundImage ? { url: (hs.backgroundImage as { url: string }).url } : null,
-          backgroundVideo: typeof hs.backgroundVideo === 'object' && hs.backgroundVideo ? { url: (hs.backgroundVideo as { url: string }).url } : null,
-          features: (hs.features as Array<{ icon: string; titleEn: string; titleTh: string; descriptionEn: string; descriptionTh: string }>) || [],
+          taglineEn: hs.taglineEn || 'Rise Together, Conquer the Tower',
+          taglineTh: hs.taglineTh || 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย',
+          taglineImageEn: extractMedia(hs.taglineImageEn),
+          taglineImageTh: extractMedia(hs.taglineImageTh),
+          ctaTextEn: hs.ctaTextEn || 'Pre-Register Now',
+          ctaTextTh: hs.ctaTextTh || 'ลงทะเบียนล่วงหน้าเลย',
+          ctaLink: hs.ctaLink || '/event',
+          backgroundImage: extractMedia(hs.backgroundImage),
+          backgroundVideo: extractMedia(hs.backgroundVideo),
+          features: (hs.features as CMSFeature[]) || [],
         },
-        event: eventConfig ? {
-          enabled: (eventConfig as Record<string, unknown>).enabled as boolean || false,
-          titleEn: (eventConfig as Record<string, unknown>).titleEn as string || '',
-          titleTh: (eventConfig as Record<string, unknown>).titleTh as string || '',
-        } : { enabled: false, titleEn: '', titleTh: '' },
+        event: ec
+          ? { enabled: ec.enabled || false, titleEn: ec.titleEn || '', titleTh: ec.titleTh || '' }
+          : { enabled: false, titleEn: '', titleTh: '' },
         characters: {
-          bgImage: typeof hs.charactersBgImage === 'object' && hs.charactersBgImage ? { url: (hs.charactersBgImage as { url: string }).url } : null,
-          badgeEn: hs.charactersBadgeEn as string || 'CHOOSE YOUR HERO',
-          badgeTh: hs.charactersBadgeTh as string || 'เลือกฮีโร่ของคุณ',
-          titleEn: hs.charactersTitleEn as string || 'Heroes of Arcatea',
-          titleTh: hs.charactersTitleTh as string || 'ฮีโร่แห่ง Arcatea',
-          voiceButtonEn: hs.voiceButtonEn as string || 'Listen to Voice Line',
-          voiceButtonTh: hs.voiceButtonTh as string || 'ฟังเสียงตัวละคร',
+          bgImage: extractMedia(hs.charactersBgImage),
+          badgeEn: hs.charactersBadgeEn || 'CHOOSE YOUR HERO',
+          badgeTh: hs.charactersBadgeTh || 'เลือกฮีโร่ของคุณ',
+          titleEn: hs.charactersTitleEn || 'Heroes of Arcatea',
+          titleTh: hs.charactersTitleTh || 'ฮีโร่แห่ง Arcatea',
+          voiceButtonEn: hs.voiceButtonEn || 'Listen to Voice Line',
+          voiceButtonTh: hs.voiceButtonTh || 'ฟังเสียงตัวละคร',
         },
         highlights: {
-          badgeEn: hs.highlightsBadgeEn as string || 'GAME FEATURES',
-          badgeTh: hs.highlightsBadgeTh as string || 'ฟีเจอร์เกม',
-          titleEn: hs.highlightsTitleEn as string || 'Game Highlights',
-          titleTh: hs.highlightsTitleTh as string || 'ไฮไลท์เกม',
-          bgImage: typeof hs.highlightsBgImage === 'object' && hs.highlightsBgImage ? { url: (hs.highlightsBgImage as { url: string }).url } : null,
+          badgeEn: hs.highlightsBadgeEn || 'GAME FEATURES',
+          badgeTh: hs.highlightsBadgeTh || 'ฟีเจอร์เกม',
+          titleEn: hs.highlightsTitleEn || 'Game Highlights',
+          titleTh: hs.highlightsTitleTh || 'ไฮไลท์เกม',
+          bgImage: extractMedia(hs.highlightsBgImage),
         },
         news: {
-          badgeEn: hs.newsBadgeEn as string || 'LATEST NEWS',
-          badgeTh: hs.newsBadgeTh as string || 'ข่าวล่าสุด',
-          titleEn: hs.newsTitleEn as string || 'News & Updates',
-          titleTh: hs.newsTitleTh as string || 'ข่าวสารและอัพเดท',
+          badgeEn: hs.newsBadgeEn || 'LATEST NEWS',
+          badgeTh: hs.newsBadgeTh || 'ข่าวล่าสุด',
+          titleEn: hs.newsTitleEn || 'News & Updates',
+          titleTh: hs.newsTitleTh || 'ข่าวสารและอัพเดท',
         },
         storeButtons: storeButtonsRes.docs.map((btn: Record<string, unknown>) => ({
           platform: btn.platform as string,
           label: btn.label as string,
-          sublabel: btn.sublabel as string,
+          sublabel: (btn.sublabel as string) || '',
           url: btn.url as string,
         })),
       };
@@ -116,28 +104,25 @@ export default async function LandingPage() {
     // Build characters array
     characters = charsRes.docs.map((c: Record<string, unknown>) => ({
       id: c.id as number,
-      name: (c.name || c.name_en || '') as string,
-      portrait: extractUrl(c.portrait),
-      infoImage: extractUrl(c.infoImage),
-      backgroundImage: extractUrl(c.backgroundImage),
-      icon: extractUrl(c.icon),
+      name: (c.name || '') as string,
+      portrait: extractMediaUrl(c.portrait),
+      infoImage: extractMediaUrl(c.infoImage),
+      backgroundImage: extractMediaUrl(c.backgroundImage),
+      icon: extractMediaUrl(c.icon),
     }));
 
     // Build news array
     news = newsRes.docs.map((article: Record<string, unknown>) => ({
       id: article.id as number,
-      titleEn: article.titleEn as string || '',
-      titleTh: article.titleTh as string || '',
-      slug: article.slug as string || '',
-      category: article.category as string || '',
-      publishedAt: article.publishedAt as string || '',
-      featuredImage: typeof article.featuredImage === 'object' && article.featuredImage
-        ? (article.featuredImage as { url: string }).url
-        : null,
+      titleEn: (article.titleEn as string) || '',
+      titleTh: (article.titleTh as string) || '',
+      slug: (article.slug as string) || '',
+      category: (article.category as string) || '',
+      publishedAt: (article.publishedAt as string) || '',
+      featuredImage: extractMediaUrl(article.featuredImage),
     }));
   } catch (error) {
     console.error('SSR data fetch error:', error);
-    // Fall through with null/empty defaults — client will render fallbacks
   }
 
   return <HomeContent settings={settings} characters={characters} news={news} />;

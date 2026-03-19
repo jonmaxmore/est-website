@@ -94,7 +94,7 @@ export default function HeroSection({ settings }: HeroProps) {
     >
       {/* Video Background Layer */}
       {videoUrl && (
-        <div className="hero-video-layer">
+        <div className="hero-video-layer" aria-hidden="true">
           <video
             ref={videoRef}
             autoPlay
@@ -237,6 +237,7 @@ export default function HeroSection({ settings }: HeroProps) {
       {/* Scroll indicator */}
       <motion.div
         className="scroll-indicator"
+        aria-hidden="true"
         animate={{ y: [0, 12, 0] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
       >

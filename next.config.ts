@@ -6,10 +6,6 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: '178.128.127.161',
-      },
-      {
         protocol: 'https',
         hostname: 'www.eternaltowersaga.com',
       },
@@ -29,7 +25,6 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '100mb',
     },
   },
-  // Suppress specific harmless warnings
   typescript: {
     ignoreBuildErrors: false,
   },

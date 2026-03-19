@@ -80,7 +80,11 @@ export default function Navigation() {
             <Link href="/event" className="nav-cta">
               {t('ลงทะเบียน', 'Register')}
             </Link>
-            <button className="nav-lang" onClick={toggle}>
+            <button
+              className="nav-lang"
+              onClick={toggle}
+              aria-label={lang === 'th' ? 'Switch to English' : 'เปลี่ยนเป็นภาษาไทย'}
+            >
               {lang === 'th' ? 'EN' : 'TH'}
             </button>
 

@@ -15,8 +15,8 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build args for env during build
-ARG PAYLOAD_SECRET=build-time-secret
-ARG DATABASE_URI=postgresql://est:est_secret@db:5432/est_db
+ARG PAYLOAD_SECRET
+ARG DATABASE_URI
 
 ENV PAYLOAD_SECRET=${PAYLOAD_SECRET}
 ENV DATABASE_URI=${DATABASE_URI}
@@ -40,11 +40,11 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Copy source + node_modules for Payload migrations at runtime
+# Copy source + deps needed for Payload migrations at runtime
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
+COPY --from=builder /app/package.json ./package.json
 
 # Copy startup script
 COPY docker-start.sh ./docker-start.sh
