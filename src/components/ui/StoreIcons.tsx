@@ -31,7 +31,6 @@ export const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export const FEATURE_ICONS: Record<string, React.ReactElement> = {
-  mercenary: <Swords size={18} />,
   explore: <Map size={18} />,
   tower: <Castle size={18} />,
   upgrade: <Sparkles size={18} />,

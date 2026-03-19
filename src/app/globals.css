@@ -861,85 +861,6 @@
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
   }
 
-  /* ─── MERCENARY SECTION ─── */
-  .section-mercenary {
-    position: relative;
-    padding: 6rem 0;
-    background: linear-gradient(180deg, var(--midnight), var(--dark-navy) 50%, var(--midnight));
-    overflow: hidden;
-  }
-
-  .merc-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: center;
-    position: relative;
-    z-index: 5;
-  }
-
-  .merc-art-wrapper { position: relative; }
-
-  .merc-art-frame {
-    position: relative;
-    aspect-ratio: 4 / 3;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 3px solid rgba(212,168,67,0.3);
-    box-shadow:
-      0 0 0 1px rgba(212,168,67,0.1),
-      0 20px 60px rgba(0,0,0,0.4),
-      inset 0 0 60px rgba(0,0,0,0.2);
-  }
-
-  .merc-art-border {
-    position: absolute;
-    inset: 0;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.1);
-    pointer-events: none;
-  }
-
-  .merc-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    position: relative;
-    z-index: 5;
-  }
-
-  .merc-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1.25rem;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    cursor: default;
-    transition: all 0.3s var(--ease-out-expo);
-  }
-
-  .merc-card:hover {
-    background: rgba(255,255,255,0.07);
-    border-color: rgba(255,255,255,0.15);
-  }
-
-  .merc-card-icon { font-size: 2rem; flex-shrink: 0; }
-
-  .merc-card-title {
-    font-weight: 700;
-    font-size: 0.95rem;
-    margin-bottom: 0.3rem;
-  }
-
-  .merc-card-desc {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.5;
-  }
 
   /* ═══ CHARACTER SHOWCASE — Polished Reference Layout ═══ */
   .char-showcase {
@@ -986,12 +907,13 @@
     pointer-events: none;
   }
 
-  /* ── Layer 2: Portrait — 60% left, FULL HEIGHT top to bottom ── */
+  /* ── Layer 2: Portrait — Centered on triangle background ── */
   .char-portrait-layer {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 60%;
     display: flex;
     align-items: stretch;
@@ -1008,19 +930,19 @@
     filter: drop-shadow(8px 0 30px rgba(0,0,0,0.4));
   }
 
-  /* ── Layer 3: Right Panel (Movie Clip + Weapon Info) ── */
+  /* ── Layer 3: Right Panel (Movie Clip + Weapon Info) — Centered, 3x larger ── */
   .char-right-panel {
     position: absolute;
-    right: 3%;
+    left: 50%;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
     z-index: 3;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
     gap: 1.2rem;
-    width: 35%;
-    max-width: 480px;
+    width: 80%;
+    max-width: 1200px;
   }
 
   /* Movie Clip Player Card */
@@ -1064,7 +986,7 @@
     transform: scale(1.08);
   }
 
-  /* Weapon Info */
+  /* Weapon Info — 3x larger, centered */
   .char-weapon-info {
     width: 100%;
   }
@@ -1073,22 +995,23 @@
     width: 100%;
     height: auto;
     object-fit: contain;
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.3));
   }
 
-  /* ── Layer 4: Character Icon Selectors (bottom-right) ── */
+  /* ── Layer 4: Character Icon Selectors — Centered bottom, 2x larger ── */
   .char-icon-selector {
     position: absolute;
     bottom: 2.5rem;
-    right: 3%;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 4;
     display: flex;
-    gap: 0.7rem;
+    gap: 1.2rem;
   }
 
   .char-icon-btn {
-    width: 56px;
-    height: 56px;
+    width: 112px;
+    height: 112px;
     border-radius: 50%;
     border: none;
     background: transparent;
@@ -1112,7 +1035,7 @@
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.3);
+    border: 3px solid rgba(255,255,255,0.3);
     transition: border-color 0.3s;
   }
 
@@ -1122,15 +1045,15 @@
 
   .char-icon-btn.active .char-icon-img {
     border-color: rgba(140,200,255,0.9);
-    box-shadow: 0 0 16px rgba(140,200,255,0.4);
+    box-shadow: 0 0 20px rgba(140,200,255,0.5);
   }
 
   /* Compass ring decoration */
   .char-icon-ring {
     position: absolute;
-    inset: -4px;
+    inset: -6px;
     border-radius: 50%;
-    border: 1.5px solid transparent;
+    border: 2px solid transparent;
     pointer-events: none;
     transition: all 0.3s;
   }
@@ -1138,10 +1061,10 @@
   .char-icon-btn.active .char-icon-ring {
     border-color: rgba(140,200,255,0.5);
     /* compass points */
-    background: radial-gradient(circle at 50% 0%, rgba(140,200,255,0.8) 2px, transparent 2px),
-                radial-gradient(circle at 100% 50%, rgba(140,200,255,0.8) 2px, transparent 2px),
-                radial-gradient(circle at 50% 100%, rgba(140,200,255,0.8) 2px, transparent 2px),
-                radial-gradient(circle at 0% 50%, rgba(140,200,255,0.8) 2px, transparent 2px);
+    background: radial-gradient(circle at 50% 0%, rgba(140,200,255,0.8) 3px, transparent 3px),
+                radial-gradient(circle at 100% 50%, rgba(140,200,255,0.8) 3px, transparent 3px),
+                radial-gradient(circle at 50% 100%, rgba(140,200,255,0.8) 3px, transparent 3px),
+                radial-gradient(circle at 0% 50%, rgba(140,200,255,0.8) 3px, transparent 3px);
   }
 
   /* ── Mobile Responsive ── */
@@ -1156,6 +1079,8 @@
       height: 55%;
       top: 0;
       bottom: auto;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     .char-portrait-img {
@@ -1164,16 +1089,15 @@
 
     .char-right-panel {
       position: absolute;
-      right: auto;
       left: 1rem;
       right: 1rem;
       top: auto;
-      bottom: 5rem;
+      bottom: 6rem;
       transform: none;
       width: auto;
       max-width: 100%;
-      flex-direction: row;
-      align-items: flex-end;
+      flex-direction: column;
+      align-items: center;
       gap: 0.8rem;
     }
 
@@ -1206,13 +1130,13 @@
 
     .char-icon-selector {
       bottom: 1rem;
-      right: 50%;
-      transform: translateX(50%);
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     .char-icon-btn {
-      width: 42px;
-      height: 42px;
+      width: 64px;
+      height: 64px;
     }
 
     .char-gradient-bottom {
@@ -1855,7 +1779,6 @@
 /* ─── RESPONSIVE ─── */
 @media (max-width: 1024px) {
   .nav-links { display: none; }
-  .merc-grid { grid-template-columns: 1fr; }
   .char-layout { grid-template-columns: 1fr; }
   .char-portrait-area { min-height: 350px; }
   .features-grid { grid-template-columns: repeat(2, 1fr); }
@@ -2838,9 +2761,6 @@
   .news-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .merc-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
   .container-custom {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
@@ -2895,14 +2815,6 @@
     gap: 0.75rem;
   }
 
-  /* Mercenary Section */
-  .merc-section-title {
-    font-size: 1.5rem;
-  }
-  .merc-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
 
   /* Features */
   .features-grid {
@@ -2962,9 +2874,6 @@
   }
   .hero-tagline-en {
     font-size: 0.85rem;
-  }
-  .merc-grid {
-    grid-template-columns: 1fr;
   }
   .section-title-gold {
     font-size: 1.3rem;
@@ -4828,6 +4737,8 @@
 }
 .event-store-badge-link:hover { transform: scale(1.05); }
 .event-store-badge-img { height: 50px; width: auto; }
+.event-success-inline { text-align: center; }
+.store-btn-modal { min-width: 200px; }
 .event-success-pc-note {
   text-align: center;
   color: #5A4A3A;
@@ -5021,4 +4932,56 @@
   .fab-back-to-top {
     transition: none;
   }
+}
+
+/* ═══════════════════════════════════════════════════
+   SKELETON LOADING UI
+   ═══════════════════════════════════════════════════ */
+.skeleton-pulse {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.skeleton-card-image {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+.skeleton-card-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skeleton-character {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.skeleton-character-portrait {
+  width: 300px;
+  height: 400px;
+  border-radius: var(--radius-xl);
+}
+
+.skeleton-character-icons {
+  display: flex;
+  gap: 1rem;
 }

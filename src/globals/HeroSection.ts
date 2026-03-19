@@ -53,28 +53,7 @@ export const HeroSection: GlobalConfig = {
           ],
         },
         { name: 'ctaLink', type: 'text', defaultValue: '/event', label: 'CTA Button Link' },
-        {
-          type: 'group',
-          name: 'mercenarySection',
-          label: 'Mercenary Companion Sub-Section',
-          fields: [
-            {
-              type: 'row',
-              fields: [
-                { name: 'titleEn', type: 'text', defaultValue: 'Mercenary Companion System', admin: { width: '50%' } },
-                { name: 'titleTh', type: 'text', defaultValue: 'ระบบเมอร์เซนารี คอมพาเนียน', admin: { width: '50%' } },
-              ],
-            },
-            {
-              type: 'row',
-              fields: [
-                { name: 'subtitleEn', type: 'text', defaultValue: 'Battle Companions — Not Just Pets', admin: { width: '50%' } },
-                { name: 'subtitleTh', type: 'text', defaultValue: 'สหายร่วมรบ — ไม่ใช่แค่สัตว์เลี้ยง', admin: { width: '50%' } },
-              ],
-            },
-            { name: 'artImage', type: 'upload', relationTo: 'media', label: 'Mercenary Art Image' },
-          ],
-        },
+
       ],
     },
 

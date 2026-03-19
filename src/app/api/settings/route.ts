@@ -97,15 +97,7 @@ export async function GET() {
         backgroundImage: typeof heroSection.backgroundImage === 'object' && heroSection.backgroundImage ? {
           url: heroSection.backgroundImage.url,
         } : null,
-        mercenarySection: {
-          titleEn: heroSection.mercenarySection?.titleEn,
-          titleTh: heroSection.mercenarySection?.titleTh,
-          subtitleEn: heroSection.mercenarySection?.subtitleEn,
-          subtitleTh: heroSection.mercenarySection?.subtitleTh,
-          artImage: typeof heroSection.mercenarySection?.artImage === 'object' && heroSection.mercenarySection?.artImage ? {
-            url: heroSection.mercenarySection.artImage.url,
-          } : null,
-        },
+
         features: heroSection.features?.map((f: Record<string, string>) => ({
           icon: f.icon,
           titleEn: f.titleEn,

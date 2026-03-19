@@ -49,7 +49,7 @@ export async function POST() {
     // 4. Seed News
     const newsData = [
       { titleEn: 'Pre-Registration Officially Opens!', titleTh: 'เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ!', slug: 'pre-registration-opens', category: 'event' as const, emoji: '🎉', status: 'published' as const, publishedAt: new Date().toISOString() },
-      { titleEn: 'Meet the Mercenary Companion System', titleTh: 'พบกับระบบเมอร์เซนารี คอมพาเนียน', slug: 'mercenary-companion-system', category: 'update' as const, emoji: '⚔️', status: 'published' as const, publishedAt: new Date(Date.now() - 86400000).toISOString() },
+      { titleEn: 'Discover the Combat System', titleTh: 'พบกับระบบการต่อสู้สุดมัน', slug: 'combat-system-reveal', category: 'update' as const, emoji: '⚔️', status: 'published' as const, publishedAt: new Date(Date.now() - 86400000).toISOString() },
       { titleEn: 'Developer Diary: Creating Arcatéa', titleTh: 'บันทึกนักพัฒนา: การสร้างอาร์คาเทีย', slug: 'developer-diary-arcatea', category: 'media' as const, emoji: '📖', status: 'published' as const, publishedAt: new Date(Date.now() - 172800000).toISOString() },
     ]
     let nCount = 0
@@ -80,19 +80,41 @@ export async function POST() {
           ctaTextEn: 'Pre-Register Now',
           ctaTextTh: 'ลงทะเบียนล่วงหน้าเลย',
           ctaLink: '/event',
-          mercenarySection: {
-            titleEn: 'Mercenary Companion System',
-            titleTh: 'ระบบเมอร์เซนารี คอมพาเนียน',
-            subtitleEn: 'Battle Companions — Not Just Pets',
-            subtitleTh: 'สหายร่วมรบ — ไม่ใช่แค่สัตว์เลี้ยง',
-          },
           features: [
-            { icon: '⚔️', titleEn: 'Mercenary Companion', titleTh: 'ระบบ Mercenary Companion', descriptionEn: 'Fight alongside companions as equals', descriptionTh: 'ต่อสู้เคียงข้างสหายร่วมรบผู้ทรงพลัง' },
+            { icon: '⚔️', titleEn: 'Combat System', titleTh: 'ระบบต่อสู้', descriptionEn: 'Exciting 4-class dungeon combat', descriptionTh: 'ลุยดันเจี้ยนสุดมัน 4 คลาส' },
             { icon: '🗺️', titleEn: 'Explore the World', titleTh: 'สำรวจโลกกว้าง', descriptionEn: 'Explore the vast lands of Arcatéa', descriptionTh: 'ผจญภัยในดินแดน Arcatéa อันกว้างใหญ่ไพศาล' },
             { icon: '🏰', titleEn: 'Conquer the Tower', titleTh: 'พิชิตหอคอย', descriptionEn: 'Climb The Boundless Spire', descriptionTh: 'ปีนหอคอยนิรันดร์ The Boundless Spire ท้าทายขั้นเซียนสุดโหด' },
             { icon: '✨', titleEn: 'Upgrade Characters', titleTh: 'อัพเกรดตัวละคร', descriptionEn: 'Develop skills, gear, and appearances', descriptionTh: 'พัฒนาทักษะ อุปกรณ์ และรูปลักษณ์ให้แข็งแกร่ง' },
             { icon: '🏟️', titleEn: 'PvP Arena', titleTh: 'PvP Arena', descriptionEn: 'Challenge other players in real-time', descriptionTh: 'ต่อสู้กับผู้เล่นคนอื่นในสนามประลองแบบเรียลไทม์' },
             { icon: '🤝', titleEn: 'Guilds & Friends', titleTh: 'กิลด์ & เพื่อน', descriptionEn: 'Join guilds and conquer bosses', descriptionTh: 'สร้างกิลด์ ร่วมมือกับเพื่อนเพื่อพิชิตบอสสุดโหด' },
+          ],
+          // Story Page
+          storyPageBadgeEn: 'LORE',
+          storyPageBadgeTh: 'เนื้อเรื่อง',
+          storyPageTitleEn: 'Story',
+          storyPageTitleTh: 'เนื้อเรื่อง',
+          storyPageSubtitleEn: 'The tale of Arcatéa and The Boundless Spire',
+          storyPageSubtitleTh: 'เรื่องราวแห่งดินแดน Arcatéa และหอคอยไร้ขอบเขต',
+          storySections: [
+            { titleEn: 'The World of Arcatéa', titleTh: 'โลกแห่ง Arcatéa', contentEn: 'In the age before memory, the world of Arcatéa was a single, boundless continent — a realm where floating islands drifted above crystalline oceans, and ancient forests stretched to the edge of horizon. The people of this land lived in harmony with the Aether, a primordial energy that flowed through all living things.', contentTh: 'ในยุคก่อนที่ความทรงจำจะเริ่มต้น โลกแห่ง Arcatéa เป็นทวีปเดียวอันไร้ขอบเขต — ดินแดนที่เกาะลอยฟ้าล่องลอยเหนือมหาสมุทรใส และป่าโบราณแผ่ขยายไปจนสุดขอบฟ้า ผู้คนแห่งดินแดนนี้ใช้ชีวิตอย่างกลมเกลียวกับ Aether พลังงานดั้งเดิมที่ไหลผ่านสิ่งมีชีวิตทุกชนิด' },
+            { titleEn: 'The Boundless Spire', titleTh: 'หอคอยไร้ขอบเขต', contentEn: 'At the heart of Arcatéa stands The Boundless Spire — a colossal tower that pierces through clouds and reaches into the unknown heavens. Ancient texts speak of it as the Pillar of Creation, the axis upon which the world was formed. No one knows who built it, or what lies at its summit. Those who dare ascend face increasingly deadly floors, each guarded by creatures born of nightmares.', contentTh: 'ณ ใจกลาง Arcatéa ตั้งตระหง่านอยู่หอคอยไร้ขอบเขต — หอคอยมหึมาที่ทะลุเมฆและยื่นขึ้นสู่สวรรค์ที่ไม่มีผู้ใดรู้จัก ตำราโบราณกล่าวถึงมันว่าเป็นเสาหลักแห่งการสร้างสรรค์ แกนกลางที่โลกถูกก่อร่างขึ้น ไม่มีผู้ใดรู้ว่าใครสร้างมัน หรือสิ่งใดซ่อนอยู่ที่ยอดสุด ผู้กล้าที่บังอาจขึ้นไปต้องเผชิญกับชั้นที่อันตรายมากขึ้นเรื่อยๆ' },
+            { titleEn: 'The Fracture', titleTh: 'การแตกร้าว', contentEn: 'A thousand years ago, a cataclysmic event known as The Fracture shattered the balance of Aether. The continent split into floating fragments, and dark energy poured from the cracks in reality. Monsters emerged from the shadows, and the once-peaceful lands became battlegrounds. The survivors built new civilizations on the floating platforms, connected by ancient bridges and magic portals.', contentTh: 'เมื่อพันปีก่อน เหตุการณ์หายนะที่เรียกว่า "การแตกร้าว" ได้ทำลายสมดุลของ Aether ทวีปแตกออกเป็นเศษชิ้นส่วนลอยฟ้า และพลังงานมืดหลั่งไหลจากรอยร้าวในความเป็นจริง สัตว์ประหลาดโผล่ออกมาจากเงามืด ดินแดนที่เคยสงบสุขกลายเป็นสมรภูมิ ผู้รอดชีวิตสร้างอารยธรรมใหม่บนแท่นลอยฟ้า เชื่อมต่อกันด้วยสะพานโบราณและประตูเวทมนตร์' },
+            { titleEn: 'The Heroes Rise', titleTh: 'วีรบุรุษผงาด', contentEn: 'Now, a new generation of heroes has emerged — warriors, archers, mages, and healers who answer the call to ascend The Boundless Spire. They venture into unknown dangers, each wielding unique weapons and mastering combat styles. Their mission: reach the summit of the tower, uncover the truth of The Fracture, and restore the balance of Aether. The fate of Arcatéa rests in their hands.', contentTh: 'บัดนี้ วีรบุรุษรุ่นใหม่ได้ปรากฏตัว — นักรบ นักธนู จอมเวทย์ และนักบวช ผู้ตอบรับเสียงเรียกให้ขึ้นหอคอยไร้ขอบเขต พวกเขาผจญภัยสู่อันตรายที่ไม่มีใครรู้จัก แต่ละคนถืออาวุธที่ไม่เหมือนกันและมีสไตล์การต่อสู้เฉพาะตัว ภารกิจของพวกเขาคือ ไปถึงยอดหอคอย เปิดเผยความจริงของการแตกร้าว และฟื้นฟูสมดุลของ Aether ชะตากรรมของ Arcatéa อยู่ในมือพวกเขา' },
+          ],
+          // Game Guide Page
+          gameGuideBadgeEn: 'GAME GUIDE',
+          gameGuideBadgeTh: 'แนะนำเกม',
+          gameGuideTitleEn: 'Game Guide',
+          gameGuideTitleTh: 'แนะนำเกม',
+          gameGuideSubtitleEn: 'Experience the new era of Eternal Tower Saga — Switch your weapon, shift the battlefield',
+          gameGuideSubtitleTh: 'สัมผัสประสบการณ์ใหม่ใน Eternal Tower Saga — อาวุธเปลี่ยน เกมเปลี่ยน',
+          gameGuideFeatures: [
+            { icon: 'swords', titleEn: 'Combat System', titleTh: 'ระบบต่อสู้', descriptionEn: 'Exciting 4-class dungeon combat with unique weapon switching mechanics', descriptionTh: 'ลุยดันเจี้ยนสุดมัน 4 คลาส พร้อมระบบเปลี่ยนอาวุธสุดเจ๋ง' },
+            { icon: 'map', titleEn: 'Explore Arcatéa', titleTh: 'สำรวจโลก Arcatéa', descriptionEn: 'Explore the vast lands of Arcatéa — discover floating platforms connected in layers', descriptionTh: 'ผจญภัยในดินแดน Arcatéa อันกว้างใหญ่ไพศาล สำรวจแท่นลอยฟ้าที่เชื่อมกันเป็นชั้นๆ' },
+            { icon: 'castle', titleEn: 'The Boundless Spire', titleTh: 'หอคอยนิรันดร์', descriptionEn: 'Climb The Boundless Spire — conquer deadly dungeons on each floor', descriptionTh: 'ปีนหอคอยนิรันดร์ The Boundless Spire — ท้าทายดันเจี้ยนสุดโหดในแต่ละชั้น' },
+            { icon: 'shield', titleEn: 'PvP Arena', titleTh: 'PvP Arena', descriptionEn: 'Challenge other players in real-time arena battles — prove your strength', descriptionTh: 'ต่อสู้กับผู้เล่นคนอื่นในสนามประลองแบบเรียลไทม์ พิสูจน์ความแกร่ง' },
+            { icon: 'sparkles', titleEn: 'Character Upgrades', titleTh: 'อัพเกรดตัวละคร', descriptionEn: 'Develop skills, gear, and appearances — switch weapons, shift the battlefield', descriptionTh: 'พัฒนาทักษะ อุปกรณ์ และรูปลักษณ์ให้แข็งแกร่ง เปลี่ยนอาวุธเปลี่ยนเกม' },
+            { icon: 'users', titleEn: 'Guilds & Friends', titleTh: 'กิลด์ & เพื่อน', descriptionEn: 'Build guilds and team up with friends to conquer deadly bosses in special dungeons', descriptionTh: 'สร้างกิลด์ ร่วมมือกับเพื่อนเพื่อพิชิตบอสสุดโหดในดันเจี้ยนพิเศษ' },
           ],
         },
       })

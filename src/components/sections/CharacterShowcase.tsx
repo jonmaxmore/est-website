@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 
 /* ──────────────────────────────────────────────
-   Character Showcase — Pure CMS, No Hardcode
-   Layout: Portrait(60% full-height) | Movie Clip + Weapon Info | Icons
-   All images come from CMS. No fallback mockups.
+   Character Showcase — Smooth Parallax Layers
+   Layout: BG (slow) → Portrait (medium) → UI (fast)
+   Uses Framer Motion useScroll + useTransform
+   Performance: will-change:transform on all layers
    ────────────────────────────────────────────── */
 
 interface CharacterData {
@@ -23,6 +24,7 @@ export default function CharacterShowcase({ characters }: { characters?: Charact
   const [activeIdx, setActiveIdx] = useState(0);
   const [hovered, setHovered] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Use only CMS data — no hardcoded fallback
   const charList = characters && characters.length > 0 ? characters : [];
@@ -37,6 +39,19 @@ export default function CharacterShowcase({ characters }: { characters?: Charact
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [hovered, nextChar, charList.length]);
 
+  /* ─── Smooth Parallax — Framer Motion ─── */
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start end', 'end start'],
+  });
+
+  // Background: deepest layer, moves slowest
+  const bgY = useTransform(scrollYProgress, [0, 1], ['-15%', '15%']);
+  // Portrait: mid layer, slight counter-movement
+  const portraitY = useTransform(scrollYProgress, [0, 1], ['10%', '-10%']);
+  // UI panels: front layer, moves fastest → creates pop-up depth
+  const uiY = useTransform(scrollYProgress, [0, 1], ['20%', '-20%']);
+
   // If no CMS data, render nothing
   if (charList.length === 0) return null;
 
@@ -44,16 +59,18 @@ export default function CharacterShowcase({ characters }: { characters?: Charact
 
   return (
     <section
+      ref={containerRef}
       className="char-showcase"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* ─── Layer 1: Full Background ─── */}
+      {/* ─── Layer 1: Full Background (slowest parallax) ─── */}
       {active.backgroundImage && (
         <AnimatePresence mode="wait">
           <motion.div
             key={`bg-${active.id}`}
             className="char-bg-layer"
+            style={{ y: bgY, willChange: 'transform' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -75,12 +92,13 @@ export default function CharacterShowcase({ characters }: { characters?: Charact
       <div className="char-gradient-top" />
       <div className="char-gradient-bottom" />
 
-      {/* ─── Layer 2: Character Portrait (60% left, full height) ─── */}
+      {/* ─── Layer 2: Character Portrait (medium parallax) ─── */}
       {active.portrait && (
         <AnimatePresence mode="wait">
           <motion.div
             key={`portrait-${active.id}`}
             className="char-portrait-layer"
+            style={{ y: portraitY, willChange: 'transform' }}
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 30 }}
@@ -98,10 +116,12 @@ export default function CharacterShowcase({ characters }: { characters?: Charact
         </AnimatePresence>
       )}
 
-      {/* ─── Layer 3: Right Panel (Weapon Info — Movie clip hidden until video available) ─── */}
+      {/* ─── Layer 3: Weapon Info Panel (fastest parallax) ─── */}
       {active.infoImage && (
-        <div className="char-right-panel">
-          {/* Weapon Info Image */}
+        <motion.div
+          className="char-right-panel"
+          style={{ y: uiY, willChange: 'transform' }}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={`info-${active.id}`}
@@ -120,11 +140,14 @@ export default function CharacterShowcase({ characters }: { characters?: Charact
               />
             </motion.div>
           </AnimatePresence>
-        </div>
+        </motion.div>
       )}
 
-      {/* ─── Layer 4: Character Selector Icons ─── */}
-      <div className="char-icon-selector">
+      {/* ─── Layer 4: Character Selector Icons (fastest parallax) ─── */}
+      <motion.div
+        className="char-icon-selector"
+        style={{ y: uiY, willChange: 'transform' }}
+      >
         {charList.map((char, i) => (
           <motion.button
             key={char.id}
@@ -138,15 +161,15 @@ export default function CharacterShowcase({ characters }: { characters?: Charact
               <Image
                 src={char.icon || char.portrait || ''}
                 alt={char.name || ''}
-                width={56}
-                height={56}
+                width={112}
+                height={112}
                 className="char-icon-img"
               />
             )}
             <div className="char-icon-ring" />
           </motion.button>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }

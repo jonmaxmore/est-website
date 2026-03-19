@@ -12,6 +12,7 @@ import { News } from './collections/News'
 import { Milestones } from './collections/Milestones'
 import { StoreButtons } from './collections/StoreButtons'
 import { Registrations } from './collections/Registrations'
+import { Gallery } from './collections/Gallery'
 import { Users } from './collections/Users'
 
 // Globals
@@ -41,6 +42,7 @@ export default buildConfig({
     Milestones,
     StoreButtons,
     Registrations,
+    Gallery,
   ],
   globals: [
     SiteSettings,
@@ -48,7 +50,7 @@ export default buildConfig({
     HeroSection,
   ],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || 'est-super-secret-key-change-in-production',
+  secret: process.env.PAYLOAD_SECRET || (() => { throw new Error('PAYLOAD_SECRET environment variable is required') })(),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },

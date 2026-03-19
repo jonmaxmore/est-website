@@ -106,9 +106,9 @@ async function seed() {
       publishedAt: new Date().toISOString(),
     },
     {
-      titleEn: 'Meet the Mercenary Companion System',
-      titleTh: 'พบกับระบบเมอร์เซนารี คอมพาเนียน',
-      slug: 'mercenary-companion-system',
+      titleEn: 'Discover the Combat System',
+      titleTh: 'พบกับระบบการต่อสู้สุดมัน',
+      slug: 'combat-system-reveal',
       category: 'update' as const,
       emoji: '⚔️',
       status: 'published' as const,
@@ -158,14 +158,8 @@ async function seed() {
         ctaTextEn: 'Pre-Register Now',
         ctaTextTh: 'ลงทะเบียนล่วงหน้าเลย',
         ctaLink: '/event',
-        mercenarySection: {
-          titleEn: 'Mercenary Companion System',
-          titleTh: 'ระบบเมอร์เซนารี คอมพาเนียน',
-          subtitleEn: 'Battle Companions — Not Just Pets',
-          subtitleTh: 'สหายร่วมรบ — ไม่ใช่แค่สัตว์เลี้ยง',
-        },
         features: [
-          { icon: '⚔️', titleEn: 'Mercenary Companion', titleTh: 'ระบบ Mercenary Companion', descriptionEn: 'Fight alongside companions as equals', descriptionTh: 'ต่อสู้เคียงข้างสหายร่วมรบผู้ทรงพลัง ไม่ใช่แค่สัตว์เลี้ยง' },
+          { icon: '⚔️', titleEn: 'Combat System', titleTh: 'ระบบต่อสู้', descriptionEn: 'Exciting 4-class dungeon combat', descriptionTh: 'ลุยดันเจี้ยนสุดมัน 4 คลาส' },
           { icon: '🗺️', titleEn: 'Explore the World', titleTh: 'สำรวจโลกกว้าง', descriptionEn: 'Explore the vast lands of Arcatéa', descriptionTh: 'ผจญภัยในดินแดน Arcatéa อันกว้างใหญ่ไพศาล' },
           { icon: '🏰', titleEn: 'Conquer the Tower', titleTh: 'พิชิตหอคอย', descriptionEn: 'Climb The Boundless Spire to ultimate challenges', descriptionTh: 'ปีนหอคอยนิรันดร์ The Boundless Spire ท้าทายขั้นเซียนสุดโหด' },
           { icon: '✨', titleEn: 'Upgrade Characters', titleTh: 'อัพเกรดตัวละคร', descriptionEn: 'Develop skills, gear, and appearances', descriptionTh: 'พัฒนาทักษะ อุปกรณ์ และรูปลักษณ์ให้แข็งแกร่ง' },

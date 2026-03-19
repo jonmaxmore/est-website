@@ -1,0 +1,103 @@
+'use client';
+
+import { useState, useCallback } from 'react';
+import { trackRegistration } from '@/lib/analytics';
+import type { StoreButton } from '@/types/event';
+
+interface UseEventFormReturn {
+  /* State */
+  email: string;
+  platform: string;
+  region: string;
+  loading: boolean;
+  error: string;
+  registered: boolean;
+  referralCode: string;
+  copied: boolean;
+  showSuccessModal: boolean;
+  /* Setters */
+  setEmail: (v: string) => void;
+  setPlatform: (v: string) => void;
+  setRegion: (v: string) => void;
+  setShowSuccessModal: (v: boolean) => void;
+  /* Actions */
+  handleRegister: (e: React.FormEvent) => Promise<void>;
+  copyReferralLink: () => void;
+}
+
+export function useEventForm(
+  displayStoreButtons: StoreButton[],
+  onRegistered?: () => void,
+): UseEventFormReturn {
+  const [registered, setRegistered] = useState(false);
+  const [email, setEmail] = useState('');
+  const [platform, setPlatform] = useState('');
+  const [region, setRegion] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [referralCode, setReferralCode] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, platform, region }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Registration failed');
+
+      setReferralCode(data.referralCode);
+      setRegistered(true);
+      setShowSuccessModal(true);
+      onRegistered?.();
+
+      // Redirect to store
+      const selectedStore = displayStoreButtons.find(btn => btn.platform === platform);
+      if (selectedStore && selectedStore.url && selectedStore.url !== '#') {
+        setTimeout(() => {
+          window.open(selectedStore.url, '_blank');
+        }, 2000);
+      }
+
+      // Track conversion
+      trackRegistration({ platform, region });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Registration failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const copyReferralLink = useCallback(() => {
+    const link = `${window.location.origin}/event?ref=${referralCode}`;
+    navigator.clipboard.writeText(link);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [referralCode]);
+
+  return {
+    email,
+    platform,
+    region,
+    loading,
+    error,
+    registered,
+    referralCode,
+    copied,
+    showSuccessModal,
+    setEmail,
+    setPlatform,
+    setRegion,
+    setShowSuccessModal,
+    handleRegister,
+    copyReferralLink,
+  };
+}

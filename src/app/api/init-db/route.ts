@@ -25,12 +25,9 @@ export async function POST() {
             ctaTextEn: 'Pre-register Now',
             ctaTextTh: 'ลงทะเบียนล่วงหน้าเลย',
             ctaLink: '/event',
-            mercenarySectionTitleEn: 'Mercenary Companion System',
-            mercenarySectionTitleTh: 'ระบบเมอร์เซนารี คอมพาเนียน',
-            mercenarySectionSubtitleEn: 'Fight side by side — Not just pets',
-            mercenarySectionSubtitleTh: 'สหายร่วมรบ — ไม่ใช่แค่สัตว์เลี้ยง',
             features: [
-              { icon: '⚔️', titleEn: 'Mercenary Companion System', titleTh: 'ระบบ Mercenary Companion', descriptionEn: 'Fight alongside powerful mercenary companions', descriptionTh: 'ต่อสู้เคียงข้างสหายร่วมรบผู้ทรงพลัง ไม่ใช่แค่สัตว์เลี้ยง' },
+              { icon: '⚔️', titleEn: 'Combat System', titleTh: 'ระบบต่อสู้', descriptionEn: 'Exciting 4-class dungeon combat', descriptionTh: 'ลุยดันเจี้ยนสุดมัน 4 คลาส' },
+
               { icon: '🗺️', titleEn: 'Explore the World', titleTh: 'สำรวจโลกกว้าง', descriptionEn: 'Adventure across the vast lands of Arcatea', descriptionTh: 'ผจญภัยในดินแดน Arcatea อันกว้างใหญ่ไพศาล' },
               { icon: '🏰', titleEn: 'Conquer the Tower', titleTh: 'พิชิตหอคอย', descriptionEn: 'Climb The Boundless Spire', descriptionTh: 'ปีนหอคอยนิรันดร์ The Boundless Spire ท้าทายดันเจี้ยนสุดโหด' },
               { icon: '⬆️', titleEn: 'Character Upgrades', titleTh: 'อัพเกรดตัวละคร', descriptionEn: 'Enhance skills, gear, and appearance', descriptionTh: 'พัฒนาทักษะ อุปกรณ์ และรูปลักษณ์ให้แข็งแกร่ง' },

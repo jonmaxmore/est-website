@@ -11,8 +11,8 @@ export default function FAQSection() {
     {
       q: t('Eternal Tower Saga เป็นเกมแนวอะไร?', 'What genre is Eternal Tower Saga?'),
       a: t(
-        'Eternal Tower Saga เป็นเกมมือถือแนว Casual MMORPG ผสม Action RPG เน้นระบบ Mercenary Companion (สหายร่วมรบ) ผจญภัยในโลก Arcatéa ปีนหอคอยนิรันดร์ The Boundless Spire ต่อสู้ PvP แบบเรียลไทม์',
-        'Eternal Tower Saga is a mobile Casual MMORPG & Action RPG featuring the Mercenary Companion system. Explore the world of Arcatéa, climb The Boundless Spire, and battle in real-time PvP.',
+        'Eternal Tower Saga เป็นเกมมือถือแนว Casual MMORPG ผสม Action RPG ผจญภัยในโลก Arcatéa ปีนหอคอยนิรันดร์ The Boundless Spire ต่อสู้ PvP แบบเรียลไทม์',
+        'Eternal Tower Saga is a mobile Casual MMORPG & Action RPG. Explore the world of Arcatéa, climb The Boundless Spire, and battle in real-time PvP.',
       ),
     },
     {
@@ -20,13 +20,6 @@ export default function FAQSection() {
       a: t(
         'รองรับ iOS 14+, Android 8.0+ และ PC (Windows 10+) ดาวน์โหลดฟรีจาก App Store, Google Play และเว็บไซต์ทางการ',
         'Supports iOS 14+, Android 8.0+, and PC (Windows 10+). Free to download from App Store, Google Play, and the official website.',
-      ),
-    },
-    {
-      q: t('ระบบ Mercenary Companion คืออะไร?', 'What is the Mercenary Companion system?'),
-      a: t(
-        'จุดเด่นของ Eternal Tower Saga! ต่อสู้เคียงข้างสหายร่วมรบ 4 คลาส: นักดาบ, นักธนู, จอมเวท, นักบวช — ไม่ใช่แค่สัตว์เลี้ยง แต่เป็นสหาย AI ที่ร่วมรบจริงๆ',
-        'The unique feature of Eternal Tower Saga! Fight alongside 4 companion classes: Swordsman, Archer, Mage, Priest — not just pets, but AI companions that fight with you.',
       ),
     },
     {

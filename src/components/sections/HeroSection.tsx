@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform, useScroll } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLang } from '@/lib/lang-context';
@@ -27,15 +27,26 @@ interface HeroProps {
 }
 
 export default function HeroSection({ settings }: HeroProps) {
+  const sectionRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const smoothX = useSpring(mouseX, { stiffness: 50, damping: 30 });
   const smoothY = useSpring(mouseY, { stiffness: 50, damping: 30 });
 
+  // Mouse parallax (hover interaction)
   const bgX = useTransform(smoothX, [-0.5, 0.5], [15, -15]);
-  const bgY = useTransform(smoothY, [-0.5, 0.5], [10, -10]);
+  const bgYMouse = useTransform(smoothY, [-0.5, 0.5], [10, -10]);
   const logoX = useTransform(smoothX, [-0.5, 0.5], [-8, 8]);
-  const logoY = useTransform(smoothY, [-0.5, 0.5], [-5, 5]);
+  const logoYMouse = useTransform(smoothY, [-0.5, 0.5], [-5, 5]);
+
+  // Scroll parallax — background moves slower, content moves faster
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+  const bgYScroll = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const contentYScroll = useTransform(scrollYProgress, [0, 1], ['0%', '-40%']);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -77,6 +88,7 @@ export default function HeroSection({ settings }: HeroProps) {
 
   return (
     <section
+      ref={sectionRef}
       className="hero-section"
       onMouseMove={handleMouseMove}
     >
@@ -102,7 +114,7 @@ export default function HeroSection({ settings }: HeroProps) {
       {/* Parallax Background — CMS image with static fallback */}
       <motion.div
         className={`hero-bg-layer hero-bg-far ${videoUrl && videoLoaded ? 'hero-bg-hidden' : ''}`}
-        style={{ x: bgX, y: bgY }}
+        style={{ x: bgX, y: bgYScroll, willChange: 'transform' }}
       >
         <Image src={bgImageUrl || '/images/hero-bg.webp'} alt="" fill className="object-cover" priority />
       </motion.div>
@@ -115,10 +127,13 @@ export default function HeroSection({ settings }: HeroProps) {
       <div className="hero-gradient-bottom" />
       <div className="hero-vignette" />
 
-      {/* Content */}
-      <div className="hero-content">
+      {/* Content — scroll parallax: moves faster than bg for depth */}
+      <motion.div
+        className="hero-content"
+        style={{ y: contentYScroll, opacity: contentOpacity, willChange: 'transform, opacity' }}
+      >
         <motion.div
-          style={{ x: logoX, y: logoY }}
+          style={{ x: logoX, y: logoYMouse }}
           initial={{ opacity: 0, scale: 0.7, y: 40 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -217,7 +232,7 @@ export default function HeroSection({ settings }: HeroProps) {
               ))}
           </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Scroll indicator */}
       <motion.div

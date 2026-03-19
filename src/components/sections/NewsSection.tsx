@@ -15,7 +15,7 @@ interface CMSNews {
   titleTh: string;
   slug: string;
   category: string;
-  publishDate: string;
+  publishedAt: string;
   featuredImage: string | null;
 }
 
@@ -44,8 +44,8 @@ export default function NewsSection({ news, sectionConfig }: { news: CMSNews[]; 
           tag: item.category?.toUpperCase() || 'NEWS',
           color: CATEGORY_COLORS[item.category] || '#5BC0EB',
           title: t(item.titleTh, item.titleEn) || item.titleEn,
-          date: item.publishDate
-            ? new Date(item.publishDate).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })
+          date: item.publishedAt
+            ? new Date(item.publishedAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })
             : 'Coming Soon',
           thumb: item.featuredImage,
           category: item.category,

@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { Outfit, Noto_Sans_Thai } from "next/font/google";
 import { LangProvider } from "@/lib/lang-context";
 import { BackToTop, CookieConsent } from "@/components/ui-overlays";
+import SmoothScroll from "@/components/ui/SmoothScroll";
 import "./globals.css";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://178.128.127.161';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com';
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -28,9 +29,9 @@ export const metadata: Metadata = {
     "Eternal Tower Saga", "ETS", "mobile RPG", "pre-register",
     "เกมมือถือ", "เกม RPG", "ลงทะเบียนล่วงหน้า", "เกมแอคชั่น",
     "tower defense", "MMORPG", "เกมออนไลน์", "pre-registration",
-    "mercenary companion", "action RPG", "game Thailand",
+    "action RPG", "game Thailand",
   ],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://178.128.127.161'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com'),
   openGraph: {
     title: "Eternal Tower Saga — Rise Together. Conquer the Tower.",
     description: "ลงทะเบียนล่วงหน้าเกมมือถือ RPG สุดมัน! ผจญภัยไปด้วยกัน พิชิตยอดหอคอย",
@@ -91,7 +92,7 @@ export default function RootLayout({
                   "@id": "https://eternaltowersaga.com/#game",
                   "name": "Eternal Tower Saga",
                   "alternateName": ["ETS", "เกม Eternal Tower Saga"],
-                  "description": "Rise Together. Conquer the Tower. เกมมือถือ RPG แนว Casual MMORPG ผจญภัยพร้อมสหายร่วมรบ (Mercenary Companion) สำรวจโลก Arcatéa พิชิตหอคอยนิรันดร์ The Boundless Spire ตั้งกิลด์ต่อสู้ PvP แบบเรียลไทม์",
+                  "description": "Rise Together. Conquer the Tower. เกมมือถือ RPG แนว Casual MMORPG ผจญภัยสำรวจโลก Arcatéa พิชิตหอคอยนิรันดร์ The Boundless Spire ตั้งกิลด์ต่อสู้ PvP แบบเรียลไทม์",
                   "genre": ["RPG", "Action RPG", "MMORPG", "Casual", "Adventure"],
                   "gamePlatform": ["iOS", "Android", "PC"],
                   "applicationCategory": "GameApplication",
@@ -142,7 +143,7 @@ export default function RootLayout({
                       "name": "Eternal Tower Saga เป็นเกมแนวอะไร?",
                       "acceptedAnswer": {
                         "@type": "Answer",
-                        "text": "Eternal Tower Saga เป็นเกมมือถือแนว Casual MMORPG ผสม Action RPG ที่เน้นระบบ Mercenary Companion (สหายร่วมรบ) ผจญภัยในโลก Arcatéa ปีนหอคอยนิรันดร์ The Boundless Spire ต่อสู้ PvP แบบเรียลไทม์ และสร้างกิลด์กับเพื่อน"
+                        "text": "Eternal Tower Saga เป็นเกมมือถือแนว Casual MMORPG ผสม Action RPG ผจญภัยในโลก Arcatéa ปีนหอคอยนิรันดร์ The Boundless Spire ต่อสู้ PvP แบบเรียลไทม์ และสร้างกิลด์กับเพื่อน"
                       }
                     },
                     {
@@ -151,14 +152,6 @@ export default function RootLayout({
                       "acceptedAnswer": {
                         "@type": "Answer",
                         "text": "Eternal Tower Saga รองรับ iOS 14 ขึ้นไป, Android 8.0 ขึ้นไป และ PC (Windows 10 ขึ้นไป) สามารถดาวน์โหลดได้ฟรีจาก App Store, Google Play และเว็บไซต์ทางการ"
-                      }
-                    },
-                    {
-                      "@type": "Question",
-                      "name": "ระบบ Mercenary Companion คืออะไร?",
-                      "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "ระบบ Mercenary Companion เป็นจุดเด่นเฉพาะของ Eternal Tower Saga ที่ผู้เล่นสามารถต่อสู้เคียงข้างสหายร่วมรบผู้ทรงพลัง 4 คลาส ได้แก่ นักดาบ (Swordsman), นักธนู (Archer), จอมเวท (Mage) และนักบวช (Priest) — ไม่ใช่แค่สัตว์เลี้ยง แต่เป็นสหายที่มี AI ร่วมรบจริงๆ"
                       }
                     },
                     {
@@ -215,7 +208,9 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <LangProvider>
-          {children}
+          <SmoothScroll>
+            {children}
+          </SmoothScroll>
           <BackToTop />
           <CookieConsent />
         </LangProvider>

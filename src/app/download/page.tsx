@@ -7,6 +7,9 @@ import { useLang } from '@/lib/lang-context';
 import { STORE_ICONS } from '@/components/ui/StoreIcons';
 import FloatingParticles from '@/components/ui/FloatingParticles';
 import { Monitor, Smartphone, Tablet, HardDrive, Cpu, MemoryStick, Layers } from 'lucide-react';
+import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
+import ScrollProgress from '@/components/ui/ScrollProgress';
 
 /* ═══════════════════════════════════════════════════
    DOWNLOAD PAGE — /download
@@ -59,9 +62,16 @@ const SYSTEM_REQUIREMENTS = {
 };
 
 export default function DownloadPage() {
-  const { lang, t, toggle } = useLang();
+  const { t } = useLang();
   const [storeButtons, setStoreButtons] = useState<StoreButton[]>([]);
   const [activePlatform, setActivePlatform] = useState('android');
+  const [socialLinks, setSocialLinks] = useState<Record<string, string | null>>({});
+  const [footer, setFooter] = useState({
+    copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
+    termsUrl: '/terms',
+    privacyUrl: '/privacy',
+    supportUrl: '#',
+  });
 
   const REAL_STORE_URLS: Record<string, string> = {
     ios: 'https://apps.apple.com/us/app/eternal-tower-saga/id6756611023',
@@ -79,6 +89,8 @@ export default function DownloadPage() {
           url: btn.url === '#' ? (REAL_STORE_URLS[btn.platform] || '#') : btn.url,
         }));
         setStoreButtons(buttons);
+        if (data?.site?.socialLinks) setSocialLinks(data.site.socialLinks);
+        if (data?.site?.footer) setFooter(data.site.footer);
       } catch {
         // fallback
       }
@@ -90,23 +102,11 @@ export default function DownloadPage() {
   const currentReq = SYSTEM_REQUIREMENTS[activePlatform as keyof typeof SYSTEM_REQUIREMENTS];
 
   return (
-    <div className="download-page">
-      {/* Navigation */}
-      <nav className="main-nav download-nav-solid">
-        <div className="nav-inner">
-          <div className="nav-links">
-            <Link href="/" className="nav-link">{t('หน้าหลัก', 'Home')}</Link>
-            <Link href="/news" className="nav-link">{t('ข่าวสาร', 'News')}</Link>
-            <Link href="/download" className="nav-link active">{t('ดาวน์โหลด', 'Download')}</Link>
-          </div>
-          <div className="nav-actions">
-            <Link href="/event" className="nav-cta">{t('ลงทะเบียน', 'Register')}</Link>
-            <button className="nav-lang" onClick={toggle}>{lang === 'th' ? 'EN' : 'TH'}</button>
-          </div>
-        </div>
-      </nav>
+    <div className="landing-page">
+      <ScrollProgress />
+      <Navigation />
 
-      <main className="download-main">
+      <main className="download-main" style={{ paddingTop: '5rem' }}>
         {/* Hero with visual depth */}
         <section className="download-hero">
           <FloatingParticles count={10} />
@@ -206,13 +206,7 @@ export default function DownloadPage() {
         </section>
       </main>
 
-      <footer className="main-footer">
-        <div className="footer-inner">
-          <div className="footer-copy">
-            <p>© 2026 อัลติเมตเกม จำกัด (Ultimate Game Co., Ltd.). All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer socialLinks={socialLinks} footer={footer} />
     </div>
   );
 }

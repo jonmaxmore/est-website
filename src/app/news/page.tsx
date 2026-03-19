@@ -6,6 +6,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useLang } from '@/lib/lang-context';
 import { Calendar, RefreshCw, Video, Megaphone, Wrench, Newspaper } from 'lucide-react';
+import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
+import ScrollProgress from '@/components/ui/ScrollProgress';
 
 /* ═══════════════════════════════════════════════════
    NEWS LISTING PAGE — /news
@@ -49,10 +52,27 @@ const CATEGORIES = [
 ];
 
 export default function NewsPage() {
-  const { lang, t, toggle } = useLang();
+  const { lang, t } = useLang();
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [activeCategory, setActiveCategory] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [socialLinks, setSocialLinks] = useState<Record<string, string | null>>({});
+  const [footer, setFooter] = useState({
+    copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
+    termsUrl: '/terms',
+    privacyUrl: '/privacy',
+    supportUrl: '#',
+  });
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.site?.socialLinks) setSocialLinks(data.site.socialLinks);
+        if (data?.site?.footer) setFooter(data.site.footer);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     async function fetchNews() {
@@ -74,23 +94,11 @@ export default function NewsPage() {
   }, [activeCategory]);
 
   return (
-    <div className="news-page">
-      {/* Navigation */}
-      <nav className="main-nav download-nav-solid">
-        <div className="nav-inner">
-          <div className="nav-links">
-            <Link href="/" className="nav-link">{t('หน้าหลัก', 'Home')}</Link>
-            <Link href="/news" className="nav-link active">{t('ข่าวสาร', 'News')}</Link>
-            <Link href="/download" className="nav-link">{t('ดาวน์โหลด', 'Download')}</Link>
-          </div>
-          <div className="nav-actions">
-            <Link href="/event" className="nav-cta">{t('ลงทะเบียน', 'Register')}</Link>
-            <button className="nav-lang" onClick={toggle}>{lang === 'th' ? 'EN' : 'TH'}</button>
-          </div>
-        </div>
-      </nav>
+    <div className="landing-page">
+      <ScrollProgress />
+      <Navigation />
 
-      <main className="news-main">
+      <main className="news-main" style={{ paddingTop: '5rem' }}>
         {/* Hero */}
         <section className="news-hero">
           <h1 className="news-hero-title">{t('ข่าวสารและประกาศ', 'News & Announcements')}</h1>
@@ -174,14 +182,7 @@ export default function NewsPage() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="main-footer">
-        <div className="footer-inner">
-          <div className="footer-copy">
-            <p>© 2026 อัลติเมตเกม จำกัด (Ultimate Game Co., Ltd.). All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer socialLinks={socialLinks} footer={footer} />
     </div>
   );
 }
