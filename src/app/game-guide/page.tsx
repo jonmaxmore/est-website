@@ -130,7 +130,7 @@ export default function GameGuidePage() {
                 );
               })}
               {features.length === 0 && (
-                <div style={{ gridColumn: '1 / -1', textAlign: 'center', opacity: 0.5, padding: '3rem' }}>
+                <div className="highlights-empty-state">
                   <p>{t('กำลังโหลด...', 'Loading...')}</p>
                 </div>
               )}

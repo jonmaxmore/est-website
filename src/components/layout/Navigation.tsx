@@ -6,6 +6,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useLang } from '@/lib/lang-context';
 
+/* ═══════════════════════════════════════════════
+   Navigation — Direct links matching site structure
+   หน้าหลัก | แนะนำเกม | เนื้อเรื่อง | ตัวละคร | ข่าวสาร
+   ═══════════════════════════════════════════════ */
+
+const NAV_LINKS = [
+  { href: '/', labelTh: 'หน้าหลัก', labelEn: 'Home' },
+  { href: '/#features', labelTh: 'แนะนำเกม', labelEn: 'Game Guide' },
+  { href: '/#story', labelTh: 'เนื้อเรื่อง', labelEn: 'Story' },
+  { href: '/character', labelTh: 'ตัวละคร', labelEn: 'Characters' },
+  { href: '/news', labelTh: 'ข่าวสาร', labelEn: 'News' },
+];
+
 export default function Navigation() {
   const { lang, toggle, t } = useLang();
   const [scrolled, setScrolled] = useState(false);
@@ -54,23 +67,13 @@ export default function Navigation() {
             />
           </Link>
 
-          {/* Desktop Nav — 5 direct links matching reference site */}
+          {/* Desktop Nav — Direct links */}
           <div className="nav-links">
-            <Link href="/" className="nav-link active">
-              {t('หน้าหลัก', 'Home')}
-            </Link>
-            <Link href="/game-guide" className="nav-link">
-              {t('แนะนำเกม', 'Game Guide')}
-            </Link>
-            <Link href="/story" className="nav-link">
-              {t('เนื้อเรื่อง', 'Story')}
-            </Link>
-            <Link href="/character" className="nav-link">
-              {t('ตัวละคร', 'Characters')}
-            </Link>
-            <Link href="/news" className="nav-link">
-              {t('ข่าวสาร', 'News')}
-            </Link>
+            {NAV_LINKS.map((link) => (
+              <Link key={link.href} href={link.href} className="nav-link">
+                {t(link.labelTh, link.labelEn)}
+              </Link>
+            ))}
           </div>
 
           <div className="nav-actions">
@@ -127,21 +130,11 @@ export default function Navigation() {
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
             <nav className="mobile-menu-nav">
-              <Link href="/" onClick={closeMobile}>
-                {t('หน้าหลัก', 'Home')}
-              </Link>
-              <Link href="/game-guide" onClick={closeMobile}>
-                {t('แนะนำเกม', 'Game Guide')}
-              </Link>
-              <Link href="/story" onClick={closeMobile}>
-                {t('เนื้อเรื่อง', 'Story')}
-              </Link>
-              <Link href="/character" onClick={closeMobile}>
-                {t('ตัวละคร', 'Characters')}
-              </Link>
-              <Link href="/news" onClick={closeMobile}>
-                {t('ข่าวสาร', 'News')}
-              </Link>
+              {NAV_LINKS.map((link) => (
+                <Link key={link.href} href={link.href} onClick={closeMobile}>
+                  {t(link.labelTh, link.labelEn)}
+                </Link>
+              ))}
               <Link
                 href="/event"
                 className="mobile-menu-cta"

@@ -103,7 +103,7 @@ export default function StoryPage() {
               </RevealSection>
             ))}
             {sections.length === 0 && (
-              <div className="story-block" style={{ textAlign: 'center', opacity: 0.5 }}>
+              <div className="story-block story-empty-state">
                 <p>{t('กำลังโหลดเนื้อเรื่อง...', 'Loading story...')}</p>
               </div>
             )}

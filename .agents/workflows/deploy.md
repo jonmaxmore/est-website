@@ -20,7 +20,7 @@ Password: `wErew@lf17john`
 
 2. Navigate to the project directory:
 ```bash
-cd /root/est-website
+cd /var/www/est-website
 ```
 
 3. Pull latest changes:
@@ -51,5 +51,5 @@ curl -s http://localhost:3000 | head -20
 
 ## Quick One-Liner (after SSH)
 ```bash
-cd /root/est-website && git pull origin main && npm install --legacy-peer-deps && npm run build && pm2 restart all && pm2 status
+cd /var/www/est-website && git pull origin main && npm install --legacy-peer-deps && npm run build && pm2 restart all && pm2 status
 ```

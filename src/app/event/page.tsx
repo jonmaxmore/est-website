@@ -81,7 +81,7 @@ interface EventSettings {
 }
 
 /* ═══════════════════════════════════════════════
-   DEFAULT MILESTONES (fallback if CMS unavailable)
+   DEFAULT MILESTONES
    ═══════════════════════════════════════════════ */
 const DEFAULT_MILESTONES: Milestone[] = [
   { threshold: 10000, label: '10,000', rewards: ['Gold ×200,000', 'Fatigue Scroll ×10'] },
@@ -94,8 +94,20 @@ const DEFAULT_MILESTONES: Milestone[] = [
 
 const DEFAULT_TARGET = new Date('2026-04-02T23:59:59+07:00').getTime();
 
+/* Country options from Figma */
+const COUNTRIES = [
+  { value: 'th', labelTh: 'ไทย', labelEn: 'Thailand' },
+  { value: 'my', labelTh: 'มาเลเซีย', labelEn: 'Malaysia' },
+  { value: 'id', labelTh: 'อินโดนีเซีย', labelEn: 'Indonesia' },
+  { value: 'ph', labelTh: 'ฟิลิปปินส์', labelEn: 'Philippines' },
+  { value: 'sg', labelTh: 'สิงคโปร์', labelEn: 'Singapore' },
+];
+
 /* ═══════════════════════════════════════════════
-   EVENT PAGE — Premium Pre-Registration
+   EVENT PAGE — Figma Design (3 Screens)
+   Screen 1: Hero
+   Screen 2: Registration Form (inline)
+   Screen 3: Milestone Rewards
    ═══════════════════════════════════════════════ */
 export default function EventPage() {
   const [registered, setRegistered] = useState(false);
@@ -107,7 +119,7 @@ export default function EventPage() {
   const [referralCode, setReferralCode] = useState('');
   const [copied, setCopied] = useState(false);
   const [registrationCount, setRegistrationCount] = useState(0);
-  const [showModal, setShowModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [milestones, setMilestones] = useState<Milestone[]>(DEFAULT_MILESTONES);
   const [storeButtons, setStoreButtons] = useState<StoreButton[]>([]);
   const [socialLinks, setSocialLinks] = useState<Record<string, string | null>>({});
@@ -115,12 +127,10 @@ export default function EventPage() {
   const [countdownTarget, setCountdownTarget] = useState(DEFAULT_TARGET);
 
   const { lang, toggle, t } = useLang();
-
   const countdown = useCountdown(countdownTarget);
 
   // Fetch CMS data
   useEffect(() => {
-    // Stats
     fetch('/api/stats')
       .then(r => r.json())
       .then(data => {
@@ -136,7 +146,6 @@ export default function EventPage() {
       })
       .catch(() => {});
 
-    // Settings
     fetch('/api/settings')
       .then(r => r.json())
       .then(data => {
@@ -151,6 +160,21 @@ export default function EventPage() {
       })
       .catch(() => {});
   }, []);
+
+  const REAL_STORE_URLS: Record<string, string> = {
+    ios: 'https://apps.apple.com/us/app/eternal-tower-saga/id6756611023',
+    android: 'https://play.google.com/store/apps/details?id=com.ultimategame.eternaltowersaga',
+    pc: '#',
+  };
+
+  const displayStoreButtons = (storeButtons.length ? storeButtons : [
+    { platform: 'ios', label: 'App Store', sublabel: 'Pre-order on the', url: REAL_STORE_URLS.ios },
+    { platform: 'android', label: 'Google Play', sublabel: 'PRE-REGISTER ON', url: REAL_STORE_URLS.android },
+    { platform: 'pc', label: 'Windows', sublabel: 'Coming soon', url: '#' },
+  ]).map(btn => ({
+    ...btn,
+    url: btn.url === '#' ? (REAL_STORE_URLS[btn.platform] || '#') : btn.url,
+  }));
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,16 +194,15 @@ export default function EventPage() {
       setReferralCode(data.referralCode);
       setRegistered(true);
       setRegistrationCount(prev => prev + 1);
+      setShowSuccessModal(true);
 
-      // Find the selected store URL and redirect
+      // Redirect to store
       const selectedStore = displayStoreButtons.find(btn => btn.platform === platform);
       if (selectedStore && selectedStore.url && selectedStore.url !== '#') {
-        // Show success briefly, then redirect
         setTimeout(() => {
           window.open(selectedStore.url, '_blank');
-        }, 1500);
+        }, 2000);
       }
-      setShowModal(false);
 
       // Track conversion — Meta Pixel
       if (typeof window !== 'undefined' && 'fbq' in window) {
@@ -216,21 +239,9 @@ export default function EventPage() {
   const maxThreshold = milestones.length ? milestones[milestones.length - 1].threshold : 200000;
   const progressPercent = Math.min((registrationCount / maxThreshold) * 100, 100);
 
-  const REAL_STORE_URLS: Record<string, string> = {
-    ios: 'https://apps.apple.com/us/app/eternal-tower-saga/id6756611023',
-    android: 'https://play.google.com/store/apps/details?id=com.ultimategame.eternaltowersaga',
-    pc: '#',
+  const scrollToForm = () => {
+    document.getElementById('register-form')?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  const displayStoreButtons = (storeButtons.length ? storeButtons : [
-    { platform: 'ios', label: 'App Store', sublabel: 'Pre-order on the', url: REAL_STORE_URLS.ios },
-    { platform: 'android', label: 'Google Play', sublabel: 'PRE-REGISTER ON', url: REAL_STORE_URLS.android },
-    { platform: 'pc', label: 'Windows', sublabel: 'Coming soon', url: '#' },
-  ]).map(btn => ({
-    ...btn,
-    // Override '#' with real store URLs
-    url: btn.url === '#' ? (REAL_STORE_URLS[btn.platform] || '#') : btn.url,
-  }));
 
   return (
     <main className="event-page">
@@ -240,6 +251,13 @@ export default function EventPage() {
       <div className="light-rays">
         <div className="ray ray-1" />
         <div className="ray ray-2" />
+      </div>
+
+      {/* ═══ ORANGE PRE-REGISTER TAB ═══ */}
+      <div className="event-prereg-tab">
+        <div className="event-prereg-tab-inner">
+          {t('Pre-register', 'Pre-register')}
+        </div>
       </div>
 
       {/* ═══ NAV BAR ═══ */}
@@ -263,144 +281,126 @@ export default function EventPage() {
             )}
           </div>
           <div className="event-nav-right">
-          <Link href="/" className="event-back-link">← {t('หน้าแรก', 'Home')}</Link>
+            <Link href="/" className="event-back-link">← {t('หน้าแรก', 'Home')}</Link>
             <button className="nav-lang" onClick={toggle}>{lang === 'th' ? 'EN' : 'TH'}</button>
           </div>
         </div>
       </nav>
 
-      {/* ═══ HERO SECTION ═══ */}
+      {/* ═══════════════════════════════════════════════
+         SCREEN 1: HERO
+         ═══════════════════════════════════════════════ */}
       <section className="event-hero">
-        {/* Game Logo */}
-        <motion.div
-          className="event-logo-wrap"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <Image src="/images/logo.webp" alt="Eternal Tower Saga" width={380} height={250} className="event-logo" priority />
-        </motion.div>
+        {/* Background */}
+        <div className="event-hero-bg">
+          <Image
+            src={eventSettings.backgroundImage?.url || '/images/hero-bg.webp'}
+            alt=""
+            fill
+            priority
+            style={{ objectFit: 'cover' }}
+          />
+          <div className="event-hero-gradient-top" />
+          <div className="event-hero-gradient" />
+        </div>
 
-        {/* Pre-register Badge */}
-        <motion.div
-          className="event-badge"
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4 }}
-        >
-          <span className="event-badge-text">{t(eventSettings.badgeTextTh || 'ลงทะเบียนล่วงหน้า', eventSettings.badgeTextEn || 'PRE-REGISTER')}</span>
-          <span className="event-badge-shimmer" />
-        </motion.div>
+        <div className="event-hero-content">
+          {/* Game Logo */}
+          <motion.div
+            className="event-logo-wrap"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Image src="/images/logo.webp" alt="Eternal Tower Saga" width={380} height={250} className="event-logo" priority />
+          </motion.div>
 
-        {/* Countdown Timer */}
-        <motion.div
-          className="event-countdown"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-        >
-          {[
-            { value: countdown.days, label: t('วัน', 'Days') },
-            { value: countdown.hours, label: t('ชั่วโมง', 'Hours') },
-            { value: countdown.minutes, label: t('นาที', 'Minutes') },
-            { value: countdown.seconds, label: t('วินาที', 'Seconds') },
-          ].map((item) => (
-            <div key={item.label} className="countdown-unit">
-              <motion.div
-                className="countdown-value"
-                key={item.value}
-                initial={{ scale: 1.1 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                {String(item.value).padStart(2, '0')}
-              </motion.div>
-              <span className="countdown-label">{item.label}</span>
-            </div>
-          ))}
-        </motion.div>
+          {/* Tagline */}
+          <motion.p
+            className="event-tagline"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            {t(
+              'สัมผัสประสบการณ์ใหม่กับ Eternal Tower Saga (ETS)\n"อาวุธเปลี่ยน เกมก็เปลี่ยน จากผู้เล่น สู่...ผู้กุมเกม"',
+              'Rewrite the rules of the MMORPG!\nStep into a whole new experience with Eternal Tower Saga (ETS)\n"Switch your weapon. Shift the battlefield.\nRise from player... to ruler of the game."'
+            )}
+          </motion.p>
 
-        {/* === REGISTRATION COUNT — Large Prominent Display === */}
-        <motion.div
-          className="event-reg-counter"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.7 }}
-        >
-          <span className="event-reg-count-number">{registrationCount.toLocaleString()}</span>
-          <span className="event-reg-count-label">{t('ผู้ลงทะเบียนล่วงหน้าแล้ว', 'Pre-Registered')}</span>
-        </motion.div>
+          {/* Countdown Timer */}
+          <motion.div
+            className="event-countdown"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            {[
+              { value: countdown.days, label: t('วัน', 'Days') },
+              { value: countdown.hours, label: t('ชั่วโมง', 'Hours') },
+              { value: countdown.minutes, label: t('นาที', 'Minutes') },
+              { value: countdown.seconds, label: t('วินาที', 'Seconds') },
+            ].map((item) => (
+              <div key={item.label} className="countdown-unit">
+                <motion.div
+                  className="countdown-value"
+                  key={item.value}
+                  initial={{ scale: 1.1 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {String(item.value).padStart(2, '0')}
+                </motion.div>
+                <span className="countdown-label">{item.label}</span>
+              </div>
+            ))}
+          </motion.div>
 
-        {/* CTA / Success State */}
-        {!registered ? (
+          {/* Registration Count */}
+          <motion.div
+            className="event-reg-counter"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6 }}
+          >
+            <span className="event-reg-count-number">{registrationCount.toLocaleString()}</span>
+            <span className="event-reg-count-label">{t('ผู้ลงทะเบียนล่วงหน้าแล้ว', 'Pre-Registered')}</span>
+          </motion.div>
+
+          {/* CTA Button — scrolls to form */}
           <motion.button
-            onClick={() => setShowModal(true)}
+            onClick={scrollToForm}
             className="event-cta"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.8 }}
-            whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(91,192,235,0.4)' }}
+            transition={{ delay: 0.7 }}
+            whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(245,166,35,0.4)' }}
             whileTap={{ scale: 0.98 }}
           >
             <span className="hero-cta-shimmer" />
-            <span className="event-cta-text">{t(eventSettings.ctaButtonTh || 'ลงทะเบียนล่วงหน้าเลย', eventSettings.ctaButtonEn || 'Pre-Register Now')}</span>
+            <span className="event-cta-text">
+              {t(eventSettings.ctaButtonTh || 'ลงทะเบียนล่วงหน้าเลย', eventSettings.ctaButtonEn || 'Pre-Register Now')}
+            </span>
           </motion.button>
-        ) : (
+
+          {/* Store Buttons */}
           <motion.div
-            className="event-success-card"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+            className="hero-stores"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
           >
-            <p className="event-success-title">✅ {t(eventSettings.successTitleTh || 'ลงทะเบียนสำเร็จ!', eventSettings.successTitleEn || 'Registration Successful!')}</p>
-            <p className="event-success-sub">{t('แชร์ให้เพื่อนเพื่อรับรางวัลพิเศษ', 'Share with friends for bonus rewards')}</p>
-
-            {/* Store redirect button */}
-            {(() => {
-              const selectedStore = displayStoreButtons.find(btn => btn.platform === platform);
-              return selectedStore ? (
-                <a
-                  href={selectedStore.url !== '#' ? selectedStore.url : undefined}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="event-store-redirect-btn"
-                >
-                  {STORE_ICONS[selectedStore.platform] || null}
-                  <span>{t(`ไปที่ ${selectedStore.label}`, `Go to ${selectedStore.label}`)}</span>
-                  <span className="event-store-redirect-arrow">→</span>
-                </a>
-              ) : null;
-            })()}
-
-            <div className="event-referral-row">
-              <input
-                readOnly
-                value={`${typeof window !== 'undefined' ? window.location.origin : ''}/event?ref=${referralCode}`}
-                className="event-referral-input"
-              />
-              <button onClick={copyReferralLink} className="event-referral-btn">
-                {copied ? t('✓ คัดลอก!', '✓ Copied!') : t('คัดลอก', 'Copy')}
-              </button>
-            </div>
+            {displayStoreButtons.map((btn) => (
+              <a key={btn.platform} href={btn.url} className="store-btn" target="_blank" rel="noopener noreferrer">
+                {STORE_ICONS[btn.platform] || null}
+                <div><small>{btn.sublabel}</small><strong>{btn.label}</strong></div>
+              </a>
+            ))}
           </motion.div>
-        )}
-
-        {/* Store Buttons — from CMS */}
-        <motion.div
-          className="hero-stores"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
-        >
-          {displayStoreButtons.map((btn) => (
-            <a key={btn.platform} href={btn.url} className="store-btn">
-              {STORE_ICONS[btn.platform] || null}
-              <div><small>{btn.sublabel}</small><strong>{btn.label}</strong></div>
-            </a>
-          ))}
-        </motion.div>
+        </div>
       </section>
 
-      {/* ═══ ORNAMENT ═══ */}
+      {/* ═══ ORNAMENT DIVIDER ═══ */}
       <div className="ornament-divider">
         <span className="ornament-line" />
         <span className="ornament-diamond" />
@@ -409,7 +409,141 @@ export default function EventPage() {
         <span className="ornament-line" />
       </div>
 
-      {/* ═══ MILESTONE TRACKER ═══ */}
+      {/* ═══════════════════════════════════════════════
+         SCREEN 2: REGISTRATION FORM (Inline)
+         ═══════════════════════════════════════════════ */}
+      <section id="register-form" className="event-form-section">
+        <motion.div
+          className="event-parchment-card"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {/* Corner ornaments */}
+          <span className="parchment-corner top-left" />
+          <span className="parchment-corner top-right" />
+          <span className="parchment-corner bottom-left" />
+          <span className="parchment-corner bottom-right" />
+
+          {!registered ? (
+            <>
+              <h2 className="event-form-title">
+                {t(eventSettings.modalTitleTh || 'ลงทะเบียนล่วงหน้า', eventSettings.modalTitleEn || 'Pre-registration')}
+              </h2>
+
+              <p className="event-form-step">
+                <strong>1.</strong> {t(
+                  'กรอกข้อมูล และตรวจสอบความถูกต้องก่อนลงทะเบียน',
+                  'Fill in your information and verify its accuracy before registering.'
+                )}
+              </p>
+
+              <form onSubmit={handleRegister}>
+                {/* Email */}
+                <input
+                  type="email"
+                  placeholder={t(eventSettings.emailPlaceholderTh || 'กรุณากรอก E-MAIL ของคุณ', eventSettings.emailPlaceholderEn || 'Please enter your E-mail address')}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="event-input"
+                />
+
+                {/* Country Radio Buttons */}
+                <div className="event-radio-group">
+                  {COUNTRIES.map((country) => (
+                    <label key={country.value} className="event-radio-label">
+                      <input
+                        type="radio"
+                        name="region"
+                        value={country.value}
+                        checked={region === country.value}
+                        onChange={(e) => setRegion(e.target.value)}
+                        className="event-radio-input"
+                      />
+                      {t(country.labelTh, country.labelEn)}
+                    </label>
+                  ))}
+                </div>
+
+                <hr className="event-form-divider" />
+
+                {/* Step 2 */}
+                <p className="event-form-step">
+                  <strong>2.</strong> {t(
+                    'คลิกเลือกอุปกรณ์เพื่อลงทะเบียน เมื่อคลิกจะไปยังหน้าสโตร์โดยอัตโนมัติ',
+                    'Select your device to proceed and confirm your registration.'
+                  )}
+                </p>
+
+                {/* Store Selection */}
+                <div className="event-form-stores">
+                  {displayStoreButtons.filter(btn => btn.platform !== 'pc').map((btn) => (
+                    <button
+                      key={btn.platform}
+                      type="button"
+                      className={`event-form-store-btn ${platform === btn.platform ? 'selected' : ''}`}
+                      onClick={() => setPlatform(btn.platform)}
+                    >
+                      {STORE_ICONS[btn.platform] || null}
+                      <span>{btn.label}</span>
+                    </button>
+                  ))}
+                </div>
+
+                {error && <p className="event-error">{error}</p>}
+
+                <button
+                  type="submit"
+                  disabled={loading || !platform || !region}
+                  className={`event-submit-btn ${(!platform || !region) ? 'disabled' : ''}`}
+                >
+                  {loading
+                    ? t('กำลังลงทะเบียน...', 'Registering...')
+                    : t(eventSettings.submitButtonTh || 'กดลงทะเบียน', eventSettings.submitButtonEn || 'Confirm Registration')
+                  }
+                </button>
+              </form>
+            </>
+          ) : (
+            /* After registration — show success inline */
+            <div style={{ textAlign: 'center' }}>
+              <p className="event-success-title">
+                ✅ {t(eventSettings.successTitleTh || 'ลงทะเบียนสำเร็จ!', eventSettings.successTitleEn || 'Registration Successful!')}
+              </p>
+              <p className="event-form-step">
+                {t('แชร์ให้เพื่อนเพื่อรับรางวัลพิเศษ', 'Share with friends for bonus rewards')}
+              </p>
+
+              {/* Referral link */}
+              <div className="event-referral-row">
+                <input
+                  readOnly
+                  value={`${typeof window !== 'undefined' ? window.location.origin : ''}/event?ref=${referralCode}`}
+                  className="event-referral-input"
+                />
+                <button onClick={copyReferralLink} className="event-referral-btn">
+                  {copied ? t('✓ คัดลอก!', '✓ Copied!') : t('คัดลอก', 'Copy')}
+                </button>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      </section>
+
+      {/* ═══ ORNAMENT DIVIDER ═══ */}
+      <div className="ornament-divider">
+        <span className="ornament-line" />
+        <span className="ornament-diamond" />
+        <span className="ornament-center">✦</span>
+        <span className="ornament-diamond" />
+        <span className="ornament-line" />
+      </div>
+
+      {/* ═══════════════════════════════════════════════
+         SCREEN 3: MILESTONE REWARDS
+         ═══════════════════════════════════════════════ */}
       <section className="event-milestones">
         <div className="container-custom">
           <motion.div
@@ -419,9 +553,19 @@ export default function EventPage() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="section-header">
-              <span className="section-badge">{t(eventSettings.milestoneBadgeTh || 'รางวัลสะสม', eventSettings.milestoneBadgeEn || 'MILESTONE REWARDS')}</span>
-              <h2 className="section-title-gold">{t(eventSettings.milestoneTitleTh || 'รางวัลสะสม Pre-Register', eventSettings.milestoneTitleEn || 'Milestone Rewards')}</h2>
+              <span className="section-badge">
+                {t(eventSettings.milestoneBadgeTh || 'รางวัลกิจกรรม', eventSettings.milestoneBadgeEn || 'MILESTONE REWARDS')}
+              </span>
+              <h2 className="section-title-gold">
+                {t(eventSettings.milestoneTitleTh || 'รางวัลกิจกรรม', eventSettings.milestoneTitleEn || 'Milestone Rewards')}
+              </h2>
               <div className="title-ornament"><span /><span /><span /></div>
+            </div>
+
+            {/* Large Registration Count */}
+            <div className="event-milestone-count">
+              <div className="event-milestone-count-number">{registrationCount.toLocaleString()}</div>
+              <div className="event-milestone-count-label">{t('ผู้ลงทะเบียน', 'Users')}</div>
             </div>
 
             {/* Progress Bar */}
@@ -486,70 +630,76 @@ export default function EventPage() {
         </div>
       </footer>
 
-      {/* ═══ REGISTRATION MODAL ═══ */}
+      {/* ═══════════════════════════════════════════════
+         SUCCESS POPUP (POP UP 1 — Parchment Style)
+         ═══════════════════════════════════════════════ */}
       <AnimatePresence>
-        {showModal && (
+        {showSuccessModal && (
           <motion.div
             className="event-modal-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className="event-modal-backdrop" onClick={() => setShowModal(false)} />
+            <div className="event-modal-backdrop" onClick={() => setShowSuccessModal(false)} />
             <motion.div
               className="event-modal"
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
             >
-              <button onClick={() => setShowModal(false)} className="event-modal-close">×</button>
+              <button onClick={() => setShowSuccessModal(false)} className="event-modal-close">×</button>
 
-              <h2 className="event-modal-title">{t(eventSettings.modalTitleTh || 'ลงทะเบียนล่วงหน้า', eventSettings.modalTitleEn || 'Pre-Register')}</h2>
+              <div className="event-parchment-card event-success-parchment">
+                {/* Corner ornaments */}
+                <span className="parchment-corner top-left" />
+                <span className="parchment-corner top-right" />
+                <span className="parchment-corner bottom-left" />
+                <span className="parchment-corner bottom-right" />
 
-              <form onSubmit={handleRegister} className="event-modal-form">
-                <input
-                  type="email"
-                  placeholder={t(eventSettings.emailPlaceholderTh || 'กรอก Email ของท่าน', eventSettings.emailPlaceholderEn || 'Enter your email')}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="event-input"
-                />
+                <p className="event-success-title">
+                  {t('ท่านได้ลงทะเบียนล่วงหน้าเบื้องต้นสำเร็จแล้ว!', 'Your initial pre-registration was successful!')}
+                </p>
 
-                {/* Store Selection Cards — Must select before submit */}
-                <label className="event-store-label">{t(eventSettings.storeLabelTh || 'เลือกสโตร์ที่ต้องการ', eventSettings.storeLabelEn || 'Choose your store')} <span className="required">*</span></label>
-                <div className="event-store-cards">
-                  {displayStoreButtons.map((btn) => (
-                    <button
-                      key={btn.platform}
-                      type="button"
-                      className={`event-store-card ${platform === btn.platform ? 'selected' : ''}`}
-                      onClick={() => setPlatform(btn.platform)}
-                    >
-                      <span className="event-store-card-icon">{STORE_ICONS[btn.platform] || null}</span>
-                      <span className="event-store-card-name">{btn.label}</span>
-                    </button>
-                  ))}
+                <hr className="event-form-divider" />
+
+                <p className="event-success-body">
+                  {t(
+                    'กรุณาคลิกปุ่มด้านล่าง! ตามอุปกรณ์ของท่าน\nเพื่อยืนยันการลงทะเบียน',
+                    'Please click the button below for your device\nto confirm your registration'
+                  )}
+                </p>
+
+                {/* App Store / Google Play badges */}
+                <div className="event-store-badges">
+                  <a
+                    href={REAL_STORE_URLS.ios}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="event-store-badge-link"
+                  >
+                    <div className="store-btn" style={{ minWidth: '200px' }}>
+                      {STORE_ICONS.ios}
+                      <div><small>Pre-order on the</small><strong>App Store</strong></div>
+                    </div>
+                  </a>
+                  <a
+                    href={REAL_STORE_URLS.android}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="event-store-badge-link"
+                  >
+                    <div className="store-btn" style={{ minWidth: '200px' }}>
+                      {STORE_ICONS.android}
+                      <div><small>PRE-REGISTER ON</small><strong>Google Play</strong></div>
+                    </div>
+                  </a>
                 </div>
-                {!platform && <p className="event-store-hint">{t('กรุณาเลือกสโตร์ก่อนลงทะเบียน', 'Please select a store to continue')}</p>}
 
-                <select
-                  value={region}
-                  onChange={(e) => setRegion(e.target.value)}
-                  required
-                  className="event-select"
-                  aria-label={t('เลือกภูมิภาค', 'Select region')}
-                >
-                  <option value="">{t('เลือกภูมิภาค', 'Select region')}</option>
-                  <option value="th">{t('ไทย', 'Thailand')}</option>
-                  <option value="sea">{t('เอเชียตะวันออกเฉียงใต้', 'Southeast Asia')}</option>
-                  <option value="global">{t('ทั่วโลก', 'Global')}</option>
-                </select>
-                {error && <p className="event-error">{error}</p>}
-                <button type="submit" disabled={loading || !platform} className={`event-submit-btn ${!platform ? 'disabled' : ''}`}>
-                  {loading ? t('กำลังลงทะเบียน...', 'Registering...') : t(eventSettings.submitButtonTh || 'ลงทะเบียนและไปที่สโตร์', eventSettings.submitButtonEn || 'Register & Go to Store')}
-                </button>
-              </form>
+                <p className="event-success-pc-note">
+                  {t('* พบกับเวอร์ชั่น PC เร็วๆ นี้ *', '* PC version coming soon *')}
+                </p>
+              </div>
             </motion.div>
           </motion.div>
         )}

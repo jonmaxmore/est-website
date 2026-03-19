@@ -17,34 +17,50 @@ interface FooterProps {
   };
 }
 
+/* Default social links — used when CMS data is not available */
+const DEFAULT_SOCIAL: Record<string, string> = {
+  discord: 'https://discord.gg/eternaltowersaga',
+  facebook: 'https://facebook.com/EternalTowerSaga',
+  youtube: 'https://youtube.com/@EternalTowerSaga',
+  tiktok: 'https://tiktok.com/@EternalTowerSaga',
+};
+
 export default function Footer({ socialLinks, footer }: FooterProps) {
   const { t } = useLang();
+
+  /* Merge CMS social links with defaults — filter out '#' and null */
+  const getSocialUrl = (key: string): string | undefined => {
+    const url = socialLinks[key];
+    if (url && url !== '#') return url;
+    return DEFAULT_SOCIAL[key] || undefined;
+  };
+
   const communityLinks = [
     {
       icon: MessageCircle,
       name: 'Discord',
       desc: t('เข้าร่วมชุมชน Discord ของเรา', 'Join our Discord community'),
-      url: socialLinks.discord || '#',
+      url: getSocialUrl('discord'),
     },
     {
       icon: Facebook,
       name: 'Facebook',
       desc: t('ติดตามข่าวสารบน Facebook', 'Follow us on Facebook'),
-      url: socialLinks.facebook || '#',
+      url: getSocialUrl('facebook'),
     },
     {
       icon: Youtube,
       name: 'YouTube',
       desc: t('ดูวิดีโอและไลฟ์สตรีม', 'Watch videos and livestreams'),
-      url: socialLinks.youtube || '#',
+      url: getSocialUrl('youtube'),
     },
     {
       icon: Music,
       name: 'TikTok',
       desc: t('ติดตามเราบน TikTok', 'Follow us on TikTok'),
-      url: socialLinks.tiktok || '#',
+      url: getSocialUrl('tiktok'),
     },
-  ];
+  ].filter(link => link.url !== null);
 
   return (
     <footer className="main-footer">

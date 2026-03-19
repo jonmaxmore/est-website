@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useLang } from '@/lib/lang-context';
 import RevealSection from '@/components/ui/RevealSection';
 import { CATEGORY_COLORS } from '@/components/ui/StoreIcons';
+import { Calendar, RefreshCw, Video, Wrench, Megaphone } from 'lucide-react';
 
 interface CMSNews {
   id: number;
@@ -14,17 +15,17 @@ interface CMSNews {
   titleTh: string;
   slug: string;
   category: string;
-  publishedAt: string;
+  publishDate: string;
   featuredImage: string | null;
 }
 
-/* Category placeholder images — visually distinct gradient cards instead of emoji */
-const CATEGORY_PLACEHOLDERS: Record<string, { gradient: string; icon: string }> = {
-  event: { gradient: 'linear-gradient(135deg, #F5A623 0%, #E8941A 50%, #D4821A 100%)', icon: '🎉' },
-  update: { gradient: 'linear-gradient(135deg, #5BC0EB 0%, #3A9BD5 50%, #2B7FC9 100%)', icon: '🔄' },
-  media: { gradient: 'linear-gradient(135deg, #9B59B6 0%, #8E44AD 50%, #7D3C98 100%)', icon: '🎬' },
-  maintenance: { gradient: 'linear-gradient(135deg, #E74C3C 0%, #C0392B 50%, #A93226 100%)', icon: '🔧' },
-  announcement: { gradient: 'linear-gradient(135deg, #2ECC71 0%, #27AE60 50%, #219A52 100%)', icon: '📢' },
+/* Category placeholders — Lucide icons with gradient backgrounds */
+const CATEGORY_PLACEHOLDERS: Record<string, { gradient: string; Icon: React.ComponentType<{ size?: number; className?: string }> }> = {
+  event: { gradient: 'linear-gradient(135deg, #F5A623 0%, #E8941A 50%, #D4821A 100%)', Icon: Calendar },
+  update: { gradient: 'linear-gradient(135deg, #5BC0EB 0%, #3A9BD5 50%, #2B7FC9 100%)', Icon: RefreshCw },
+  media: { gradient: 'linear-gradient(135deg, #9B59B6 0%, #8E44AD 50%, #7D3C98 100%)', Icon: Video },
+  maintenance: { gradient: 'linear-gradient(135deg, #E74C3C 0%, #C0392B 50%, #A93226 100%)', Icon: Wrench },
+  announcement: { gradient: 'linear-gradient(135deg, #2ECC71 0%, #27AE60 50%, #219A52 100%)', Icon: Megaphone },
 };
 
 interface NewsSectionConfig {
@@ -43,8 +44,8 @@ export default function NewsSection({ news, sectionConfig }: { news: CMSNews[]; 
           tag: item.category?.toUpperCase() || 'NEWS',
           color: CATEGORY_COLORS[item.category] || '#5BC0EB',
           title: t(item.titleTh, item.titleEn) || item.titleEn,
-          date: item.publishedAt
-            ? new Date(item.publishedAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })
+          date: item.publishDate
+            ? new Date(item.publishDate).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })
             : 'Coming Soon',
           thumb: item.featuredImage,
           category: item.category,
@@ -77,7 +78,7 @@ export default function NewsSection({ news, sectionConfig }: { news: CMSNews[]; 
                     <Image src={item.thumb} alt="" fill className="object-cover" />
                   ) : (
                     <div className="news-card-placeholder" style={{ background: placeholder.gradient }}>
-                      <span className="news-card-placeholder-icon">{placeholder.icon}</span>
+                      <span className="news-card-placeholder-icon"><placeholder.Icon size={40} /></span>
                       <div className="news-card-placeholder-pattern" />
                     </div>
                   )}

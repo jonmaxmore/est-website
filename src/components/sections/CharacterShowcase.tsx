@@ -98,22 +98,10 @@ export default function CharacterShowcase({ characters }: { characters?: Charact
         </AnimatePresence>
       )}
 
-      {/* ─── Layer 3: Right Panel (Movie Clip + Weapon Info) ─── */}
-      <div className="char-right-panel">
-        {/* Movie Clip Player */}
-        <div className="char-movie-clip">
-          <div className="char-movie-clip-inner">
-            <button className="char-movie-play-btn" aria-label="Play character movie clip">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <circle cx="12" cy="12" r="10" />
-                <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Weapon Info Image */}
-        {active.infoImage && (
+      {/* ─── Layer 3: Right Panel (Weapon Info — Movie clip hidden until video available) ─── */}
+      {active.infoImage && (
+        <div className="char-right-panel">
+          {/* Weapon Info Image */}
           <AnimatePresence mode="wait">
             <motion.div
               key={`info-${active.id}`}
@@ -132,8 +120,8 @@ export default function CharacterShowcase({ characters }: { characters?: Charact
               />
             </motion.div>
           </AnimatePresence>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* ─── Layer 4: Character Selector Icons ─── */}
       <div className="char-icon-selector">
