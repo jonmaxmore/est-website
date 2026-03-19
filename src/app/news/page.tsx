@@ -51,6 +51,7 @@ const CATEGORIES = [
   { key: 'maintenance', labelTh: 'บำรุงรักษา', labelEn: 'Maintenance' },
 ];
 
+// eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function NewsPage() {
   const { lang, t } = useLang();
   const [articles, setArticles] = useState<NewsArticle[]>([]);
@@ -79,8 +80,8 @@ export default function NewsPage() {
       setLoading(true);
       try {
         const url = activeCategory === 'all'
-          ? '/api/news?limit=50'
-          : `/api/news?limit=50&category=${activeCategory}`;
+          ? '/api/public/news?limit=50'
+          : `/api/public/news?limit=50&category=${activeCategory}`;
         const res = await fetch(url);
         const data = await res.json();
         setArticles(data.articles || []);

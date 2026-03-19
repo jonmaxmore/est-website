@@ -3,12 +3,16 @@ import { getPayloadClient } from '@/lib/payload'
 
 export const dynamic = 'force-dynamic'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+// GET /api/public/news-detail?slug=article-slug
+export async function GET(request: NextRequest) {
   try {
-    const { slug } = await params
+    const { searchParams } = new URL(request.url)
+    const slug = searchParams.get('slug')
+
+    if (!slug) {
+      return NextResponse.json({ error: 'Slug parameter is required' }, { status: 400 })
+    }
+
     const payload = await getPayloadClient()
 
     const result = await payload.find({

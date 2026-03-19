@@ -51,6 +51,7 @@ const WEAPON_INFO = [
   },
 ];
 
+// eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function CharacterPage() {
   const { t } = useLang();
   const [characters, setCharacters] = useState<CMSCharacter[]>([]);
@@ -58,7 +59,7 @@ export default function CharacterPage() {
   const [direction, setDirection] = useState(0);
 
   useEffect(() => {
-    fetch('/api/characters')
+    fetch('/api/public/characters')
       .then(r => r.json())
       .then(data => {
         if (data?.characters) {

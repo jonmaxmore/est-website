@@ -52,6 +52,7 @@ const PLACEHOLDER_ITEMS: Record<string, GalleryItem[]> = {
   ],
 };
 
+// eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function GalleryPage() {
   const { t } = useLang();
   const [activeTab, setActiveTab] = useState('screenshots');
@@ -76,7 +77,7 @@ export default function GalleryPage() {
       .catch(() => {});
 
     // Try to fetch gallery items from CMS
-    fetch('/api/gallery')
+    fetch('/api/public/gallery')
       .then((r) => r.json())
       .then((data) => {
         if (data?.items && Object.keys(data.items).length > 0) {

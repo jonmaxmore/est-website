@@ -92,6 +92,7 @@ function renderContent(content: { root: { children: RichTextNode[] } } | null): 
   return content.root.children.map(renderRichText).join('');
 }
 
+// eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function NewsArticlePage() {
   const { lang, t, toggle } = useLang();
   const params = useParams();
@@ -106,7 +107,7 @@ export default function NewsArticlePage() {
     async function fetchArticle() {
       setLoading(true);
       try {
-        const res = await fetch(`/api/news/${slug}`);
+        const res = await fetch(`/api/public/news-detail?slug=${slug}`);
         if (!res.ok) { setError(true); return; }
         const data = await res.json();
         setArticle(data.article);
