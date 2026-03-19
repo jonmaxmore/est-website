@@ -47,47 +47,20 @@ async function seed() {
 
   // ─── 3. Seed Characters ───
   console.log('🗡️ Seeding characters...')
+  // Only use fields that exist in the Characters collection: name, sortOrder, visible
+  // portrait/infoImage/backgroundImage/icon are upload fields — add via CMS admin later
   const characters = [
-    {
-      nameEn: 'Arthur', nameTh: 'อาร์เธอร์',
-      classEn: 'Iron Knight', classTh: 'อัศวินเหล็ก',
-      weaponClass: 'SWORD' as const, faction: 'light' as const,
-      descriptionEn: 'A legendary knight who excels in close combat, capable of fulfilling both offensive and defensive roles.',
-      descriptionTh: 'เป็นอาวุธที่เชี่ยวชาญในการโจมตีกายภาพ ซึ่งสามารถปฏิบัติหน้าที่ในการโจมตีระยะประชิดและการป้องกันได้อย่างสมดุล',
-      accentColor: '#FFD700', sortOrder: 1, visible: true,
-    },
-    {
-      nameEn: 'Elena', nameTh: 'เอเลน่า',
-      classEn: 'Forest Ranger', classTh: 'เจ้าป่า',
-      weaponClass: 'BOW' as const, faction: 'nature' as const,
-      descriptionEn: 'A master archer who strikes from afar, using nature\'s power to overwhelm enemies.',
-      descriptionTh: 'นักธนูผู้เชี่ยวชาญที่โจมตีจากระยะไกล ใช้พลังของธรรมชาติเพื่อเอาชนะศัตรู',
-      accentColor: '#4CAF50', sortOrder: 2, visible: true,
-    },
-    {
-      nameEn: 'Kaelen', nameTh: 'เคเลน',
-      classEn: 'Shadow Mage', classTh: 'จอมเวทย์เงา',
-      weaponClass: 'CRYSTAL_ORB' as const, faction: 'dark' as const,
-      descriptionEn: 'A mysterious mage wielding dark arcane powers to devastate foes from a distance.',
-      descriptionTh: 'จอมเวทย์ลึกลับผู้ใช้พลังมืดเพื่อทำลายศัตรูจากระยะไกล',
-      accentColor: '#7B1FA2', sortOrder: 3, visible: true,
-    },
-    {
-      nameEn: 'Lyra', nameTh: 'ไลร่า',
-      classEn: 'Holy Priestess', classTh: 'นักบวชศักดิ์สิทธิ์',
-      weaponClass: 'WAND' as const, faction: 'light' as const,
-      descriptionEn: 'A divine healer who protects allies with holy magic and resurrects the fallen.',
-      descriptionTh: 'นักบวชศักดิ์สิทธิ์ผู้ปกป้องพันธมิตรด้วยเวทมนตร์ศักดิ์สิทธิ์',
-      accentColor: '#E1BEE7', sortOrder: 4, visible: true,
-    },
+    { name: 'Arthur — Iron Knight', sortOrder: 1, visible: true },
+    { name: 'Elena — Forest Ranger', sortOrder: 2, visible: true },
+    { name: 'Kaelen — Shadow Mage', sortOrder: 3, visible: true },
+    { name: 'Lyra — Holy Priestess', sortOrder: 4, visible: true },
   ]
 
   for (const char of characters) {
     try {
-      // Create character without portrait for now (will be added via CMS upload)
       await payload.create({
         collection: 'characters',
-        data: { ...char, portrait: undefined } as Record<string, unknown>,
+        data: char as Record<string, unknown>,
       })
     } catch { /* skip if exists */ }
   }

@@ -23,7 +23,6 @@ export const Characters: CollectionConfig = {
       name: 'portrait',
       type: 'upload',
       relationTo: 'media',
-      required: true,
       label: 'Character Portrait (60% ของหน้าจอ)',
       admin: { description: 'รูปตัวละครแบบ full-body — จะแสดงทางซ้าย 60% ของหน้าจอ' },
     },
