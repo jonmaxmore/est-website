@@ -73,7 +73,7 @@ export async function POST() {
     // 6. Set Globals
     try {
       await payload.updateGlobal({
-        slug: 'hero-section',
+        slug: 'homepage',
         data: {
           taglineEn: 'Adventure together, conquer the tower',
           taglineTh: 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย',

@@ -23,22 +23,22 @@ export default async function LandingPage() {
     const payload = await getPayloadClient();
 
     // Fetch all data in parallel — direct DB access, no API round-trip
-    const [siteSettings, eventConfig, heroSection, storeButtonsRes, charsRes, newsRes] =
+    const [siteSettings, eventConfig, homepage, storeButtonsRes, charsRes, newsRes] =
       await Promise.all([
         payload.findGlobal({ slug: 'site-settings' }).catch((e) => { console.error('Failed to fetch site-settings:', e); return null; }),
         payload.findGlobal({ slug: 'event-config' }).catch((e) => { console.error('Failed to fetch event-config:', e); return null; }),
-        payload.findGlobal({ slug: 'hero-section' }).catch((e) => { console.error('Failed to fetch hero-section:', e); return null; }),
+        payload.findGlobal({ slug: 'homepage' }).catch((e) => { console.error('Failed to fetch homepage:', e); return null; }),
         payload.find({ collection: 'store-buttons', where: { visible: { equals: true } }, sort: 'sortOrder' }).catch(() => ({ docs: [] })),
         payload.find({ collection: 'characters', where: { visible: { equals: true } }, sort: 'sortOrder', limit: 20 }).catch(() => ({ docs: [] })),
         payload.find({ collection: 'news', where: { status: { equals: 'published' } }, sort: '-publishedAt', limit: 3 }).catch(() => ({ docs: [] })),
       ]);
 
     // Build settings object
-    if (siteSettings && heroSection) {
+    if (siteSettings && homepage) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const ss = siteSettings as any;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const hs = heroSection as any;
+      const hs = homepage as any;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const ec = eventConfig as any;
 

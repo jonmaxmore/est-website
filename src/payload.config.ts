@@ -18,7 +18,9 @@ import { Users } from './collections/Users'
 // Globals
 import { SiteSettings } from './globals/SiteSettings'
 import { EventConfig } from './globals/EventConfig'
-import { HeroSection } from './globals/HeroSection'
+import { Homepage } from './globals/HeroSection'
+import { StoryPage } from './globals/StoryPage'
+import { GameGuidePage } from './globals/GameGuidePage'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -47,7 +49,9 @@ export default buildConfig({
   globals: [
     SiteSettings,
     EventConfig,
-    HeroSection,
+    Homepage,
+    StoryPage,
+    GameGuidePage,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET ?? (() => { throw new Error('PAYLOAD_SECRET environment variable is required') })(),

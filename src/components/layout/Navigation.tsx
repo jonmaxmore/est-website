@@ -13,8 +13,8 @@ import { useLang } from '@/lib/lang-context';
 
 const NAV_LINKS = [
   { href: '/', labelTh: 'หน้าหลัก', labelEn: 'Home' },
-  { href: '/#features', labelTh: 'แนะนำเกม', labelEn: 'Game Guide' },
-  { href: '/#story', labelTh: 'เนื้อเรื่อง', labelEn: 'Story' },
+  { href: '/game-guide', labelTh: 'แนะนำเกม', labelEn: 'Game Guide' },
+  { href: '/story', labelTh: 'เนื้อเรื่อง', labelEn: 'Story' },
   { href: '/character', labelTh: 'ตัวละคร', labelEn: 'Characters' },
   { href: '/news', labelTh: 'ข่าวสาร', labelEn: 'News' },
 ];

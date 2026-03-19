@@ -124,7 +124,7 @@ async function seed() {
   console.log('🖼️  Setting hero section globals...')
   try {
     await payload.updateGlobal({
-      slug: 'hero-section',
+      slug: 'homepage',
       data: {
         taglineEn: 'Adventure together, conquer the tower',
         taglineTh: 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย',

@@ -8,10 +8,12 @@ export async function GET() {
     const payload = await getPayloadClient()
 
     // Fetch all global settings in parallel
-    const [siteSettings, eventConfig, heroSection] = await Promise.all([
+    const [siteSettings, eventConfig, homepage, storyPage, gameGuidePage] = await Promise.all([
       payload.findGlobal({ slug: 'site-settings' }),
       payload.findGlobal({ slug: 'event-config' }),
-      payload.findGlobal({ slug: 'hero-section' }),
+      payload.findGlobal({ slug: 'homepage' }),
+      payload.findGlobal({ slug: 'story-page' }),
+      payload.findGlobal({ slug: 'game-guide-page' }),
     ])
 
     // Fetch store buttons
@@ -80,25 +82,25 @@ export async function GET() {
         })) || [],
       },
       hero: {
-        taglineEn: heroSection.taglineEn,
-        taglineTh: heroSection.taglineTh,
-        taglineImageEn: typeof heroSection.taglineImageEn === 'object' && heroSection.taglineImageEn ? {
-          url: heroSection.taglineImageEn.url,
+        taglineEn: homepage.taglineEn,
+        taglineTh: homepage.taglineTh,
+        taglineImageEn: typeof homepage.taglineImageEn === 'object' && homepage.taglineImageEn ? {
+          url: homepage.taglineImageEn.url,
         } : null,
-        taglineImageTh: typeof heroSection.taglineImageTh === 'object' && heroSection.taglineImageTh ? {
-          url: heroSection.taglineImageTh.url,
+        taglineImageTh: typeof homepage.taglineImageTh === 'object' && homepage.taglineImageTh ? {
+          url: homepage.taglineImageTh.url,
         } : null,
-        ctaTextEn: heroSection.ctaTextEn,
-        ctaTextTh: heroSection.ctaTextTh,
-        ctaLink: heroSection.ctaLink,
-        backgroundVideo: typeof heroSection.backgroundVideo === 'object' && heroSection.backgroundVideo ? {
-          url: heroSection.backgroundVideo.url,
+        ctaTextEn: homepage.ctaTextEn,
+        ctaTextTh: homepage.ctaTextTh,
+        ctaLink: homepage.ctaLink,
+        backgroundVideo: typeof homepage.backgroundVideo === 'object' && homepage.backgroundVideo ? {
+          url: homepage.backgroundVideo.url,
         } : null,
-        backgroundImage: typeof heroSection.backgroundImage === 'object' && heroSection.backgroundImage ? {
-          url: heroSection.backgroundImage.url,
+        backgroundImage: typeof homepage.backgroundImage === 'object' && homepage.backgroundImage ? {
+          url: homepage.backgroundImage.url,
         } : null,
 
-        features: heroSection.features?.map((f: Record<string, string>) => ({
+        features: homepage.features?.map((f: Record<string, string>) => ({
           icon: f.icon,
           titleEn: f.titleEn,
           titleTh: f.titleTh,
@@ -107,42 +109,42 @@ export async function GET() {
         })) || [],
       },
       characters: {
-        bgImage: typeof heroSection.charactersBgImage === 'object' && heroSection.charactersBgImage ? {
-          url: (heroSection.charactersBgImage as { url: string }).url,
+        bgImage: typeof homepage.charactersBgImage === 'object' && homepage.charactersBgImage ? {
+          url: (homepage.charactersBgImage as { url: string }).url,
         } : null,
-        badgeEn: heroSection.charactersBadgeEn || 'CHOOSE YOUR HERO',
-        badgeTh: heroSection.charactersBadgeTh || 'เลือกฮีโร่ของคุณ',
-        titleEn: heroSection.charactersTitleEn || 'Heroes of Arcatea',
-        titleTh: heroSection.charactersTitleTh || 'ฮีโร่แห่ง Arcatea',
-        voiceButtonEn: heroSection.voiceButtonEn || 'Listen to Voice Line',
-        voiceButtonTh: heroSection.voiceButtonTh || 'ฟังเสียงตัวละคร',
+        badgeEn: homepage.charactersBadgeEn || 'CHOOSE YOUR HERO',
+        badgeTh: homepage.charactersBadgeTh || 'เลือกฮีโร่ของคุณ',
+        titleEn: homepage.charactersTitleEn || 'Heroes of Arcatea',
+        titleTh: homepage.charactersTitleTh || 'ฮีโร่แห่ง Arcatea',
+        voiceButtonEn: homepage.voiceButtonEn || 'Listen to Voice Line',
+        voiceButtonTh: homepage.voiceButtonTh || 'ฟังเสียงตัวละคร',
       },
       highlights: {
-        badgeEn: heroSection.highlightsBadgeEn || 'GAME FEATURES',
-        badgeTh: heroSection.highlightsBadgeTh || 'ฟีเจอร์เกม',
-        titleEn: heroSection.highlightsTitleEn || 'Game Highlights',
-        titleTh: heroSection.highlightsTitleTh || 'ไฮไลท์เกม',
-        bgImage: typeof heroSection.highlightsBgImage === 'object' && heroSection.highlightsBgImage ? {
-          url: (heroSection.highlightsBgImage as { url: string }).url,
+        badgeEn: homepage.highlightsBadgeEn || 'GAME FEATURES',
+        badgeTh: homepage.highlightsBadgeTh || 'ฟีเจอร์เกม',
+        titleEn: homepage.highlightsTitleEn || 'Game Highlights',
+        titleTh: homepage.highlightsTitleTh || 'ไฮไลท์เกม',
+        bgImage: typeof homepage.highlightsBgImage === 'object' && homepage.highlightsBgImage ? {
+          url: (homepage.highlightsBgImage as { url: string }).url,
         } : null,
       },
       news: {
-        badgeEn: heroSection.newsBadgeEn || 'LATEST NEWS',
-        badgeTh: heroSection.newsBadgeTh || 'ข่าวล่าสุด',
-        titleEn: heroSection.newsTitleEn || 'News & Updates',
-        titleTh: heroSection.newsTitleTh || 'ข่าวสารและอัพเดท',
+        badgeEn: homepage.newsBadgeEn || 'LATEST NEWS',
+        badgeTh: homepage.newsBadgeTh || 'ข่าวล่าสุด',
+        titleEn: homepage.newsTitleEn || 'News & Updates',
+        titleTh: homepage.newsTitleTh || 'ข่าวสารและอัพเดท',
       },
       storyPage: {
-        heroImage: typeof heroSection.storyPageHeroImage === 'object' && heroSection.storyPageHeroImage ? {
-          url: (heroSection.storyPageHeroImage as { url: string }).url,
+        heroImage: typeof storyPage.heroImage === 'object' && storyPage.heroImage ? {
+          url: (storyPage.heroImage as { url: string }).url,
         } : null,
-        badgeEn: heroSection.storyPageBadgeEn || 'LORE',
-        badgeTh: heroSection.storyPageBadgeTh || 'เนื้อเรื่อง',
-        titleEn: heroSection.storyPageTitleEn || 'Story',
-        titleTh: heroSection.storyPageTitleTh || 'เนื้อเรื่อง',
-        subtitleEn: heroSection.storyPageSubtitleEn || 'The tale of Arcatéa and The Boundless Spire',
-        subtitleTh: heroSection.storyPageSubtitleTh || 'เรื่องราวแห่งดินแดน Arcatéa และหอคอยไร้ขอบเขต',
-        sections: (heroSection.storySections as Array<Record<string, string>>)?.map((s) => ({
+        badgeEn: storyPage.badgeEn || 'LORE',
+        badgeTh: storyPage.badgeTh || 'เนื้อเรื่อง',
+        titleEn: storyPage.titleEn || 'Story',
+        titleTh: storyPage.titleTh || 'เนื้อเรื่อง',
+        subtitleEn: storyPage.subtitleEn || 'The tale of Arcatéa and The Boundless Spire',
+        subtitleTh: storyPage.subtitleTh || 'เรื่องราวแห่งดินแดน Arcatéa และหอคอยไร้ขอบเขต',
+        sections: (storyPage.sections as Array<Record<string, string>>)?.map((s) => ({
           titleEn: s.titleEn,
           titleTh: s.titleTh,
           contentEn: s.contentEn,
@@ -150,16 +152,16 @@ export async function GET() {
         })) || [],
       },
       gameGuidePage: {
-        heroImage: typeof heroSection.gameGuideHeroImage === 'object' && heroSection.gameGuideHeroImage ? {
-          url: (heroSection.gameGuideHeroImage as { url: string }).url,
+        heroImage: typeof gameGuidePage.heroImage === 'object' && gameGuidePage.heroImage ? {
+          url: (gameGuidePage.heroImage as { url: string }).url,
         } : null,
-        badgeEn: heroSection.gameGuideBadgeEn || 'GAME GUIDE',
-        badgeTh: heroSection.gameGuideBadgeTh || 'แนะนำเกม',
-        titleEn: heroSection.gameGuideTitleEn || 'Game Guide',
-        titleTh: heroSection.gameGuideTitleTh || 'แนะนำเกม',
-        subtitleEn: heroSection.gameGuideSubtitleEn || 'Experience the new era of Eternal Tower Saga',
-        subtitleTh: heroSection.gameGuideSubtitleTh || 'สัมผัสประสบการณ์ใหม่ใน Eternal Tower Saga',
-        features: (heroSection.gameGuideFeatures as Array<Record<string, string>>)?.map((f) => ({
+        badgeEn: gameGuidePage.badgeEn || 'GAME GUIDE',
+        badgeTh: gameGuidePage.badgeTh || 'แนะนำเกม',
+        titleEn: gameGuidePage.titleEn || 'Game Guide',
+        titleTh: gameGuidePage.titleTh || 'แนะนำเกม',
+        subtitleEn: gameGuidePage.subtitleEn || 'Experience the new era of Eternal Tower Saga',
+        subtitleTh: gameGuidePage.subtitleTh || 'สัมผัสประสบการณ์ใหม่ใน Eternal Tower Saga',
+        features: (gameGuidePage.features as Array<Record<string, string>>)?.map((f) => ({
           icon: f.icon,
           titleEn: f.titleEn,
           titleTh: f.titleTh,

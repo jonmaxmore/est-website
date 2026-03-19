@@ -13,12 +13,12 @@ export async function POST() {
 
     // 1. Initialize HeroSection global
     try {
-      await payload.findGlobal({ slug: 'hero-section' })
-      results.push('✅ hero-section table exists')
+      await payload.findGlobal({ slug: 'homepage' })
+      results.push('✅ homepage table exists')
     } catch {
       try {
         await payload.updateGlobal({
-          slug: 'hero-section',
+          slug: 'homepage',
           data: {
             taglineEn: 'Rise Together. Conquer the Tower.',
             taglineTh: 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย',
@@ -36,9 +36,9 @@ export async function POST() {
             ],
           },
         })
-        results.push('✅ hero-section created & seeded')
+        results.push('✅ homepage created & seeded')
       } catch (e) {
-        results.push(`⚠️ hero-section: ${String(e).slice(0, 100)}`)
+        results.push(`⚠️ homepage: ${String(e).slice(0, 100)}`)
       }
     }
 
