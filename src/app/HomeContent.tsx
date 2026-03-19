@@ -141,9 +141,7 @@ export default function HomeContent({ settings, characters, news }: HomeContentP
 
         {/* ═══ SECTION 2: CHARACTERS — Full-width cinematic ═══ */}
         <section id="characters" className="section-transition-top">
-          <RevealSection>
-            <CharacterShowcase characters={characters} />
-          </RevealSection>
+          <CharacterShowcase characters={characters} />
         </section>
 
         {/* ═══ SECTION 3: HIGHLIGHTS STRIP — Compact feature showcase ═══ */}
