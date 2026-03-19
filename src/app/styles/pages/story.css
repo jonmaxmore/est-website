@@ -1,0 +1,146 @@
+﻿/*    STORY PAGE Ã¢â‚¬â€ Immersive Lore Narrative
+   Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
+.section-story-content {
+  position: relative;
+  padding: 5rem 0 6rem;
+  background: linear-gradient(180deg, var(--midnight) 0%, var(--deeper-navy) 40%, var(--dark-navy) 70%, var(--midnight) 100%);
+  counter-reset: story-chapter;
+}
+
+/* Atmospheric background pattern */
+.section-story-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(212, 168, 67, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(91, 192, 235, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.story-block {
+  position: relative;
+  max-width: 780px;
+  margin: 0 auto 4rem;
+  padding: 2.5rem 2.5rem 2.5rem 3rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  border: 1px solid rgba(212, 168, 67, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: border-color 0.4s var(--ease-out-expo), box-shadow 0.4s, transform 0.4s;
+  counter-increment: story-chapter;
+}
+
+/* Gold accent bar on left */
+.story-block::before {
+  content: '';
+  position: absolute;
+  top: 1.5rem;
+  bottom: 1.5rem;
+  left: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--gold), rgba(212, 168, 67, 0.2));
+  border-radius: 0 3px 3px 0;
+  opacity: 0.6;
+  transition: opacity 0.4s;
+}
+
+/* Chapter number counter */
+.story-block::after {
+  content: '0' counter(story-chapter);
+  position: absolute;
+  top: -0.75rem;
+  left: 2rem;
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  background: var(--midnight);
+  padding: 0.15rem 0.75rem;
+  border-radius: 100px;
+  border: 1px solid rgba(212, 168, 67, 0.25);
+  z-index: 2;
+}
+
+/* Connecting timeline between blocks */
+.story-block:not(:last-child) {
+  margin-bottom: 4rem;
+}
+
+/* Connecting timeline Ã¢â‚¬â€ blocks are naturally spaced */
+
+.story-block:hover {
+  border-color: rgba(212, 168, 67, 0.3);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3), 0 0 24px rgba(212, 168, 67, 0.05);
+  transform: translateY(-2px);
+}
+
+.story-block:hover::before {
+  opacity: 1;
+}
+
+.story-block:last-child {
+  margin-bottom: 0;
+}
+
+.story-block-title {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1.25rem;
+  line-height: 1.3;
+}
+
+.story-block-text {
+  font-size: 1.05rem;
+  line-height: 2;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.01em;
+}
+
+/* First letter drop cap effect */
+.story-block:first-child .story-block-text::first-letter {
+  font-size: 3.5rem;
+  font-weight: 800;
+  float: left;
+  line-height: 1;
+  margin-right: 0.5rem;
+  margin-top: 0.1rem;
+  color: var(--gold);
+  font-family: var(--font-heading);
+}
+
+@media (max-width: 768px) {
+  .story-block {
+    padding: 2rem 1.5rem 2rem 2rem;
+    margin-bottom: 3rem;
+  }
+  .story-block-title {
+    font-size: 1.3rem;
+  }
+  .story-block-text {
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+}
+
+/* Empty state styles */
+.story-empty-state {
+  text-align: center;
+  opacity: 0.5;
+}
+
+.highlights-empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  opacity: 0.5;
+  padding: var(--space-2xl);
+  color: var(--text-muted);
+}
+

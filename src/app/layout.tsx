@@ -5,6 +5,31 @@ import { BackToTop, CookieConsent } from "@/components/ui-overlays";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import "./globals.css";
 
+/* Modular CSS — Homepage Components */
+import "./styles/navigation.css";
+import "./styles/hero.css";
+import "./styles/sections.css";
+import "./styles/character-showcase.css";
+import "./styles/features.css";
+import "./styles/news-section.css";
+import "./styles/footer.css";
+import "./styles/highlights.css";
+
+/* Modular CSS — Shared */
+import "./styles/page-hero.css";
+import "./styles/responsive.css";
+import "./styles/mobile-responsive.css";
+import "./styles/faq.css";
+
+/* Modular CSS — Page-Specific */
+import "./styles/pages/event-part1.css";
+import "./styles/pages/event-part2.css";
+import "./styles/pages/news-page.css";
+import "./styles/pages/news-download-responsive.css";
+import "./styles/pages/download.css";
+import "./styles/pages/story.css";
+import "./styles/pages/legal.css";
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com';
 
 const outfit = Outfit({
@@ -71,6 +96,7 @@ export const metadata: Metadata = {
   },
 };
 
+// eslint-disable-next-line max-lines-per-function -- Layout contains all meta/structured-data/analytics config
 export default function RootLayout({
   children,
 }: Readonly<{

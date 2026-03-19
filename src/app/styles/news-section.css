@@ -1,0 +1,62 @@
+﻿@layer components {
+  /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ NEWS SECTION Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+  .section-news {
+    position: relative;
+    padding: 6rem 0;
+    background: var(--midnight);
+  }
+
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    position: relative;
+    z-index: 5;
+  }
+
+  .news-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s var(--ease-out-expo);
+  }
+
+  .news-card:hover {
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  /* .news-card-thumb Ã¢â‚¬â€ see canonical version below with position:relative + overflow:hidden */
+
+  .news-card-emoji { font-size: 3rem; }
+
+  .news-card-body { padding: 1.25rem; }
+
+  .news-card-tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .news-card-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+    line-height: 1.4;
+  }
+
+  .news-card-date {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+
+}
+

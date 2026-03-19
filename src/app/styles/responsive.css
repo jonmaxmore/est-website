@@ -1,0 +1,21 @@
+﻿/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ RESPONSIVE Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+@media (max-width: 1024px) {
+  .nav-links { display: none; }
+  .char-layout { grid-template-columns: 1fr; }
+  .char-portrait-area { min-height: 350px; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .news-grid { grid-template-columns: repeat(2, 1fr); }
+  .milestone-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .hero-stores { flex-direction: column; align-items: center; }
+  .store-btn { min-width: 260px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .news-grid { grid-template-columns: 1fr; }
+  .char-selector-btn { width: 55px; height: 55px; }
+  .event-countdown { gap: 0.75rem; }
+  .countdown-value { font-size: 1.8rem; min-width: 55px; padding: 0.5rem 0.75rem; }
+  .milestone-grid { grid-template-columns: repeat(2, 1fr); }
+  .event-modal { margin: 1rem; padding: 1.5rem; }
+}
