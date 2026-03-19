@@ -40,6 +40,16 @@
     line-height: 1.2;
   }
 
+  /* Left-aligned section header variant (for character overlay) */
+  .char-info-overlay .section-header {
+    text-align: left;
+    margin-bottom: 0.75rem;
+  }
+
+  .char-info-overlay .title-ornament {
+    justify-content: flex-start;
+  }
+
   .section-subtitle {
     font-size: 1.1rem;
     color: var(--text-muted);

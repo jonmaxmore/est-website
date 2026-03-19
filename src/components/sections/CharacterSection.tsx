@@ -45,6 +45,7 @@ interface CharacterSectionProps {
   sectionConfig?: CMSCharacterSectionConfig;
 }
 
+// eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function CharacterSection({ characters, sectionConfig }: CharacterSectionProps) {
   const { t } = useLang();
   const [activeIdx, setActiveIdx] = useState(0);
@@ -272,8 +273,8 @@ export default function CharacterSection({ characters, sectionConfig }: Characte
               <Image
                 src={characters[i].icon!}
                 alt=""
-                width={72}
-                height={72}
+                width={80}
+                height={80}
                 className="char-icon-img"
               />
             ) : (

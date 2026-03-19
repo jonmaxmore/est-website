@@ -301,8 +301,8 @@ export default function CharacterPage() {
                   <Image
                     src={characters[i].icon!}
                     alt=""
-                    width={72}
-                    height={72}
+                    width={80}
+                    height={80}
                     className="char-icon-img"
                   />
                 ) : (
