@@ -1,18 +1,17 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLang } from '@/lib/lang-context';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import ScrollProgress from '@/components/ui/ScrollProgress';
-import RevealSection from '@/components/ui/RevealSection';
 
 /* ═══════════════════════════════════════════════
    CHARACTER PAGE — ตัวละคร (Dedicated Page)
-   Shows weapon types with descriptions
-   Content from reference site
+   Immersive full-viewport showcase (same as homepage)
    ═══════════════════════════════════════════════ */
 
 interface CMSCharacter {
@@ -56,6 +55,7 @@ export default function CharacterPage() {
   const { t } = useLang();
   const [characters, setCharacters] = useState<CMSCharacter[]>([]);
   const [activeIdx, setActiveIdx] = useState(0);
+  const [direction, setDirection] = useState(0);
 
   useEffect(() => {
     fetch('/api/characters')
@@ -64,7 +64,7 @@ export default function CharacterPage() {
         if (data?.characters) {
           setCharacters(data.characters.map((c: Record<string, unknown>) => {
             const extractUrl = (field: unknown): string | null => {
-              if (typeof field === 'object' && field && 'url' in (field as Record<string, unknown>)) 
+              if (typeof field === 'object' && field && 'url' in (field as Record<string, unknown>))
                 return (field as { url: string }).url;
               if (typeof field === 'string') return field;
               return null;
@@ -83,8 +83,69 @@ export default function CharacterPage() {
       .catch(() => {});
   }, []);
 
+  const hasCmsData = characters.length > 0;
+  const itemCount = hasCmsData ? characters.length : WEAPON_INFO.length;
   const activeChar = characters[activeIdx];
   const activeWeapon = WEAPON_INFO[activeIdx] || WEAPON_INFO[0];
+
+  const getCharName = (i: number) =>
+    hasCmsData ? characters[i]?.name || '' : t(WEAPON_INFO[i]?.nameTh || '', WEAPON_INFO[i]?.nameEn || '');
+
+  /* Navigation helpers */
+  const goTo = useCallback((idx: number) => {
+    setDirection(idx > activeIdx ? 1 : -1);
+    setActiveIdx(idx);
+  }, [activeIdx]);
+
+  const goPrev = useCallback(() => {
+    setDirection(-1);
+    setActiveIdx((prev) => (prev - 1 + itemCount) % itemCount);
+  }, [itemCount]);
+
+  const goNext = useCallback(() => {
+    setDirection(1);
+    setActiveIdx((prev) => (prev + 1) % itemCount);
+  }, [itemCount]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        goNext();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        goPrev();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        setDirection(-1);
+        setActiveIdx(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        setDirection(1);
+        setActiveIdx(itemCount - 1);
+      }
+    },
+    [itemCount, goNext, goPrev],
+  );
+
+  /* Animation variants */
+  const bgVariants = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+  };
+
+  const portraitVariants = {
+    initial: (dir: number) => ({ opacity: 0, x: dir > 0 ? 80 : -80 }),
+    animate: { opacity: 1, x: 0 },
+    exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -80 : 80 }),
+  };
+
+  const infoVariants = {
+    initial: { opacity: 0, y: 30 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
+  };
 
   return (
     <div className="landing-page">
@@ -92,121 +153,164 @@ export default function CharacterPage() {
       <Navigation />
 
       <main>
-        {/* Hero Banner */}
-        <section className="page-hero page-hero-character">
-          <div className="page-hero-bg">
-            {activeChar?.backgroundImage && (
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`char-bg-${activeIdx}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.6 }}
-                  style={{ position: 'absolute', inset: 0 }}
-                >
+        <section className="char-showcase" aria-label={t('ตัวละคร', 'Characters')}>
+          {/* ── Layer 1: Background ── */}
+          <div className="char-bg-layer">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`bg-${activeIdx}`}
+                variants={bgVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.6 }}
+                style={{ position: 'absolute', inset: 0 }}
+              >
+                {activeChar?.backgroundImage ? (
                   <Image
                     src={activeChar.backgroundImage}
                     alt=""
                     fill
-                    className="object-cover"
+                    className="char-bg-img"
                     priority
                   />
-                </motion.div>
-              </AnimatePresence>
-            )}
-            <div className="page-hero-overlay" />
-          </div>
-          <div className="container-custom">
-            <RevealSection>
-              <div className="page-hero-content">
-                <span className="section-badge">CHARACTERS</span>
-                <h1 className="page-hero-title">{t('ตัวละคร', 'Characters')}</h1>
-                <p className="page-hero-subtitle">
-                  {t('เลือกอาวุธ เปลี่ยนเกม', 'Choose your weapon, shift the battlefield')}
-                </p>
-              </div>
-            </RevealSection>
-          </div>
-        </section>
-
-        {/* Character Showcase */}
-        <section className="section-character-detail">
-          <div className="container-custom">
-            {/* Character Selector Icons */}
-            <div className="character-page-selector">
-              {(characters.length > 0 ? characters : WEAPON_INFO).map((item, i) => (
-                <motion.button
-                  key={i}
-                  className={`char-page-icon-btn ${i === activeIdx ? 'active' : ''}`}
-                  onClick={() => setActiveIdx(i)}
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {characters[i]?.icon ? (
-                    <Image
-                      src={characters[i].icon!}
-                      alt={characters[i].name || ''}
-                      width={64}
-                      height={64}
-                      className="char-page-icon-img"
-                    />
-                  ) : (
-                    <span className="char-page-icon-placeholder">
-                      {('nameEn' in item ? (item as typeof WEAPON_INFO[0]).nameEn : (item as CMSCharacter).name || '?').charAt(0)}
-                    </span>
-                  )}
-                  <span className="char-page-icon-label">
-                    {characters[i]?.name || ('nameTh' in item ? t((item as typeof WEAPON_INFO[0]).nameTh, (item as typeof WEAPON_INFO[0]).nameEn) : '')}
-                  </span>
-                </motion.button>
-              ))}
-            </div>
-
-            {/* Character Detail Card */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeIdx}
-                className="character-detail-card"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.4 }}
-              >
-                <div className="character-detail-portrait">
-                  {activeChar?.portrait ? (
-                    <Image
-                      src={activeChar.portrait}
-                      alt={activeChar.name || ''}
-                      width={600}
-                      height={800}
-                      className="character-detail-portrait-img"
-                    />
-                  ) : (
-                    <div className="character-detail-portrait-placeholder" />
-                  )}
-                </div>
-                <div className="character-detail-info">
-                  <h2 className="character-detail-name">
-                    {activeChar?.name || t(activeWeapon.nameTh, activeWeapon.nameEn)}
-                  </h2>
-                  <p className="character-detail-desc">
-                    {t(activeWeapon.descTh, activeWeapon.descEn)}
-                  </p>
-                  {activeChar?.infoImage && (
-                    <div className="character-detail-weapon-img">
-                      <Image
-                        src={activeChar.infoImage}
-                        alt="Weapon info"
-                        width={400}
-                        height={200}
-                        className="character-detail-weapon-img-inner"
-                      />
-                    </div>
-                  )}
-                </div>
+                ) : (
+                  <div
+                    className="char-bg-img"
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(135deg, var(--deeper-navy), var(--midnight))',
+                    }}
+                  />
+                )}
               </motion.div>
             </AnimatePresence>
+            <div className="char-gradient-top" />
+            <div className="char-gradient-bottom" />
+          </div>
+
+          {/* ── Layer 2: Portrait ── */}
+          <div className="char-portrait-layer">
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={`portrait-${activeIdx}`}
+                custom={direction}
+                variants={portraitVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+                style={{ width: '100%', height: '100%', position: 'relative' }}
+              >
+                {activeChar?.portrait ? (
+                  <Image
+                    src={activeChar.portrait}
+                    alt={activeChar.name || ''}
+                    fill
+                    className="char-portrait-img"
+                    priority
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      opacity: 0.15,
+                      fontSize: 'clamp(6rem, 15vw, 12rem)',
+                      fontWeight: 900,
+                      color: 'var(--gold)',
+                      fontFamily: 'var(--font-heading)',
+                      userSelect: 'none',
+                    }}
+                    aria-hidden="true"
+                  >
+                    {getCharName(activeIdx).charAt(0)}
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* ── Layer 3: Info Overlay ── */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`info-${activeIdx}`}
+              className="char-info-overlay"
+              variants={infoVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={{ duration: 0.4, delay: 0.15 }}
+            >
+              <div className="section-header">
+                <span className="section-badge">CHARACTERS</span>
+                <h1 className="section-title-gold">{t('ตัวละคร', 'Characters')}</h1>
+                <div className="title-ornament" aria-hidden="true"><span /><span /><span /></div>
+              </div>
+
+              <h2 className="char-name">
+                {activeChar?.name || t(activeWeapon.nameTh, activeWeapon.nameEn)}
+              </h2>
+              <p className="char-desc">
+                {t(activeWeapon.descTh, activeWeapon.descEn)}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* ── Layer 4: Navigation Arrows ── */}
+          <button
+            className="char-nav-arrow prev"
+            onClick={goPrev}
+            aria-label={t('ตัวละครก่อนหน้า', 'Previous character')}
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <button
+            className="char-nav-arrow next"
+            onClick={goNext}
+            aria-label={t('ตัวละครถัดไป', 'Next character')}
+          >
+            <ChevronRight size={24} />
+          </button>
+
+          {/* ── Layer 5: Icon Selector ── */}
+          <div
+            className="char-icon-selector"
+            role="tablist"
+            aria-label={t('เลือกตัวละคร', 'Select character')}
+            onKeyDown={handleKeyDown}
+          >
+            {Array.from({ length: itemCount }).map((_, i) => (
+              <motion.button
+                key={i}
+                role="tab"
+                aria-selected={i === activeIdx}
+                aria-label={getCharName(i)}
+                tabIndex={i === activeIdx ? 0 : -1}
+                className={`char-icon-btn ${i === activeIdx ? 'active' : ''}`}
+                onClick={() => goTo(i)}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {characters[i]?.icon ? (
+                  <Image
+                    src={characters[i].icon!}
+                    alt=""
+                    width={72}
+                    height={72}
+                    className="char-icon-img"
+                  />
+                ) : (
+                  <span className="char-icon-placeholder" aria-hidden="true">
+                    {(hasCmsData ? characters[i]?.name || '?' : WEAPON_INFO[i]?.nameEn || '?').charAt(0)}
+                  </span>
+                )}
+              </motion.button>
+            ))}
           </div>
         </section>
       </main>
