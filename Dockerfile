@@ -53,6 +53,9 @@ RUN chmod +x ./docker-start.sh
 # Create .next/cache for ISR/image optimization (writable by nextjs user)
 RUN mkdir -p .next/cache && chown nextjs:nodejs .next/cache
 
+# Create media upload directory for Payload CMS (writable by nextjs user)
+RUN mkdir -p public/media && chown -R nextjs:nodejs public/media
+
 USER nextjs
 EXPOSE 3000
 
