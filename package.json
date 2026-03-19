@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "payload-seed": "tsx src/seed.ts"
+    "lint:fix": "eslint --fix",
+    "payload-seed": "tsx src/seed.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.79.1",
@@ -37,9 +39,14 @@
     "@types/uuid": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
     "prettier": "^3.8.1",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": ["eslint --max-warnings 0"]
   }
 }
