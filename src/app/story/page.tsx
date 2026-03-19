@@ -31,9 +31,11 @@ interface StoryPageConfig {
   sections: StorySection[];
 }
 
+// eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function StoryPage() {
   const { t } = useLang();
   const [config, setConfig] = useState<StoryPageConfig | null>(null);
+  const [loaded, setLoaded] = useState(false);
   const [socialLinks, setSocialLinks] = useState<Record<string, string | null>>({});
   const [footer, setFooter] = useState({
     copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
@@ -50,7 +52,8 @@ export default function StoryPage() {
         if (data?.site?.socialLinks) setSocialLinks(data.site.socialLinks);
         if (data?.site?.footer) setFooter(data.site.footer);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoaded(true));
   }, []);
 
   const badge = config ? t(config.badgeTh, config.badgeEn) : 'LORE';
@@ -104,7 +107,10 @@ export default function StoryPage() {
             ))}
             {sections.length === 0 && (
               <div className="story-block story-empty-state">
-                <p>{t('กำลังโหลดเนื้อเรื่อง...', 'Loading story...')}</p>
+                <p>{loaded
+                  ? t('เนื้อเรื่องกำลังจะมาเร็ว ๆ นี้...', 'Story coming soon...')
+                  : t('กำลังโหลดเนื้อเรื่อง...', 'Loading story...')
+                }</p>
               </div>
             )}
           </div>

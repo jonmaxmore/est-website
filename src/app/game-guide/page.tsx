@@ -43,9 +43,11 @@ interface GameGuidePageConfig {
   features: GameGuideFeature[];
 }
 
+// eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function GameGuidePage() {
   const { t } = useLang();
   const [config, setConfig] = useState<GameGuidePageConfig | null>(null);
+  const [loaded, setLoaded] = useState(false);
   const [socialLinks, setSocialLinks] = useState<Record<string, string | null>>({});
   const [footer, setFooter] = useState({
     copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
@@ -62,7 +64,8 @@ export default function GameGuidePage() {
         if (data?.site?.socialLinks) setSocialLinks(data.site.socialLinks);
         if (data?.site?.footer) setFooter(data.site.footer);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoaded(true));
   }, []);
 
   const badge = config ? t(config.badgeTh, config.badgeEn) : t('แนะนำเกม', 'GAME GUIDE');
@@ -131,7 +134,10 @@ export default function GameGuidePage() {
               })}
               {features.length === 0 && (
                 <div className="highlights-empty-state">
-                  <p>{t('กำลังโหลด...', 'Loading...')}</p>
+                <p>{loaded
+                  ? t('กำลังจะมาเร็ว ๆ นี้...', 'Coming soon...')
+                  : t('กำลังโหลด...', 'Loading...')
+                }</p>
                 </div>
               )}
             </div>
