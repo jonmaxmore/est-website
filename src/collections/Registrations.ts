@@ -5,7 +5,7 @@ export const Registrations: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
     description: 'Pre-registration submissions with 2-level referral tracking',
-    group: 'Data',
+    group: 'Event',
     defaultColumns: ['email', 'platform', 'region', 'referralCode', 'referralLevel1Count', 'referralPoints', 'createdAt'],
   },
   access: {

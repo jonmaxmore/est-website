@@ -1,12 +1,14 @@
-import { NextResponse } from 'next/server'
-import { getPayloadClient } from '@/lib/payload'
+import { NextRequest, NextResponse } from 'next/server'
+import { requireAdmin } from '@/lib/require-admin'
 
 export const dynamic = 'force-dynamic'
 
 // eslint-disable-next-line max-lines-per-function
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
-    const payload = await getPayloadClient()
+    const auth = await requireAdmin(request)
+    if ('error' in auth) return auth.error
+    const { payload } = auth
 
     const results: string[] = []
 

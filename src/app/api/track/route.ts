@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayloadClient } from '@/lib/payload'
 import { checkRateLimit } from '@/lib/rate-limit'
+import { isBot } from '@/lib/bot-detection'
 
 export const dynamic = 'force-dynamic'
-
-// ─── Bot detection ───
-const BOT_PATTERNS = /bot|crawl|spider|slurp|facebookexternalhit|mediapartners|google|bing|yandex|baidu|duckduck|semrush|ahrefs|mj12bot|dotbot|petalbot|bytespider/i
 
 // ─── Excluded paths (internal/admin) ───
 const EXCLUDED_PATHS = ['/admin', '/api/', '/_next/', '/favicon.ico', '/robots.txt', '/sitemap.xml']
@@ -33,7 +31,7 @@ export async function POST(request: NextRequest) {
     const userAgent = request.headers.get('user-agent') || ''
 
     // Skip bots
-    if (BOT_PATTERNS.test(userAgent)) {
+    if (isBot(userAgent)) {
       return NextResponse.json({ ok: true, filtered: 'bot' }, { status: 200 })
     }
 

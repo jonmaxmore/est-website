@@ -5,7 +5,7 @@ export const StoreButtons: CollectionConfig = {
   admin: {
     useAsTitle: 'platform',
     description: 'App store download buttons',
-    group: 'Content',
+    group: 'Event',
     defaultColumns: ['platform', 'label', 'url', 'visible'],
   },
   access: {

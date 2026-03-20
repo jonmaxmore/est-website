@@ -1,10 +1,12 @@
-import { NextResponse } from 'next/server'
-import { getPayloadClient } from '@/lib/payload'
+import { NextRequest, NextResponse } from 'next/server'
+import { requireAdmin } from '@/lib/require-admin'
 
 // POST /api/cleanup — Clean duplicate data and re-seed properly
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
-    const payload = await getPayloadClient()
+    const auth = await requireAdmin(request)
+    if ('error' in auth) return auth.error
+    const { payload } = auth
     const results: string[] = []
 
     // 1. Clean duplicate milestones — keep only one per threshold

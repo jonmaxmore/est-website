@@ -6,6 +6,7 @@ export const Milestones: CollectionConfig = {
     useAsTitle: 'rewardEn',
     description: 'Pre-registration milestone rewards — auto lock/unlock based on registration count',
     group: 'Event',
+    listSearchableFields: ['rewardEn', 'rewardTh'],
     defaultColumns: ['threshold', 'rewardEn', 'rewardDescriptionEn', 'sortOrder'],
   },
   access: {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayloadClient } from '@/lib/payload'
+import { isBot } from '@/lib/bot-detection'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,13 +11,6 @@ export const dynamic = 'force-dynamic'
  *
  * Requires admin authentication via Payload session cookie
  */
-
-// ─── Bot detection ───
-const BOT_PATTERNS = /bot|crawl|spider|slurp|facebookexternalhit|mediapartners|google|bing|yandex|baidu|duckduck|semrush|ahrefs|mj12bot|dotbot|petalbot|bytespider/i
-
-function isBot(ua: string): boolean {
-  return BOT_PATTERNS.test(ua)
-}
 
 // ─── Device type from user-agent ───
 function getDeviceType(ua: string): 'desktop' | 'mobile' | 'tablet' {

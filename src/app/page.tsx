@@ -14,6 +14,7 @@ import {
    Fetches CMS data at request time, passes to client
    ═══════════════════════════════════════════════ */
 
+// eslint-disable-next-line max-lines-per-function -- SSR data fetch with parallel queries
 export default async function LandingPage() {
   let settings: CMSSettings | null = null;
   let characters: CMSCharacter[] = [];
@@ -29,7 +30,7 @@ export default async function LandingPage() {
         payload.findGlobal({ slug: 'event-config' }).catch((e) => { console.error('Failed to fetch event-config:', e); return null; }),
         payload.findGlobal({ slug: 'homepage' }).catch((e) => { console.error('Failed to fetch homepage:', e); return null; }),
         payload.find({ collection: 'store-buttons', where: { visible: { equals: true } }, sort: 'sortOrder' }).catch(() => ({ docs: [] })),
-        payload.find({ collection: 'characters', where: { visible: { equals: true } }, sort: 'sortOrder', limit: 20 }).catch(() => ({ docs: [] })),
+        payload.find({ collection: 'characters', where: { visible: { equals: true } }, sort: 'sortOrder', limit: 20, depth: 2 }).catch(() => ({ docs: [] })),
         payload.find({ collection: 'news', where: { status: { equals: 'published' } }, sort: '-publishedAt', limit: 3 }).catch(() => ({ docs: [] })),
       ]);
 

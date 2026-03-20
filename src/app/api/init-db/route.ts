@@ -1,11 +1,14 @@
-import { NextResponse } from 'next/server'
-import { getPayloadClient } from '@/lib/payload'
+import { NextRequest, NextResponse } from 'next/server'
+import { requireAdmin } from '@/lib/require-admin'
 
 // POST /api/init-db — Initialize database tables by attempting operations
 // This forces Payload CMS to create missing tables
-export async function POST() {
+// eslint-disable-next-line max-lines-per-function -- DB init with multiple global seeds
+export async function POST(request: NextRequest) {
   try {
-    const payload = await getPayloadClient()
+    const auth = await requireAdmin(request)
+    if ('error' in auth) return auth.error
+    const { payload } = auth
     const results: string[] = []
 
     // Force table creation by attempting to find/create in each global
