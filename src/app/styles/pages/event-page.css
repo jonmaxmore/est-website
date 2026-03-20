@@ -49,8 +49,14 @@
   align-items: center;
   gap: 1.25rem;
   max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
 }
 .event-logo-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   filter: drop-shadow(0 8px 30px rgba(0,0,0,0.5));
 }
 .event-logo {
@@ -58,6 +64,7 @@
   max-width: 360px;
   width: 60vw;
   height: auto !important;
+  margin: 0 auto;
 }
 .event-tagline {
   font-size: clamp(0.85rem, 1.8vw, 1.1rem);

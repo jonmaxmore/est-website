@@ -82,7 +82,7 @@ export default function EventForm({
 
             <p className="event-form-step">
               <strong>1.</strong> {t(
-                'กรอกข้อมูล และตรวจสอบความถูกต้องก่อนลงทะเบียน',
+                eventSettings.emailPlaceholderTh ? 'กรอกข้อมูล และตรวจสอบความถูกต้องก่อนลงทะเบียน' : 'กรอกข้อมูล และตรวจสอบความถูกต้องก่อนลงทะเบียน',
                 'Fill in your information and verify its accuracy before registering.'
               )}
             </p>
@@ -120,8 +120,8 @@ export default function EventForm({
               {/* Step 2 */}
               <p className="event-form-step">
                 <strong>2.</strong> {t(
-                  'คลิกเลือกอุปกรณ์เพื่อลงทะเบียน เมื่อคลิกจะไปยังหน้าสโตร์โดยอัตโนมัติ',
-                  'Select your device to proceed and confirm your registration.'
+                  eventSettings.storeLabelTh || 'คลิกเลือกอุปกรณ์เพื่อลงทะเบียน เมื่อคลิกจะไปยังหน้าสโตร์โดยอัตโนมัติ',
+                  eventSettings.storeLabelEn || 'Select your device to proceed and confirm your registration.'
                 )}
               </p>
 
