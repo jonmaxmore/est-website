@@ -91,8 +91,8 @@ export default function HomeContent({ settings, characters, news }: HomeContentP
         {/* ═══ SECTION 1: HERO ═══ */}
         <HeroSection settings={settings} />
 
-        {/* ═══ SECTION 2: CHARACTERS — Weapon selector + detail card ═══ */}
-        <CharacterSection characters={characters} sectionConfig={settings?.characters} />
+        {/* ═══ SECTION 2: WEAPONS — Image-only weapon showcase ═══ */}
+        <CharacterSection characters={characters} />
 
         {/* ═══ SECTION 3: HIGHLIGHTS STRIP — Compact feature showcase ═══ */}
         <section id="features" className="section-highlights">

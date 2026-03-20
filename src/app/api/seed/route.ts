@@ -39,12 +39,12 @@ export async function POST(request: NextRequest) {
     }
     results.push(`✅ ${mCount} milestones seeded`)
 
-    // 3. Seed Characters (fields match Characters collection schema)
+    // 3. Seed Weapons (image-only — portraits/info/bg/icons uploaded via CMS admin)
     const charsData = [
-      { name: 'Arthur — Iron Knight', descriptionEn: 'A weapon specialized in physical attacks, capable of balanced melee offense and defense.', descriptionTh: 'เป็นอาวุธที่เชียวชาญในการโจมตีกายภาพ ซึ่งสามารถปฏิบัติหน้าที่ในการโจมตีระยะประชิดและการป้องกันได้อย่างสมดุล', sortOrder: 1, visible: true },
-      { name: 'Elena — Forest Ranger', descriptionEn: 'A weapon that supports allies from range through various methods or disrupts enemies with status effects.', descriptionTh: 'เป็นอาวุธที่สามารถสนับสนุนพันธมิตรจากระยะไกลด้วยวิธีการต่างๆ หรือก่อกวนศัตรูด้วยสถานะผิดปกติต่างๆ', sortOrder: 2, visible: true },
-      { name: 'Kaelen — Shadow Mage', descriptionEn: 'A weapon specialized in magic attacks, dealing devastating burst damage or applying continuous damage debuffs.', descriptionTh: 'เป็นอาวุธที่เชียวชาญในการโจมตีเวทมนตร์ สามารถสร้างความเสียหายอย่างรุนแรงแก่ศัตรูในคราวเดียวหรือมอบดีบัฟที่สร้างความเสียหายอย่างต่อเนื่อง', sortOrder: 3, visible: true },
-      { name: 'Lyra — Holy Priestess', descriptionEn: 'A weapon focused on supporting allies through ranged healing and buffs, while also disrupting enemies with various status effects.', descriptionTh: 'เป็นอาวุธที่เน้นการสนับสนุนพันธมิตรผ่านการฟื้นฟูและบัฟจากระยะไกล และยังสามารถสนับสนุนการต่อสู้ของพันธมิตรผ่านสถานะผิดปกติต่างๆ ได้อีกด้วย', sortOrder: 4, visible: true },
+      { name: 'SWORD', sortOrder: 1, visible: true },
+      { name: 'BOW', sortOrder: 2, visible: true },
+      { name: 'CRYSTAL_ORB', sortOrder: 3, visible: true },
+      { name: 'WAND', sortOrder: 4, visible: true },
     ]
     let cCount = 0
     for (const c of charsData) {

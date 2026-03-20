@@ -35,8 +35,6 @@ export function extractMedia(field: unknown): { url: string } | null {
 export interface CMSCharacter {
   id: number;
   name: string;
-  descriptionEn: string;
-  descriptionTh: string;
   portrait: string | null;
   infoImage: string | null;
   backgroundImage: string | null;

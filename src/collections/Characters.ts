@@ -4,7 +4,7 @@ export const Characters: CollectionConfig = {
   slug: 'characters',
   admin: {
     useAsTitle: 'name',
-    description: 'ตัวละครในเกม — อัพโหลดรูปภาพเท่านั้น',
+    description: 'อาวุธในเกม — แต่ละอาวุธใช้ 4 รูป: ตัวละคร, ข้อความ, แบคกราว, ไอคอน',
     group: 'Game Content',
     defaultColumns: ['name', 'portrait', 'sortOrder', 'visible'],
   },
@@ -19,25 +19,8 @@ export const Characters: CollectionConfig = {
       name: 'name',
       type: 'text',
       required: true,
-      label: 'Character Name (Admin Only)',
-      admin: { description: 'ชื่อตัวละครสำหรับจัดการใน CMS' },
-    },
-    {
-      type: 'row',
-      fields: [
-        {
-          name: 'descriptionEn',
-          type: 'textarea',
-          label: 'Description (English)',
-          admin: { width: '50%', description: 'Character/weapon description shown on homepage' },
-        },
-        {
-          name: 'descriptionTh',
-          type: 'textarea',
-          label: 'Description (Thai)',
-          admin: { width: '50%', description: 'คำอธิบายตัวละคร/อาวุธที่แสดงหน้าแรก' },
-        },
-      ],
+      label: 'Weapon Name (Admin Only)',
+      admin: { description: 'ชื่ออาวุธสำหรับจัดการใน CMS เช่น SWORD, BOW, CRYSTAL_ORB, WAND' },
     },
     {
       name: 'portrait',
