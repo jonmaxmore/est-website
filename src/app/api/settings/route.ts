@@ -8,14 +8,18 @@ export async function GET() {
   try {
     const payload = await getPayloadClient()
 
-    // Fetch all global settings in parallel
+    // Fetch all global settings in parallel — each wrapped to survive missing tables
+    const safeGlobal = async (slug: string) => {
+      try { return await payload.findGlobal({ slug }) }
+      catch { return {} as Record<string, unknown> }
+    }
     const [siteSettings, eventConfig, homepage, storyPage, gameGuidePage, faqPage] = await Promise.all([
-      payload.findGlobal({ slug: 'site-settings' }),
-      payload.findGlobal({ slug: 'event-config' }),
-      payload.findGlobal({ slug: 'homepage' }),
-      payload.findGlobal({ slug: 'story-page' }),
-      payload.findGlobal({ slug: 'game-guide-page' }),
-      payload.findGlobal({ slug: 'faq-page' }),
+      safeGlobal('site-settings'),
+      safeGlobal('event-config'),
+      safeGlobal('homepage'),
+      safeGlobal('story-page'),
+      safeGlobal('game-guide-page'),
+      safeGlobal('faq-page'),
     ])
 
     // Fetch store buttons
