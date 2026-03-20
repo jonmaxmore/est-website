@@ -38,6 +38,9 @@ export default buildConfig({
       titleSuffix: ' — EST CMS',
       description: 'Eternal Tower Saga Content Management',
     },
+    components: {
+      afterDashboard: ['@/components/admin/AnalyticsDashboardWidget#default'],
+    },
   },
   collections: [
     Users,

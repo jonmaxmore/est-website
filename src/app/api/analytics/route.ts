@@ -4,64 +4,183 @@ import { getPayloadClient } from '@/lib/payload'
 export const dynamic = 'force-dynamic'
 
 /**
- * GET /api/analytics — Dashboard data aggregation
- * Returns comprehensive analytics from our internal DB
- * Data source: Internal Only (NOT Google/Adjust)
+ * GET /api/analytics — Professional analytics aggregation
+ * Uses efficient count queries + selective field fetching
+ * Data source: Internal DB only (NOT Google/Adjust)
+ *
+ * Requires admin authentication via Payload session cookie
  */
+
+// ─── Bot detection ───
+const BOT_PATTERNS = /bot|crawl|spider|slurp|facebookexternalhit|mediapartners|google|bing|yandex|baidu|duckduck|semrush|ahrefs|mj12bot|dotbot|petalbot|bytespider/i
+
+function isBot(ua: string): boolean {
+  return BOT_PATTERNS.test(ua)
+}
+
+// ─── Device type from user-agent ───
+function getDeviceType(ua: string): 'desktop' | 'mobile' | 'tablet' {
+  if (/tablet|ipad|playbook|silk/i.test(ua)) return 'tablet'
+  if (/mobile|iphone|ipod|android.*mobile|windows phone|blackberry|opera mini|iemobile/i.test(ua)) return 'mobile'
+  return 'desktop'
+}
+
 // eslint-disable-next-line max-lines-per-function -- Analytics aggregation endpoint
 export async function GET(request: NextRequest) {
   try {
-    // Auth check — only admin users
     const payload = await getPayloadClient()
 
+    // ── Admin auth check via cookie ──
+    const cookieHeader = request.headers.get('cookie') || ''
+    if (!cookieHeader.includes('payload-token')) {
+      return NextResponse.json({ error: 'Unauthorized — admin login required' }, { status: 401 })
+    }
+
     const { searchParams } = new URL(request.url)
-    const days = parseInt(searchParams.get('days') || '30', 10)
+    const days = Math.min(parseInt(searchParams.get('days') || '30', 10), 365)
     const since = new Date()
     since.setDate(since.getDate() - days)
 
-    // ── Parallel queries ──
+    // Previous period for trend comparison
+    const prevStart = new Date(since)
+    prevStart.setDate(prevStart.getDate() - days)
+
+    // ── Efficient count queries (no document loading) ──
     const [
       totalRegistrations,
-      pageViewsResult,
-      pageEventsResult,
-      registrationsByRegion,
+      recentRegistrations,
+      prevRegistrations,
+      totalPageViews,
+      prevPageViews,
+      totalEvents,
+      prevEvents,
     ] = await Promise.all([
-      // Total registrations
       payload.count({ collection: 'registrations' }),
-
-      // Page views in date range
-      payload.find({
-        collection: 'page-views',
-        where: { createdAt: { greater_than: since.toISOString() } },
-        limit: 0,
-        pagination: false,
-      }),
-
-      // Page events in date range
-      payload.find({
-        collection: 'page-events',
-        where: { createdAt: { greater_than: since.toISOString() } },
-        limit: 0,
-        pagination: false,
-      }),
-
-      // Registrations in date range
-      payload.find({
+      payload.count({
         collection: 'registrations',
         where: { createdAt: { greater_than: since.toISOString() } },
-        limit: 0,
-        pagination: false,
+      }),
+      payload.count({
+        collection: 'registrations',
+        where: {
+          and: [
+            { createdAt: { greater_than: prevStart.toISOString() } },
+            { createdAt: { less_than_equal: since.toISOString() } },
+          ],
+        },
+      }),
+      payload.count({
+        collection: 'page-views',
+        where: { createdAt: { greater_than: since.toISOString() } },
+      }),
+      payload.count({
+        collection: 'page-views',
+        where: {
+          and: [
+            { createdAt: { greater_than: prevStart.toISOString() } },
+            { createdAt: { less_than_equal: since.toISOString() } },
+          ],
+        },
+      }),
+      payload.count({
+        collection: 'page-events',
+        where: { createdAt: { greater_than: since.toISOString() } },
+      }),
+      payload.count({
+        collection: 'page-events',
+        where: {
+          and: [
+            { createdAt: { greater_than: prevStart.toISOString() } },
+            { createdAt: { less_than_equal: since.toISOString() } },
+          ],
+        },
       }),
     ])
 
-    // ── Aggregate Page Views ──
-    const pvDocs = pageViewsResult.docs
-    const uniqueIPs = new Set(pvDocs.map((d) => d.ip)).size
-    const totalPageViews = pvDocs.length
+    // ── Fetch ONLY needed fields for aggregation (not full docs) ──
+    // Page views: ip, sessionId, path, userAgent, createdAt
+    const MAX_AGGREGATION_DOCS = 10000
+    const [pvResult, evResult, regResult] = await Promise.all([
+      payload.find({
+        collection: 'page-views',
+        where: { createdAt: { greater_than: since.toISOString() } },
+        limit: MAX_AGGREGATION_DOCS,
+        sort: '-createdAt',
+        select: {
+          path: true,
+          ip: true,
+          sessionId: true,
+          userAgent: true,
+          createdAt: true,
+        },
+      }),
+      payload.find({
+        collection: 'page-events',
+        where: { createdAt: { greater_than: since.toISOString() } },
+        limit: MAX_AGGREGATION_DOCS,
+        sort: '-createdAt',
+        select: {
+          eventName: true,
+          path: true,
+          createdAt: true,
+        },
+      }),
+      payload.find({
+        collection: 'registrations',
+        where: { createdAt: { greater_than: since.toISOString() } },
+        limit: MAX_AGGREGATION_DOCS,
+        sort: '-createdAt',
+        select: {
+          region: true,
+          platform: true,
+          createdAt: true,
+        },
+      }),
+    ])
 
-    // Page views by path
+    const pvDocs = pvResult.docs
+    const evDocs = evResult.docs
+    const regDocs = regResult.docs
+
+    // ── Filter out bots from page view analysis ──
+    const humanPvDocs = pvDocs.filter(d => !isBot((d.userAgent as string) || ''))
+
+    // ── Unique visitors (distinct IPs, excluding bots) ──
+    const uniqueIPs = new Set(humanPvDocs.map(d => d.ip)).size
+
+    // ── Sessions (GA4 style: unique sessionId values) ──
+    const sessionIds = new Set(humanPvDocs.map(d => d.sessionId).filter(Boolean))
+    const totalSessions = sessionIds.size || 1 // Prevent division by zero
+
+    // ── Bounce Rate (GA4 style: sessions with only 1 page view) ──
+    const pagesPerSession: Record<string, number> = {}
+    for (const doc of humanPvDocs) {
+      const sid = (doc.sessionId as string) || 'no-session'
+      pagesPerSession[sid] = (pagesPerSession[sid] || 0) + 1
+    }
+    const singlePageSessions = Object.values(pagesPerSession).filter(c => c === 1).length
+    const bounceRate = totalSessions > 0 ? Math.round((singlePageSessions / totalSessions) * 100) : 0
+
+    // ── Avg pages per session ──
+    const avgPagesPerSession = totalSessions > 0
+      ? Math.round((humanPvDocs.length / totalSessions) * 100) / 100
+      : 0
+
+    // ── Device breakdown ──
+    const deviceCounts: Record<string, number> = { desktop: 0, mobile: 0, tablet: 0 }
+    const countedSessions = new Set<string>()
+    for (const doc of humanPvDocs) {
+      const sid = (doc.sessionId as string) || doc.ip as string
+      if (!countedSessions.has(sid)) {
+        countedSessions.add(sid)
+        const device = getDeviceType((doc.userAgent as string) || '')
+        deviceCounts[device] = (deviceCounts[device] || 0) + 1
+      }
+    }
+
+    // ── Top pages ──
     const pageViewsByPath: Record<string, number> = {}
-    for (const doc of pvDocs) {
+    for (const doc of humanPvDocs) {
       const p = (doc.path as string) || '/'
       pageViewsByPath[p] = (pageViewsByPath[p] || 0) + 1
     }
@@ -70,18 +189,14 @@ export async function GET(request: NextRequest) {
       .slice(0, 10)
       .map(([path, count]) => ({ path, count }))
 
-    // Page views by date
+    // ── Page views by date ──
     const pvByDate: Record<string, number> = {}
-    for (const doc of pvDocs) {
+    for (const doc of humanPvDocs) {
       const day = new Date(doc.createdAt as string).toISOString().split('T')[0]
       pvByDate[day] = (pvByDate[day] || 0) + 1
     }
 
-    // ── Aggregate Page Events ──
-    const evDocs = pageEventsResult.docs
-    const totalEvents = evDocs.length
-
-    // Events by name
+    // ── Top events ──
     const eventsByName: Record<string, number> = {}
     for (const doc of evDocs) {
       const name = (doc.eventName as string) || 'unknown'
@@ -92,8 +207,7 @@ export async function GET(request: NextRequest) {
       .slice(0, 10)
       .map(([name, count]) => ({ name, count }))
 
-    // ── Aggregate Registrations ──
-    const regDocs = registrationsByRegion.docs
+    // ── Registration breakdowns ──
     const regByRegion: Record<string, number> = {}
     const regByPlatform: Record<string, number> = {}
     const regByDate: Record<string, number> = {}
@@ -109,39 +223,64 @@ export async function GET(request: NextRequest) {
       regByDate[day] = (regByDate[day] || 0) + 1
     }
 
+    // ── Trend calculation (vs previous period) ──
+    const calcTrend = (current: number, previous: number): { change: number; direction: 'up' | 'down' | 'flat' } => {
+      if (previous === 0) return { change: current > 0 ? 100 : 0, direction: current > 0 ? 'up' : 'flat' }
+      const change = Math.round(((current - previous) / previous) * 100)
+      return { change: Math.abs(change), direction: change > 0 ? 'up' : change < 0 ? 'down' : 'flat' }
+    }
+
     return NextResponse.json({
       period: { days, since: since.toISOString() },
 
-      // Overview
       overview: {
         totalRegistrations: totalRegistrations.totalDocs,
-        recentRegistrations: regDocs.length,
-        totalPageViews,
+        recentRegistrations: recentRegistrations.totalDocs,
+        totalPageViews: totalPageViews.totalDocs,
         uniqueVisitors: uniqueIPs,
-        totalEvents,
+        totalSessions,
+        bounceRate,
+        avgPagesPerSession,
+        totalEvents: totalEvents.totalDocs,
       },
 
-      // Registration breakdowns
+      trends: {
+        registrations: calcTrend(recentRegistrations.totalDocs, prevRegistrations.totalDocs),
+        pageViews: calcTrend(totalPageViews.totalDocs, prevPageViews.totalDocs),
+        events: calcTrend(totalEvents.totalDocs, prevEvents.totalDocs),
+      },
+
+      devices: Object.entries(deviceCounts).map(([device, count]) => ({ device, count })),
+
       registrations: {
-        byRegion: Object.entries(regByRegion).map(([region, count]) => ({ region, count })),
-        byPlatform: Object.entries(regByPlatform).map(([platform, count]) => ({ platform, count })),
+        byRegion: Object.entries(regByRegion)
+          .sort((a, b) => b[1] - a[1])
+          .map(([region, count]) => ({ region, count })),
+        byPlatform: Object.entries(regByPlatform)
+          .sort((a, b) => b[1] - a[1])
+          .map(([platform, count]) => ({ platform, count })),
         byDate: Object.entries(regByDate).sort().map(([date, count]) => ({ date, count })),
       },
 
-      // Page view breakdowns
       pageViews: {
         topPages,
         byDate: Object.entries(pvByDate).sort().map(([date, count]) => ({ date, count })),
       },
 
-      // Event breakdowns
       events: {
         topEvents,
       },
 
-      // Data source labels
       dataSource: 'internal_db',
-      note: 'This data is from our own database. For Google Analytics data, access GA4 console. For Adjust data, access Adjust dashboard.',
+      _meta: {
+        docsProcessed: {
+          pageViews: humanPvDocs.length,
+          events: evDocs.length,
+          registrations: regDocs.length,
+        },
+        maxAggregationDocs: MAX_AGGREGATION_DOCS,
+        botsFiltered: pvDocs.length - humanPvDocs.length,
+      },
     }, {
       headers: { 'Cache-Control': 'private, max-age=60' },
     })

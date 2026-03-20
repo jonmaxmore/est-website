@@ -4,15 +4,37 @@ import React, { useEffect, useReducer, useState } from 'react';
 import Link from 'next/link';
 import '@/app/styles/pages/admin-analytics.css';
 
+/* ═══════════════════════════════════════════════
+   Full Analytics Dashboard — /admin-analytics
+   Professional metrics with admin auth
+   Data source: Internal DB (NOT Google/Adjust)
+   ═══════════════════════════════════════════════ */
+
+interface OverviewData {
+  totalRegistrations: number;
+  recentRegistrations: number;
+  totalPageViews: number;
+  uniqueVisitors: number;
+  totalSessions: number;
+  bounceRate: number;
+  avgPagesPerSession: number;
+  totalEvents: number;
+}
+
+interface TrendData {
+  change: number;
+  direction: 'up' | 'down' | 'flat';
+}
+
 interface AnalyticsData {
   period: { days: number; since: string };
-  overview: {
-    totalRegistrations: number;
-    recentRegistrations: number;
-    totalPageViews: number;
-    uniqueVisitors: number;
-    totalEvents: number;
+  overview: OverviewData;
+  trends: {
+    registrations: TrendData;
+    pageViews: TrendData;
+    events: TrendData;
   };
+  devices: Array<{ device: string; count: number }>;
   registrations: {
     byRegion: Array<{ region: string; count: number }>;
     byPlatform: Array<{ platform: string; count: number }>;
@@ -25,7 +47,10 @@ interface AnalyticsData {
   events: {
     topEvents: Array<{ name: string; count: number }>;
   };
-  dataSource: string;
+  _meta?: {
+    docsProcessed: { pageViews: number; events: number; registrations: number };
+    botsFiltered: number;
+  };
 }
 
 type FetchState = { data: AnalyticsData | null; loading: boolean; error: string };
@@ -42,6 +67,17 @@ function fetchReducer(_state: FetchState, action: FetchAction): FetchState {
   }
 }
 
+const TREND_ICONS: Record<string, string> = { up: '↑', down: '↓', flat: '→' };
+const TREND_CSS: Record<string, string> = { up: 'color-green', down: 'color-red', flat: '' };
+
+function TrendBadge({ trend, label }: { trend: TrendData; label?: string }) {
+  return (
+    <span className={`analytics-trend ${TREND_CSS[trend.direction]}`}>
+      {TREND_ICONS[trend.direction]} {trend.change}% {label && `vs prev ${label}`}
+    </span>
+  );
+}
+
 // eslint-disable-next-line max-lines-per-function -- Dashboard page with multiple chart sections
 export default function AnalyticsDashboard() {
   const [{ data, loading, error }, dispatch] = useReducer(fetchReducer, { data: null, loading: true, error: '' });
@@ -51,10 +87,16 @@ export default function AnalyticsDashboard() {
   useEffect(() => {
     let cancelled = false;
     dispatch({ type: 'FETCH_START' });
-    fetch(`/api/analytics?days=${days}`)
-      .then(r => r.json())
+    fetch(`/api/analytics?days=${days}`, { credentials: 'include' })
+      .then(r => {
+        if (r.status === 401) {
+          window.location.href = '/admin';
+          return null;
+        }
+        return r.json();
+      })
       .then(d => {
-        if (cancelled) return;
+        if (cancelled || !d) return;
         if (d.error) dispatch({ type: 'FETCH_ERR', error: d.error });
         else dispatch({ type: 'FETCH_OK', data: d });
       })
@@ -73,6 +115,9 @@ export default function AnalyticsDashboard() {
             <h1 className="analytics-title">📊 Analytics Dashboard</h1>
             <p className="analytics-subtitle">
               Data Source: <strong className="analytics-source-label">Internal Database</strong> — Not from Google/Adjust
+              {data?._meta && (
+                <> · Bots filtered: {data._meta.botsFiltered}</>
+              )}
             </p>
           </div>
           <div className="analytics-controls">
@@ -100,25 +145,52 @@ export default function AnalyticsDashboard() {
             <div className="analytics-cards-grid">
               {[
                 { label: 'Total Registrations', value: data.overview.totalRegistrations, colorClass: 'color-gold', icon: '👥' },
-                { label: `Registrations (${days}D)`, value: data.overview.recentRegistrations, colorClass: 'color-green', icon: '📈' },
-                { label: `Page Views (${days}D)`, value: data.overview.totalPageViews, colorClass: 'color-blue', icon: '👁️' },
-                { label: `Unique Visitors (${days}D)`, value: data.overview.uniqueVisitors, colorClass: 'color-purple', icon: '🌐' },
-                { label: `Events (${days}D)`, value: data.overview.totalEvents, colorClass: 'color-red', icon: '🖱️' },
+                { label: `Registrations (${days}D)`, value: data.overview.recentRegistrations, colorClass: 'color-green', icon: '📈', trend: data.trends.registrations },
+                { label: `Page Views (${days}D)`, value: data.overview.totalPageViews, colorClass: 'color-blue', icon: '👁️', trend: data.trends.pageViews },
+                { label: `Unique Visitors`, value: data.overview.uniqueVisitors, colorClass: 'color-purple', icon: '🌐' },
+                { label: `Sessions`, value: data.overview.totalSessions, colorClass: 'color-gold', icon: '📊' },
+                { label: `Bounce Rate`, value: data.overview.bounceRate, colorClass: data.overview.bounceRate > 70 ? 'color-red' : 'color-green', icon: '📉', suffix: '%' },
+                { label: `Avg Pages/Session`, value: data.overview.avgPagesPerSession, colorClass: 'color-blue', icon: '📄' },
+                { label: `Events (${days}D)`, value: data.overview.totalEvents, colorClass: 'color-red', icon: '🖱️', trend: data.trends.events },
               ].map(card => (
                 <div key={card.label} className="analytics-card">
                   <div className="analytics-card-icon">{card.icon}</div>
-                  <div className={`analytics-card-value ${card.colorClass}`}>{card.value.toLocaleString()}</div>
-                  <div className="analytics-card-label">{card.label}</div>
+                  <div className={`analytics-card-value ${card.colorClass}`}>
+                    {typeof card.value === 'number' ? card.value.toLocaleString() : card.value}{'suffix' in card ? card.suffix : ''}
+                  </div>
+                  <div className="analytics-card-label">
+                    {card.label}
+                    {'trend' in card && card.trend && <TrendBadge trend={card.trend} />}
+                  </div>
                 </div>
               ))}
             </div>
+
+            {/* ═══ DEVICE BREAKDOWN ═══ */}
+            {data.devices.length > 0 && (
+              <>
+                <h2 className="analytics-section-title analytics-section-title--purple">
+                  📱 Device Breakdown
+                </h2>
+                <div className="analytics-panel analytics-panel--mb">
+                  {data.devices.map(item => (
+                    <div key={item.device} className="analytics-bar-row">
+                      <span className="analytics-bar-label analytics-bar-label--platform">{item.device}</span>
+                      <div className="analytics-bar-track">
+                        <div className="analytics-bar-fill analytics-bar-fill--blue" style={{ width: `${(item.count / maxBar(data.devices)) * 100}%` } as React.CSSProperties} />
+                      </div>
+                      <span className="analytics-bar-count">{item.count}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
 
             {/* ═══ SECTION: REGISTRATIONS ═══ */}
             <h2 className="analytics-section-title analytics-section-title--gold">
               📝 Registrations (Internal DB)
             </h2>
             <div className="analytics-two-col">
-              {/* By Region */}
               <div className="analytics-panel">
                 <h3 className="analytics-panel-title">By Region</h3>
                 {data.registrations.byRegion.map(item => (
@@ -133,7 +205,6 @@ export default function AnalyticsDashboard() {
                 {data.registrations.byRegion.length === 0 && <p className="analytics-empty">No data yet</p>}
               </div>
 
-              {/* By Platform */}
               <div className="analytics-panel">
                 <h3 className="analytics-panel-title">By Platform</h3>
                 {data.registrations.byPlatform.map(item => (
@@ -164,12 +235,12 @@ export default function AnalyticsDashboard() {
                   <span className="analytics-bar-count">{item.count}</span>
                 </div>
               ))}
-              {data.pageViews.topPages.length === 0 && <p className="analytics-empty">No page views yet — data will appear after users visit the site</p>}
+              {data.pageViews.topPages.length === 0 && <p className="analytics-empty">No page views yet — data appears after real users visit</p>}
             </div>
 
             {/* ═══ SECTION: EVENTS ═══ */}
             <h2 className="analytics-section-title analytics-section-title--red">
-              🖱️ Button Clicks &amp; Events (Internal DB)
+              🖱️ Events (Internal DB)
             </h2>
             <div className="analytics-panel analytics-panel--mb">
               <h3 className="analytics-panel-title">Top Events</h3>
@@ -182,7 +253,7 @@ export default function AnalyticsDashboard() {
                   <span className="analytics-bar-count">{item.count}</span>
                 </div>
               ))}
-              {data.events.topEvents.length === 0 && <p className="analytics-empty">No events yet — data will appear when users click buttons</p>}
+              {data.events.topEvents.length === 0 && <p className="analytics-empty">No events yet — data appears when users interact</p>}
             </div>
 
             {/* ═══ EXTERNAL DATA SOURCES ═══ */}
@@ -190,36 +261,24 @@ export default function AnalyticsDashboard() {
               🔗 External Analytics (Separate Data Sources)
             </h2>
             <div className="analytics-two-col">
-              {/* Google Analytics */}
               <div className="analytics-external-ga4">
                 <h3>📊 Google Analytics (GA4)</h3>
                 <p className="analytics-external-desc">
                   GA4 tracks: sessions, bounce rate, user demographics, traffic sources, real-time users, conversion funnels.
                   <br />Data is <strong>separate</strong> from our internal DB.
                 </p>
-                <a
-                  href="https://analytics.google.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="analytics-external-link analytics-external-link--ga4"
-                >
+                <a href="https://analytics.google.com" target="_blank" rel="noopener noreferrer" className="analytics-external-link analytics-external-link--ga4">
                   Open GA4 Dashboard →
                 </a>
               </div>
 
-              {/* Adjust */}
               <div className="analytics-external-adjust">
                 <h3>📱 Adjust</h3>
                 <p className="analytics-external-desc">
                   Adjust tracks: app installs, mobile attribution, deep links, ad campaign performance, in-app events.
                   <br />Data is <strong>separate</strong> from our internal DB and GA4.
                 </p>
-                <a
-                  href="https://dash.adjust.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="analytics-external-link analytics-external-link--adjust"
-                >
+                <a href="https://dash.adjust.com" target="_blank" rel="noopener noreferrer" className="analytics-external-link analytics-external-link--adjust">
                   Open Adjust Dashboard →
                 </a>
               </div>
@@ -238,7 +297,6 @@ export default function AnalyticsDashboard() {
           </>
         )}
 
-        {/* Back link */}
         <div className="analytics-footer">
           <Link href="/admin" className="analytics-back-link">← Back to CMS Admin</Link>
         </div>

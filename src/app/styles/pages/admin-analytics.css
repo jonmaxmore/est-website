@@ -339,6 +339,12 @@
 .color-ga4 { color: #4285f4; }
 .color-adjust { color: #00b0ff; }
 
+.analytics-trend {
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-left: 0.3rem;
+}
+
 /* ── Footer ── */
 .analytics-footer {
   text-align: center;

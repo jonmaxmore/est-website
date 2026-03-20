@@ -4,9 +4,9 @@ export const PageViews: CollectionConfig = {
   slug: 'page-views',
   admin: {
     group: 'Analytics',
-    description: 'Server-side page view tracking — unique IP counting',
+    description: 'Server-side page view tracking — real user visits with bot filtering',
     useAsTitle: 'path',
-    defaultColumns: ['path', 'ip', 'createdAt'],
+    defaultColumns: ['path', 'ip', 'deviceType', 'createdAt'],
   },
   access: {
     read: ({ req: { user } }) => !!user,
@@ -48,6 +48,19 @@ export const PageViews: CollectionConfig = {
       name: 'language',
       type: 'text',
       label: 'Browser Language',
+    },
+    {
+      name: 'deviceType',
+      type: 'select',
+      label: 'Device Type',
+      options: [
+        { label: 'Desktop', value: 'desktop' },
+        { label: 'Mobile', value: 'mobile' },
+        { label: 'Tablet', value: 'tablet' },
+      ],
+      defaultValue: 'desktop',
+      index: true,
+      admin: { description: 'Detected from user-agent at tracking time' },
     },
   ],
   timestamps: true,
