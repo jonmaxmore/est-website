@@ -69,43 +69,10 @@ export function trackCTAClick(buttonLabel: string) {
   });
 }
 
-// ─── Convenience: Pre-Registration Complete ───
-export function trackRegistration(
-  region: string,
-  platform: string,
-  email: string,
-) {
-  // GA4 — conversion event
-  trackGA4Event('pre_registration', {
-    region,
-    platform,
-    method: 'email',
-  });
-
-  // Adjust — registration event
-  const adjustToken = process.env.NEXT_PUBLIC_ADJUST_REGISTER_TOKEN;
-  trackAdjustEvent(adjustToken, [
-    { key: 'region', value: region },
-    { key: 'platform', value: platform },
-    { key: 'email_hash', value: simpleHash(email) },
-  ]);
-}
-
 // ─── Convenience: Referral Link Copy ───
 export function trackReferralCopy(referralCode: string) {
   trackGA4Event('referral_link_copy', {
     referral_code: referralCode,
     page: 'event',
   });
-}
-
-// ─── Utility: Simple hash for PII protection ───
-function simpleHash(str: string): string {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash |= 0;
-  }
-  return Math.abs(hash).toString(36);
 }
