@@ -51,16 +51,11 @@ export const PageViews: CollectionConfig = {
     },
     {
       name: 'deviceType',
-      type: 'select',
+      type: 'text',
       label: 'Device Type',
-      options: [
-        { label: 'Desktop', value: 'desktop' },
-        { label: 'Mobile', value: 'mobile' },
-        { label: 'Tablet', value: 'tablet' },
-      ],
       defaultValue: 'desktop',
       index: true,
-      admin: { description: 'Detected from user-agent at tracking time' },
+      admin: { description: 'Detected from user-agent: desktop, mobile, or tablet' },
     },
   ],
   timestamps: true,
