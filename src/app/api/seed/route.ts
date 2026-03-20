@@ -3,20 +3,24 @@ import { getPayloadClient } from '@/lib/payload'
 
 export const dynamic = 'force-dynamic'
 
+// eslint-disable-next-line max-lines-per-function
 export async function POST() {
   try {
     const payload = await getPayloadClient()
 
     const results: string[] = []
 
-    // 1. Create Admin User
+    // 1. Create or update Admin User
     try {
-      await payload.create({
-        collection: 'users',
-        data: { email: 'admin@eternaltowersaga.com', password: 'Admin@EST2026!', role: 'admin' },
-      })
-      results.push('✅ Admin user created')
-    } catch { results.push('⏭️ Admin user exists') }
+      const existing = await payload.find({ collection: 'users', where: { email: { equals: 'admin@eternaltowersaga.com' } }, limit: 1 })
+      if (existing.docs.length > 0) {
+        await payload.update({ collection: 'users', id: existing.docs[0].id, data: { password: 'Admin@EST2026!', loginAttempts: 0, lockUntil: '' } })
+        results.push('✅ Admin password reset')
+      } else {
+        await payload.create({ collection: 'users', data: { email: 'admin@eternaltowersaga.com', password: 'Admin@EST2026!', role: 'admin' } })
+        results.push('✅ Admin user created')
+      }
+    } catch (e) { results.push(`⚠️ Admin: ${e}`) }
 
     // 2. Seed Milestones
     const milestonesData = [
