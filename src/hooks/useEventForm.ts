@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { trackRegistration } from '@/lib/analytics';
+import { trackReferralCopy } from '@/lib/tracking';
 import type { StoreButton } from '@/types/event';
 
 interface UseEventFormReturn {
@@ -69,12 +70,14 @@ export function useEventForm(
       setShowSuccessModal(true);
       onRegistered?.();
 
-      // Redirect to store
       const selectedStore = displayStoreButtons.find(btn => btn.platform === platform);
-      if (selectedStore && selectedStore.url && selectedStore.url !== '#') {
-        setTimeout(() => {
-          window.open(selectedStore.url, '_blank');
-        }, 2000);
+      if (selectedStore) {
+        const storeUrl = selectedStore.trackingUrl || selectedStore.url;
+        if (storeUrl && storeUrl !== '#') {
+          setTimeout(() => {
+            window.open(storeUrl, '_blank');
+          }, 2000);
+        }
       }
 
       // Track conversion
@@ -90,6 +93,7 @@ export function useEventForm(
     const link = `${window.location.origin}/event?ref=${referralCode}`;
     navigator.clipboard.writeText(link);
     setCopied(true);
+    trackReferralCopy(referralCode);
     setTimeout(() => setCopied(false), 2000);
   }, [referralCode]);
 

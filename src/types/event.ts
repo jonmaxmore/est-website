@@ -53,6 +53,10 @@ export interface StoreButton {
   label: string;
   sublabel: string;
   url: string;
+  trackingUrl?: string;
+  badgeImage?: { url: string } | null;
+  visible?: boolean;
+  sortOrder?: number;
 }
 
 export interface EventSettings {
@@ -86,6 +90,8 @@ export interface EventSettings {
   successTitleTh?: string;
   // CMS store URLs
   storeUrls?: StoreUrls;
+  // CTA button image (CMS upload)
+  ctaButtonImage?: { url: string } | null;
   // Referral point settings
   pointsLevel1?: number;
   pointsLevel2?: number;

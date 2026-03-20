@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useLang } from '@/lib/lang-context';
 import { useCountdown } from '@/hooks/useCountdown';
 import { STORE_ICONS } from '@/components/ui/StoreIcons';
+import { trackStoreClick, trackCTAClick } from '@/lib/tracking';
 import type { EventSettings, StoreButton } from '@/types/event';
 
 interface EventHeroProps {
@@ -15,6 +16,7 @@ interface EventHeroProps {
   displayStoreButtons: StoreButton[];
 }
 
+// eslint-disable-next-line max-lines-per-function -- Hero component with JSX template
 export default function EventHero({
   eventSettings,
   countdownTarget,
@@ -25,8 +27,18 @@ export default function EventHero({
   const countdown = useCountdown(countdownTarget);
 
   const scrollToForm = () => {
+    const label = t(eventSettings.ctaButtonTh || 'ลงทะเบียนล่วงหน้าเลย', eventSettings.ctaButtonEn || 'Pre-Register Now');
+    trackCTAClick(label);
     document.getElementById('register-form')?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const handleStoreClick = (btn: StoreButton) => {
+    const url = btn.trackingUrl || btn.url;
+    trackStoreClick(btn.platform, url);
+  };
+
+  // CTA image from CMS
+  const ctaImage = eventSettings.ctaButtonImage;
 
   return (
     <section className="event-hero">
@@ -116,10 +128,22 @@ export default function EventHero({
           whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(245,166,35,0.4)' }}
           whileTap={{ scale: 0.98 }}
         >
-          <span className="hero-cta-shimmer" />
-          <span className="event-cta-text">
-            {t(eventSettings.ctaButtonTh || 'ลงทะเบียนล่วงหน้าเลย', eventSettings.ctaButtonEn || 'Pre-Register Now')}
-          </span>
+          {ctaImage?.url ? (
+            <Image
+              src={ctaImage.url}
+              alt={t(eventSettings.ctaButtonTh || 'ลงทะเบียน', eventSettings.ctaButtonEn || 'Pre-Register Now')}
+              width={300}
+              height={60}
+              className="event-cta-image"
+            />
+          ) : (
+            <>
+              <span className="hero-cta-shimmer" />
+              <span className="event-cta-text">
+                {t(eventSettings.ctaButtonTh || 'ลงทะเบียนล่วงหน้าเลย', eventSettings.ctaButtonEn || 'Pre-Register Now')}
+              </span>
+            </>
+          )}
         </motion.button>
 
         {/* Store Buttons */}
@@ -129,12 +153,35 @@ export default function EventHero({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9 }}
         >
-          {displayStoreButtons.map((btn) => (
-            <a key={btn.platform} href={btn.url} className="store-btn" target="_blank" rel="noopener noreferrer">
-              {STORE_ICONS[btn.platform] || null}
-              <div><small>{btn.sublabel}</small><strong>{btn.label}</strong></div>
-            </a>
-          ))}
+          {displayStoreButtons.map((btn) => {
+            const href = btn.trackingUrl || btn.url;
+            return (
+              <a
+                key={btn.platform}
+                href={href}
+                className="store-btn"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleStoreClick(btn)}
+                data-track-platform={btn.platform}
+              >
+                {btn.badgeImage?.url ? (
+                  <Image
+                    src={btn.badgeImage.url}
+                    alt={btn.label}
+                    width={160}
+                    height={48}
+                    className="store-badge-img"
+                  />
+                ) : (
+                  <>
+                    {STORE_ICONS[btn.platform] || null}
+                    <div><small>{btn.sublabel}</small><strong>{btn.label}</strong></div>
+                  </>
+                )}
+              </a>
+            );
+          })}
         </motion.div>
       </div>
     </section>

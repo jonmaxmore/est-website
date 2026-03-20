@@ -63,17 +63,26 @@ export default function EventPage() {
         if (data.storeUrls) {
           setStoreUrls(data.storeUrls);
         }
+        // CMS store buttons (with tracking URLs, badge images)
+        if (data.eventStoreButtons?.length) {
+          setStoreButtons(data.eventStoreButtons);
+        }
+        // CTA button image from CMS
+        if (data.ctaButtonImage) {
+          setEventSettings(prev => ({ ...prev, ctaButtonImage: data.ctaButtonImage }));
+        }
       })
       .catch(() => {});
 
     fetch('/api/settings')
       .then(r => r.json())
       .then(data => {
-        if (data.storeButtons) setStoreButtons(data.storeButtons);
+        // Legacy store buttons from settings (lower priority)
+        if (data.storeButtons && !storeButtons.length) setStoreButtons(data.storeButtons);
         if (data.site?.socialLinks) setSocialLinks(data.site.socialLinks);
         if (data.site?.footer) setFooter(data.site.footer);
         if (data.event) {
-          setEventSettings(data.event);
+          setEventSettings(prev => ({ ...prev, ...data.event }));
           if (data.event.countdownTarget) {
             setCountdownTarget(new Date(data.event.countdownTarget).getTime());
           }
@@ -84,6 +93,7 @@ export default function EventPage() {
         }
       })
       .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* ─── Display Store Buttons (with fallback + dedup by platform) ─── */

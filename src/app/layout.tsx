@@ -224,6 +224,15 @@ export default function RootLayout({
             }} />
           </>
         )}
+        {/* Adjust Web SDK */}
+        {process.env.NEXT_PUBLIC_ADJUST_APP_TOKEN && (
+          <>
+            <script async src="https://cdn.adjust.com/adjust-latest.min.js" />
+            <script dangerouslySetInnerHTML={{
+              __html: `window.addEventListener('load',function(){if(window.Adjust){Adjust.initSdk({appToken:'${process.env.NEXT_PUBLIC_ADJUST_APP_TOKEN}',environment:'production'});}});`
+            }} />
+          </>
+        )}
         {/* Meta Pixel */}
         {process.env.NEXT_PUBLIC_META_PIXEL_ID && (
           <>

@@ -4,6 +4,7 @@ import { checkRateLimit } from '@/lib/rate-limit'
 
 export const dynamic = 'force-dynamic'
 
+// eslint-disable-next-line max-lines-per-function -- Stats API with CMS data mapping
 export async function GET(request: NextRequest) {
   try {
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
@@ -59,6 +60,28 @@ export async function GET(request: NextRequest) {
       pc: (eventConfig.pcStoreUrl as string) || '#',
     }
 
+    // CMS Store Buttons
+    const rawStoreButtons = (eventConfig.eventStoreButtons as Array<Record<string, unknown>>) || []
+    const eventStoreButtons = rawStoreButtons
+      .filter((btn) => btn.visible !== false)
+      .sort((a, b) => ((a.sortOrder as number) || 0) - ((b.sortOrder as number) || 0))
+      .map((btn) => ({
+        platform: btn.platform as string,
+        label: btn.label as string,
+        sublabel: (btn.sublabel as string) || '',
+        url: btn.url as string,
+        trackingUrl: (btn.trackingUrl as string) || null,
+        badgeImage: typeof btn.badgeImage === 'object' && btn.badgeImage
+          ? { url: (btn.badgeImage as Record<string, unknown>).url as string }
+          : null,
+        sortOrder: (btn.sortOrder as number) || 0,
+      }))
+
+    // CTA Button Image
+    const ctaButtonImage = typeof eventConfig.ctaButtonImage === 'object' && eventConfig.ctaButtonImage
+      ? { url: (eventConfig.ctaButtonImage as Record<string, unknown>).url as string }
+      : null
+
     return NextResponse.json({
       totalRegistrations: displayCount,
       realCount,
@@ -68,6 +91,8 @@ export async function GET(request: NextRequest) {
       override: override ?? null,
       milestones,
       storeUrls,
+      eventStoreButtons,
+      ctaButtonImage,
     }, {
       headers: { 'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=30' },
     })

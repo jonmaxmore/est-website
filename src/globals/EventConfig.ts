@@ -201,7 +201,7 @@ export const EventConfig: GlobalConfig = {
         // ═══════════════════════════════════════
         {
           label: 'Store & Referral',
-          description: 'App store links and referral point settings',
+          description: 'App store links, button images, tracking, and referral points',
           fields: [
             {
               type: 'row',
@@ -232,6 +232,94 @@ export const EventConfig: GlobalConfig = {
                 },
               ],
             },
+            // ── CTA Button Image ──
+            {
+              name: 'ctaButtonImage',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'CTA Button Image (optional)',
+              admin: { description: 'Upload a custom button image to replace the default text CTA. Recommended: 400×80px PNG' },
+            },
+            // ── Store Buttons (CMS-managed) ──
+            {
+              name: 'eventStoreButtons',
+              type: 'array',
+              label: 'Store Buttons',
+              admin: {
+                description: 'Configure store buttons shown on event page. Use trackingUrl for Adjust/AppsFlyer links.',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'platform',
+                      type: 'select',
+                      required: true,
+                      options: [
+                        { label: 'App Store (iOS)', value: 'ios' },
+                        { label: 'Google Play', value: 'android' },
+                        { label: 'Windows PC', value: 'pc' },
+                      ],
+                      admin: { width: '25%' },
+                    },
+                    {
+                      name: 'label',
+                      type: 'text',
+                      required: true,
+                      label: 'Button Label',
+                      defaultValue: 'App Store',
+                      admin: { width: '25%' },
+                    },
+                    {
+                      name: 'sublabel',
+                      type: 'text',
+                      label: 'Sub Label',
+                      defaultValue: 'Pre-order on the',
+                      admin: { width: '25%' },
+                    },
+                    {
+                      name: 'visible',
+                      type: 'checkbox',
+                      defaultValue: true,
+                      label: 'Visible',
+                      admin: { width: '25%' },
+                    },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'url',
+                      type: 'text',
+                      required: true,
+                      label: 'Store URL',
+                      admin: { width: '50%', description: 'Direct store URL' },
+                    },
+                    {
+                      name: 'trackingUrl',
+                      type: 'text',
+                      label: 'Tracking URL (Adjust/AppsFlyer)',
+                      admin: { width: '50%', description: 'If set, this URL is used for tracking instead of direct URL' },
+                    },
+                  ],
+                },
+                {
+                  name: 'badgeImage',
+                  type: 'upload',
+                  relationTo: 'media',
+                  label: 'Badge Image',
+                  admin: { description: 'Custom store badge image (e.g. official App Store badge PNG). Falls back to SVG icon.' },
+                },
+                {
+                  name: 'sortOrder',
+                  type: 'number',
+                  defaultValue: 0,
+                },
+              ],
+            },
+            // ── Referral Points ──
             {
               type: 'row',
               fields: [
