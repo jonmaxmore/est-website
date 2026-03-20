@@ -26,6 +26,7 @@ interface UseEventFormReturn {
   copyReferralLink: () => void;
 }
 
+// eslint-disable-next-line max-lines-per-function -- Hook with form logic + clipboard fallback
 export function useEventForm(
   displayStoreButtons: StoreButton[],
   onRegistered?: () => void,
@@ -91,7 +92,21 @@ export function useEventForm(
 
   const copyReferralLink = useCallback(() => {
     const link = `${window.location.origin}/event?ref=${referralCode}`;
-    navigator.clipboard.writeText(link);
+    
+    // Clipboard API requires HTTPS — fallback for HTTP/IP sites
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(link);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = link;
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+    
     setCopied(true);
     trackReferralCopy(referralCode);
     setTimeout(() => setCopied(false), 2000);
