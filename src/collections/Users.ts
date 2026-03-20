@@ -8,7 +8,10 @@ export const Users: CollectionConfig = {
     description: 'Admin users who can manage website content',
   },
   access: {
-    read: () => true,
+    read: ({ req: { user } }) => !!user,
+    create: ({ req: { user } }) => !!user,
+    update: ({ req: { user } }) => !!user,
+    delete: ({ req: { user } }) => !!user,
   },
   fields: [
     {

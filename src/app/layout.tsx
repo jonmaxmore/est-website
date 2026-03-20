@@ -29,6 +29,7 @@ import "./styles/pages/news-download-responsive.css";
 import "./styles/pages/download.css";
 import "./styles/pages/story.css";
 import "./styles/pages/legal.css";
+import "./styles/pages/gallery.css";
 
 /* Modular CSS — Utility */
 import "./styles/accessibility.css";

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { trackRegistration } from '@/lib/analytics';
 import type { StoreButton } from '@/types/event';
 
@@ -38,6 +38,16 @@ export function useEventForm(
   const [referralCode, setReferralCode] = useState('');
   const [copied, setCopied] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [referredByCode, setReferredByCode] = useState('');
+
+  // Extract ?ref= parameter from URL for referral tracking
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const refCode = params.get('ref');
+    if (refCode) {
+      setReferredByCode(refCode);
+    }
+  }, []);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +58,7 @@ export function useEventForm(
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, platform, region }),
+        body: JSON.stringify({ email, platform, region, referredByCode: referredByCode || undefined }),
       });
 
       const data = await res.json();

@@ -3,17 +3,19 @@ import { getPayloadClient } from '@/lib/payload'
 
 export const dynamic = 'force-dynamic'
 
+// eslint-disable-next-line max-lines-per-function -- single API route aggregating all CMS globals
 export async function GET() {
   try {
     const payload = await getPayloadClient()
 
     // Fetch all global settings in parallel
-    const [siteSettings, eventConfig, homepage, storyPage, gameGuidePage] = await Promise.all([
+    const [siteSettings, eventConfig, homepage, storyPage, gameGuidePage, faqPage] = await Promise.all([
       payload.findGlobal({ slug: 'site-settings' }),
       payload.findGlobal({ slug: 'event-config' }),
       payload.findGlobal({ slug: 'homepage' }),
       payload.findGlobal({ slug: 'story-page' }),
       payload.findGlobal({ slug: 'game-guide-page' }),
+      payload.findGlobal({ slug: 'faq-page' }),
     ])
 
     // Fetch store buttons
@@ -167,6 +169,16 @@ export async function GET() {
           titleTh: f.titleTh,
           descriptionEn: f.descriptionEn,
           descriptionTh: f.descriptionTh,
+        })) || [],
+      },
+      faqPage: {
+        titleEn: faqPage.titleEn || 'Frequently Asked Questions',
+        titleTh: faqPage.titleTh || 'คำถามที่พบบ่อย',
+        faqItems: (faqPage.faqItems as Array<Record<string, string>>)?.map((item) => ({
+          questionEn: item.questionEn,
+          questionTh: item.questionTh,
+          answerEn: item.answerEn,
+          answerTh: item.answerTh,
         })) || [],
       },
       storeButtons: storeButtons.docs.map((btn) => ({

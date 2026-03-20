@@ -8,6 +8,7 @@ export const EventConfig: GlobalConfig = {
   },
   access: {
     read: () => true,
+    update: ({ req: { user } }) => !!user,
   },
   fields: [
     {

@@ -8,6 +8,7 @@ export const GameGuidePage: GlobalConfig = {
   },
   access: {
     read: () => true,
+    update: ({ req: { user } }) => !!user,
   },
   fields: [
     {

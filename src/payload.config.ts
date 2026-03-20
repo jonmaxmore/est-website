@@ -21,6 +21,7 @@ import { EventConfig } from './globals/EventConfig'
 import { Homepage } from './globals/HeroSection'
 import { StoryPage } from './globals/StoryPage'
 import { GameGuidePage } from './globals/GameGuidePage'
+import { FaqPage } from './globals/FaqPage'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -52,6 +53,7 @@ export default buildConfig({
     Homepage,
     StoryPage,
     GameGuidePage,
+    FaqPage,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET ?? (() => { throw new Error('PAYLOAD_SECRET environment variable is required') })(),

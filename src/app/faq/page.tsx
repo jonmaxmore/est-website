@@ -56,6 +56,7 @@ const DEFAULT_FAQ_ITEMS: FAQItem[] = [
   },
 ];
 
+// eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function FAQPage() {
   const { t } = useLang();
   const [faqItems, setFaqItems] = useState<FAQItem[]>(DEFAULT_FAQ_ITEMS);
@@ -73,8 +74,13 @@ export default function FAQPage() {
       .then((data) => {
         if (data?.site?.socialLinks) setSocialLinks(data.site.socialLinks);
         if (data?.site?.footer) setFooter(data.site.footer);
-        // If CMS has FAQ items, use them
-        if (data?.faqItems?.length) setFaqItems(data.faqItems);
+        // Use CMS FAQ items if available
+        if (data?.faqPage?.faqItems?.length) {
+          setFaqItems(data.faqPage.faqItems.map((item: { questionTh: string; questionEn: string; answerTh: string; answerEn: string }) => ({
+            q: { th: item.questionTh, en: item.questionEn },
+            a: { th: item.answerTh, en: item.answerEn },
+          })));
+        }
       })
       .catch(() => {});
   }, []);

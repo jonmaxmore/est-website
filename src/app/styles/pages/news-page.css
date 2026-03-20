@@ -18,7 +18,7 @@
 
 .news-hero-title {
   font-family: var(--font-heading);
-  font-size: 2.5rem;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
   font-weight: 800;
   background: linear-gradient(135deg, var(--gold-light), var(--gold));
   -webkit-background-clip: text;
@@ -322,5 +322,33 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .news-articles-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .article-related-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .news-hero {
+    padding: 5rem 0 1.5rem;
+  }
+  .news-main {
+    padding: 0 1.25rem 3rem;
+  }
+  .article-main {
+    padding: 4rem 1.25rem 3rem;
+  }
+  .article-title {
+    font-size: clamp(1.3rem, 4vw, 2rem);
+  }
+  .article-featured-image {
+    height: 250px;
+  }
 }
 

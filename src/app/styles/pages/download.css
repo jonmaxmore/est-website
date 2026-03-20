@@ -238,3 +238,26 @@
   box-shadow: 0 6px 25px rgba(91, 192, 235, 0.4);
 }
 
+/* Responsive */
+@media (max-width: 1024px) {
+  .download-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 550px;
+  }
+}
+
+@media (max-width: 768px) {
+  .download-hero {
+    padding: 5rem 0 2rem;
+  }
+  .download-main {
+    padding: 0 1.25rem 3rem;
+  }
+  .download-title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+  }
+  .download-section-title {
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+  }
+}
+

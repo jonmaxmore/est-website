@@ -16,6 +16,8 @@ interface RichTextNode {
   text?: string;
   format?: number;
   children?: RichTextNode[];
+  fields?: { url?: string; newTab?: boolean };
+  url?: string;
 }
 
 interface Article {
@@ -78,8 +80,11 @@ function renderRichText(node: RichTextNode): string {
       return `<${listTag}>${children}</${listTag}>`;
     case 'listitem':
       return `<li>${children}</li>`;
-    case 'link':
-      return `<a href="#">${children}</a>`;
+    case 'link': {
+      const href = node.fields?.url || node.url || '#';
+      const target = node.fields?.newTab ? ' target="_blank" rel="noopener noreferrer"' : '';
+      return `<a href="${href}"${target}>${children}</a>`;
+    }
     case 'quote':
       return `<blockquote>${children}</blockquote>`;
     default:
@@ -90,6 +95,15 @@ function renderRichText(node: RichTextNode): string {
 function renderContent(content: { root: { children: RichTextNode[] } } | null): string {
   if (!content?.root?.children) return '';
   return content.root.children.map(renderRichText).join('');
+}
+
+/** Sanitize HTML from CMS richText to prevent XSS */
+function sanitizeHtml(html: string): string {
+  return html
+    .replace(/on\w+\s*=/gi, '') // Remove event handlers
+    .replace(/<script[\s>][\s\S]*?<\/script>/gi, '') // Remove script tags
+    .replace(/<iframe[\s>][\s\S]*?<\/iframe>/gi, '') // Remove iframes
+    .replace(/javascript:/gi, ''); // Remove javascript: URLs
 }
 
 // eslint-disable-next-line max-lines-per-function -- Page component with JSX template
@@ -139,7 +153,7 @@ export default function NewsArticlePage() {
     </div>
   );
 
-  const contentHtml = renderContent(lang === 'th' ? article.contentTh : article.contentEn);
+  const contentHtml = sanitizeHtml(renderContent(lang === 'th' ? article.contentTh : article.contentEn));
 
   return (
     <div className="news-page">
