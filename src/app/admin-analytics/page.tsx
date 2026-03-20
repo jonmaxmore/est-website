@@ -278,6 +278,51 @@ export default function AnalyticsDashboardPage() {
         </div>
       </section>
 
+      {/* Daily Trends */}
+      {(d.pageViews.byDate.length > 0 || d.registrations.byDate.length > 0) && (
+        <section className="analytics-charts-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
+          {/* Page Views by Day */}
+          <div className="analytics-chart-card">
+            <h3 className="analytics-chart-title">📈 Page Views by Day</h3>
+            <div className="analytics-daily-chart">
+              {d.pageViews.byDate.slice(-14).map((day) => {
+                const maxPV = Math.max(...d.pageViews.byDate.slice(-14).map(x => x.count));
+                return (
+                  <div className="analytics-daily-bar-col" key={day.date} title={`${day.date}: ${day.count} views`}>
+                    <span className="analytics-daily-bar-value">{day.count}</span>
+                    <div
+                      className="analytics-daily-bar"
+                      style={{ height: maxPV > 0 ? `${(day.count / maxPV) * 100}%` : '0%' }}
+                    />
+                    <span className="analytics-daily-bar-label">{day.date.slice(5)}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Registrations by Day */}
+          <div className="analytics-chart-card">
+            <h3 className="analytics-chart-title">📝 Registrations by Day</h3>
+            <div className="analytics-daily-chart">
+              {d.registrations.byDate.slice(-14).map((day) => {
+                const maxReg = Math.max(...d.registrations.byDate.slice(-14).map(x => x.count));
+                return (
+                  <div className="analytics-daily-bar-col" key={day.date} title={`${day.date}: ${day.count} registrations`}>
+                    <span className="analytics-daily-bar-value">{day.count}</span>
+                    <div
+                      className="analytics-daily-bar registration"
+                      style={{ height: maxReg > 0 ? `${(day.count / maxReg) * 100}%` : '0%' }}
+                    />
+                    <span className="analytics-daily-bar-label">{day.date.slice(5)}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Charts */}
       <section className="analytics-charts-grid">
         {/* Device Breakdown */}
