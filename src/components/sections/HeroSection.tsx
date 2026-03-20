@@ -26,6 +26,7 @@ interface HeroProps {
   } | null;
 }
 
+// eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function HeroSection({ settings }: HeroProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
@@ -35,7 +36,6 @@ export default function HeroSection({ settings }: HeroProps) {
 
   // Mouse parallax (hover interaction)
   const bgX = useTransform(smoothX, [-0.5, 0.5], [15, -15]);
-  const bgYMouse = useTransform(smoothY, [-0.5, 0.5], [10, -10]);
   const logoX = useTransform(smoothX, [-0.5, 0.5], [-8, 8]);
   const logoYMouse = useTransform(smoothY, [-0.5, 0.5], [-5, 5]);
 
@@ -76,11 +76,15 @@ export default function HeroSection({ settings }: HeroProps) {
   );
   const ctaLink = settings?.hero?.ctaLink || '/event';
 
-  const storeButtons = settings?.storeButtons || [
+  const rawStoreButtons = settings?.storeButtons || [
     { platform: 'ios', label: 'App Store', sublabel: 'Pre-order on the', url: '#' },
     { platform: 'android', label: 'Google Play', sublabel: 'PRE-REGISTER ON', url: '#' },
     { platform: 'pc', label: 'Windows', sublabel: 'Coming soon', url: '#' },
   ];
+  // Deduplicate: keep first entry per platform
+  const storeButtons = rawStoreButtons.filter((btn, _i, arr) =>
+    arr.findIndex(b => b.platform === btn.platform) === arr.indexOf(btn)
+  );
 
   const videoUrl = settings?.hero?.backgroundVideo?.url || null;
   const bgImageUrl = settings?.hero?.backgroundImage?.url || null;
@@ -139,6 +143,7 @@ export default function HeroSection({ settings }: HeroProps) {
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           className="hero-logo-container"
         >
+          <h1 className="sr-only">Eternal Tower Saga</h1>
           <Image
             src="/images/logo.webp"
             alt="Eternal Tower Saga"

@@ -31,8 +31,9 @@ import {
    EVENT PAGE — Orchestrator
    Uses shared Navigation + Footer for consistent UX
    ═══════════════════════════════════════════════ */
+// eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function EventPage() {
-  const { t } = useLang();
+  useLang(); // ensure lang context is active
 
   /* ─── CMS Data State ─── */
   const [registrationCount, setRegistrationCount] = useState(0);
@@ -81,8 +82,8 @@ export default function EventPage() {
       .catch(() => {});
   }, []);
 
-  /* ─── Display Store Buttons (with fallback) ─── */
-  const displayStoreButtons = (storeButtons.length ? storeButtons : [
+  /* ─── Display Store Buttons (with fallback + dedup by platform) ─── */
+  const rawStoreButtons = (storeButtons.length ? storeButtons : [
     { platform: 'ios', label: 'App Store', sublabel: 'Pre-order on the', url: REAL_STORE_URLS.ios },
     { platform: 'android', label: 'Google Play', sublabel: 'PRE-REGISTER ON', url: REAL_STORE_URLS.android },
     { platform: 'pc', label: 'Windows', sublabel: 'Coming soon', url: '#' },
@@ -90,6 +91,13 @@ export default function EventPage() {
     ...btn,
     url: btn.url === '#' ? (REAL_STORE_URLS[btn.platform] || '#') : btn.url,
   }));
+  // Deduplicate: keep first entry per platform
+  const seen = new Set<string>();
+  const displayStoreButtons = rawStoreButtons.filter(btn => {
+    if (seen.has(btn.platform)) return false;
+    seen.add(btn.platform);
+    return true;
+  });
 
   /* ─── Registration Form Hook ─── */
   const form = useEventForm(

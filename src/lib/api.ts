@@ -1,5 +1,5 @@
 // API client for fetching CMS content (server-side)
-const API_BASE = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+const API_BASE = process.env.NEXT_PUBLIC_BASE_URL || '';
 
 interface FetchOptions {
   cache?: RequestCache;
