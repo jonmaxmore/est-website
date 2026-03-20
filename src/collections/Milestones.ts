@@ -5,7 +5,7 @@ export const Milestones: CollectionConfig = {
   admin: {
     useAsTitle: 'rewardEn',
     description: 'Pre-registration milestone rewards — auto lock/unlock based on registration count',
-    group: 'Game Content',
+    group: 'Event',
     defaultColumns: ['threshold', 'rewardEn', 'rewardDescriptionEn', 'sortOrder'],
   },
   access: {
