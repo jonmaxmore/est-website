@@ -1,21 +1,38 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
-import { trackPageView } from '@/lib/tracking';
+import {
+  trackPageView,
+  trackScrollDepth,
+  resetScrollMilestones,
+  startPageTimer,
+  trackTimeOnPage,
+} from '@/lib/tracking';
 
 // ─── Paths to exclude from tracking ───
 const EXCLUDED = ['/admin', '/api/', '/_next/'];
 
 /**
- * Automatically tracks page views on route change.
- * - Debounces rapid SPA navigations (300ms)
- * - Excludes admin and internal routes
- * - Sends to our internal DB via /api/track (NOT GA4/Adjust)
+ * Automatically tracks:
+ * - Page views on route change (debounced 300ms)
+ * - Scroll depth (25%, 50%, 75%, 100%)
+ * - Time on page (sent on navigation away)
+ * Excludes admin and internal routes.
+ * Data → /api/track (internal DB, NOT GA4/Adjust)
  */
 export default function PageViewTracker() {
   const pathname = usePathname();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ─── Scroll handler ───
+  const handleScroll = useCallback(() => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (docHeight <= 0) return;
+    const percent = Math.round((scrollTop / docHeight) * 100);
+    trackScrollDepth(percent);
+  }, []);
 
   useEffect(() => {
     // Skip admin/internal routes
@@ -25,12 +42,25 @@ export default function PageViewTracker() {
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
       trackPageView(pathname);
+      startPageTimer();
+      resetScrollMilestones();
     }, 300);
+
+    // Scroll depth listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Time on page: send on beforeunload
+    const handleUnload = () => trackTimeOnPage();
+    window.addEventListener('beforeunload', handleUnload);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('beforeunload', handleUnload);
+      // Also fire time-on-page when navigating within SPA
+      trackTimeOnPage();
     };
-  }, [pathname]);
+  }, [pathname, handleScroll]);
 
   return null; // Invisible component
 }

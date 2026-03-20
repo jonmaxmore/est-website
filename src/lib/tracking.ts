@@ -135,3 +135,60 @@ export function trackReferralCopy(referralCode: string) {
   });
 }
 
+// ─── Scroll Depth Tracking ───
+const scrollMilestones = new Set<number>();
+
+export function trackScrollDepth(depth: number) {
+  const milestones = [25, 50, 75, 100];
+  for (const m of milestones) {
+    if (depth >= m && !scrollMilestones.has(m)) {
+      scrollMilestones.add(m);
+      trackInternalEvent('scroll_depth', {
+        depth: m,
+        page: typeof window !== 'undefined' ? window.location.pathname : '',
+      });
+      trackGA4Event('scroll', { percent_scrolled: m });
+    }
+  }
+}
+
+export function resetScrollMilestones() {
+  scrollMilestones.clear();
+}
+
+// ─── Navigation Click Tracking ───
+export function trackNavClick(label: string, destination: string) {
+  trackInternalEvent('nav_click', { label, destination });
+  trackGA4Event('nav_click', { link_text: label, link_url: destination });
+}
+
+// ─── Time on Page ───
+let pageEntryTime = 0;
+
+export function startPageTimer() {
+  pageEntryTime = Date.now();
+}
+
+export function trackTimeOnPage() {
+  if (pageEntryTime <= 0) return;
+  const seconds = Math.round((Date.now() - pageEntryTime) / 1000);
+  if (seconds < 2 || seconds > 3600) return; // Ignore <2s or >1hr
+  trackInternalEvent('time_on_page', {
+    seconds,
+    page: typeof window !== 'undefined' ? window.location.pathname : '',
+  });
+  pageEntryTime = 0;
+}
+
+// ─── UTM Parameter Capture ───
+export function getUTMParams(): Record<string, string> {
+  if (typeof window === 'undefined') return {};
+  const params = new URLSearchParams(window.location.search);
+  const utm: Record<string, string> = {};
+  for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']) {
+    const val = params.get(key);
+    if (val) utm[key] = val;
+  }
+  return utm;
+}
+
