@@ -131,8 +131,6 @@ export async function GET() {
         badgeTh: homepage.charactersBadgeTh || 'เลือกฮีโร่ของคุณ',
         titleEn: homepage.charactersTitleEn || 'Heroes of Arcatea',
         titleTh: homepage.charactersTitleTh || 'ฮีโร่แห่ง Arcatea',
-        voiceButtonEn: homepage.voiceButtonEn || 'Listen to Voice Line',
-        voiceButtonTh: homepage.voiceButtonTh || 'ฟังเสียงตัวละคร',
       },
       highlights: {
         badgeEn: homepage.highlightsBadgeEn || 'GAME FEATURES',
