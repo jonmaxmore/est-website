@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client';
 
 import React, { useEffect, useReducer, useCallback } from 'react';
@@ -94,6 +95,57 @@ function trendClass(direction: string): string {
   if (direction === 'up') return 'analytics-trend-up';
   if (direction === 'down') return 'analytics-trend-down';
   return 'analytics-trend-neutral';
+}
+
+function exportCSV(d: AnalyticsResponse) {
+  const rows: string[][] = [
+    ['=== Eternal Tower Saga — Analytics Report ==='],
+    ['Period', `Last ${d.period.days} days`],
+    ['Generated', new Date().toISOString()],
+    [],
+    ['=== Overview ==='],
+    ['Metric', 'Value'],
+    ['Total Page Views', String(d.overview.totalPageViews)],
+    ['Unique Visitors', String(d.overview.uniqueVisitors)],
+    ['Registrations (period)', String(d.overview.recentRegistrations)],
+    ['Total Registrations', String(d.overview.totalRegistrations)],
+    ['Sessions', String(d.overview.totalSessions)],
+    ['Bounce Rate', `${d.overview.bounceRate}%`],
+    ['Avg Pages/Session', String(d.overview.avgPagesPerSession)],
+    ['Events Tracked', String(d.overview.totalEvents)],
+    [],
+    ['=== Top Pages ==='],
+    ['Path', 'Views'],
+    ...d.pageViews.topPages.map(p => [p.path, String(p.count)]),
+    [],
+    ['=== Top Events ==='],
+    ['Event', 'Count'],
+    ...d.events.topEvents.map(e => [e.name, String(e.count)]),
+    [],
+    ['=== Registrations by Region ==='],
+    ['Region', 'Count'],
+    ...d.registrations.byRegion.map(r => [r.region.toUpperCase(), String(r.count)]),
+    [],
+    ['=== Registrations by Platform ==='],
+    ['Platform', 'Count'],
+    ...d.registrations.byPlatform.map(p => [p.platform, String(p.count)]),
+    [],
+    ['=== Daily Page Views ==='],
+    ['Date', 'Views'],
+    ...d.pageViews.byDate.map(x => [x.date, String(x.count)]),
+    [],
+    ['=== Daily Registrations ==='],
+    ['Date', 'Count'],
+    ...d.registrations.byDate.map(x => [x.date, String(x.count)]),
+  ];
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `est-analytics-${d.period.days}d-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // eslint-disable-next-line max-lines-per-function
@@ -198,6 +250,13 @@ export default function AnalyticsDashboardPage() {
             disabled={state.loading}
           >
             {state.loading ? '⟳' : '↻'} Refresh
+          </button>
+          <button
+            className="analytics-export-btn"
+            onClick={() => state.data && exportCSV(state.data)}
+            disabled={!state.data}
+          >
+            📥 Export CSV
           </button>
         </div>
       </header>

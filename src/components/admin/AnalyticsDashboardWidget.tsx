@@ -51,11 +51,10 @@ function reducer(_s: State, a: Action): State {
 }
 
 const TREND_ICONS = { up: '↑', down: '↓', flat: '→' }
-const TREND_COLORS = { up: '#66bb6a', down: '#ef5350', flat: '#888' }
 
 function TrendBadge({ trend }: { trend: TrendData }) {
   return (
-    <span className="analytics-widget__trend" style={{ color: TREND_COLORS[trend.direction] }}>
+    <span className={`analytics-widget__trend analytics-widget__trend--${trend.direction}`}>
       {TREND_ICONS[trend.direction]} {trend.change}%
     </span>
   )
@@ -107,7 +106,7 @@ export default function AnalyticsDashboardWidget() {
         <div className="analytics-widget__grid">
           <div className="analytics-widget__card">
             <div className="analytics-widget__card-icon">👥</div>
-            <div className="analytics-widget__card-value" style={{ color: '#f5a623' }}>
+            <div className="analytics-widget__card-value analytics-widget__val--amber">
               {data.overview.totalRegistrations.toLocaleString()}
             </div>
             <div className="analytics-widget__card-label">Total Registrations</div>
@@ -115,7 +114,7 @@ export default function AnalyticsDashboardWidget() {
 
           <div className="analytics-widget__card">
             <div className="analytics-widget__card-icon">📈</div>
-            <div className="analytics-widget__card-value" style={{ color: '#66bb6a' }}>
+            <div className="analytics-widget__card-value analytics-widget__val--green">
               {data.overview.recentRegistrations.toLocaleString()}
             </div>
             <div className="analytics-widget__card-label">
@@ -126,7 +125,7 @@ export default function AnalyticsDashboardWidget() {
 
           <div className="analytics-widget__card">
             <div className="analytics-widget__card-icon">👁️</div>
-            <div className="analytics-widget__card-value" style={{ color: '#4fc3f7' }}>
+            <div className="analytics-widget__card-value analytics-widget__val--blue">
               {data.overview.totalPageViews.toLocaleString()}
             </div>
             <div className="analytics-widget__card-label">
@@ -137,7 +136,7 @@ export default function AnalyticsDashboardWidget() {
 
           <div className="analytics-widget__card">
             <div className="analytics-widget__card-icon">🌐</div>
-            <div className="analytics-widget__card-value" style={{ color: '#ab47bc' }}>
+            <div className="analytics-widget__card-value analytics-widget__val--purple">
               {data.overview.uniqueVisitors.toLocaleString()}
             </div>
             <div className="analytics-widget__card-label">Unique Visitors</div>
@@ -145,7 +144,7 @@ export default function AnalyticsDashboardWidget() {
 
           <div className="analytics-widget__card">
             <div className="analytics-widget__card-icon">📊</div>
-            <div className="analytics-widget__card-value" style={{ color: '#ff9800' }}>
+            <div className="analytics-widget__card-value analytics-widget__val--orange">
               {data.overview.totalSessions.toLocaleString()}
             </div>
             <div className="analytics-widget__card-label">Sessions</div>
@@ -153,7 +152,7 @@ export default function AnalyticsDashboardWidget() {
 
           <div className="analytics-widget__card">
             <div className="analytics-widget__card-icon">📉</div>
-            <div className="analytics-widget__card-value" style={{ color: data.overview.bounceRate > 70 ? '#ef5350' : '#66bb6a' }}>
+            <div className={`analytics-widget__card-value ${data.overview.bounceRate > 70 ? 'analytics-widget__val--red' : 'analytics-widget__val--green'}`}>
               {data.overview.bounceRate}%
             </div>
             <div className="analytics-widget__card-label">Bounce Rate</div>
@@ -161,7 +160,7 @@ export default function AnalyticsDashboardWidget() {
 
           <div className="analytics-widget__card">
             <div className="analytics-widget__card-icon">📄</div>
-            <div className="analytics-widget__card-value" style={{ color: '#26c6da' }}>
+            <div className="analytics-widget__card-value analytics-widget__val--cyan">
               {data.overview.avgPagesPerSession}
             </div>
             <div className="analytics-widget__card-label">Avg Pages/Session</div>
@@ -169,7 +168,7 @@ export default function AnalyticsDashboardWidget() {
 
           <div className="analytics-widget__card">
             <div className="analytics-widget__card-icon">🖱️</div>
-            <div className="analytics-widget__card-value" style={{ color: '#ef5350' }}>
+            <div className="analytics-widget__card-value analytics-widget__val--red">
               {data.overview.totalEvents.toLocaleString()}
             </div>
             <div className="analytics-widget__card-label">

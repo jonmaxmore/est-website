@@ -128,3 +128,17 @@
   font-size: 0.7rem;
   font-weight: 700;
 }
+
+/* Trend direction colors */
+.analytics-widget__trend--up { color: #66bb6a; }
+.analytics-widget__trend--down { color: #ef5350; }
+.analytics-widget__trend--flat { color: #888; }
+
+/* Card value colors */
+.analytics-widget__val--amber { color: #f5a623; }
+.analytics-widget__val--green { color: #66bb6a; }
+.analytics-widget__val--blue { color: #4fc3f7; }
+.analytics-widget__val--purple { color: #ab47bc; }
+.analytics-widget__val--orange { color: #ff9800; }
+.analytics-widget__val--cyan { color: #26c6da; }
+.analytics-widget__val--red { color: #ef5350; }
