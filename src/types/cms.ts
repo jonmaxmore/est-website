@@ -35,6 +35,8 @@ export function extractMedia(field: unknown): { url: string } | null {
 export interface CMSCharacter {
   id: number;
   name: string;
+  descriptionEn: string;
+  descriptionTh: string;
   portrait: string | null;
   infoImage: string | null;
   backgroundImage: string | null;
@@ -62,7 +64,7 @@ export interface CMSStoreButton {
   url: string;
 }
 
-// ──── Section Configs (from HeroSection global) ────
+// ──── Section Configs (from Homepage global) ────
 
 export interface CMSHeroConfig {
   taglineEn: string;
@@ -91,8 +93,6 @@ export interface CMSCharacterSectionConfig {
   badgeTh: string;
   titleEn: string;
   titleTh: string;
-  voiceButtonEn: string;
-  voiceButtonTh: string;
 }
 
 export interface CMSHighlightsConfig {

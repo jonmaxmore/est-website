@@ -20,7 +20,7 @@ import { PageEvents } from './collections/PageEvents'
 // Globals
 import { SiteSettings } from './globals/SiteSettings'
 import { EventConfig } from './globals/EventConfig'
-import { Homepage } from './globals/HeroSection'
+import { Homepage } from './globals/Homepage'
 import { StoryPage } from './globals/StoryPage'
 import { GameGuidePage } from './globals/GameGuidePage'
 import { FaqPage } from './globals/FaqPage'

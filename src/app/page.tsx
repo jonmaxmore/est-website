@@ -9,6 +9,9 @@ import {
   type CMSFeature,
 } from '@/types/cms';
 
+// Force fresh CMS data on every request (not static prerender)
+export const dynamic = 'force-dynamic';
+
 /* ═══════════════════════════════════════════════
    MAIN LANDING PAGE — Server Component (SSR)
    Fetches CMS data at request time, passes to client
@@ -77,8 +80,6 @@ export default async function LandingPage() {
           badgeTh: hs.charactersBadgeTh || 'เลือกฮีโร่ของคุณ',
           titleEn: hs.charactersTitleEn || 'Heroes of Arcatea',
           titleTh: hs.charactersTitleTh || 'ฮีโร่แห่ง Arcatea',
-          voiceButtonEn: hs.voiceButtonEn || 'Listen to Voice Line',
-          voiceButtonTh: hs.voiceButtonTh || 'ฟังเสียงตัวละคร',
         },
         highlights: {
           badgeEn: hs.highlightsBadgeEn || 'GAME FEATURES',
@@ -106,6 +107,8 @@ export default async function LandingPage() {
     characters = charsRes.docs.map((c: Record<string, unknown>) => ({
       id: c.id as number,
       name: (c.name || '') as string,
+      descriptionEn: (c.descriptionEn as string) || '',
+      descriptionTh: (c.descriptionTh as string) || '',
       portrait: extractMediaUrl(c.portrait),
       infoImage: extractMediaUrl(c.infoImage),
       backgroundImage: extractMediaUrl(c.backgroundImage),

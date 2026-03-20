@@ -13,28 +13,24 @@ import type { CMSCharacter, CMSCharacterSectionConfig } from '@/types/cms';
    ═══════════════════════════════════════════════ */
 
 /* Static fallback data when CMS has no characters */
-const WEAPON_INFO = [
+const FALLBACK_CHARACTERS: Array<{ name: string; descTh: string; descEn: string }> = [
   {
-    nameTh: 'Arthur — Iron Knight',
-    nameEn: 'Arthur — Iron Knight',
+    name: 'Arthur — Iron Knight',
     descTh: 'เป็นอาวุธที่เชียวชาญในการโจมตีกายภาพ ซึ่งสามารถปฏิบัติหน้าที่ในการโจมตีระยะประชิดและการป้องกันได้อย่างสมดุล',
     descEn: 'A weapon specialized in physical attacks, capable of balanced melee offense and defense.',
   },
   {
-    nameTh: 'Elena — Forest Ranger',
-    nameEn: 'Elena — Forest Ranger',
+    name: 'Elena — Forest Ranger',
     descTh: 'เป็นอาวุธที่สามารถสนับสนุนพันธมิตรจากระยะไกลด้วยวิธีการต่างๆ หรือก่อกวนศัตรูด้วยสถานะผิดปกติต่างๆ',
     descEn: 'A weapon that supports allies from range through various methods or disrupts enemies with status effects.',
   },
   {
-    nameTh: 'Kaelen — Shadow Mage',
-    nameEn: 'Kaelen — Shadow Mage',
+    name: 'Kaelen — Shadow Mage',
     descTh: 'เป็นอาวุธที่เชียวชาญในการโจมตีเวทมนตร์ สามารถสร้างความเสียหายอย่างรุนแรงแก่ศัตรูในคราวเดียวหรือมอบดีบัฟที่สร้างความเสียหายอย่างต่อเนื่อง',
     descEn: 'A weapon specialized in magic attacks, dealing devastating burst damage or applying continuous damage debuffs.',
   },
   {
-    nameTh: 'Lyra — Holy Priestess',
-    nameEn: 'Lyra — Holy Priestess',
+    name: 'Lyra — Holy Priestess',
     descTh: 'เป็นอาวุธที่เน้นการสนับสนุนพันธมิตรผ่านการฟื้นฟูและบัฟจากระยะไกล และยังสามารถสนับสนุนการต่อสู้ของพันธมิตรผ่านสถานะผิดปกติต่างๆ ได้อีกด้วย',
     descEn: 'A weapon focused on supporting allies through ranged healing and buffs, while also disrupting enemies with various status effects.',
   },
@@ -52,9 +48,9 @@ export default function CharacterSection({ characters, sectionConfig }: Characte
   const [direction, setDirection] = useState(0); // -1 left, 1 right
 
   const hasCmsData = characters.length > 0;
-  const itemCount = hasCmsData ? characters.length : WEAPON_INFO.length;
+  const itemCount = hasCmsData ? characters.length : FALLBACK_CHARACTERS.length;
   const activeChar = hasCmsData ? characters[activeIdx] : null;
-  const activeWeapon = WEAPON_INFO[activeIdx] || WEAPON_INFO[0];
+  const fallback = FALLBACK_CHARACTERS[activeIdx] || FALLBACK_CHARACTERS[0];
 
   const badgeText = sectionConfig
     ? t(sectionConfig.badgeTh || 'เลือกฮีโร่ของคุณ', sectionConfig.badgeEn || 'CHOOSE YOUR HERO')
@@ -65,7 +61,7 @@ export default function CharacterSection({ characters, sectionConfig }: Characte
     : t('ฮีโร่แห่ง Arcatea', 'Heroes of Arcatea');
 
   const getCharName = (i: number) =>
-    hasCmsData ? characters[i]?.name || '' : t(WEAPON_INFO[i]?.nameTh || '', WEAPON_INFO[i]?.nameEn || '');
+    hasCmsData ? characters[i]?.name || '' : FALLBACK_CHARACTERS[i]?.name || '';
 
   /* Navigation helpers */
   const goTo = useCallback((idx: number) => {
@@ -208,10 +204,17 @@ export default function CharacterSection({ characters, sectionConfig }: Characte
           </div>
 
           <h3 className="char-name">
-            {activeChar?.name || t(activeWeapon.nameTh, activeWeapon.nameEn)}
+            {activeChar?.name || fallback.name}
           </h3>
+          {activeChar?.infoImage && (
+            <div className="char-info-image">
+              <Image src={activeChar.infoImage} alt="" width={200} height={48} className="char-weapon-label" />
+            </div>
+          )}
           <p className="char-desc">
-            {t(activeWeapon.descTh, activeWeapon.descEn)}
+            {activeChar
+              ? t(activeChar.descriptionTh || fallback.descTh, activeChar.descriptionEn || fallback.descEn)
+              : t(fallback.descTh, fallback.descEn)}
           </p>
         </motion.div>
       </AnimatePresence>
@@ -262,7 +265,7 @@ export default function CharacterSection({ characters, sectionConfig }: Characte
               />
             ) : (
               <span className="char-icon-placeholder" aria-hidden="true">
-                {(hasCmsData ? characters[i]?.name || '?' : WEAPON_INFO[i]?.nameEn || '?').charAt(0)}
+                {(hasCmsData ? characters[i]?.name || '?' : FALLBACK_CHARACTERS[i]?.name || '?').charAt(0)}
               </span>
             )}
           </motion.button>

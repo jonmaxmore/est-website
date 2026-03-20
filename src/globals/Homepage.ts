@@ -87,13 +87,6 @@ export const Homepage: GlobalConfig = {
             { name: 'charactersTitleTh', type: 'text', defaultValue: 'ฮีโร่แห่ง Arcatea', label: 'Title (Thai)', admin: { width: '50%' } },
           ],
         },
-        {
-          type: 'row',
-          fields: [
-            { name: 'voiceButtonEn', type: 'text', defaultValue: 'Listen to Voice Line', label: 'Voice Button (EN)', admin: { width: '50%' } },
-            { name: 'voiceButtonTh', type: 'text', defaultValue: 'ฟังเสียงตัวละคร', label: 'Voice Button (TH)', admin: { width: '50%' } },
-          ],
-        },
       ],
     },
 

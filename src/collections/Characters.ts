@@ -23,6 +23,23 @@ export const Characters: CollectionConfig = {
       admin: { description: 'ชื่อตัวละครสำหรับจัดการใน CMS' },
     },
     {
+      type: 'row',
+      fields: [
+        {
+          name: 'descriptionEn',
+          type: 'textarea',
+          label: 'Description (English)',
+          admin: { width: '50%', description: 'Character/weapon description shown on homepage' },
+        },
+        {
+          name: 'descriptionTh',
+          type: 'textarea',
+          label: 'Description (Thai)',
+          admin: { width: '50%', description: 'คำอธิบายตัวละคร/อาวุธที่แสดงหน้าแรก' },
+        },
+      ],
+    },
+    {
       name: 'portrait',
       type: 'upload',
       relationTo: 'media',
