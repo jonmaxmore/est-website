@@ -52,9 +52,14 @@ export const SiteSettings: GlobalConfig = {
       name: 'analytics',
       label: 'Analytics & Tracking',
       fields: [
-        { name: 'gaId', type: 'text', label: 'Google Analytics 4 ID', admin: { description: 'e.g. G-XXXXXXXXXX' } },
-        { name: 'metaPixelId', type: 'text', label: 'Meta (Facebook) Pixel ID' },
-        { name: 'gtmId', type: 'text', label: 'Google Tag Manager ID' },
+        { name: 'gaId', type: 'text', label: 'Google Analytics 4 ID', admin: { description: 'e.g. G-XXXXXXXXXX', width: '50%' } },
+        { name: 'metaPixelId', type: 'text', label: 'Meta (Facebook) Pixel ID', admin: { width: '50%' } },
+        { name: 'gtmId', type: 'text', label: 'Google Tag Manager ID', admin: { width: '50%' } },
+        { name: 'adjustAppToken', type: 'text', label: 'Adjust App Token', admin: { description: 'From Adjust dashboard', width: '50%' } },
+        { name: 'adjustEnvironment', type: 'select', label: 'Adjust Environment', defaultValue: 'production', options: [
+          { label: 'Production', value: 'production' },
+          { label: 'Sandbox', value: 'sandbox' },
+        ], admin: { width: '50%' } },
       ],
     },
     {

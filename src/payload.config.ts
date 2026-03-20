@@ -14,6 +14,8 @@ import { StoreButtons } from './collections/StoreButtons'
 import { Registrations } from './collections/Registrations'
 import { Gallery } from './collections/Gallery'
 import { Users } from './collections/Users'
+import { PageViews } from './collections/PageViews'
+import { PageEvents } from './collections/PageEvents'
 
 // Globals
 import { SiteSettings } from './globals/SiteSettings'
@@ -46,6 +48,8 @@ export default buildConfig({
     StoreButtons,
     Registrations,
     Gallery,
+    PageViews,
+    PageEvents,
   ],
   globals: [
     SiteSettings,

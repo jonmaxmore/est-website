@@ -116,7 +116,16 @@ export default function EventPage() {
   /* ─── Registration Form Hook ─── */
   const form = useEventForm(
     displayStoreButtons,
-    () => setRegistrationCount(prev => prev + 1),
+    // Re-fetch real count from backend after registration (API-first: frontend must not calculate)
+    () => {
+      fetch('/api/stats')
+        .then(r => r.json())
+        .then(data => {
+          if (data.displayCount != null) setRegistrationCount(data.displayCount);
+          else if (data.totalRegistrations != null) setRegistrationCount(data.totalRegistrations);
+        })
+        .catch(() => {});
+    },
   );
 
   return (

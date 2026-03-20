@@ -34,6 +34,7 @@ import "./styles/pages/gallery.css";
 /* Modular CSS — Utility */
 import "./styles/accessibility.css";
 import "./styles/skeleton.css";
+import PageViewTracker from '@/components/PageViewTracker';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || '';
 
@@ -248,6 +249,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <LangProvider>
+          <PageViewTracker />
           <SmoothScroll>
             {children}
           </SmoothScroll>
