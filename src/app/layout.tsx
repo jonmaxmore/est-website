@@ -35,7 +35,7 @@ import "./styles/pages/gallery.css";
 import "./styles/accessibility.css";
 import "./styles/skeleton.css";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || '';
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     "tower defense", "MMORPG", "เกมออนไลน์", "pre-registration",
     "action RPG", "game Thailand",
   ],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   openGraph: {
     title: "Eternal Tower Saga — Rise Together. Conquer the Tower.",
     description: "ลงทะเบียนล่วงหน้าเกมมือถือ RPG สุดมัน! ผจญภัยไปด้วยกัน พิชิตยอดหอคอย",
@@ -120,7 +120,7 @@ export default function RootLayout({
               "@graph": [
                 {
                   "@type": "VideoGame",
-                  "@id": "https://eternaltowersaga.com/#game",
+                  "@id": `${SITE_URL}/#game`,
                   "name": "Eternal Tower Saga",
                   "alternateName": ["ETS", "เกม Eternal Tower Saga"],
                   "description": "Rise Together. Conquer the Tower. เกมมือถือ RPG แนว Casual MMORPG ผจญภัยสำรวจโลก Arcatéa พิชิตหอคอยนิรันดร์ The Boundless Spire ตั้งกิลด์ต่อสู้ PvP แบบเรียลไทม์",
@@ -140,12 +140,12 @@ export default function RootLayout({
                     "availability": "https://schema.org/PreOrder",
                     "url": `${SITE_URL}/event`
                   },
-                  "publisher": { "@id": "https://eternaltowersaga.com/#publisher" },
-                  "author": { "@id": "https://eternaltowersaga.com/#publisher" }
+                  "publisher": { "@id": `${SITE_URL}/#publisher` },
+                  "author": { "@id": `${SITE_URL}/#publisher` }
                 },
                 {
                   "@type": "Organization",
-                  "@id": "https://eternaltowersaga.com/#publisher",
+                  "@id": `${SITE_URL}/#publisher`,
                   "name": "อัลติเมตเกม จำกัด",
                   "alternateName": "Ultimate Game Co., Ltd.",
                   "url": SITE_URL,
@@ -159,15 +159,15 @@ export default function RootLayout({
                 },
                 {
                   "@type": "WebSite",
-                  "@id": "https://eternaltowersaga.com/#website",
+                  "@id": `${SITE_URL}/#website`,
                   "name": "Eternal Tower Saga",
                   "url": SITE_URL,
-                  "publisher": { "@id": "https://eternaltowersaga.com/#publisher" },
+                  "publisher": { "@id": `${SITE_URL}/#publisher` },
                   "inLanguage": ["th", "en"]
                 },
                 {
                   "@type": "FAQPage",
-                  "@id": "https://eternaltowersaga.com/#faq",
+                  "@id": `${SITE_URL}/#faq`,
                   "mainEntity": [
                     {
                       "@type": "Question",
