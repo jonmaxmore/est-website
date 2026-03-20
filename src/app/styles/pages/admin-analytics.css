@@ -12,6 +12,18 @@
   padding: 1.5rem 2rem 3rem;
 }
 
+/* ─── Data Cap Warning ─── */
+.analytics-data-cap-warning {
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  color: #fbbf24;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
 /* ─── Auth Wall ─── */
 .analytics-auth-wall {
   min-height: 100vh;

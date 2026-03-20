@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayloadClient } from '@/lib/payload'
 import { isBot } from '@/lib/bot-detection'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,6 +23,12 @@ function getDeviceType(ua: string): 'desktop' | 'mobile' | 'tablet' {
 // eslint-disable-next-line max-lines-per-function -- Analytics aggregation endpoint
 export async function GET(request: NextRequest) {
   try {
+    // Rate limit: 10 requests per minute (expensive aggregation)
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+    if (!checkRateLimit(`analytics:${ip}`, 10, 60000)) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+    }
+
     const payload = await getPayloadClient()
 
     // ── Admin auth check via cookie ──
@@ -266,6 +273,7 @@ export async function GET(request: NextRequest) {
       },
 
       dataSource: 'internal_db',
+      generatedAt: new Date().toISOString(),
       _meta: {
         docsProcessed: {
           pageViews: humanPvDocs.length,

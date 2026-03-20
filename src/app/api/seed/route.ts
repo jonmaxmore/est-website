@@ -39,12 +39,12 @@ export async function POST(request: NextRequest) {
     }
     results.push(`✅ ${mCount} milestones seeded`)
 
-    // 3. Seed Characters (without portraits)
+    // 3. Seed Characters (fields match Characters collection schema)
     const charsData = [
-      { nameEn: 'Arthur', nameTh: 'อาร์เธอร์', classEn: 'Iron Knight', classTh: 'อัศวินเหล็ก', weaponClass: 'SWORD' as const, faction: 'light' as const, descriptionEn: 'A legendary knight who excels in close combat, balancing offense and defense.', descriptionTh: 'อัศวินในตำนานที่เชี่ยวชาญการรบระยะประชิด สมดุลทั้งรุกและรับ', accentColor: '#FFD700', sortOrder: 1, visible: true },
-      { nameEn: 'Elena', nameTh: 'เอเลน่า', classEn: 'Forest Ranger', classTh: 'เจ้าป่า', weaponClass: 'BOW' as const, faction: 'nature' as const, descriptionEn: 'A master archer who strikes from afar, using nature\'s power.', descriptionTh: 'นักธนูผู้เชี่ยวชาญที่โจมตีจากระยะไกล ใช้พลังของธรรมชาติ', accentColor: '#4CAF50', sortOrder: 2, visible: true },
-      { nameEn: 'Kaelen', nameTh: 'เคเลน', classEn: 'Shadow Mage', classTh: 'จอมเวทย์เงา', weaponClass: 'CRYSTAL_ORB' as const, faction: 'dark' as const, descriptionEn: 'A mysterious mage wielding dark arcane powers from a distance.', descriptionTh: 'จอมเวทย์ลึกลับผู้ใช้พลังเวทมนตร์มืดจากระยะไกล', accentColor: '#7B1FA2', sortOrder: 3, visible: true },
-      { nameEn: 'Lyra', nameTh: 'ไลร่า', classEn: 'Holy Priestess', classTh: 'นักบวชศักดิ์สิทธิ์', weaponClass: 'WAND' as const, faction: 'light' as const, descriptionEn: 'A divine healer who protects allies with holy magic.', descriptionTh: 'นักบวชศักดิ์สิทธิ์ผู้ปกป้องพันธมิตรด้วยเวทมนตร์ศักดิ์สิทธิ์', accentColor: '#E1BEE7', sortOrder: 4, visible: true },
+      { name: 'Arthur — Iron Knight', descriptionEn: 'A weapon specialized in physical attacks, capable of balanced melee offense and defense.', descriptionTh: 'เป็นอาวุธที่เชียวชาญในการโจมตีกายภาพ ซึ่งสามารถปฏิบัติหน้าที่ในการโจมตีระยะประชิดและการป้องกันได้อย่างสมดุล', sortOrder: 1, visible: true },
+      { name: 'Elena — Forest Ranger', descriptionEn: 'A weapon that supports allies from range through various methods or disrupts enemies with status effects.', descriptionTh: 'เป็นอาวุธที่สามารถสนับสนุนพันธมิตรจากระยะไกลด้วยวิธีการต่างๆ หรือก่อกวนศัตรูด้วยสถานะผิดปกติต่างๆ', sortOrder: 2, visible: true },
+      { name: 'Kaelen — Shadow Mage', descriptionEn: 'A weapon specialized in magic attacks, dealing devastating burst damage or applying continuous damage debuffs.', descriptionTh: 'เป็นอาวุธที่เชียวชาญในการโจมตีเวทมนตร์ สามารถสร้างความเสียหายอย่างรุนแรงแก่ศัตรูในคราวเดียวหรือมอบดีบัฟที่สร้างความเสียหายอย่างต่อเนื่อง', sortOrder: 3, visible: true },
+      { name: 'Lyra — Holy Priestess', descriptionEn: 'A weapon focused on supporting allies through ranged healing and buffs, while also disrupting enemies with various status effects.', descriptionTh: 'เป็นอาวุธที่เน้นการสนับสนุนพันธมิตรผ่านการฟื้นฟูและบัฟจากระยะไกล และยังสามารถสนับสนุนการต่อสู้ของพันธมิตรผ่านสถานะผิดปกติต่างๆ ได้อีกด้วย', sortOrder: 4, visible: true },
     ]
     let cCount = 0
     for (const c of charsData) {

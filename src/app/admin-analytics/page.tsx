@@ -42,6 +42,7 @@ interface AnalyticsResponse {
     topEvents: { name: string; count: number }[];
   };
   dataSource: string;
+  generatedAt: string;
   _meta: {
     docsProcessed: { pageViews: number; events: number; registrations: number };
     maxAggregationDocs: number;
@@ -220,9 +221,20 @@ export default function AnalyticsDashboardPage() {
   const d = state.data!;
   const ov = d.overview;
   const totalDevices = d.devices.reduce((s, x) => s + x.count, 0);
+  const isDataCapped = Object.values(d._meta.docsProcessed).some(
+    (count) => count >= d._meta.maxAggregationDocs
+  );
 
   return (
     <div className="analytics-page">
+      {/* Data cap warning */}
+      {isDataCapped && (
+        <div className="analytics-data-cap-warning">
+          Data is sampled — some collections exceeded the {formatNumber(d._meta.maxAggregationDocs)} document aggregation limit.
+          Counts are exact, but breakdowns (charts, tables) may be partial. Try a shorter period for full accuracy.
+        </div>
+      )}
+
       {/* Header */}
       <header className="analytics-header">
         <div className="analytics-header-left">
@@ -344,8 +356,8 @@ export default function AnalyticsDashboardPage() {
           <div className="analytics-chart-card">
             <h3 className="analytics-chart-title">📈 Page Views by Day</h3>
             <div className="analytics-daily-chart">
-              {d.pageViews.byDate.slice(-14).map((day) => {
-                const maxPV = Math.max(...d.pageViews.byDate.slice(-14).map(x => x.count));
+              {d.pageViews.byDate.map((day) => {
+                const maxPV = Math.max(...d.pageViews.byDate.map(x => x.count));
                 return (
                   <div className="analytics-daily-bar-col" key={day.date} title={`${day.date}: ${day.count} views`}>
                     <span className="analytics-daily-bar-value">{day.count}</span>
@@ -364,8 +376,8 @@ export default function AnalyticsDashboardPage() {
           <div className="analytics-chart-card">
             <h3 className="analytics-chart-title">📝 Registrations by Day</h3>
             <div className="analytics-daily-chart">
-              {d.registrations.byDate.slice(-14).map((day) => {
-                const maxReg = Math.max(...d.registrations.byDate.slice(-14).map(x => x.count));
+              {d.registrations.byDate.map((day) => {
+                const maxReg = Math.max(...d.registrations.byDate.map(x => x.count));
                 return (
                   <div className="analytics-daily-bar-col" key={day.date} title={`${day.date}: ${day.count} registrations`}>
                     <span className="analytics-daily-bar-value">{day.count}</span>
@@ -565,7 +577,7 @@ export default function AnalyticsDashboardPage() {
 
       {/* Footer */}
       <footer className="analytics-footer">
-        <p>Data from internal tracking • Bot-filtered ({d._meta.botsFiltered} filtered) • Updated in real-time</p>
+        <p>Data from internal tracking • Bot-filtered ({d._meta.botsFiltered} filtered) • Last updated: {new Date(d.generatedAt).toLocaleString()}</p>
         <p className="analytics-footer-note">
           Period: Last {d.period.days} days from {new Date(d.period.since).toLocaleDateString()} • Docs processed: {d._meta.docsProcessed.pageViews} PV / {d._meta.docsProcessed.events} Events / {d._meta.docsProcessed.registrations} Registrations
         </p>
