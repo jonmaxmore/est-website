@@ -6,6 +6,7 @@ import { registrationSchema } from '@/lib/validation'
 
 export const dynamic = 'force-dynamic'
 
+// eslint-disable-next-line max-lines-per-function -- registration with MLM referral logic
 export async function POST(request: NextRequest) {
   try {
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
@@ -30,8 +31,13 @@ export async function POST(request: NextRequest) {
     const { email, platform, region, referredByCode } = parsed.data
     const payload = await getPayloadClient()
 
-    // Validate referral code exists BEFORE creating registration
-    let validReferrer: { id: string | number; referralCount: number } | null = null
+    // ── Fetch referral point config ──
+    const eventConfig = await payload.findGlobal({ slug: 'event-config' })
+    const pointsL1 = (eventConfig.pointsLevel1 as number) ?? 1
+    const pointsL2 = (eventConfig.pointsLevel2 as number) ?? 0.5
+
+    // ── Validate L1 referrer (direct parent) ──
+    let l1Parent: { id: string | number; referralLevel1Count: number; referralPoints: number; referredBy?: string } | null = null
     if (referredByCode) {
       const referrerRes = await payload.find({
         collection: 'registrations',
@@ -40,18 +46,20 @@ export async function POST(request: NextRequest) {
       })
       if (referrerRes.docs.length > 0) {
         const doc = referrerRes.docs[0]
-        validReferrer = {
+        l1Parent = {
           id: doc.id,
-          referralCount: (doc.referralCount as number) || 0,
+          referralLevel1Count: (doc.referralLevel1Count as number) || 0,
+          referralPoints: (doc.referralPoints as number) || 0,
+          referredBy: (doc.referredBy as string) || undefined,
         }
       }
       // If referral code is invalid, we still allow registration but ignore the code
     }
 
-    // Generate referral code
+    // ── Generate referral code ──
     const referralCode = nanoid(8)
 
-    // Create registration — use try/catch for unique constraint (race condition safety net)
+    // ── Create registration ──
     let registration
     try {
       registration = await payload.create({
@@ -61,8 +69,11 @@ export async function POST(request: NextRequest) {
           platform,
           region,
           referralCode,
-          referredBy: validReferrer ? referredByCode : undefined,
-          referralCount: 0,
+          referredBy: l1Parent ? referredByCode : undefined,
+          referralLevel1Count: 0,
+          referralLevel2Count: 0,
+          referralPoints: 0,
+          referralCount: 0, // legacy field
           ipAddress: ip,
           userAgent: request.headers.get('user-agent') || '',
         },
@@ -79,34 +90,47 @@ export async function POST(request: NextRequest) {
       throw err // Re-throw unexpected errors
     }
 
-    // Increment referrer's count (only if referral code was valid)
-    if (validReferrer) {
+    // ── 2-Level MLM Referral Updates ──
+    if (l1Parent) {
+      // Update L1 parent: +1 direct referral
+      const newL1Count = l1Parent.referralLevel1Count + 1
+      const l1Doc = await payload.findByID({ collection: 'registrations', id: l1Parent.id })
+      const l1Level2Count = (l1Doc.referralLevel2Count as number) || 0
+      const recalcL1Points = (newL1Count * pointsL1) + (l1Level2Count * pointsL2)
+
       await payload.update({
         collection: 'registrations',
-        id: validReferrer.id,
+        id: l1Parent.id,
         data: {
-          referralCount: validReferrer.referralCount + 1,
+          referralLevel1Count: newL1Count,
+          referralPoints: recalcL1Points,
+          referralCount: newL1Count, // legacy compat
         },
       })
-    }
 
-    // Check & unlock milestones
-    const totalCount = await payload.count({ collection: 'registrations' })
-    const milestones = await payload.find({
-      collection: 'milestones',
-      where: { unlocked: { equals: false } },
-    })
+      // ── Find L2 grandparent (L1's referredBy) ──
+      if (l1Parent.referredBy) {
+        const grandparentRes = await payload.find({
+          collection: 'registrations',
+          where: { referralCode: { equals: l1Parent.referredBy } },
+          limit: 1,
+        })
+        if (grandparentRes.docs.length > 0) {
+          const gpDoc = grandparentRes.docs[0]
+          const gpL1Count = (gpDoc.referralLevel1Count as number) || 0
+          const gpL2Count = ((gpDoc.referralLevel2Count as number) || 0) + 1
+          const recalcGpPoints = (gpL1Count * pointsL1) + (gpL2Count * pointsL2)
 
-    const milestoneUpdates = milestones.docs
-      .filter((m) => totalCount.totalDocs >= ((m.threshold as number) || 0))
-      .map((m) => payload.update({
-        collection: 'milestones',
-        id: m.id,
-        data: { unlocked: true },
-      }))
-
-    if (milestoneUpdates.length > 0) {
-      await Promise.all(milestoneUpdates)
+          await payload.update({
+            collection: 'registrations',
+            id: gpDoc.id,
+            data: {
+              referralLevel2Count: gpL2Count,
+              referralPoints: recalcGpPoints,
+            },
+          })
+        }
+      }
     }
 
     return NextResponse.json({

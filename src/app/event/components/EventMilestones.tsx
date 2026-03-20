@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useLang } from '@/lib/lang-context';
 import type { EventSettings, Milestone } from '@/types/event';
@@ -11,6 +12,7 @@ interface EventMilestonesProps {
   registrationCount: number;
 }
 
+// eslint-disable-next-line max-lines-per-function -- milestone grid with progress bar
 export default function EventMilestones({
   eventSettings,
   milestones,
@@ -63,7 +65,7 @@ export default function EventMilestones({
               {milestones.map((m) => (
                 <div
                   key={m.threshold}
-                  className={`milestone-node-dark ${registrationCount >= m.threshold ? 'unlocked' : ''}`}
+                  className={`milestone-node-dark ${m.unlocked ? 'unlocked' : ''}`}
                   style={{ left: `${(m.threshold / maxThreshold) * 100}%` }}
                 />
               ))}
@@ -74,8 +76,8 @@ export default function EventMilestones({
           <div className="milestone-grid">
             {milestones.map((m, i) => (
               <motion.div
-                key={m.threshold}
-                className={`milestone-card ${registrationCount >= m.threshold ? 'unlocked' : ''}`}
+                key={m.id}
+                className={`milestone-card ${m.unlocked ? 'unlocked' : ''}`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -83,16 +85,33 @@ export default function EventMilestones({
                 whileHover={{ y: -4, boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
               >
                 <div className="milestone-card-icon">
-                  {m.rewardImage ? (
-                    <img src={m.rewardImage} alt="reward" width={64} height={64} className="milestone-reward-img" />
+                  {m.unlocked ? (
+                    m.rewardImage ? (
+                      <Image src={m.rewardImage.url} alt={t(m.rewardTh, m.rewardEn)} width={64} height={64} className="milestone-reward-img" />
+                    ) : (
+                      m.icon || '🎁'
+                    )
                   ) : (
-                    registrationCount >= m.threshold ? '🎁' : '🔒'
+                    m.lockedImage ? (
+                      <Image src={m.lockedImage.url} alt="Locked" width={64} height={64} className="milestone-reward-img milestone-locked-img" />
+                    ) : (
+                      '🔒'
+                    )
                   )}
                 </div>
-                <div className="milestone-card-threshold">{m.label}</div>
-                {m.rewards.map((r, j) => (
-                  <div key={j} className="milestone-card-reward">{r}</div>
-                ))}
+                <div className="milestone-card-threshold">{m.threshold.toLocaleString()}</div>
+                <div className="milestone-card-reward">
+                  {t(m.rewardTh, m.rewardEn)}
+                </div>
+                {(m.rewardDescriptionEn || m.rewardDescriptionTh) && (
+                  <div className="milestone-card-description">
+                    {t(m.rewardDescriptionTh || '', m.rewardDescriptionEn || '')
+                      .split('\n')
+                      .map((line, j) => (
+                        <div key={j} className="milestone-card-desc-line">{line}</div>
+                      ))}
+                  </div>
+                )}
               </motion.div>
             ))}
           </div>

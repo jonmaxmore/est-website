@@ -14,22 +14,19 @@ import Footer from '@/components/layout/Footer';
 import EventHero from './components/EventHero';
 import EventForm from './components/EventForm';
 import EventMilestones from './components/EventMilestones';
+import ReferralLeaderboard from './components/ReferralLeaderboard';
 import SuccessModal from './components/SuccessModal';
 
 /* Hooks */
 import { useEventForm } from '@/hooks/useEventForm';
 
 /* Types & Constants */
-import type { Milestone, StoreButton, EventSettings } from '@/types/event';
-import {
-  DEFAULT_MILESTONES,
-  DEFAULT_COUNTDOWN_TARGET,
-  REAL_STORE_URLS,
-} from '@/types/event';
+import type { Milestone, StoreButton, EventSettings, StoreUrls } from '@/types/event';
+import { DEFAULT_COUNTDOWN_TARGET } from '@/types/event';
 
 /* ═══════════════════════════════════════════════
    EVENT PAGE — Orchestrator
-   Uses shared Navigation + Footer for consistent UX
+   2 Independent Systems: Milestone + Referral
    ═══════════════════════════════════════════════ */
 // eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function EventPage() {
@@ -37,11 +34,16 @@ export default function EventPage() {
 
   /* ─── CMS Data State ─── */
   const [registrationCount, setRegistrationCount] = useState(0);
-  const [milestones, setMilestones] = useState<Milestone[]>(DEFAULT_MILESTONES);
+  const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [storeButtons, setStoreButtons] = useState<StoreButton[]>([]);
   const [socialLinks, setSocialLinks] = useState<Record<string, string | null>>({});
   const [eventSettings, setEventSettings] = useState<EventSettings>({});
   const [countdownTarget, setCountdownTarget] = useState(DEFAULT_COUNTDOWN_TARGET);
+  const [storeUrls, setStoreUrls] = useState<StoreUrls>({
+    ios: 'https://apps.apple.com/us/app/eternal-tower-saga/id6756611023',
+    android: 'https://play.google.com/store/apps/details?id=com.ultimategame.eternaltowersaga',
+    pc: '#',
+  });
   const [footer, setFooter] = useState({
     copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
     termsUrl: '/terms',
@@ -56,12 +58,10 @@ export default function EventPage() {
       .then(data => {
         setRegistrationCount(data.totalRegistrations || 0);
         if (data.milestones?.length) {
-          setMilestones(data.milestones.map((m: { threshold: number; rewardEn: string; rewardTh: string; rewardImage?: { url: string } | null }) => ({
-            threshold: m.threshold,
-            label: m.threshold.toLocaleString(),
-            rewards: [m.rewardTh || m.rewardEn],
-            rewardImage: m.rewardImage?.url || null,
-          })));
+          setMilestones(data.milestones);
+        }
+        if (data.storeUrls) {
+          setStoreUrls(data.storeUrls);
         }
       })
       .catch(() => {});
@@ -77,6 +77,10 @@ export default function EventPage() {
           if (data.event.countdownTarget) {
             setCountdownTarget(new Date(data.event.countdownTarget).getTime());
           }
+          // Store URLs from settings too (fallback)
+          if (data.event.storeUrls) {
+            setStoreUrls(prev => ({ ...prev, ...data.event.storeUrls }));
+          }
         }
       })
       .catch(() => {});
@@ -84,12 +88,12 @@ export default function EventPage() {
 
   /* ─── Display Store Buttons (with fallback + dedup by platform) ─── */
   const rawStoreButtons = (storeButtons.length ? storeButtons : [
-    { platform: 'ios', label: 'App Store', sublabel: 'Pre-order on the', url: REAL_STORE_URLS.ios },
-    { platform: 'android', label: 'Google Play', sublabel: 'PRE-REGISTER ON', url: REAL_STORE_URLS.android },
-    { platform: 'pc', label: 'Windows', sublabel: 'Coming soon', url: '#' },
+    { platform: 'ios', label: 'App Store', sublabel: 'Pre-order on the', url: storeUrls.ios },
+    { platform: 'android', label: 'Google Play', sublabel: 'PRE-REGISTER ON', url: storeUrls.android },
+    { platform: 'pc', label: 'Windows', sublabel: 'Coming soon', url: storeUrls.pc },
   ]).map(btn => ({
     ...btn,
-    url: btn.url === '#' ? (REAL_STORE_URLS[btn.platform] || '#') : btn.url,
+    url: btn.url === '#' ? (storeUrls[btn.platform as keyof StoreUrls] || '#') : btn.url,
   }));
   // Deduplicate: keep first entry per platform
   const seen = new Set<string>();
@@ -159,12 +163,24 @@ export default function EventPage() {
           <span className="ornament-line" />
         </div>
 
-        {/* ═══ SCREEN 3: MILESTONES ═══ */}
+        {/* ═══ SCREEN 3: MILESTONES (registration count system) ═══ */}
         <EventMilestones
           eventSettings={eventSettings}
           milestones={milestones}
           registrationCount={registrationCount}
         />
+
+        {/* ═══ ORNAMENT DIVIDER ═══ */}
+        <div className="ornament-divider">
+          <span className="ornament-line" />
+          <span className="ornament-diamond" />
+          <span className="ornament-center" aria-hidden="true">✦</span>
+          <span className="ornament-diamond" />
+          <span className="ornament-line" />
+        </div>
+
+        {/* ═══ SCREEN 4: REFERRAL LEADERBOARD (separate system) ═══ */}
+        <ReferralLeaderboard />
       </main>
 
       <Footer socialLinks={socialLinks} footer={footer} />
@@ -173,6 +189,7 @@ export default function EventPage() {
       <SuccessModal
         show={form.showSuccessModal}
         onClose={() => form.setShowSuccessModal(false)}
+        storeUrls={storeUrls}
       />
     </div>
   );

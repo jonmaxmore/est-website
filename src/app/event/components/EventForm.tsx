@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLang } from '@/lib/lang-context';
 import { STORE_ICONS } from '@/components/ui/StoreIcons';
-import type { EventSettings, StoreButton } from '@/types/event';
+import type { EventSettings, StoreButton, ReferralStats } from '@/types/event';
 import { COUNTRIES } from '@/types/event';
 
 interface EventFormProps {
@@ -26,6 +26,7 @@ interface EventFormProps {
   copyReferralLink: () => void;
 }
 
+// eslint-disable-next-line max-lines-per-function -- form component with registration + referral stats
 export default function EventForm({
   eventSettings,
   displayStoreButtons,
@@ -44,6 +45,19 @@ export default function EventForm({
   copyReferralLink,
 }: EventFormProps) {
   const { t } = useLang();
+  const [referralStats, setReferralStats] = useState<ReferralStats | null>(null);
+
+  // Fetch referral stats after registration
+  useEffect(() => {
+    if (registered && referralCode) {
+      fetch(`/api/referral-stats?code=${referralCode}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.referralCode) setReferralStats(data);
+        })
+        .catch(() => {});
+    }
+  }, [registered, referralCode]);
 
   return (
     <section id="register-form" className="event-form-section">
@@ -141,7 +155,7 @@ export default function EventForm({
             </form>
           </>
         ) : (
-          /* After registration — show success inline */
+          /* After registration — show success inline + referral stats */
           <div className="event-success-inline">
             <p className="event-success-title">
               ✅ {t(eventSettings.successTitleTh || 'ลงทะเบียนสำเร็จ!', eventSettings.successTitleEn || 'Registration Successful!')}
@@ -162,6 +176,26 @@ export default function EventForm({
                 {copied ? t('✓ คัดลอก!', '✓ Copied!') : t('คัดลอก', 'Copy')}
               </button>
             </div>
+
+            {/* Referral Stats */}
+            {referralStats && (
+              <div className="event-referral-stats">
+                <div className="referral-stats-grid">
+                  <div className="referral-stat-item">
+                    <span className="referral-stat-value">{referralStats.level1Count}</span>
+                    <span className="referral-stat-label">{t('เชิญตรง (L1)', 'Direct (L1)')}</span>
+                  </div>
+                  <div className="referral-stat-item">
+                    <span className="referral-stat-value">{referralStats.level2Count}</span>
+                    <span className="referral-stat-label">{t('ทางอ้อม (L2)', 'Indirect (L2)')}</span>
+                  </div>
+                  <div className="referral-stat-item">
+                    <span className="referral-stat-value">{referralStats.totalPoints}</span>
+                    <span className="referral-stat-label">{t('คะแนนรวม', 'Total Points')}</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </motion.div>

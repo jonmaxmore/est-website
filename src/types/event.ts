@@ -1,12 +1,51 @@
 /* ═══════════════════════════════════════════════
    Event Page Types — Used by event page components
+   2 Independent Systems: Milestone (registration count) + Referral (MLM)
    ═══════════════════════════════════════════════ */
 
+// ── Milestone System (driven by pre-registration count) ──
+
 export interface Milestone {
+  id: string | number;
   threshold: number;
-  label: string;
-  rewards: string[];
-  rewardImage?: string | null;
+  rewardEn: string;
+  rewardTh: string;
+  rewardDescriptionEn?: string | null;
+  rewardDescriptionTh?: string | null;
+  icon?: string;
+  rewardImage?: { url: string } | null;
+  lockedImage?: { url: string } | null;
+  unlocked: boolean;
+  sortOrder?: number;
+}
+
+// ── Referral System (MLM 2-level, separate leaderboard) ──
+
+export interface ReferralStats {
+  referralCode: string;
+  level1Count: number;
+  level2Count: number;
+  totalPoints: number;
+  level1Referrals: Array<{
+    email: string; // masked
+    createdAt: string;
+  }>;
+}
+
+export interface ReferralLeaderboardEntry {
+  rank: number;
+  email: string; // masked
+  level1Count: number;
+  level2Count: number;
+  totalPoints: number;
+}
+
+// ── Store & CMS ──
+
+export interface StoreUrls {
+  ios: string;
+  android: string;
+  pc: string;
 }
 
 export interface StoreButton {
@@ -45,6 +84,11 @@ export interface EventSettings {
   submitButtonTh?: string;
   successTitleEn?: string;
   successTitleTh?: string;
+  // CMS store URLs
+  storeUrls?: StoreUrls;
+  // Referral point settings
+  pointsLevel1?: number;
+  pointsLevel2?: number;
 }
 
 export interface CountryOption {
@@ -61,19 +105,4 @@ export const COUNTRIES: CountryOption[] = [
   { value: 'sg', labelTh: 'สิงคโปร์', labelEn: 'Singapore' },
 ];
 
-export const DEFAULT_MILESTONES: Milestone[] = [
-  { threshold: 10000, label: '10,000', rewards: ['Gold ×200,000', 'Fatigue Scroll ×10'] },
-  { threshold: 25000, label: '25,000', rewards: ['Weapon Stone ×100', 'Armor Stone ×100'] },
-  { threshold: 50000, label: '50,000', rewards: ['Mana ×12,000', 'Accessory Stone ×100'] },
-  { threshold: 100000, label: '100,000', rewards: ['Clothing Ticket ×10'] },
-  { threshold: 150000, label: '150,000', rewards: ['Summon Ticket ×10'] },
-  { threshold: 200000, label: '200,000', rewards: ['Fortune House ×1', 'Reset Potions ×4'] },
-];
-
 export const DEFAULT_COUNTDOWN_TARGET = new Date('2026-04-02T23:59:59+07:00').getTime();
-
-export const REAL_STORE_URLS: Record<string, string> = {
-  ios: 'https://apps.apple.com/us/app/eternal-tower-saga/id6756611023',
-  android: 'https://play.google.com/store/apps/details?id=com.ultimategame.eternaltowersaga',
-  pc: '#',
-};

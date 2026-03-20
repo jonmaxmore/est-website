@@ -5,7 +5,7 @@ export const registrationSchema = z.object({
   platform: z.enum(['ios', 'android', 'pc'], {
     message: 'Platform must be ios, android, or pc',
   }),
-  region: z.enum(['th', 'sea', 'global'], {
+  region: z.enum(['th', 'my', 'id', 'ph', 'sg'], {
     message: 'Invalid region',
   }),
   referredByCode: z.string().optional(),

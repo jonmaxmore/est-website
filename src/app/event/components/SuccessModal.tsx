@@ -4,14 +4,15 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLang } from '@/lib/lang-context';
 import { STORE_ICONS } from '@/components/ui/StoreIcons';
-import { REAL_STORE_URLS } from '@/types/event';
+import type { StoreUrls } from '@/types/event';
 
 interface SuccessModalProps {
   show: boolean;
   onClose: () => void;
+  storeUrls: StoreUrls;
 }
 
-export default function SuccessModal({ show, onClose }: SuccessModalProps) {
+export default function SuccessModal({ show, onClose, storeUrls }: SuccessModalProps) {
   const { t } = useLang();
 
   return (
@@ -52,10 +53,10 @@ export default function SuccessModal({ show, onClose }: SuccessModalProps) {
                 )}
               </p>
 
-              {/* App Store / Google Play badges */}
+              {/* App Store / Google Play badges — using CMS URLs */}
               <div className="event-store-badges">
                 <a
-                  href={REAL_STORE_URLS.ios}
+                  href={storeUrls.ios}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="event-store-badge-link"
@@ -66,7 +67,7 @@ export default function SuccessModal({ show, onClose }: SuccessModalProps) {
                   </div>
                 </a>
                 <a
-                  href={REAL_STORE_URLS.android}
+                  href={storeUrls.android}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="event-store-badge-link"

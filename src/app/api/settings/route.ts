@@ -82,6 +82,15 @@ export async function GET() {
           textTh: s.textTh,
           image: typeof s.image === 'object' && s.image ? { url: (s.image as Record<string, string>).url } : null,
         })) || [],
+        // Referral point settings
+        pointsLevel1: (eventConfig.pointsLevel1 as number) ?? 1,
+        pointsLevel2: (eventConfig.pointsLevel2 as number) ?? 0.5,
+        // Store URLs (CMS-managed)
+        storeUrls: {
+          ios: (eventConfig.iosStoreUrl as string) || 'https://apps.apple.com/us/app/eternal-tower-saga/id6756611023',
+          android: (eventConfig.androidStoreUrl as string) || 'https://play.google.com/store/apps/details?id=com.ultimategame.eternaltowersaga',
+          pc: (eventConfig.pcStoreUrl as string) || '#',
+        },
       },
       hero: {
         taglineEn: homepage.taglineEn,

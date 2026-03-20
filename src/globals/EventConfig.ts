@@ -222,6 +222,62 @@ export const EventConfig: GlobalConfig = {
       defaultValue: '© 2026 Eternal Tower Saga. All rights reserved.',
       label: 'Footer Text',
     },
+    // ── Referral Point Settings ──
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'pointsLevel1',
+          type: 'number',
+          defaultValue: 1,
+          label: 'Points per Level 1 Referral',
+          admin: {
+            width: '50%',
+            description: 'Points awarded for each direct invite (Level 1)',
+          },
+        },
+        {
+          name: 'pointsLevel2',
+          type: 'number',
+          defaultValue: 0.5,
+          label: 'Points per Level 2 Referral',
+          admin: {
+            width: '50%',
+            description: 'Points awarded for each indirect invite (Level 2 — invitee of your invitee)',
+          },
+        },
+      ],
+    },
+    // ── Store URLs (CMS-managed) ──
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'iosStoreUrl',
+          type: 'text',
+          defaultValue: 'https://apps.apple.com/us/app/eternal-tower-saga/id6756611023',
+          label: 'iOS App Store URL',
+          admin: { width: '33%' },
+        },
+        {
+          name: 'androidStoreUrl',
+          type: 'text',
+          defaultValue: 'https://play.google.com/store/apps/details?id=com.ultimategame.eternaltowersaga',
+          label: 'Android Play Store URL',
+          admin: { width: '33%' },
+        },
+        {
+          name: 'pcStoreUrl',
+          type: 'text',
+          defaultValue: '#',
+          label: 'PC Store URL',
+          admin: {
+            width: '33%',
+            description: 'Set "#" if PC not yet available',
+          },
+        },
+      ],
+    },
     {
       name: 'contentSections',
       type: 'array',

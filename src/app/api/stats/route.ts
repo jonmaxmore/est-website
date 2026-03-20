@@ -43,10 +43,21 @@ export async function GET(request: NextRequest) {
       threshold: m.threshold,
       rewardEn: m.rewardEn,
       rewardTh: m.rewardTh,
+      rewardDescriptionEn: m.rewardDescriptionEn || null,
+      rewardDescriptionTh: m.rewardDescriptionTh || null,
       icon: m.icon,
       rewardImage: typeof m.rewardImage === 'object' && m.rewardImage ? { url: m.rewardImage.url } : null,
-      unlocked: m.unlocked || (displayCount >= (m.threshold || 0)),
+      lockedImage: typeof m.lockedImage === 'object' && m.lockedImage ? { url: m.lockedImage.url } : null,
+      unlocked: displayCount >= ((m.threshold as number) || 0),
+      sortOrder: m.sortOrder,
     }))
+
+    // Store URLs from CMS
+    const storeUrls = {
+      ios: (eventConfig.iosStoreUrl as string) || 'https://apps.apple.com/us/app/eternal-tower-saga/id6756611023',
+      android: (eventConfig.androidStoreUrl as string) || 'https://play.google.com/store/apps/details?id=com.ultimategame.eternaltowersaga',
+      pc: (eventConfig.pcStoreUrl as string) || '#',
+    }
 
     return NextResponse.json({
       totalRegistrations: displayCount,
@@ -56,6 +67,7 @@ export async function GET(request: NextRequest) {
       offset,
       override: override ?? null,
       milestones,
+      storeUrls,
     }, {
       headers: { 'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=30' },
     })
@@ -64,6 +76,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       totalRegistrations: 0,
       milestones: [],
+      storeUrls: { ios: '#', android: '#', pc: '#' },
     })
   }
 }
