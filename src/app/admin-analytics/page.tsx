@@ -6,60 +6,76 @@ import '@/app/styles/pages/admin-analytics.css';
 
 /* ═══════════════════════════════════════════════
    EST Analytics Dashboard
-   Full-page analytics view with KPI cards,
-   charts, tables, and real-time data
+   Full-page analytics view matching /api/analytics
    ═══════════════════════════════════════════════ */
 
-interface AnalyticsData {
-  totalPageViews: number;
-  uniqueVisitors: number;
-  totalRegistrations: number;
-  realRegistrationCount: number;
-  totalEvents: number;
-  sessions: number;
-  bounceRate: number;
-  avgPagesPerSession: number;
-  topPages: { path: string; count: number }[];
-  topEvents: { name: string; count: number }[];
-  deviceBreakdown: { desktop: number; mobile: number; tablet: number };
-  trends: {
-    pageViews: number;
-    visitors: number;
-    registrations: number;
-    events: number;
+// Match the EXACT /api/analytics response shape
+interface AnalyticsResponse {
+  period: { days: number; since: string };
+  overview: {
+    totalRegistrations: number;
+    recentRegistrations: number;
+    totalPageViews: number;
+    uniqueVisitors: number;
+    totalSessions: number;
+    bounceRate: number;
+    avgPagesPerSession: number;
+    totalEvents: number;
   };
-  botsFiltered: number;
-  dateRange: { from: string; to: string };
+  trends: {
+    registrations: { change: number; direction: 'up' | 'down' | 'flat' };
+    pageViews: { change: number; direction: 'up' | 'down' | 'flat' };
+    events: { change: number; direction: 'up' | 'down' | 'flat' };
+  };
+  devices: { device: string; count: number }[];
+  registrations: {
+    byRegion: { region: string; count: number }[];
+    byPlatform: { platform: string; count: number }[];
+    byDate: { date: string; count: number }[];
+  };
+  pageViews: {
+    topPages: { path: string; count: number }[];
+    byDate: { date: string; count: number }[];
+  };
+  events: {
+    topEvents: { name: string; count: number }[];
+  };
+  dataSource: string;
+  _meta: {
+    docsProcessed: { pageViews: number; events: number; registrations: number };
+    maxAggregationDocs: number;
+    botsFiltered: number;
+  };
 }
 
 type State = {
-  data: AnalyticsData | null;
+  data: AnalyticsResponse | null;
   loading: boolean;
   error: string | null;
-  period: string;
+  days: number;
 };
 
 type Action =
   | { type: 'FETCH_START' }
-  | { type: 'FETCH_OK'; payload: AnalyticsData }
+  | { type: 'FETCH_OK'; payload: AnalyticsResponse }
   | { type: 'FETCH_ERR'; payload: string }
-  | { type: 'SET_PERIOD'; payload: string };
+  | { type: 'SET_DAYS'; payload: number };
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'FETCH_START': return { ...state, loading: true, error: null };
     case 'FETCH_OK': return { ...state, loading: false, data: action.payload };
     case 'FETCH_ERR': return { ...state, loading: false, error: action.payload };
-    case 'SET_PERIOD': return { ...state, period: action.payload };
+    case 'SET_DAYS': return { ...state, days: action.payload };
   }
 }
 
 const PERIODS = [
-  { key: '1d', label: 'Today' },
-  { key: '7d', label: '7 Days' },
-  { key: '30d', label: '30 Days' },
-  { key: '90d', label: '90 Days' },
-  { key: 'all', label: 'All Time' },
+  { days: 1, label: 'Today' },
+  { days: 7, label: '7 Days' },
+  { days: 30, label: '30 Days' },
+  { days: 90, label: '90 Days' },
+  { days: 365, label: 'All Time' },
 ];
 
 function formatNumber(n: number): string {
@@ -68,15 +84,15 @@ function formatNumber(n: number): string {
   return n.toLocaleString();
 }
 
-function trendArrow(pct: number): string {
-  if (pct > 0) return `↑ ${Math.abs(pct).toFixed(1)}%`;
-  if (pct < 0) return `↓ ${Math.abs(pct).toFixed(1)}%`;
+function trendIndicator(trend: { change: number; direction: string }): string {
+  if (trend.direction === 'up') return `↑ ${trend.change}%`;
+  if (trend.direction === 'down') return `↓ ${trend.change}%`;
   return '—';
 }
 
-function trendClass(pct: number): string {
-  if (pct > 0) return 'analytics-trend-up';
-  if (pct < 0) return 'analytics-trend-down';
+function trendClass(direction: string): string {
+  if (direction === 'up') return 'analytics-trend-up';
+  if (direction === 'down') return 'analytics-trend-down';
   return 'analytics-trend-neutral';
 }
 
@@ -86,13 +102,13 @@ export default function AnalyticsDashboardPage() {
     data: null,
     loading: true,
     error: null,
-    period: '30d',
+    days: 30,
   });
 
-  const fetchData = useCallback(async (period: string) => {
+  const fetchData = useCallback(async (days: number) => {
     dispatch({ type: 'FETCH_START' });
     try {
-      const res = await fetch(`/api/analytics?period=${period}`, {
+      const res = await fetch(`/api/analytics?days=${days}`, {
         credentials: 'include',
       });
       if (res.status === 401) {
@@ -108,10 +124,10 @@ export default function AnalyticsDashboardPage() {
   }, []);
 
   useEffect(() => {
-    fetchData(state.period);
-  }, [state.period, fetchData]);
+    fetchData(state.days);
+  }, [state.days, fetchData]);
 
-  // ─── Unauthorized → redirect to login ───
+  // Unauthorized → redirect to login
   if (state.error === 'unauthorized') {
     return (
       <div className="analytics-auth-wall">
@@ -126,7 +142,7 @@ export default function AnalyticsDashboardPage() {
     );
   }
 
-  // ─── Loading ───
+  // Loading
   if (state.loading && !state.data) {
     return (
       <div className="analytics-loading">
@@ -136,13 +152,13 @@ export default function AnalyticsDashboardPage() {
     );
   }
 
-  // ─── Error ───
+  // Error
   if (state.error) {
     return (
       <div className="analytics-error">
         <h2>⚠️ Error loading analytics</h2>
         <p>{state.error}</p>
-        <button onClick={() => fetchData(state.period)} className="analytics-retry-btn">
+        <button onClick={() => fetchData(state.days)} className="analytics-retry-btn">
           Retry
         </button>
       </div>
@@ -150,26 +166,27 @@ export default function AnalyticsDashboardPage() {
   }
 
   const d = state.data!;
-  const totalDevices = d.deviceBreakdown.desktop + d.deviceBreakdown.mobile + d.deviceBreakdown.tablet;
+  const ov = d.overview;
+  const totalDevices = d.devices.reduce((s, x) => s + x.count, 0);
 
   return (
     <div className="analytics-page">
-      {/* ─── Header ─── */}
+      {/* Header */}
       <header className="analytics-header">
         <div className="analytics-header-left">
           <Link href="/admin" className="analytics-back-link">← Back to CMS</Link>
           <h1 className="analytics-title">📊 Analytics Dashboard</h1>
           <p className="analytics-subtitle">
-            Real-time insights for Eternal Tower Saga
+            Real-time insights for Eternal Tower Saga • {d.dataSource === 'internal_db' ? 'Internal DB' : 'External'}
           </p>
         </div>
         <div className="analytics-header-right">
           <div className="analytics-period-selector">
             {PERIODS.map((p) => (
               <button
-                key={p.key}
-                className={`analytics-period-btn ${state.period === p.key ? 'active' : ''}`}
-                onClick={() => dispatch({ type: 'SET_PERIOD', payload: p.key })}
+                key={p.days}
+                className={`analytics-period-btn ${state.days === p.days ? 'active' : ''}`}
+                onClick={() => dispatch({ type: 'SET_DAYS', payload: p.days })}
               >
                 {p.label}
               </button>
@@ -177,7 +194,7 @@ export default function AnalyticsDashboardPage() {
           </div>
           <button
             className="analytics-refresh-btn"
-            onClick={() => fetchData(state.period)}
+            onClick={() => fetchData(state.days)}
             disabled={state.loading}
           >
             {state.loading ? '⟳' : '↻'} Refresh
@@ -185,15 +202,15 @@ export default function AnalyticsDashboardPage() {
         </div>
       </header>
 
-      {/* ─── KPI Cards ─── */}
+      {/* KPI Cards */}
       <section className="analytics-kpi-grid">
         <div className="analytics-kpi-card">
           <div className="analytics-kpi-icon">👁️</div>
           <div className="analytics-kpi-content">
-            <span className="analytics-kpi-value">{formatNumber(d.totalPageViews)}</span>
+            <span className="analytics-kpi-value">{formatNumber(ov.totalPageViews)}</span>
             <span className="analytics-kpi-label">Page Views</span>
-            <span className={`analytics-kpi-trend ${trendClass(d.trends.pageViews)}`}>
-              {trendArrow(d.trends.pageViews)}
+            <span className={`analytics-kpi-trend ${trendClass(d.trends.pageViews.direction)}`}>
+              {trendIndicator(d.trends.pageViews)}
             </span>
           </div>
         </div>
@@ -201,21 +218,18 @@ export default function AnalyticsDashboardPage() {
         <div className="analytics-kpi-card">
           <div className="analytics-kpi-icon">👤</div>
           <div className="analytics-kpi-content">
-            <span className="analytics-kpi-value">{formatNumber(d.uniqueVisitors)}</span>
+            <span className="analytics-kpi-value">{formatNumber(ov.uniqueVisitors)}</span>
             <span className="analytics-kpi-label">Unique Visitors</span>
-            <span className={`analytics-kpi-trend ${trendClass(d.trends.visitors)}`}>
-              {trendArrow(d.trends.visitors)}
-            </span>
           </div>
         </div>
 
         <div className="analytics-kpi-card highlight">
           <div className="analytics-kpi-icon">📝</div>
           <div className="analytics-kpi-content">
-            <span className="analytics-kpi-value">{formatNumber(d.realRegistrationCount)}</span>
-            <span className="analytics-kpi-label">Registrations</span>
-            <span className={`analytics-kpi-trend ${trendClass(d.trends.registrations)}`}>
-              {trendArrow(d.trends.registrations)}
+            <span className="analytics-kpi-value">{formatNumber(ov.recentRegistrations)}</span>
+            <span className="analytics-kpi-label">Registrations ({d.period.days}D)</span>
+            <span className={`analytics-kpi-trend ${trendClass(d.trends.registrations.direction)}`}>
+              {trendIndicator(d.trends.registrations)}
             </span>
           </div>
         </div>
@@ -223,7 +237,7 @@ export default function AnalyticsDashboardPage() {
         <div className="analytics-kpi-card">
           <div className="analytics-kpi-icon">🔄</div>
           <div className="analytics-kpi-content">
-            <span className="analytics-kpi-value">{formatNumber(d.sessions)}</span>
+            <span className="analytics-kpi-value">{formatNumber(ov.totalSessions)}</span>
             <span className="analytics-kpi-label">Sessions</span>
           </div>
         </div>
@@ -231,7 +245,7 @@ export default function AnalyticsDashboardPage() {
         <div className="analytics-kpi-card">
           <div className="analytics-kpi-icon">📈</div>
           <div className="analytics-kpi-content">
-            <span className="analytics-kpi-value">{d.bounceRate.toFixed(1)}%</span>
+            <span className="analytics-kpi-value">{ov.bounceRate}%</span>
             <span className="analytics-kpi-label">Bounce Rate</span>
           </div>
         </div>
@@ -239,7 +253,7 @@ export default function AnalyticsDashboardPage() {
         <div className="analytics-kpi-card">
           <div className="analytics-kpi-icon">📄</div>
           <div className="analytics-kpi-content">
-            <span className="analytics-kpi-value">{d.avgPagesPerSession.toFixed(1)}</span>
+            <span className="analytics-kpi-value">{ov.avgPagesPerSession.toFixed(1)}</span>
             <span className="analytics-kpi-label">Pages / Session</span>
           </div>
         </div>
@@ -247,10 +261,10 @@ export default function AnalyticsDashboardPage() {
         <div className="analytics-kpi-card">
           <div className="analytics-kpi-icon">🎯</div>
           <div className="analytics-kpi-content">
-            <span className="analytics-kpi-value">{formatNumber(d.totalEvents)}</span>
+            <span className="analytics-kpi-value">{formatNumber(ov.totalEvents)}</span>
             <span className="analytics-kpi-label">Events Tracked</span>
-            <span className={`analytics-kpi-trend ${trendClass(d.trends.events)}`}>
-              {trendArrow(d.trends.events)}
+            <span className={`analytics-kpi-trend ${trendClass(d.trends.events.direction)}`}>
+              {trendIndicator(d.trends.events)}
             </span>
           </div>
         </div>
@@ -258,61 +272,42 @@ export default function AnalyticsDashboardPage() {
         <div className="analytics-kpi-card">
           <div className="analytics-kpi-icon">🤖</div>
           <div className="analytics-kpi-content">
-            <span className="analytics-kpi-value">{formatNumber(d.botsFiltered)}</span>
+            <span className="analytics-kpi-value">{formatNumber(d._meta.botsFiltered)}</span>
             <span className="analytics-kpi-label">Bots Filtered</span>
           </div>
         </div>
       </section>
 
-      {/* ─── Charts Section ─── */}
+      {/* Charts */}
       <section className="analytics-charts-grid">
         {/* Device Breakdown */}
         <div className="analytics-chart-card">
           <h3 className="analytics-chart-title">📱 Device Breakdown</h3>
           <div className="analytics-device-bars">
-            <div className="analytics-device-row">
-              <span className="analytics-device-label">🖥️ Desktop</span>
-              <div className="analytics-device-bar-track">
-                <div
-                  className="analytics-device-bar-fill desktop"
-                  style={{ width: totalDevices > 0 ? `${(d.deviceBreakdown.desktop / totalDevices) * 100}%` : '0%' }}
-                />
+            {d.devices.map((dev) => (
+              <div className="analytics-device-row" key={dev.device}>
+                <span className="analytics-device-label">
+                  {dev.device === 'desktop' ? '🖥️' : dev.device === 'mobile' ? '📱' : '📟'} {dev.device}
+                </span>
+                <div className="analytics-device-bar-track">
+                  <div
+                    className={`analytics-device-bar-fill ${dev.device}`}
+                    style={{ width: totalDevices > 0 ? `${(dev.count / totalDevices) * 100}%` : '0%' }}
+                  />
+                </div>
+                <span className="analytics-device-count">
+                  {dev.count} ({totalDevices > 0 ? ((dev.count / totalDevices) * 100).toFixed(0) : 0}%)
+                </span>
               </div>
-              <span className="analytics-device-count">
-                {d.deviceBreakdown.desktop} ({totalDevices > 0 ? ((d.deviceBreakdown.desktop / totalDevices) * 100).toFixed(0) : 0}%)
-              </span>
-            </div>
-            <div className="analytics-device-row">
-              <span className="analytics-device-label">📱 Mobile</span>
-              <div className="analytics-device-bar-track">
-                <div
-                  className="analytics-device-bar-fill mobile"
-                  style={{ width: totalDevices > 0 ? `${(d.deviceBreakdown.mobile / totalDevices) * 100}%` : '0%' }}
-                />
-              </div>
-              <span className="analytics-device-count">
-                {d.deviceBreakdown.mobile} ({totalDevices > 0 ? ((d.deviceBreakdown.mobile / totalDevices) * 100).toFixed(0) : 0}%)
-              </span>
-            </div>
-            <div className="analytics-device-row">
-              <span className="analytics-device-label">📟 Tablet</span>
-              <div className="analytics-device-bar-track">
-                <div
-                  className="analytics-device-bar-fill tablet"
-                  style={{ width: totalDevices > 0 ? `${(d.deviceBreakdown.tablet / totalDevices) * 100}%` : '0%' }}
-                />
-              </div>
-              <span className="analytics-device-count">
-                {d.deviceBreakdown.tablet} ({totalDevices > 0 ? ((d.deviceBreakdown.tablet / totalDevices) * 100).toFixed(0) : 0}%)
-              </span>
-            </div>
+            ))}
+            {d.devices.length === 0 && <p className="analytics-empty">No device data yet</p>}
           </div>
         </div>
 
         {/* Top Pages */}
         <div className="analytics-chart-card">
           <h3 className="analytics-chart-title">📄 Top Pages</h3>
-          {d.topPages.length === 0 ? (
+          {d.pageViews.topPages.length === 0 ? (
             <p className="analytics-empty">No page data yet</p>
           ) : (
             <div className="analytics-table-wrap">
@@ -321,7 +316,7 @@ export default function AnalyticsDashboardPage() {
                   <tr><th>Path</th><th>Views</th><th>Share</th></tr>
                 </thead>
                 <tbody>
-                  {d.topPages.slice(0, 10).map((p, i) => (
+                  {d.pageViews.topPages.slice(0, 10).map((p, i) => (
                     <tr key={i}>
                       <td className="analytics-cell-path">{p.path}</td>
                       <td className="analytics-cell-num">{p.count}</td>
@@ -329,7 +324,7 @@ export default function AnalyticsDashboardPage() {
                         <div className="analytics-mini-bar-track">
                           <div
                             className="analytics-mini-bar-fill"
-                            style={{ width: `${d.topPages[0] ? (p.count / d.topPages[0].count) * 100 : 0}%` }}
+                            style={{ width: `${d.pageViews.topPages[0] ? (p.count / d.pageViews.topPages[0].count) * 100 : 0}%` }}
                           />
                         </div>
                       </td>
@@ -344,7 +339,7 @@ export default function AnalyticsDashboardPage() {
         {/* Top Events */}
         <div className="analytics-chart-card">
           <h3 className="analytics-chart-title">🎯 Top Events</h3>
-          {d.topEvents.length === 0 ? (
+          {d.events.topEvents.length === 0 ? (
             <p className="analytics-empty">No events tracked yet</p>
           ) : (
             <div className="analytics-table-wrap">
@@ -353,7 +348,7 @@ export default function AnalyticsDashboardPage() {
                   <tr><th>Event</th><th>Count</th><th>Share</th></tr>
                 </thead>
                 <tbody>
-                  {d.topEvents.slice(0, 10).map((e, i) => (
+                  {d.events.topEvents.slice(0, 10).map((e, i) => (
                     <tr key={i}>
                       <td className="analytics-cell-path">{e.name}</td>
                       <td className="analytics-cell-num">{e.count}</td>
@@ -361,7 +356,7 @@ export default function AnalyticsDashboardPage() {
                         <div className="analytics-mini-bar-track">
                           <div
                             className="analytics-mini-bar-fill event"
-                            style={{ width: `${d.topEvents[0] ? (e.count / d.topEvents[0].count) * 100 : 0}%` }}
+                            style={{ width: `${d.events.topEvents[0] ? (e.count / d.events.topEvents[0].count) * 100 : 0}%` }}
                           />
                         </div>
                       </td>
@@ -374,11 +369,101 @@ export default function AnalyticsDashboardPage() {
         </div>
       </section>
 
-      {/* ─── Footer ─── */}
+      {/* Registrations Breakdown */}
+      <section className="analytics-charts-grid">
+        {/* By Region */}
+        <div className="analytics-chart-card">
+          <h3 className="analytics-chart-title">🌏 Registrations by Region</h3>
+          {d.registrations.byRegion.length === 0 ? (
+            <p className="analytics-empty">No registration data yet</p>
+          ) : (
+            <div className="analytics-table-wrap">
+              <table className="analytics-table">
+                <thead>
+                  <tr><th>Region</th><th>Count</th><th>Share</th></tr>
+                </thead>
+                <tbody>
+                  {d.registrations.byRegion.map((r, i) => (
+                    <tr key={i}>
+                      <td className="analytics-cell-path">{r.region.toUpperCase()}</td>
+                      <td className="analytics-cell-num">{r.count}</td>
+                      <td className="analytics-cell-bar">
+                        <div className="analytics-mini-bar-track">
+                          <div
+                            className="analytics-mini-bar-fill"
+                            style={{ width: `${d.registrations.byRegion[0] ? (r.count / d.registrations.byRegion[0].count) * 100 : 0}%` }}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* By Platform */}
+        <div className="analytics-chart-card">
+          <h3 className="analytics-chart-title">📱 Registrations by Platform</h3>
+          {d.registrations.byPlatform.length === 0 ? (
+            <p className="analytics-empty">No platform data yet</p>
+          ) : (
+            <div className="analytics-device-bars">
+              {d.registrations.byPlatform.map((p) => {
+                const totalReg = d.registrations.byPlatform.reduce((s, x) => s + x.count, 0);
+                return (
+                  <div className="analytics-device-row" key={p.platform}>
+                    <span className="analytics-device-label">
+                      {p.platform === 'ios' ? '🍎' : p.platform === 'android' ? '🤖' : '🖥️'} {p.platform}
+                    </span>
+                    <div className="analytics-device-bar-track">
+                      <div
+                        className={`analytics-device-bar-fill ${p.platform === 'ios' ? 'desktop' : 'mobile'}`}
+                        style={{ width: totalReg > 0 ? `${(p.count / totalReg) * 100}%` : '0%' }}
+                      />
+                    </div>
+                    <span className="analytics-device-count">
+                      {p.count} ({totalReg > 0 ? ((p.count / totalReg) * 100).toFixed(0) : 0}%)
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Total Registrations */}
+        <div className="analytics-chart-card">
+          <h3 className="analytics-chart-title">📊 Registration Summary</h3>
+          <div className="analytics-device-bars">
+            <div className="analytics-device-row">
+              <span className="analytics-device-label">📋 Total (All Time)</span>
+              <span className="analytics-device-count" style={{ fontWeight: 800, fontSize: '1.2rem', color: '#fbbf24' }}>
+                {formatNumber(ov.totalRegistrations)}
+              </span>
+            </div>
+            <div className="analytics-device-row">
+              <span className="analytics-device-label">📅 This Period</span>
+              <span className="analytics-device-count" style={{ fontWeight: 800, fontSize: '1.2rem', color: '#22c55e' }}>
+                {formatNumber(ov.recentRegistrations)}
+              </span>
+            </div>
+            <div className="analytics-device-row">
+              <span className="analytics-device-label">📊 Trend</span>
+              <span className={`analytics-device-count ${trendClass(d.trends.registrations.direction)}`} style={{ fontWeight: 800, fontSize: '1rem' }}>
+                {trendIndicator(d.trends.registrations)}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
       <footer className="analytics-footer">
-        <p>Data from internal tracking • Bot-filtered • Updated in real-time</p>
+        <p>Data from internal tracking • Bot-filtered ({d._meta.botsFiltered} filtered) • Updated in real-time</p>
         <p className="analytics-footer-note">
-          Period: {d.dateRange.from} → {d.dateRange.to}
+          Period: Last {d.period.days} days from {new Date(d.period.since).toLocaleDateString()} • Docs processed: {d._meta.docsProcessed.pageViews} PV / {d._meta.docsProcessed.events} Events / {d._meta.docsProcessed.registrations} Registrations
         </p>
       </footer>
     </div>
