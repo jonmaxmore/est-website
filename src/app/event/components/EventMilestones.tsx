@@ -66,7 +66,7 @@ export default function EventMilestones({
                 <div
                   key={m.threshold}
                   className={`milestone-node-dark ${m.unlocked ? 'unlocked' : ''}`}
-                  style={{ left: `${(m.threshold / maxThreshold) * 100}%` }}
+                  style={{ left: `${(m.threshold / maxThreshold) * 100}%` } as React.CSSProperties}
                 />
               ))}
             </div>

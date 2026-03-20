@@ -225,8 +225,8 @@
   background: rgba(255,255,255,0.04);
   border-radius: 20px;
   border: 1px solid rgba(255,255,255,0.1);
-  backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   box-shadow:
     0 20px 60px rgba(0,0,0,0.4),
     inset 0 1px 0 rgba(255,255,255,0.06);
@@ -317,8 +317,8 @@
 }
 .event-radio-label:hover { color: var(--white); }
 .event-radio-input {
-  appearance: none;
   -webkit-appearance: none;
+  appearance: none;
   width: 18px;
   height: 18px;
   border: 2px solid rgba(255,255,255,0.2);
@@ -536,8 +536,8 @@
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   text-align: center;
   transition: all 0.3s var(--ease-out-expo);
 }
@@ -589,8 +589,8 @@
   position: absolute;
   inset: 0;
   background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 .event-modal {
   position: relative;
@@ -918,4 +918,10 @@
   .event-referral-row { flex-direction: column; }
   .referral-stats-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
   .referral-stat-value { font-size: 1.2rem; }
+}
+
+/* ── Utility ── */
+.loading-text {
+  text-align: center;
+  opacity: 0.6;
 }

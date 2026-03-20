@@ -30,7 +30,7 @@ export default function ReferralLeaderboard() {
             <h2 className="section-title-gold">{t('กระดานอันดับ', 'Leaderboard')}</h2>
             <div className="title-ornament"><span /><span /><span /></div>
           </div>
-          <p style={{ textAlign: 'center', opacity: 0.6 }}>{t('กำลังโหลด...', 'Loading...')}</p>
+          <p className="loading-text">{t('กำลังโหลด...', 'Loading...')}</p>
         </div>
       </section>
     );

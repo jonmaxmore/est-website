@@ -136,7 +136,7 @@ export default function CharacterSection({ characters, sectionConfig }: Characte
             animate="animate"
             exit="exit"
             transition={{ duration: 0.6 }}
-            style={{ position: 'absolute', inset: 0 }}
+            className="char-motion-absolute"
           >
             {activeChar?.backgroundImage ? (
               <Image
@@ -148,12 +148,7 @@ export default function CharacterSection({ characters, sectionConfig }: Characte
               />
             ) : (
               <div
-                className="char-bg-img"
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(135deg, var(--deeper-navy), var(--midnight))',
-                }}
+                className="char-bg-img char-bg-fallback"
               />
             )}
           </motion.div>
@@ -185,19 +180,7 @@ export default function CharacterSection({ characters, sectionConfig }: Characte
               />
             ) : (
               <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  opacity: 0.15,
-                  fontSize: 'clamp(6rem, 15vw, 12rem)',
-                  fontWeight: 900,
-                  color: 'var(--gold)',
-                  fontFamily: 'var(--font-heading)',
-                  userSelect: 'none',
-                }}
+                className="char-portrait-placeholder"
                 aria-hidden="true"
               >
                 {getCharName(activeIdx).charAt(0)}
