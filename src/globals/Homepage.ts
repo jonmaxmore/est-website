@@ -3,7 +3,7 @@ import type { GlobalConfig } from 'payload'
 export const Homepage: GlobalConfig = {
   slug: 'homepage',
   admin: {
-    description: 'Manage homepage sections — Hero, Characters, Highlights, News',
+    description: 'Manage homepage sections — Hero, Weapons, Highlights, News',
     group: 'Pages',
   },
   access: {
@@ -63,28 +63,28 @@ export const Homepage: GlobalConfig = {
        ═══════════════════════════════════════════════ */
     {
       type: 'collapsible',
-      label: '2️⃣ Characters Section — Background, Title, Badge',
+      label: '2️⃣ Weapons Section — Background, Title, Badge',
       admin: { initCollapsed: true },
       fields: [
         {
           name: 'charactersBgImage',
           type: 'upload',
           relationTo: 'media',
-          label: 'Characters Background Image',
-          admin: { description: 'Background image for Characters section. If empty, uses default gradient.' },
+          label: 'Weapons Background Image',
+          admin: { description: 'Background image for Weapons section. If empty, uses default gradient.' },
         },
         {
           type: 'row',
           fields: [
-            { name: 'charactersBadgeEn', type: 'text', defaultValue: 'CHOOSE YOUR HERO', label: 'Badge (English)', admin: { width: '50%' } },
-            { name: 'charactersBadgeTh', type: 'text', defaultValue: 'เลือกฮีโร่ของคุณ', label: 'Badge (Thai)', admin: { width: '50%' } },
+            { name: 'charactersBadgeEn', type: 'text', defaultValue: 'CHOOSE YOUR WEAPON', label: 'Badge (English)', admin: { width: '50%' } },
+            { name: 'charactersBadgeTh', type: 'text', defaultValue: 'เลือกอาวุธของคุณ', label: 'Badge (Thai)', admin: { width: '50%' } },
           ],
         },
         {
           type: 'row',
           fields: [
-            { name: 'charactersTitleEn', type: 'text', defaultValue: 'Heroes of Arcatea', label: 'Title (English)', admin: { width: '50%' } },
-            { name: 'charactersTitleTh', type: 'text', defaultValue: 'ฮีโร่แห่ง Arcatea', label: 'Title (Thai)', admin: { width: '50%' } },
+            { name: 'charactersTitleEn', type: 'text', defaultValue: 'Weapons of Arcatea', label: 'Title (English)', admin: { width: '50%' } },
+            { name: 'charactersTitleTh', type: 'text', defaultValue: 'อาวุธแห่ง Arcatea', label: 'Title (Thai)', admin: { width: '50%' } },
           ],
         },
       ],

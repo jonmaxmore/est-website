@@ -76,10 +76,10 @@ export default async function LandingPage() {
           : { enabled: false, titleEn: '', titleTh: '' },
         characters: {
           bgImage: extractMedia(hs.charactersBgImage),
-          badgeEn: hs.charactersBadgeEn || 'CHOOSE YOUR HERO',
-          badgeTh: hs.charactersBadgeTh || 'เลือกฮีโร่ของคุณ',
-          titleEn: hs.charactersTitleEn || 'Heroes of Arcatea',
-          titleTh: hs.charactersTitleTh || 'ฮีโร่แห่ง Arcatea',
+          badgeEn: hs.charactersBadgeEn || 'CHOOSE YOUR WEAPON',
+          badgeTh: hs.charactersBadgeTh || 'เลือกอาวุธของคุณ',
+          titleEn: hs.charactersTitleEn || 'Weapons of Arcatea',
+          titleTh: hs.charactersTitleTh || 'อาวุธแห่ง Arcatea',
         },
         highlights: {
           badgeEn: hs.highlightsBadgeEn || 'GAME FEATURES',

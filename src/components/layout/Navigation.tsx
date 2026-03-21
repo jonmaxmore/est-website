@@ -8,17 +8,18 @@ import { useLang } from '@/lib/lang-context';
 
 /* ═══════════════════════════════════════════════
    Navigation — Direct links matching site structure
-   หน้าหลัก | แนะนำเกม | เนื้อเรื่อง | ตัวละคร | ข่าวสาร
+   หน้าหลัก | แนะนำเกม | เนื้อเรื่อง | อาวุธ | ข่าวสาร
    ═══════════════════════════════════════════════ */
 
 const NAV_LINKS = [
   { href: '/', labelTh: 'หน้าหลัก', labelEn: 'Home' },
   { href: '/game-guide', labelTh: 'แนะนำเกม', labelEn: 'Game Guide' },
   { href: '/story', labelTh: 'เนื้อเรื่อง', labelEn: 'Story' },
-  { href: '/character', labelTh: 'ตัวละคร', labelEn: 'Characters' },
+  { href: '/character', labelTh: 'อาวุธ', labelEn: 'Weapons' },
   { href: '/news', labelTh: 'ข่าวสาร', labelEn: 'News' },
 ];
 
+// eslint-disable-next-line max-lines-per-function -- Navigation with mobile menu
 export default function Navigation() {
   const { lang, toggle, t } = useLang();
   const [scrolled, setScrolled] = useState(false);

@@ -1,7 +1,7 @@
 {
   "nav": {
     "home": "Home",
-    "characters": "Characters",
+    "characters": "Weapons",
     "world": "World",
     "features": "Features",
     "news": "News",
@@ -17,12 +17,12 @@
     "subtitle": "Battle Partners — Not Pets",
     "description": "Fight side-by-side with powerful mercenary companions. The Mercenary Companion system pairs you with elite warriors who fight alongside you in every battle."
   },
-  "characters": {
-    "title": "Characters",
-    "warrior": "Swordsman",
-    "archer": "Archer",
-    "mage": "Mage",
-    "healer": "Healer"
+  "weapons": {
+    "title": "Weapons",
+    "sword": "Sword",
+    "bow": "Bow",
+    "crystalOrb": "Crystal Orb",
+    "wand": "Wand"
   },
   "event": {
     "title": "Pre-Registration",

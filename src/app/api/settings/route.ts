@@ -127,10 +127,10 @@ export async function GET() {
         bgImage: typeof homepage.charactersBgImage === 'object' && homepage.charactersBgImage ? {
           url: (homepage.charactersBgImage as { url: string }).url,
         } : null,
-        badgeEn: homepage.charactersBadgeEn || 'CHOOSE YOUR HERO',
-        badgeTh: homepage.charactersBadgeTh || 'เลือกฮีโร่ของคุณ',
-        titleEn: homepage.charactersTitleEn || 'Heroes of Arcatea',
-        titleTh: homepage.charactersTitleTh || 'ฮีโร่แห่ง Arcatea',
+        badgeEn: homepage.charactersBadgeEn || 'CHOOSE YOUR WEAPON',
+        badgeTh: homepage.charactersBadgeTh || 'เลือกอาวุธของคุณ',
+        titleEn: homepage.charactersTitleEn || 'Weapons of Arcatea',
+        titleTh: homepage.charactersTitleTh || 'อาวุธแห่ง Arcatea',
       },
       highlights: {
         badgeEn: homepage.highlightsBadgeEn || 'GAME FEATURES',
