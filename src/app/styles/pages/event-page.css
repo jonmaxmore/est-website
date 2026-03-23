@@ -77,6 +77,13 @@
   text-shadow: 0 2px 12px rgba(0,0,0,0.7);
   max-width: 600px;
 }
+.event-tagline-image {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+}
 .event-badge {
   position: relative;
   overflow: hidden;

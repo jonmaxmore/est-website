@@ -74,13 +74,11 @@ export default function EventHero({
           transition={{ delay: 0.4 }}
         >
           {(eventSettings.descriptionImageTh?.url || eventSettings.descriptionImageEn?.url) ? (
-            <Image
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
               src={t(eventSettings.descriptionImageTh?.url || '', eventSettings.descriptionImageEn?.url || '')}
               alt={t(eventSettings.descriptionTh || '', eventSettings.descriptionEn || '')}
-              width={600}
-              height={200}
               className="event-tagline-image"
-              style={{ maxWidth: '100%', height: 'auto' }}
             />
           ) : (
             <p>
