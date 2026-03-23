@@ -4,97 +4,14 @@ import { checkRateLimit } from '@/lib/rate-limit'
 import { isBot } from '@/lib/bot-detection'
 import { deriveChannel } from '@/lib/channel-detection'
 import { UAParser } from 'ua-parser-js'
-import type { Payload } from 'payload'
+import {
+  isExcludedPath, upsertSession, incrementSessionEventCount,
+  recordFunnelEvent, updateSessionHeartbeat,
+  EVENT_TO_FUNNEL, FUNNEL_STEPS,
+  type TrackContext,
+} from '@/services/tracking'
 
 export const dynamic = 'force-dynamic'
-
-// ─── Excluded paths (internal/admin) ───
-const EXCLUDED_PATHS = ['/admin', '/api/', '/_next/', '/favicon.ico', '/robots.txt', '/sitemap.xml']
-
-function isExcludedPath(path: string): boolean {
-  return EXCLUDED_PATHS.some(p => path.startsWith(p))
-}
-
-// ─── Funnel step mapping ───
-const FUNNEL_STEPS: Record<string, { step: string; stepOrder: number }> = {
-  landing: { step: 'landing', stepOrder: 1 },
-  engagement: { step: 'engagement', stepOrder: 2 },
-  event_page: { step: 'event_page', stepOrder: 3 },
-  form_interaction: { step: 'form_interaction', stepOrder: 4 },
-  registration: { step: 'registration', stepOrder: 5 },
-  store_click: { step: 'store_click', stepOrder: 6 },
-  referral_share: { step: 'referral_share', stepOrder: 7 },
-}
-
-// ─── Auto funnel mapping from event names ───
-const EVENT_TO_FUNNEL: Record<string, string> = {
-  cta_click: 'form_interaction',
-  registration: 'registration',
-  store_click: 'store_click',
-  referral_copy: 'referral_share',
-}
-
-// ─── Parsed context shared across handlers ───
-interface TrackContext {
-  payload: Payload
-  ip: string
-  deviceType: 'desktop' | 'mobile' | 'tablet'
-  browserName: string
-  browserVersion: string
-  osName: string
-  osVersion: string
-  channel: string
-  body: Record<string, unknown>
-}
-
-// ─── Session upsert for pageview ───
-async function upsertSession(ctx: TrackContext) {
-  const { payload, body, ip, deviceType, browserName, browserVersion, osName, osVersion, channel } = ctx
-  const { sessionId, visitorId, path, referrer, language,
-    utmSource, utmMedium, utmCampaign, utmTerm, utmContent,
-    screenWidth, screenHeight } = body as Record<string, string | number>
-
-  if (!sessionId) return
-
-  const existing = await payload.find({
-    collection: 'analytics-sessions',
-    where: { sessionId: { equals: sessionId } },
-    limit: 1,
-  })
-
-  if (existing.docs.length > 0) {
-    const session = existing.docs[0]
-    await payload.update({
-      collection: 'analytics-sessions',
-      id: session.id,
-      data: {
-        pageCount: ((session.pageCount as number) || 1) + 1,
-        exitPage: path as string,
-        isBounce: false,
-      },
-    })
-  } else {
-    await payload.create({
-      collection: 'analytics-sessions',
-      data: {
-        sessionId, visitorId: visitorId || '', landingPage: path,
-        referrer: referrer || '', channel,
-        utmSource: utmSource || '', utmMedium: utmMedium || '',
-        utmCampaign: utmCampaign || '', utmTerm: utmTerm || '', utmContent: utmContent || '',
-        device: deviceType, browser: browserName, browserVersion,
-        os: osName, osVersion,
-        screenWidth: screenWidth || 0, screenHeight: screenHeight || 0,
-        country: '', language: language || '',
-        pageCount: 1, eventCount: 0, duration: 0, maxScrollDepth: 0,
-        exitPage: path, isBounce: true, isConverted: false, ip,
-      },
-    })
-    await payload.create({
-      collection: 'analytics-funnel-events',
-      data: { sessionId, visitorId: visitorId || '', step: 'landing', stepOrder: 1, path: path as string },
-    })
-  }
-}
 
 // ─── Handle pageview ───
 async function handlePageview(ctx: TrackContext) {
@@ -135,30 +52,16 @@ async function handleEvent(ctx: TrackContext) {
     data: { eventName, eventData: eventData || {}, path: path || '', ip, sessionId: sessionId || '' },
   })
 
-  // Increment session event count
   if (sessionId) {
-    try {
-      const existing = await payload.find({ collection: 'analytics-sessions', where: { sessionId: { equals: sessionId } }, limit: 1 })
-      if (existing.docs.length > 0) {
-        const session = existing.docs[0]
-        const updates: Record<string, unknown> = { eventCount: ((session.eventCount as number) || 0) + 1 }
-        if (eventName === 'registration') updates.isConverted = true
-        await payload.update({ collection: 'analytics-sessions', id: session.id, data: updates })
-      }
-    } catch { /* Non-critical */ }
+    try { await incrementSessionEventCount(payload, sessionId as string, eventName as string) } catch { /* Non-critical */ }
   }
 
-  // Auto-detect funnel events
   const autoStep = EVENT_TO_FUNNEL[eventName as string]
   if (autoStep && sessionId && FUNNEL_STEPS[autoStep]) {
     try {
-      await payload.create({
-        collection: 'analytics-funnel-events',
-        data: {
-          sessionId, visitorId: visitorId || '',
-          step: FUNNEL_STEPS[autoStep].step, stepOrder: FUNNEL_STEPS[autoStep].stepOrder,
-          path: (path || '') as string, metadata: eventData || {},
-        },
+      await recordFunnelEvent(payload, {
+        sessionId: sessionId as string, visitorId: (visitorId || '') as string,
+        stepName: autoStep, path: (path || '') as string, metadata: eventData as Record<string, unknown>,
       })
     } catch { /* Non-critical */ }
   }
@@ -166,7 +69,7 @@ async function handleEvent(ctx: TrackContext) {
   return NextResponse.json({ ok: true }, { status: 201 })
 }
 
-// ─── Handle session heartbeat update ───
+// ─── Handle session heartbeat ───
 async function handleSessionUpdate(ctx: TrackContext) {
   const { payload, body } = ctx
   const { sessionId, duration, maxScrollDepth, exitPage, pageCount } = body as Record<string, string | number>
@@ -174,16 +77,12 @@ async function handleSessionUpdate(ctx: TrackContext) {
   if (!sessionId) return NextResponse.json({ error: 'Missing sessionId' }, { status: 400 })
 
   try {
-    const existing = await payload.find({ collection: 'analytics-sessions', where: { sessionId: { equals: sessionId } }, limit: 1 })
-    if (existing.docs.length > 0) {
-      const session = existing.docs[0]
-      const updates: Record<string, unknown> = {}
-      if (duration !== undefined) updates.duration = duration
-      if (maxScrollDepth !== undefined) updates.maxScrollDepth = Math.max(maxScrollDepth as number, (session.maxScrollDepth as number) || 0)
-      if (exitPage) updates.exitPage = exitPage
-      if (pageCount !== undefined) { updates.pageCount = pageCount; updates.isBounce = (pageCount as number) <= 1 }
-      if (Object.keys(updates).length > 0) await payload.update({ collection: 'analytics-sessions', id: session.id, data: updates })
-    }
+    await updateSessionHeartbeat(payload, sessionId as string, {
+      duration: duration as number | undefined,
+      maxScrollDepth: maxScrollDepth as number | undefined,
+      exitPage: exitPage as string | undefined,
+      pageCount: pageCount as number | undefined,
+    })
   } catch (err) { console.error('[/api/track] Session update error:', err) }
 
   return NextResponse.json({ ok: true }, { status: 200 })
@@ -198,23 +97,25 @@ async function handleFunnel(ctx: TrackContext) {
     return NextResponse.json({ error: 'Missing or invalid funnelStep/sessionId' }, { status: 400 })
   }
 
-  await payload.create({
-    collection: 'analytics-funnel-events',
-    data: {
-      sessionId, visitorId: visitorId || '',
-      step: FUNNEL_STEPS[funnelStep as string].step,
-      stepOrder: FUNNEL_STEPS[funnelStep as string].stepOrder,
-      path: (path || '') as string, metadata: funnelMetadata || {},
-    },
+  await recordFunnelEvent(payload, {
+    sessionId: sessionId as string, visitorId: (visitorId || '') as string,
+    stepName: funnelStep as string, path: (path || '') as string, metadata: funnelMetadata as Record<string, unknown>,
   })
 
   return NextResponse.json({ ok: true }, { status: 201 })
 }
 
+// ─── Route handler map ───
+const handlers: Record<string, (c: TrackContext) => Promise<NextResponse>> = {
+  pageview: handlePageview,
+  event: handleEvent,
+  session_update: handleSessionUpdate,
+  funnel: handleFunnel,
+}
+
 /**
- * POST /api/track — Enterprise tracking endpoint
- * Handles: pageview, event, session_update, funnel
- * Parses UA, derives channel, upserts sessions, records funnel events
+ * POST /api/track — Tracking endpoint
+ * Thin controller: parses request, delegates to handlers + service layer
  */
 export async function POST(request: NextRequest) {
   try {
@@ -243,13 +144,6 @@ export async function POST(request: NextRequest) {
       osVersion: uaOS.version || '',
       channel: deriveChannel(body.referrer || '', body.utmSource, body.utmMedium),
       body,
-    }
-
-    const handlers: Record<string, (c: TrackContext) => Promise<NextResponse>> = {
-      pageview: handlePageview,
-      event: handleEvent,
-      session_update: handleSessionUpdate,
-      funnel: handleFunnel,
     }
 
     const handler = handlers[body.type]

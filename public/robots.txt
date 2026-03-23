@@ -50,4 +50,4 @@ Disallow: /admin
 Disallow: /api/
 
 # ── Sitemap ──
-Sitemap: http://178.128.127.161/sitemap.xml
+Sitemap: https://est.egat.co.th/sitemap.xml

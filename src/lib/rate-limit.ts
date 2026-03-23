@@ -1,7 +1,17 @@
 /**
  * In-memory rate limiter with automatic cleanup.
- * Note: Resets on server restart. For distributed environments,
- * use Redis or Upstash for persistent rate limiting.
+ *
+ * PRODUCTION NOTE: This resets on server restart and does not work
+ * across multiple instances. For production at scale, replace with:
+ *   - Upstash Redis (@upstash/ratelimit) for serverless
+ *   - ioredis sliding-window for traditional deployments
+ *   - Nginx/Cloudflare rate limiting at the infrastructure level
+ *
+ * CSRF NOTE: Next.js Server Actions include built-in CSRF protection
+ * via origin checking. API routes using POST with JSON bodies are
+ * inherently CSRF-resistant (browsers won't send JSON cross-origin
+ * without CORS preflight). Additional CSRF tokens are not required
+ * for this architecture.
  */
 
 interface RateLimitTracker {
