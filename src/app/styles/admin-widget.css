@@ -179,6 +179,18 @@
   background: rgba(139, 148, 158, 0.12);
 }
 
+.analytics-widget__events {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--theme-elevation-100, rgba(255, 255, 255, 0.08));
+}
+
+.analytics-widget__title--small {
+  font-size: 0.85rem;
+  margin-bottom: 0.85rem;
+  opacity: 0.9;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .analytics-widget { padding: 1rem; }

@@ -39,6 +39,7 @@ interface DashboardResponse {
     registrations: TrendData
     events: TrendData
   }
+  funnel?: Array<{ step: string; label: string; count: number }>
   generatedAt: string
 }
 
@@ -100,7 +101,7 @@ export default function AnalyticsDashboardWidget() {
 
   useEffect(() => {
     dispatch({ type: 'START' })
-    fetch(`/api/analytics/dashboard?days=${days}&tab=overview`, { credentials: 'include' })
+    fetch(`/api/analytics/dashboard?days=${days}&tab=behavior`, { credentials: 'include' })
       .then(r => {
         if (!r.ok) throw new Error(r.status === 401 ? 'Unauthorized' : `HTTP ${r.status}`)
         return r.json()
@@ -142,16 +143,31 @@ export default function AnalyticsDashboardWidget() {
       {error && <p className="analytics-widget__error">{error}</p>}
 
       {data && !loading && (
-        <div className="analytics-widget__grid">
-          <MetricCard label="Registrations" value={fmt(data.kpi.totalRegistrations)} trend={data.trends.registrations} />
-          <MetricCard label={`New (${days}D)`} value={fmt(data.kpi.recentRegistrations)} trend={data.trends.registrations} />
-          <MetricCard label="Page Views" value={fmt(data.kpi.pageviews)} trend={data.trends.pageviews} />
-          <MetricCard label="Visitors" value={fmt(data.kpi.uniqueVisitors)} trend={data.trends.uniqueVisitors} />
-          <MetricCard label="Sessions" value={fmt(data.kpi.sessions)} trend={data.trends.sessions} />
-          <MetricCard label="Bounce Rate" value={`${data.kpi.bounceRate}%`} />
-          <MetricCard label="Avg Duration" value={formatDuration(data.kpi.avgDuration)} />
-          <MetricCard label="Events" value={fmt(data.kpi.totalEvents)} trend={data.trends.events} />
-        </div>
+        <>
+          <div className="analytics-widget__grid">
+            <MetricCard label="Registrations" value={fmt(data.kpi.totalRegistrations)} trend={data.trends.registrations} />
+            <MetricCard label={`New (${days}D)`} value={fmt(data.kpi.recentRegistrations)} trend={data.trends.registrations} />
+            <MetricCard label="Page Views" value={fmt(data.kpi.pageviews)} trend={data.trends.pageviews} />
+            <MetricCard label="Visitors" value={fmt(data.kpi.uniqueVisitors)} trend={data.trends.uniqueVisitors} />
+            <MetricCard label="Sessions" value={fmt(data.kpi.sessions)} trend={data.trends.sessions} />
+            <MetricCard label="Bounce Rate" value={`${data.kpi.bounceRate}%`} />
+            <MetricCard label="Avg Duration" value={formatDuration(data.kpi.avgDuration)} />
+            <MetricCard label="Events" value={fmt(data.kpi.totalEvents)} trend={data.trends.events} />
+          </div>
+
+          {data.funnel && data.funnel.length > 0 && (
+            <div className="analytics-widget__events">
+              <h3 className="analytics-widget__title analytics-widget__title--small">Key Player Events</h3>
+              <div className="analytics-widget__grid">
+                {data.funnel
+                  .filter((step) => ['weapon_click', 'store_click', 'event_page', 'form_interaction'].includes(step.step))
+                  .map((step) => (
+                    <MetricCard key={step.step} label={step.label} value={fmt(step.count)} />
+                  ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   )

@@ -28,7 +28,13 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
   const goTo = useCallback((idx: number) => {
     setDirection(idx > activeIdx ? 1 : -1);
     setActiveIdx(idx);
-  }, [activeIdx]);
+    
+    // Tracking
+    const char = characters[idx];
+    if (char) {
+      import('@/lib/tracking').then(m => m.trackWeaponClick(char.name || `Weapon_${idx}`));
+    }
+  }, [activeIdx, characters]);
 
   const goPrev = useCallback(() => {
     setDirection(-1);

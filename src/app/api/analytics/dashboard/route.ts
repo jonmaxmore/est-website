@@ -184,9 +184,9 @@ async function tabBehavior(payload: PayloadClient, base: Record<string, unknown>
     if (!funnelSteps[step]) funnelSteps[step] = new Set()
     funnelSteps[step].add(sid)
   }
-  const order = ['landing', 'engagement', 'event_page', 'form_interaction', 'registration', 'store_click', 'referral_share']
-  const labels: Record<string, string> = { landing: 'Landing', engagement: 'Engagement (50%+ scroll)', event_page: 'Event Page Visit',
-    form_interaction: 'Form Interaction', registration: 'Registration', store_click: 'Store Click', referral_share: 'Referral Share' }
+  const order = ['landing', 'engagement', 'weapon_click', 'event_page', 'form_interaction', 'registration', 'store_click', 'referral_share']
+  const labels: Record<string, string> = { landing: 'Landing', engagement: 'Engagement (50%+ scroll)', weapon_click: 'Weapon Clicks', event_page: 'Event Page Visit',
+    form_interaction: 'Form Interaction', registration: 'Registration', store_click: 'Store Links Clicked', referral_share: 'Referral Share' }
   const funnel = order.map(step => ({ step, label: labels[step] || step, count: funnelSteps[step]?.size || 0 }))
   return NextResponse.json({ ...base, tab: 'behavior', topPages: groupByValue(pathDocs).slice(0, 20), funnel }, { headers: CACHE_HEADERS })
 }

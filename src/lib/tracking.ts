@@ -156,12 +156,20 @@ export function trackAdjustEvent(
 // ─── Convenience: Store Button Click ───
 export function trackStoreClick(platform: string, url: string) {
   trackInternalEvent('store_click', { platform, url });
+  trackFunnelStep('store_click', { platform });
   trackGA4Event('store_button_click', { platform, destination_url: url, page: 'event' });
   const adjustToken = process.env.NEXT_PUBLIC_ADJUST_STORE_CLICK_TOKEN;
   trackAdjustEvent(adjustToken, [
     { key: 'platform', value: platform },
     { key: 'url', value: url },
   ]);
+}
+
+// ─── Convenience: Weapon/Character Click ───
+export function trackWeaponClick(weaponName: string) {
+  trackInternalEvent('weapon_click', { weaponName });
+  trackFunnelStep('weapon_click', { weaponName });
+  trackGA4Event('character_click', { character_name: weaponName, page: 'homepage' });
 }
 
 // ─── Convenience: CTA Button Click ───

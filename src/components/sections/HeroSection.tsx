@@ -205,7 +205,15 @@ export default function HeroSection({ settings }: HeroProps) {
                 ? '/images/badge-google-play.webp'
                 : '/images/badge-app-store.webp';
               return (
-                <a key={btn.platform} href={btn.url} className="hero-store-badge-link" title={`${btn.sublabel} ${btn.label}`}>
+                <a
+                  key={btn.platform}
+                  href={btn.url}
+                  className="hero-store-badge-link"
+                  title={`${btn.sublabel} ${btn.label}`}
+                  onClick={() => {
+                    import('@/lib/tracking').then((m) => m.trackStoreClick(btn.platform, btn.url));
+                  }}
+                >
                   <Image
                     src={badgeSrc}
                     alt={`${btn.sublabel} ${btn.label}`}
@@ -224,6 +232,9 @@ export default function HeroSection({ settings }: HeroProps) {
                   key={btn.platform}
                   href={btn.url}
                   className="store-btn store-btn-sm store-btn-hero"
+                  onClick={() => {
+                    import('@/lib/tracking').then((m) => m.trackStoreClick(btn.platform, btn.url));
+                  }}
                 >
                   {STORE_ICONS[btn.platform] || null}
                   <div>
