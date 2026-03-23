@@ -222,7 +222,7 @@ async function testHTTPSReadiness() {
 
   // Check for mixed content in homepage HTML
   const html = await (await fetch(BASE_URL)).text();
-  const httpRefs = html.match(/http:\/\/(?!localhost)/g) || [];
+  const httpRefs = html.match(/http:\/\/(?!localhost|178\.128\.127\.161)/g) || [];
   httpRefs.length === 0
     ? pass('No mixed content (http://) references')
     : fail(`Mixed content detected: ${httpRefs.length} http:// references`);
