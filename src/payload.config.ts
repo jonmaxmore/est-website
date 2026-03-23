@@ -7,7 +7,7 @@ import sharp from 'sharp'
 
 // Collections
 import { Media } from './collections/Media'
-import { Characters } from './collections/Characters'
+import { Weapons } from './collections/Weapons'
 import { News } from './collections/News'
 import { Milestones } from './collections/Milestones'
 import { StoreButtons } from './collections/StoreButtons'
@@ -49,7 +49,7 @@ export default buildConfig({
   collections: [
     Users,
     Media,
-    Characters,
+    Weapons,
     News,
     Milestones,
     StoreButtons,

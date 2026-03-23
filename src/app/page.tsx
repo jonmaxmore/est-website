@@ -4,7 +4,7 @@ import {
   extractMediaUrl,
   extractMedia,
   type CMSSettings,
-  type CMSCharacter,
+  type CMSWeapon,
   type CMSNewsArticle,
 } from '@/types/cms';
 
@@ -19,20 +19,20 @@ export const dynamic = 'force-dynamic';
 // eslint-disable-next-line max-lines-per-function -- SSR data fetch with parallel queries
 export default async function LandingPage() {
   let settings: CMSSettings | null = null;
-  let characters: CMSCharacter[] = [];
+  let weapons: CMSWeapon[] = [];
   let news: CMSNewsArticle[] = [];
 
   try {
     const payload = await getPayloadClient();
 
     // Fetch all data in parallel — direct DB access, no API round-trip
-    const [siteSettings, eventConfig, homepage, storeButtonsRes, charsRes, newsRes] =
+      const [siteSettings, eventConfig, homepage, storeButtonsRes, weaponsRes, newsRes] =
       await Promise.all([
         payload.findGlobal({ slug: 'site-settings' }).catch((e) => { console.error('Failed to fetch site-settings:', e); return null; }),
         payload.findGlobal({ slug: 'event-config' }).catch((e) => { console.error('Failed to fetch event-config:', e); return null; }),
         payload.findGlobal({ slug: 'homepage' }).catch((e) => { console.error('Failed to fetch homepage:', e); return null; }),
         payload.find({ collection: 'store-buttons', where: { visible: { equals: true } }, sort: 'sortOrder' }).catch(() => ({ docs: [] })),
-        payload.find({ collection: 'characters', where: { visible: { equals: true } }, sort: 'sortOrder', limit: 20, depth: 2 }).catch(() => ({ docs: [] })),
+        payload.find({ collection: 'weapons', where: { visible: { equals: true } }, sort: 'sortOrder', limit: 20, depth: 2 }).catch(() => ({ docs: [] })),
         payload.find({ collection: 'news', where: { status: { equals: 'published' } }, sort: '-publishedAt', limit: 3 }).catch(() => ({ docs: [] })),
       ]);
 
@@ -80,12 +80,12 @@ export default async function LandingPage() {
         event: ec
           ? { enabled: ec.enabled || false, titleEn: ec.titleEn || '', titleTh: ec.titleTh || '' }
           : { enabled: false, titleEn: '', titleTh: '' },
-        characters: {
-          bgImage: extractMedia(hs.charactersBgImage),
-          badgeEn: hs.charactersBadgeEn || 'CHOOSE YOUR WEAPON',
-          badgeTh: hs.charactersBadgeTh || 'เลือกอาวุธของคุณ',
-          titleEn: hs.charactersTitleEn || 'Weapons of Arcatea',
-          titleTh: hs.charactersTitleTh || 'อาวุธแห่ง Arcatea',
+        weapons: {
+          bgImage: extractMedia(hs.weaponsBgImage),
+          badgeEn: hs.weaponsBadgeEn || 'CHOOSE YOUR WEAPON',
+          badgeTh: hs.weaponsBadgeTh || 'เลือกอาวุธของคุณ',
+          titleEn: hs.weaponsTitleEn || 'Weapons of Arcatea',
+          titleTh: hs.weaponsTitleTh || 'อาวุธแห่ง Arcatea',
         },
         highlights: {
           badgeEn: hs.highlightsBadgeEn || 'GAME FEATURES',
@@ -110,8 +110,8 @@ export default async function LandingPage() {
       };
     }
 
-    // Build characters array
-    characters = charsRes.docs.map((c: Record<string, unknown>) => ({
+    // Build weapons array
+    weapons = weaponsRes.docs.map((c: Record<string, unknown>) => ({
       id: c.id as number,
       name: (c.name || '') as string,
       portrait: extractMediaUrl(c.portrait),
@@ -138,5 +138,5 @@ export default async function LandingPage() {
     console.error('SSR data fetch error:', error);
   }
 
-  return <HomeContent settings={settings} characters={characters} news={news} />;
+  return <HomeContent settings={settings} weapons={weapons} news={news} />;
 }

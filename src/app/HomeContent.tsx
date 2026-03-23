@@ -6,7 +6,7 @@ import {
   Swords, Map, Castle, Sparkles, Shield, Users,
   type LucideIcon,
 } from 'lucide-react';
-import type { CMSSettings, CMSCharacter, CMSNewsArticle } from '@/types/cms';
+import type { CMSSettings, CMSWeapon, CMSNewsArticle } from '@/types/cms';
 
 /* ─── Shared UI Components ─── */
 import ScrollProgress from '@/components/ui/ScrollProgress';
@@ -15,7 +15,7 @@ import LoadingScreen from '@/components/ui/LoadingScreen';
 
 /* ─── Section Components ─── */
 import HeroSection from '@/components/sections/HeroSection';
-import CharacterSection from '@/components/sections/CharacterSection';
+import WeaponSection from '@/components/sections/WeaponSection';
 import NewsSection from '@/components/sections/NewsSection';
 
 /* ─── Layout Components ─── */
@@ -50,11 +50,11 @@ function FeatureIcon({ icon, index }: { icon: string; index: number }) {
    ═══════════════════════════════════════════════ */
 interface HomeContentProps {
   settings: CMSSettings | null;
-  characters: CMSCharacter[];
+  weapons: CMSWeapon[];
   news: CMSNewsArticle[];
 }
 
-export default function HomeContent({ settings, characters, news }: HomeContentProps) {
+export default function HomeContent({ settings, weapons, news }: HomeContentProps) {
   const { t } = useLang();
 
   /* Derived data */
@@ -88,7 +88,7 @@ export default function HomeContent({ settings, characters, news }: HomeContentP
         <HeroSection settings={settings} />
 
         {/* ═══ SECTION 2: WEAPONS — Image-only weapon showcase ═══ */}
-        <CharacterSection characters={characters} />
+        <WeaponSection weapons={weapons} />
 
         {/* ═══ SECTION 3: HIGHLIGHTS STRIP — Compact feature showcase ═══ */}
         <section

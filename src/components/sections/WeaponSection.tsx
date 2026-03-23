@@ -4,7 +4,7 @@ import React, { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Play, X } from 'lucide-react';
-import type { CMSCharacter } from '@/types/cms';
+import type { CMSWeapon } from '@/types/cms';
 
 /* ═══════════════════════════════════════════════
    WEAPON SHOWCASE — Image-Only Full-Viewport
@@ -12,18 +12,18 @@ import type { CMSCharacter } from '@/types/cms';
    No text — everything is communicated via images
    ═══════════════════════════════════════════════ */
 
-interface CharacterSectionProps {
-  characters: CMSCharacter[];
+interface WeaponSectionProps {
+  weapons: CMSWeapon[];
 }
 
 // eslint-disable-next-line max-lines-per-function -- Page component with JSX template
-export default function CharacterSection({ characters }: CharacterSectionProps) {
+export default function WeaponSection({ weapons }: WeaponSectionProps) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [direction, setDirection] = useState(0);
   const [videoOpen, setVideoOpen] = useState(false);
 
-  const itemCount = characters.length;
-  const activeChar = characters[activeIdx];
+  const itemCount = weapons.length;
+  const activeWeapon = weapons[activeIdx];
 
   /* Navigation helpers — must be before early return (rules of hooks) */
   const goTo = useCallback((idx: number) => {
@@ -31,11 +31,11 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
     setActiveIdx(idx);
     
     // Tracking
-    const char = characters[idx];
-    if (char) {
-      import('@/lib/tracking').then(m => m.trackWeaponClick(char.name || `Weapon_${idx}`));
+    const weapon = weapons[idx];
+    if (weapon) {
+      import('@/lib/tracking').then(m => m.trackWeaponClick(weapon.name || `Weapon_${idx}`));
     }
-  }, [activeIdx, characters]);
+  }, [activeIdx, weapons]);
 
   const goPrev = useCallback(() => {
     setDirection(-1);
@@ -126,13 +126,13 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
 
   return (
     <section 
-      id="characters" 
-      className="char-showcase" 
+      id="weapons" 
+      className="weapon-showcase" 
       aria-label="Weapon Showcase"
       onMouseMove={handleMouseMove}
     >
       {/* ── Layer 1: Background ── */}
-      <div className="char-bg-layer">
+      <div className="weapon-bg-layer">
         <AnimatePresence mode="wait">
           <motion.div
             key={`bg-${activeIdx}`}
@@ -141,28 +141,28 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
             animate="animate"
             exit="exit"
             transition={{ duration: 0.6 }}
-            className="char-motion-absolute"
+            className="weapon-motion-absolute"
             style={{ x: bgX, y: bgY, scale: 1.05 }}
           >
-            {activeChar?.backgroundImage ? (
+            {activeWeapon?.backgroundImage ? (
               <Image
-                src={activeChar.backgroundImage}
+                src={activeWeapon.backgroundImage}
                 alt=""
                 fill
-                className="char-bg-img"
+                className="weapon-bg-img"
                 priority
               />
             ) : (
-              <div className="char-bg-img char-bg-fallback" />
+              <div className="weapon-bg-img weapon-bg-fallback" />
             )}
           </motion.div>
         </AnimatePresence>
-        <div className="char-gradient-top" />
-        <div className="char-gradient-bottom" />
+        <div className="weapon-gradient-top" />
+        <div className="weapon-gradient-bottom" />
       </div>
 
       {/* ── Layer 2: Portrait ── */}
-      <div className="char-portrait-layer">
+      <div className="weapon-portrait-layer">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={`portrait-${activeIdx}`}
@@ -180,23 +180,23 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
               y: portraitY 
             }}
           >
-            {activeChar?.portrait ? (
+            {activeWeapon?.portrait ? (
               <Image
-                src={activeChar.portrait}
-                alt={activeChar.name || ''}
+                src={activeWeapon.portrait}
+                alt={activeWeapon.name || ''}
                 fill
-                className="char-portrait-img"
+                className="weapon-portrait-img"
                 priority
               />
             ) : (
-              <div className="char-portrait-placeholder" aria-hidden="true" />
+              <div className="weapon-portrait-placeholder" aria-hidden="true" />
             )}
           </motion.div>
         </AnimatePresence>
       </div>
 
       {/* ── Layer 3: Weapon Info Overlay (Text Image + Video Button) ── */}
-      <div className="char-info-overlay">
+      <div className="weapon-info-overlay">
         <AnimatePresence mode="popLayout" custom={direction}>
           <motion.div
             key={`info-${activeIdx}`}
@@ -206,23 +206,23 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
             transition={{ duration: 0.5 }}
             style={{ x: infoX, y: infoY }}
           >
-            {activeChar?.infoImage && (
+            {activeWeapon?.infoImage && (
               <Image
-                src={activeChar.infoImage}
+                src={activeWeapon.infoImage}
                 alt="Weapon Info"
                 width={800}
                 height={500}
-                className="char-weapon-info-img"
+                className="weapon-weapon-info-img"
               />
             )}
             
-            {activeChar?.videoType !== 'none' && (
+            {activeWeapon?.videoType !== 'none' && (
               <button 
-                className="char-video-btn" 
+                className="weapon-video-btn" 
                 onClick={() => setVideoOpen(true)}
                 aria-label="Play Action Video"
               >
-                <div className="char-video-btn-icon"><Play size={20} /></div>
+                <div className="weapon-video-btn-icon"><Play size={20} /></div>
                 <span>Play Showcase</span>
               </button>
             )}
@@ -232,14 +232,14 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
 
       {/* ── Layer 4: Navigation Arrows ── */}
       <button
-        className="char-nav-arrow prev"
+        className="weapon-nav-arrow prev"
         onClick={goPrev}
         aria-label="Previous weapon"
       >
         <ChevronLeft size={24} />
       </button>
       <button
-        className="char-nav-arrow next"
+        className="weapon-nav-arrow next"
         onClick={goNext}
         aria-label="Next weapon"
       >
@@ -248,38 +248,38 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
 
       {/* ── Layer 5: Glassmorphism Icon Selector Panel ── */}
       <div
-        className="char-icon-selector-panel"
+        className="weapon-icon-selector-panel"
         onKeyDown={handleKeyDown}
       >
-        <div className="char-selector-header">
-          <h3 className="char-selector-title">Select Weapon</h3>
-          <div className="char-divider" />
+        <div className="weapon-selector-header">
+          <h3 className="weapon-selector-title">Select Weapon</h3>
+          <div className="weapon-divider" />
         </div>
         
-        <div className="char-icon-grid" role="tablist" aria-label="Select weapon">
-          {characters.map((char, i) => (
+        <div className="weapon-icon-grid" role="tablist" aria-label="Select weapon">
+          {weapons.map((weapon, i) => (
             <motion.button
-              key={char.id}
+              key={weapon.id}
               role="tab"
               aria-selected={i === activeIdx}
-              aria-label={char.name || `Weapon ${i + 1}`}
+              aria-label={weapon.name || `Weapon ${i + 1}`}
               tabIndex={i === activeIdx ? 0 : -1}
-              className={`char-icon-btn ${i === activeIdx ? 'active' : ''}`}
+              className={`weapon-icon-btn ${i === activeIdx ? 'active' : ''}`}
               onClick={() => goTo(i)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {char.icon ? (
+              {weapon.icon ? (
                 <Image
-                  src={char.icon}
-                  alt={char.name || ''}
+                  src={weapon.icon}
+                  alt={weapon.name || ''}
                   width={80}
                   height={80}
-                  className="char-icon-img"
+                  className="weapon-icon-img"
                 />
               ) : (
-                <span className="char-icon-placeholder" aria-hidden="true">
-                  {(char.name || '?').charAt(0)}
+                <span className="weapon-icon-placeholder" aria-hidden="true">
+                  {(weapon.name || '?').charAt(0)}
                 </span>
               )}
             </motion.button>
@@ -291,28 +291,28 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
       <AnimatePresence>
         {videoOpen && (
           <motion.div
-            className="char-video-modal"
+            className="weapon-video-modal"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className="char-video-modal-backdrop" onClick={() => setVideoOpen(false)} />
-            <div className="char-video-modal-content">
-              <button className="char-video-close" onClick={() => setVideoOpen(false)} title="Close Video">
+            <div className="weapon-video-modal-backdrop" onClick={() => setVideoOpen(false)} />
+            <div className="weapon-video-modal-content">
+              <button className="weapon-video-close" onClick={() => setVideoOpen(false)} title="Close Video">
                 <X size={28} />
               </button>
-              {activeChar.videoType === 'youtube' && activeChar.videoUrl ? (
+              {activeWeapon.videoType === 'youtube' && activeWeapon.videoUrl ? (
                 <iframe 
-                  src={`https://www.youtube.com/embed/${activeChar.videoUrl.split('v=')[1] || activeChar.videoUrl.split('/').pop()}?autoplay=1`} 
+                  src={`https://www.youtube.com/embed/${activeWeapon.videoUrl.split('v=')[1] || activeWeapon.videoUrl.split('/').pop()}?autoplay=1`} 
                   allow="autoplay; encrypted-media"
                   allowFullScreen
                   title="Showcase Video"
-                  className="char-video-iframe"
+                  className="weapon-video-iframe"
                 />
-              ) : activeChar.videoType === 'upload' && activeChar.videoUpload ? (
-                <video src={activeChar.videoUpload} controls autoPlay className="char-video-iframe" />
+              ) : activeWeapon.videoType === 'upload' && activeWeapon.videoUpload ? (
+                <video src={activeWeapon.videoUpload} controls autoPlay className="weapon-video-iframe" />
               ) : (
-                <div className="char-video-error">Video Unavailable</div>
+                <div className="weapon-video-error">Video Unavailable</div>
               )}
             </div>
           </motion.div>

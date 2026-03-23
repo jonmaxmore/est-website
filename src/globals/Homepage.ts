@@ -63,29 +63,43 @@ export const Homepage: GlobalConfig = {
        ═══════════════════════════════════════════════ */
     {
       type: 'collapsible',
-      label: '2️⃣ Weapons Section — Background, Title, Badge',
+      label: 'Weapons Showcase Section',
       admin: { initCollapsed: true },
       fields: [
         {
-          name: 'charactersBgImage',
+          name: 'weaponsBgImage',
           type: 'upload',
           relationTo: 'media',
-          label: 'Weapons Background Image',
+          label: 'Section Background Image',
           admin: { description: 'Background image for Weapons section. If empty, uses default gradient.' },
         },
         {
-          type: 'row',
-          fields: [
-            { name: 'charactersBadgeEn', type: 'text', defaultValue: 'CHOOSE YOUR WEAPON', label: 'Badge (English)', admin: { width: '50%' } },
-            { name: 'charactersBadgeTh', type: 'text', defaultValue: 'เลือกอาวุธของคุณ', label: 'Badge (Thai)', admin: { width: '50%' } },
-          ],
+          name: 'weaponsBadgeEn',
+          type: 'text',
+          label: 'Badge Text (English)',
+          defaultValue: 'CHOOSE YOUR WEAPON',
+          admin: { width: '50%' },
         },
         {
-          type: 'row',
-          fields: [
-            { name: 'charactersTitleEn', type: 'text', defaultValue: 'Weapons of Arcatea', label: 'Title (English)', admin: { width: '50%' } },
-            { name: 'charactersTitleTh', type: 'text', defaultValue: 'อาวุธแห่ง Arcatea', label: 'Title (Thai)', admin: { width: '50%' } },
-          ],
+          name: 'weaponsBadgeTh',
+          type: 'text',
+          label: 'Badge Text (Thai)',
+          defaultValue: 'เลือกอาวุธของคุณ',
+          admin: { width: '50%' },
+        },
+        {
+          name: 'weaponsTitleEn',
+          type: 'text',
+          label: 'Section Title (English)',
+          defaultValue: 'Weapons of Arcatea',
+          admin: { width: '50%' },
+        },
+        {
+          name: 'weaponsTitleTh',
+          type: 'text',
+          label: 'Section Title (Thai)',
+          defaultValue: 'อาวุธแห่ง Arcatea',
+          admin: { width: '50%' },
         },
       ],
     },

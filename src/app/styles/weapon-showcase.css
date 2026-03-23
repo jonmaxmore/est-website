@@ -7,7 +7,7 @@
    - Particle-ready layered backgrounds
    ═══════════════════════════════════════════════════ */
 
-.char-showcase {
+.weapon-showcase {
   position: relative;
   width: 100%;
   height: 100vh;
@@ -21,25 +21,25 @@
 }
 
 /* ── Layer 1: Background ── */
-.char-bg-layer {
+.weapon-bg-layer {
   position: absolute;
   inset: 0;
   z-index: 0;
 }
 
-.char-bg-img {
+.weapon-bg-img {
   object-fit: cover;
   object-position: center;
   opacity: 0.55;
 }
 
-.char-bg-fallback {
+.weapon-bg-fallback {
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, var(--deeper-navy), var(--midnight));
 }
 
-.char-portrait-placeholder {
+.weapon-portrait-placeholder {
   width: 100%;
   height: 100%;
   display: flex;
@@ -54,18 +54,18 @@
   user-select: none;
 }
 
-.char-motion-absolute {
+.weapon-motion-absolute {
   position: absolute;
   inset: 0;
 }
 
-.char-motion-full {
+.weapon-motion-full {
   width: 100%;
   height: 100%;
   position: relative;
 }
 
-.char-gradient-top {
+.weapon-gradient-top {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 30%;
@@ -74,7 +74,7 @@
   pointer-events: none;
 }
 
-.char-gradient-bottom {
+.weapon-gradient-bottom {
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 40%;
@@ -84,7 +84,7 @@
 }
 
 /* Particle / atmosphere layer — add subtle depth */
-.char-showcase::before {
+.weapon-showcase::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -96,7 +96,7 @@
 }
 
 /* ── Layer 2: Portrait — large foreground character ── */
-.char-portrait-layer {
+.weapon-portrait-layer {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -111,7 +111,7 @@
   pointer-events: none;
 }
 
-.char-portrait-img {
+.weapon-portrait-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -122,7 +122,7 @@
 }
 
 /* ── Layer 3: Weapon Info Image — left side overlay ── */
-.char-info-overlay {
+.weapon-info-overlay {
   position: absolute;
   bottom: 12%;
   left: clamp(3rem, 8vw, 10rem);
@@ -130,7 +130,7 @@
   max-width: 800px;
 }
 
-.char-weapon-info-img {
+.weapon-weapon-info-img {
   width: auto;
   height: auto;
   max-width: 100%;
@@ -140,7 +140,7 @@
 }
 
 /* ── Layer 4: Navigation Arrows ── */
-.char-nav-arrow {
+.weapon-nav-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -160,7 +160,7 @@
   transition: all 0.35s var(--ease-out-expo);
 }
 
-.char-nav-arrow:hover {
+.weapon-nav-arrow:hover {
   background: rgba(212, 168, 67, 0.15);
   border-color: var(--gold);
   color: var(--gold);
@@ -168,16 +168,16 @@
   box-shadow: 0 0 20px rgba(212, 168, 67, 0.2);
 }
 
-.char-nav-arrow.prev {
+.weapon-nav-arrow.prev {
   left: clamp(1rem, 2.5vw, 2.5rem);
 }
 
-.char-nav-arrow.next {
+.weapon-nav-arrow.next {
   right: clamp(1rem, 2.5vw, 2.5rem);
 }
 
 /* ── Layer 5: Icon Selector Panel — Glassmorphism right side panel ── */
-.char-icon-selector-panel {
+.weapon-icon-selector-panel {
   position: absolute;
   right: clamp(1rem, 3vw, 3rem);
   top: 50%;
@@ -195,12 +195,12 @@
   -webkit-backdrop-filter: none;
 }
 
-.char-selector-header {
+.weapon-selector-header {
   text-align: center;
 }
 
 
-.char-selector-title {
+.weapon-selector-title {
   font-family: var(--font-heading);
   font-size: 1.8rem;
   font-weight: 700;
@@ -208,20 +208,20 @@
   margin: 0 0 0.75rem 0;
 }
 
-.char-divider {
+.weapon-divider {
   width: 60px;
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--gold), transparent);
   margin: 0 auto;
 }
 
-.char-icon-grid {
+.weapon-icon-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
-.char-icon-btn {
+.weapon-icon-btn {
   width: 80px;
   height: 80px;
   border-radius: var(--radius-lg);
@@ -236,13 +236,13 @@
   padding: 0;
 }
 
-.char-icon-btn:hover {
+.weapon-icon-btn:hover {
   border-color: rgba(255, 255, 255, 0.4);
   transform: scale(1.08);
   background: rgba(0, 0, 0, 0.55);
 }
 
-.char-icon-btn.active {
+.weapon-icon-btn.active {
   border-color: var(--gold);
   box-shadow:
     0 0 24px rgba(212, 168, 67, 0.3),
@@ -252,7 +252,7 @@
 }
 
 /* Active indicator dot */
-.char-icon-btn.active::after {
+.weapon-icon-btn.active::after {
   content: '';
   position: absolute;
   bottom: 4px;
@@ -265,14 +265,14 @@
   box-shadow: 0 0 8px var(--gold);
 }
 
-.char-icon-btn .char-icon-img {
+.weapon-icon-btn .weapon-icon-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: calc(var(--radius-lg) - 2px);
 }
 
-.char-icon-placeholder {
+.weapon-icon-placeholder {
   width: 100%;
   height: 100%;
   display: flex;
@@ -292,35 +292,35 @@
 
 /* Tablet landscape */
 @media (max-width: 1280px) {
-  .char-portrait-layer {
+  .weapon-portrait-layer {
     left: 42%;
     width: 58%;
   }
 
-  .char-icon-btn {
+  .weapon-icon-btn {
     width: 70px;
     height: 70px;
   }
 
-  .char-info-overlay {
+  .weapon-info-overlay {
     max-width: 420px;
   }
 }
 
 /* Tablet portrait */
 @media (max-width: 1024px) {
-  .char-portrait-layer {
+  .weapon-portrait-layer {
     left: 50%;
     transform: translateX(-50%);
     width: 65%;
   }
 
-  .char-info-overlay {
+  .weapon-info-overlay {
     bottom: 18%;
     max-width: 380px;
   }
 
-  .char-icon-selector-panel {
+  .weapon-icon-selector-panel {
     /* Move to bottom on tablet */
     position: absolute;
     right: auto;
@@ -333,19 +333,19 @@
     padding: 1.5rem;
   }
 
-  .char-icon-grid {
+  .weapon-icon-grid {
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
     gap: 0.75rem;
   }
 
-  .char-icon-btn {
+  .weapon-icon-btn {
     width: 60px;
     height: 60px;
   }
 
-  .char-nav-arrow {
+  .weapon-nav-arrow {
     width: 46px;
     height: 46px;
   }
@@ -353,37 +353,37 @@
 
 /* Mobile */
 @media (max-width: 768px) {
-  .char-showcase {
+  .weapon-showcase {
     height: 100dvh;
     min-height: 500px;
   }
 
-  .char-portrait-layer {
+  .weapon-portrait-layer {
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
   }
 
-  .char-portrait-img {
+  .weapon-portrait-img {
     object-position: center 20%;
   }
 
-  .char-info-overlay {
+  .weapon-info-overlay {
     bottom: 15%;
     left: 50%;
     transform: translateX(-50%);
     max-width: 80%;
   }
 
-  .char-weapon-info-img {
+  .weapon-weapon-info-img {
     max-height: 120px;
   }
 
-  .char-nav-arrow {
+  .weapon-nav-arrow {
     display: none;
   }
 
-  .char-icon-selector-panel {
+  .weapon-icon-selector-panel {
     position: absolute;
     right: auto;
     left: 50%;
@@ -399,34 +399,34 @@
     box-shadow: none;
   }
 
-  .char-selector-title {
+  .weapon-selector-title {
     font-size: 1.4rem;
     margin-bottom: 0.5rem;
   }
 
-  .char-icon-grid {
+  .weapon-icon-grid {
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
     gap: 0.6rem;
   }
 
-  .char-icon-btn {
+  .weapon-icon-btn {
     width: 48px;
     height: 48px;
     border-radius: var(--radius-md);
   }
 
-  .char-icon-btn .char-icon-img {
+  .weapon-icon-btn .weapon-icon-img {
     border-radius: calc(var(--radius-md) - 2px);
   }
 
-  .char-icon-placeholder {
+  .weapon-icon-placeholder {
     border-radius: calc(var(--radius-md) - 2px);
     font-size: 1.1rem;
   }
 
-  .char-icon-btn.active::after {
+  .weapon-icon-btn.active::after {
     bottom: 2px;
     width: 4px;
     height: 4px;
@@ -435,30 +435,30 @@
 
 /* Small mobile */
 @media (max-width: 480px) {
-  .char-icon-btn {
+  .weapon-icon-btn {
     width: 42px;
     height: 42px;
     border-width: 2px;
   }
 
-  .char-weapon-info-img {
+  .weapon-weapon-info-img {
     max-height: 80px;
   }
 
-  .char-icon-grid {
+  .weapon-icon-grid {
     gap: 0.45rem;
   }
 }
 
 /* ── Video Overlay Button ── */
-.char-info-overlay {
+.weapon-info-overlay {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1.5rem;
 }
 
-.char-video-btn {
+.weapon-video-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
@@ -476,14 +476,14 @@
   transition: all 0.3s var(--ease-out-expo);
 }
 
-.char-video-btn:hover {
+.weapon-video-btn:hover {
   background: rgba(212, 168, 67, 0.2);
   border-color: var(--gold);
   color: var(--gold);
   transform: translateY(-2px);
 }
 
-.char-video-btn-icon {
+.weapon-video-btn-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -495,13 +495,13 @@
   transition: all 0.3s;
 }
 
-.char-video-btn:hover .char-video-btn-icon {
+.weapon-video-btn:hover .weapon-video-btn-icon {
   background: var(--gold);
   color: white;
 }
 
 /* ── Video Modal ── */
-.char-video-modal {
+.weapon-video-modal {
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -511,7 +511,7 @@
   padding: 2rem;
 }
 
-.char-video-modal-backdrop {
+.weapon-video-modal-backdrop {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.9);
@@ -519,7 +519,7 @@
   -webkit-backdrop-filter: blur(10px);
 }
 
-.char-video-modal-content {
+.weapon-video-modal-content {
   position: relative;
   width: 100%;
   max-width: 1100px;
@@ -531,7 +531,7 @@
   z-index: 10000;
 }
 
-.char-video-close {
+.weapon-video-close {
   position: absolute;
   top: 1rem;
   right: 1rem;
@@ -549,19 +549,19 @@
   transition: all 0.2s;
 }
 
-.char-video-close:hover {
+.weapon-video-close:hover {
   background: var(--primary);
   border-color: var(--primary);
   transform: scale(1.1);
 }
 
-.char-video-iframe {
+.weapon-video-iframe {
   width: 100%;
   height: 100%;
   border: none;
 }
 
-.char-video-error {
+.weapon-video-error {
   width: 100%;
   height: 100%;
   display: flex;

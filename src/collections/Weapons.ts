@@ -1,17 +1,13 @@
-import type { CollectionConfig } from 'payload'
+import { CollectionConfig } from 'payload'
 
-export const Characters: CollectionConfig = {
-  slug: 'characters',
+export const Weapons: CollectionConfig = {
+  slug: 'weapons',
   admin: {
     useAsTitle: 'name',
-    description: 'อาวุธในเกม — แต่ละอาวุธใช้ 4 รูป: ตัวละคร, ข้อความ, แบคกราว, ไอคอน',
-    group: 'Game Content',
-    defaultColumns: ['name', 'portrait', 'sortOrder', 'visible'],
+    defaultColumns: ['name', 'sortOrder', 'visible', 'updatedAt'],
   },
   access: {
     read: () => true,
-    create: ({ req: { user } }) => !!user,
-    update: ({ req: { user } }) => !!user,
     delete: ({ req: { user } }) => !!user,
   },
   fields: [

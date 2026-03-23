@@ -9,7 +9,7 @@ import "./globals.css";
 import "./styles/navigation.css";
 import "./styles/hero.css";
 import "./styles/sections.css";
-import "./styles/character-showcase.css";
+import "./styles/weapon-showcase.css";
 import "./styles/features.css";
 import "./styles/news-section.css";
 import "./styles/footer.css";

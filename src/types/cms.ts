@@ -32,7 +32,7 @@ export function extractMedia(field: unknown): { url: string } | null {
 
 // ──── Characters ────
 
-export interface CMSCharacter {
+export interface CMSWeapon {
   id: number;
   name: string;
   portrait: string | null;
@@ -89,7 +89,7 @@ export interface CMSFeature {
   descriptionTh: string;
 }
 
-export interface CMSCharacterSectionConfig {
+export interface CMSWeaponSectionConfig {
   bgImage: { url: string } | null;
   badgeEn: string;
   badgeTh: string;
@@ -138,7 +138,7 @@ export interface CMSSettings {
   site: CMSSiteConfig;
   hero: CMSHeroConfig;
   event: CMSEventConfig;
-  characters: CMSCharacterSectionConfig;
+  weapons: CMSWeaponSectionConfig;
   highlights: CMSHighlightsConfig;
   news: CMSNewsSectionConfig;
   storeButtons: CMSStoreButton[];
