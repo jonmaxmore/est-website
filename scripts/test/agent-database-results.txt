@@ -1,9 +1,12 @@
 Agent: Database Integrity
 Target: http://178.128.127.161
-Pass: 17 | Fail: 1 | Skip: 2 | Rate: 94.4%
-Timestamp: 2026-03-23T10:04:42.972Z
+Pass: 21 | Fail: 6 | Skip: 1 | Rate: 77.8%
+Timestamp: 2026-03-23T10:25:56.767Z
 
-[FAIL] Characters API unreachable
+[PASS] Characters collection has 4 entries
+[PASS] All characters have required fields (id, name)
+[PASS] No duplicate character names
+[PASS] All character media URLs are valid format
 [PASS] News collection has 3 published articles
 [PASS] All articles have required fields
 [PASS] No duplicate news slugs
@@ -15,11 +18,16 @@ Timestamp: 2026-03-23T10:04:42.972Z
 [PASS] No duplicate thresholds
 [PASS] Milestones sorted by threshold ascending
 [SKIP] Gallery integrity — no gallery items in DB
-[PASS] Registration count is valid: 21408
+[PASS] Registration count is valid: 21413
 [PASS] Stats milestones is array
-[PASS] 1/6 milestones unlocked (display count: 21408)
+[PASS] 1/6 milestones unlocked (display count: 21413)
 [PASS] Site name: "Eternal Tower Saga"
 [PASS] Footer copyright configured
 [PASS] Event config loaded
 [PASS] Hero section config loaded
-[SKIP] Media accessibility — characters API unavailable
+[FAIL] Media broken: CRYSTAL_ORB portrait — status=404
+[FAIL] Media broken: CRYSTAL_ORB icon — status=404
+[FAIL] Media broken: WAND portrait — status=404
+[FAIL] Media broken: WAND icon — status=404
+[FAIL] Media broken: SWORD portrait — status=404
+[FAIL] Media broken: SWORD icon — status=404

@@ -79,6 +79,7 @@ export interface CMSHeroConfig {
 
 export interface CMSFeature {
   icon: string;
+  iconImage?: { url: string } | null;
   titleEn: string;
   titleTh: string;
   descriptionEn: string;
@@ -106,6 +107,7 @@ export interface CMSNewsSectionConfig {
   badgeTh: string;
   titleEn: string;
   titleTh: string;
+  bgImage?: { url: string } | null;
 }
 
 export interface CMSSiteConfig {

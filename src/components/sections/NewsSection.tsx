@@ -18,33 +18,32 @@ const CATEGORY_PLACEHOLDERS: Record<string, { gradient: string; Icon: React.Comp
   maintenance: { gradient: 'linear-gradient(135deg, #E74C3C 0%, #C0392B 50%, #A93226 100%)', Icon: Wrench },
   announcement: { gradient: 'linear-gradient(135deg, #2ECC71 0%, #27AE60 50%, #219A52 100%)', Icon: Megaphone },
 };
-
+// eslint-disable-next-line max-lines-per-function
 export default function NewsSection({ news, sectionConfig }: { news: CMSNewsArticle[]; sectionConfig?: CMSNewsSectionConfig }) {
   const { t } = useLang();
 
-  const items =
-    news.length > 0
-      ? news.map((item, i) => ({
-          key: item.id,
-          slug: item.slug,
-          tag: item.category?.toUpperCase() || 'NEWS',
-          color: CATEGORY_COLORS[item.category] || '#5BC0EB',
-          title: t(item.titleTh, item.titleEn) || item.titleEn,
-          date: item.publishedAt
-            ? new Date(item.publishedAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })
-            : 'Coming Soon',
-          thumb: item.featuredImage,
-          category: item.category,
-          delay: i * 0.1,
-        }))
-      : [
-          { key: 1, slug: '', tag: 'EVENT', color: '#F5A623', title: t('เปิดลงทะเบียนล่วงหน้าแล้ว!', 'Pre-registration is now open!'), date: '16 มี.ค. 2026', thumb: null, category: 'event', delay: 0 },
-          { key: 2, slug: '', tag: 'UPDATE', color: '#5BC0EB', title: t('เผยเนื้อเรื่องซีซั่นแรก', 'Season 1 Story Revealed'), date: 'Coming Soon', thumb: null, category: 'update', delay: 0.1 },
-          { key: 3, slug: '', tag: 'MEDIA', color: '#9B59B6', title: t('ตัวอย่างเกมเพลย์แรก', 'First Gameplay Trailer'), date: 'Coming Soon', thumb: null, category: 'media', delay: 0.2 },
-        ];
+  const items = news.map((item, i) => ({
+    key: item.id,
+    slug: item.slug,
+    tag: item.category?.toUpperCase() || 'NEWS',
+    color: CATEGORY_COLORS[item.category] || '#5BC0EB',
+    title: t(item.titleTh, item.titleEn) || item.titleEn,
+    date: item.publishedAt
+      ? new Date(item.publishedAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })
+      : 'Coming Soon',
+    thumb: item.featuredImage,
+    category: item.category,
+    delay: i * 0.1,
+  }));
+
+  if (items.length === 0) return null;
 
   return (
-    <section className="section-news">
+    <section
+      id="news"
+      className="section-news"
+      style={sectionConfig?.bgImage ? { backgroundImage: `url(${sectionConfig.bgImage.url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+    >
       <div className="container-custom">
         <RevealSection>
           <div className="section-header">

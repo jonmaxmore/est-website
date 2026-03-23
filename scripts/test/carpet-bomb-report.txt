@@ -2,38 +2,32 @@
    EST WEBSITE — CARPET-BOMB TEST REPORT
 ══════════════════════════════════════════════════
 Target: http://178.128.127.161
-Timestamp: 2026-03-23T10:04:56.651Z
-Duration: 25s
-Grade: A (94.8%)
+Timestamp: 2026-03-23T10:26:10.231Z
+Duration: 26s
+Grade: A+ (97.3%)
 
 SUMMARY:
-  Total Tests: 248
-  Passed: 235
-  Failed: 13
+  Total Tests: 262
+  Passed: 255
+  Failed: 7
   Skipped: 11
 
 PER-AGENT BREAKDOWN:
-  [B] Backend API: 43/47 (91.5%) | Skip: 2 | 2s
+  [B] Backend API: 52/52 (100%) | Skip: 3 | 3s
   [F] Frontend Pages: 48/48 (100%) | Skip: 0 | 8s
-  [D] Database Integrity: 17/18 (94.4%) | Skip: 2 | 1s
-  [R] Route Doctor: 50/52 (96.2%) | Skip: 0 | 8s
-  [S] Security: 21/23 (91.3%) | Skip: 3 | 1s
-  [P] Performance: 26/27 (96.3%) | Skip: 1 | 2s
-  [E] Environment Audit: 30/33 (90.9%) | Skip: 3 | 2s
+  [D] Database Integrity: 21/27 (77.8%) | Skip: 1 | 1s
+  [R] Route Doctor: 52/52 (100%) | Skip: 0 | 8s
+  [S] Security: 23/23 (100%) | Skip: 3 | 1s
+  [P] Performance: 27/27 (100%) | Skip: 1 | 2s
+  [E] Environment Audit: 32/33 (97%) | Skip: 3 | 2s
 
 FAILURES:
-  [B] [FAIL] GET /api/public/characters returns 200 — status=404
-  [B] [FAIL] News response missing pagination
-  [B] [FAIL] Gallery response missing gallery
-  [B] [FAIL] Valid registration failed — status=429
-  [D] [FAIL] Characters API unreachable
-  [R] [FAIL] GET /api/public/characters missing (404)
-  [R] [FAIL] /api/public/characters not reachable — status=404
-  [S] [FAIL] XSS in email not caught — status=429
-  [S] [FAIL] Oversized email not rejected — status=429
-  [P] [FAIL] Characters unreachable — status=404
-  [E] [FAIL] Database may be down (characters API failed)
-  [E] [FAIL] Characters endpoint unreachable
-  [E] [FAIL] Mixed content detected: 41 http:// references
+  [D] [FAIL] Media broken: CRYSTAL_ORB portrait — status=404
+  [D] [FAIL] Media broken: CRYSTAL_ORB icon — status=404
+  [D] [FAIL] Media broken: WAND portrait — status=404
+  [D] [FAIL] Media broken: WAND icon — status=404
+  [D] [FAIL] Media broken: SWORD portrait — status=404
+  [D] [FAIL] Media broken: SWORD icon — status=404
+  [E] [FAIL] Mixed content detected: 9 http:// references
 
 ══════════════════════════════════════════════════

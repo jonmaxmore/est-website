@@ -76,11 +76,7 @@ export default function HeroSection({ settings }: HeroProps) {
   );
   const ctaLink = settings?.hero?.ctaLink || '/event';
 
-  const rawStoreButtons = settings?.storeButtons || [
-    { platform: 'ios', label: 'App Store', sublabel: 'Pre-order on the', url: '#' },
-    { platform: 'android', label: 'Google Play', sublabel: 'PRE-REGISTER ON', url: '#' },
-    { platform: 'pc', label: 'Windows', sublabel: 'Coming soon', url: '#' },
-  ];
+  const rawStoreButtons = settings?.storeButtons || [];
   // Deduplicate: keep first entry per platform
   const storeButtons = rawStoreButtons.filter((btn, _i, arr) =>
     arr.findIndex(b => b.platform === btn.platform) === arr.indexOf(btn)
@@ -92,6 +88,7 @@ export default function HeroSection({ settings }: HeroProps) {
 
   return (
     <section
+      id="hero"
       ref={sectionRef}
       className="hero-section"
       onMouseMove={handleMouseMove}

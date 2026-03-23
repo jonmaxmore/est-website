@@ -124,7 +124,8 @@ export const Homepage: GlobalConfig = {
           label: 'Feature Items',
           admin: { description: 'Features displayed in the highlights grid' },
           fields: [
-            { name: 'icon', type: 'text', required: true, label: 'Icon (emoji)' },
+            { name: 'icon', type: 'text', required: true, label: 'Icon (emoji or lucide icon name)' },
+            { name: 'iconImage', type: 'upload', relationTo: 'media', label: 'Custom Icon Image (Overrides default icon)' },
             {
               type: 'row',
               fields: [
@@ -149,9 +150,15 @@ export const Homepage: GlobalConfig = {
        ═══════════════════════════════════════════════ */
     {
       type: 'collapsible',
-      label: '4️⃣ News Section — Badge, Title',
+      label: '4️⃣ News Section — Badge, Title, Background',
       admin: { initCollapsed: true },
       fields: [
+        {
+          name: 'newsBgImage',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'News Background Image (optional)',
+        },
         {
           type: 'row',
           fields: [

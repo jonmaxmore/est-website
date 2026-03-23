@@ -1,13 +1,13 @@
 Agent: Environment Audit
 Target: http://178.128.127.161
-Pass: 30 | Fail: 3 | Skip: 3 | Rate: 90.9%
-Timestamp: 2026-03-23T10:04:56.639Z
+Pass: 32 | Fail: 1 | Skip: 3 | Rate: 97.0%
+Timestamp: 2026-03-23T10:26:10.203Z
 
 [PASS] Server status: ok
 [PASS] Environment: production
 [PASS] Version: 0.1.0
-[PASS] Uptime: 7117s
-[FAIL] Database may be down (characters API failed)
+[PASS] Uptime: 595s
+[PASS] Database reachable (characters API works)
 [PASS] Database read path works (stats)
 [PASS] CMS admin panel accessible — status=200
 [PASS] GraphQL endpoint operational
@@ -24,14 +24,14 @@ Timestamp: 2026-03-23T10:04:56.639Z
 [PASS] Event enabled: true
 [PASS] Characters section config loaded
 [PASS] 3 store buttons configured
-[FAIL] Characters endpoint unreachable
+[PASS] Characters: 4 items
 [PASS] News Articles: 3 items
 [PASS] Milestones: 6 items
 [PASS] Hero tagline bilingual (EN + TH)
 [PASS] Hero CTA bilingual
 [PASS] News articles bilingual
 [PASS] HSTS configured (will apply in production)
-[FAIL] Mixed content detected: 41 http:// references
+[FAIL] Mixed content detected: 9 http:// references
 [PASS] robots.txt accessible
 [PASS] sitemap.xml accessible
 [SKIP] No canonical link

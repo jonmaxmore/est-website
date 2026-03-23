@@ -28,8 +28,22 @@ const LUCIDE_ICONS: Record<string, LucideIcon> = {
   sparkles: Sparkles, shield: Shield, users: Users,
 };
 
-/** Render a CMS icon field — supports Lucide icon names and emoji strings */
-function FeatureIcon({ icon, index }: { icon: string; index: number }) {
+import Image from 'next/image';
+
+/** Render a CMS icon field — supports custom images, Lucide icon names, and emoji strings */
+function FeatureIcon({ icon, iconImage, index }: { icon: string; iconImage?: string | null; index: number }) {
+  if (iconImage) {
+    return (
+      <Image
+        src={iconImage}
+        alt=""
+        width={48}
+        height={48}
+        className="highlight-custom-icon"
+      />
+    );
+  }
+
   const name = icon.toLowerCase().trim();
   const LIcon = LUCIDE_ICONS[name];
   if (LIcon) return <LIcon size={28} />;
@@ -68,16 +82,10 @@ export default function HomeContent({ settings, characters, news }: HomeContentP
   const highlights = settings?.hero?.features?.slice(0, 6).map((feat, i) => ({
     key: i,
     icon: feat.icon,
+    iconImage: feat.iconImage?.url || null,
     title: t(feat.titleTh, feat.titleEn || feat.titleTh),
     desc: t(feat.descriptionTh, feat.descriptionEn || feat.descriptionTh),
-  })) || [
-    { key: 0, icon: 'swords', title: t('ระบบต่อสู้', 'Combat System'), desc: t('ลุยดันเจี้ยนสุดมัน 4 คลาส', 'Exciting 4-class dungeon combat') },
-    { key: 1, icon: 'map', title: t('สำรวจโลก Arcatea', 'Explore Arcatea'), desc: t('ดินแดนกว้างใหญ่ไพศาล', 'Vast open world to explore') },
-    { key: 2, icon: 'castle', title: t('หอคอยนิรันดร์', 'Eternal Tower'), desc: t('ท้าทายดันเจี้ยนสุดโหด', 'Conquer deadly dungeons') },
-    { key: 3, icon: 'shield', title: t('PvP Arena', 'PvP Arena'), desc: t('ต่อสู้แบบเรียลไทม์', 'Real-time battle arena') },
-    { key: 4, icon: 'sparkles', title: t('อัพเกรดตัวละคร', 'Upgrade Characters'), desc: t('พัฒนาทักษะและอุปกรณ์', 'Enhance skills & equipment') },
-    { key: 5, icon: 'users', title: t('กิลด์ & ทีม', 'Guilds & Teams'), desc: t('ร่วมมือพิชิตบอส', 'Team up to defeat bosses') },
-  ];
+  })) || [];
 
   return (
     <div className="landing-page">
@@ -95,7 +103,11 @@ export default function HomeContent({ settings, characters, news }: HomeContentP
         <CharacterSection characters={characters} />
 
         {/* ═══ SECTION 3: HIGHLIGHTS STRIP — Compact feature showcase ═══ */}
-        <section id="features" className="section-highlights">
+        <section
+          id="features"
+          className="section-highlights"
+          style={settings?.highlights?.bgImage ? { backgroundImage: `url(${settings.highlights.bgImage.url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+        >
           <div className="container-custom">
             <RevealSection>
               <div className="section-header">
@@ -108,7 +120,7 @@ export default function HomeContent({ settings, characters, news }: HomeContentP
               {highlights.map((item, i) => (
                 <RevealSection key={item.key} delay={i * 0.06}>
                   <div className="highlight-card">
-                    <div className="highlight-icon"><FeatureIcon icon={item.icon} index={item.key} /></div>
+                    <div className="highlight-icon"><FeatureIcon icon={item.icon} iconImage={item.iconImage} index={item.key} /></div>
                     <h3 className="highlight-title">{item.title}</h3>
                     <p className="highlight-desc">{item.desc}</p>
                   </div>

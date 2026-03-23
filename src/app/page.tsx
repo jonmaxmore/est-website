@@ -6,7 +6,6 @@ import {
   type CMSSettings,
   type CMSCharacter,
   type CMSNewsArticle,
-  type CMSFeature,
 } from '@/types/cms';
 
 // Force fresh CMS data on every request (not static prerender)
@@ -69,7 +68,14 @@ export default async function LandingPage() {
           ctaLink: hs.ctaLink || '/event',
           backgroundImage: extractMedia(hs.backgroundImage),
           backgroundVideo: extractMedia(hs.backgroundVideo),
-          features: (hs.features as CMSFeature[]) || [],
+          features: (hs.features as Record<string, unknown>[])?.map(f => ({
+            icon: (f.icon as string) || '',
+            iconImage: extractMedia(f.iconImage),
+            titleEn: (f.titleEn as string) || '',
+            titleTh: (f.titleTh as string) || '',
+            descriptionEn: (f.descriptionEn as string) || '',
+            descriptionTh: (f.descriptionTh as string) || '',
+          })) || [],
         },
         event: ec
           ? { enabled: ec.enabled || false, titleEn: ec.titleEn || '', titleTh: ec.titleTh || '' }
@@ -93,6 +99,7 @@ export default async function LandingPage() {
           badgeTh: hs.newsBadgeTh || 'ข่าวล่าสุด',
           titleEn: hs.newsTitleEn || 'News & Updates',
           titleTh: hs.newsTitleTh || 'ข่าวสารและอัพเดท',
+          bgImage: extractMedia(hs.newsBgImage),
         },
         storeButtons: storeButtonsRes.docs.map((btn: Record<string, unknown>) => ({
           platform: btn.platform as string,

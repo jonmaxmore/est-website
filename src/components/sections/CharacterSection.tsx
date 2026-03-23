@@ -77,11 +77,7 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
     exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -80 : 80 }),
   };
 
-  const infoVariants = {
-    initial: { opacity: 0, y: 30 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -20 },
-  };
+
 
   return (
     <section id="characters" className="char-showcase" aria-label="Weapon Showcase">
@@ -142,29 +138,6 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
         </AnimatePresence>
       </div>
 
-      {/* ── Layer 3: Weapon Info Image (text as image) ── */}
-      {activeChar?.infoImage && (
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`info-${activeIdx}`}
-            className="char-info-overlay"
-            variants={infoVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.4, delay: 0.15 }}
-          >
-            <Image
-              src={activeChar.infoImage}
-              alt={activeChar.name || 'Weapon info'}
-              width={400}
-              height={200}
-              className="char-weapon-info-img"
-            />
-          </motion.div>
-        </AnimatePresence>
-      )}
-
       {/* ── Layer 4: Navigation Arrows ── */}
       <button
         className="char-nav-arrow prev"
@@ -181,40 +154,46 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
         <ChevronRight size={24} />
       </button>
 
-      {/* ── Layer 5: Icon Selector ── */}
+      {/* ── Layer 5: Glassmorphism Icon Selector Panel ── */}
       <div
-        className="char-icon-selector"
-        role="tablist"
-        aria-label="Select weapon"
+        className="char-icon-selector-panel"
         onKeyDown={handleKeyDown}
       >
-        {characters.map((char, i) => (
-          <motion.button
-            key={char.id}
-            role="tab"
-            aria-selected={i === activeIdx}
-            aria-label={char.name || `Weapon ${i + 1}`}
-            tabIndex={i === activeIdx ? 0 : -1}
-            className={`char-icon-btn ${i === activeIdx ? 'active' : ''}`}
-            onClick={() => goTo(i)}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {char.icon ? (
-              <Image
-                src={char.icon}
-                alt=""
-                width={80}
-                height={80}
-                className="char-icon-img"
-              />
-            ) : (
-              <span className="char-icon-placeholder" aria-hidden="true">
-                {(char.name || '?').charAt(0)}
-              </span>
-            )}
-          </motion.button>
-        ))}
+        <div className="char-selector-header">
+          <span className="char-selector-badge">ARSENAL</span>
+          <h3 className="char-selector-title">Select Weapon</h3>
+          <div className="char-divider" />
+        </div>
+        
+        <div className="char-icon-grid" role="tablist" aria-label="Select weapon">
+          {characters.map((char, i) => (
+            <motion.button
+              key={char.id}
+              role="tab"
+              aria-selected={i === activeIdx}
+              aria-label={char.name || `Weapon ${i + 1}`}
+              tabIndex={i === activeIdx ? 0 : -1}
+              className={`char-icon-btn ${i === activeIdx ? 'active' : ''}`}
+              onClick={() => goTo(i)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {char.icon ? (
+                <Image
+                  src={char.icon}
+                  alt={char.name || ''}
+                  width={80}
+                  height={80}
+                  className="char-icon-img"
+                />
+              ) : (
+                <span className="char-icon-placeholder" aria-hidden="true">
+                  {(char.name || '?').charAt(0)}
+                </span>
+              )}
+            </motion.button>
+          ))}
+        </div>
       </div>
     </section>
   );

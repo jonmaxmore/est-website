@@ -1,7 +1,7 @@
 Agent: Security
 Target: http://178.128.127.161
-Pass: 21 | Fail: 2 | Skip: 3 | Rate: 91.3%
-Timestamp: 2026-03-23T10:04:52.531Z
+Pass: 23 | Fail: 0 | Skip: 3 | Rate: 100.0%
+Timestamp: 2026-03-23T10:26:06.371Z
 
 [PASS] X-Content-Type-Options: nosniff, nosniff
 [PASS] X-Frame-Options: SAMEORIGIN, SAMEORIGIN
@@ -15,9 +15,9 @@ Timestamp: 2026-03-23T10:04:52.531Z
 [PASS] POST /api/init-db is restricted — status=401
 [PASS] GET /api/users requires auth
 [PASS] POST /api/users requires auth
-[FAIL] XSS in email not caught — status=429
+[PASS] XSS in email rejected
 [PASS] SQL injection in slug handled safely — status=404
-[FAIL] Oversized email not rejected — status=429
+[PASS] Oversized email rejected — status=413
 [PASS] Path traversal blocked — status=404
 [SKIP] Content-Type enforcement — accepted text/plain (status=429)
 [PASS] Rate limiting triggered on /api/register (429)

@@ -172,16 +172,58 @@
   right: clamp(1rem, 2.5vw, 2.5rem);
 }
 
-/* ── Layer 5: Icon Selector — 2-column grid, right side ── */
-.char-icon-selector {
+/* ── Layer 5: Icon Selector Panel — Glassmorphism right side panel ── */
+.char-icon-selector-panel {
   position: absolute;
-  right: clamp(1.5rem, 4vw, 4rem);
+  right: clamp(1rem, 3vw, 3rem);
   top: 50%;
   transform: translateY(-50%);
   z-index: 6;
+  width: 380px;
+  background: rgba(4, 14, 33, 0.65);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.char-selector-header {
+  text-align: center;
+}
+
+.char-selector-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.char-selector-title {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem 0;
+}
+
+.char-divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto;
+}
+
+.char-icon-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
 }
 
 .char-icon-btn {
@@ -283,7 +325,7 @@
     max-width: 380px;
   }
 
-  .char-icon-selector {
+  .char-icon-selector-panel {
     /* Move to bottom on tablet */
     position: absolute;
     right: auto;
@@ -291,8 +333,15 @@
     top: auto;
     bottom: 1.5rem;
     transform: translateX(-50%);
+    width: 90%;
+    max-width: 600px;
+    padding: 1.5rem;
+  }
+
+  .char-icon-grid {
     display: flex;
     flex-wrap: nowrap;
+    justify-content: center;
     gap: 0.75rem;
   }
 
@@ -339,22 +388,31 @@
     display: none;
   }
 
-  .char-icon-selector {
+  .char-icon-selector-panel {
     position: absolute;
     right: auto;
     left: 50%;
     top: auto;
     bottom: 1rem;
     transform: translateX(-50%);
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 0.6rem;
-    padding: 0.5rem 1rem;
+    width: 95%;
+    padding: 1rem;
     background: rgba(4, 14, 33, 0.85);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
-    border-radius: var(--radius-full);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-xl);
+  }
+
+  .char-selector-title {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .char-icon-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 0.6rem;
   }
 
   .char-icon-btn {
@@ -391,8 +449,7 @@
     max-height: 80px;
   }
 
-  .char-icon-selector {
+  .char-icon-grid {
     gap: 0.45rem;
-    padding: 0.4rem 0.8rem;
   }
 }

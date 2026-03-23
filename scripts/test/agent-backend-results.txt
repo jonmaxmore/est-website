@@ -1,7 +1,7 @@
 Agent: Backend API
 Target: http://178.128.127.161
-Pass: 43 | Fail: 4 | Skip: 2 | Rate: 91.5%
-Timestamp: 2026-03-23T10:04:34.188Z
+Pass: 52 | Fail: 0 | Skip: 3 | Rate: 100.0%
+Timestamp: 2026-03-23T10:25:47.553Z
 
 [PASS] GET /api/health returns 200 — status=200
 [PASS] Health response has status=ok
@@ -15,10 +15,14 @@ Timestamp: 2026-03-23T10:04:34.188Z
 [PASS] Settings has news config
 [PASS] Settings has storeButtons
 [SKIP] Settings Cache-Control header — not set
-[FAIL] GET /api/public/characters returns 200 — status=404
+[PASS] GET /api/public/characters returns 200
+[PASS] Characters response is array
+[PASS] Character has id
+[PASS] Character has name
+[PASS] Characters collection has data — 4 characters
 [PASS] GET /api/public/news returns 200
 [PASS] News response has articles array
-[FAIL] News response missing pagination
+[PASS] News response has pagination
 [PASS] News pagination limit works — got 2 items
 [PASS] News category filter accepted
 [PASS] News limit capped at 50
@@ -28,7 +32,8 @@ Timestamp: 2026-03-23T10:04:34.188Z
 [PASS] News detail has article object
 [PASS] News detail has related articles
 [PASS] GET /api/public/gallery returns 200
-[FAIL] Gallery response missing gallery
+[PASS] Gallery response has gallery object
+[SKIP] Gallery categories — no data
 [PASS] GET /api/public/milestones returns 200
 [PASS] Milestones response is array
 [PASS] Milestone has threshold
@@ -43,12 +48,13 @@ Timestamp: 2026-03-23T10:04:34.188Z
 [PASS] Register with invalid email returns 400
 [PASS] Register with invalid platform returns 400
 [PASS] Register with invalid region returns 400
-[FAIL] Valid registration failed — status=429
-[SKIP] Duplicate email check — status=429
+[PASS] Valid registration returns referralCode — code=20L3g6lq
+[PASS] Valid registration accepted — email=carpet-bomb-test-1774261546570@test-delete.com
+[SKIP] Duplicate email check — status=500
 [PASS] Stats reset without auth returns 401/403 — status=401
 [PASS] Stats reset with fake token rejected — status=403
 [PASS] GraphQL endpoint responds
 [PASS] DELETE /api/health not allowed — status=405
 [PASS] DELETE /api/settings not allowed — status=405
-[PASS] DELETE /api/public/characters not allowed — status=404
+[PASS] DELETE /api/public/characters not allowed — status=405
 [PASS] DELETE /api/public/news not allowed — status=405

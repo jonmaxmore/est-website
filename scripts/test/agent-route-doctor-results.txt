@@ -1,7 +1,7 @@
 Agent: Route Doctor
 Target: http://178.128.127.161
-Pass: 50 | Fail: 2 | Skip: 0 | Rate: 96.2%
-Timestamp: 2026-03-23T10:04:46.097Z
+Pass: 52 | Fail: 0 | Skip: 0 | Rate: 100.0%
+Timestamp: 2026-03-23T10:25:59.879Z
 
 [PASS] Page / exists — status=200
 [PASS] Page /character exists — status=307
@@ -19,11 +19,11 @@ Timestamp: 2026-03-23T10:04:46.097Z
 [PASS] GET /api/health exists — status=200
 [PASS] GET /api/settings exists — status=200
 [PASS] GET /api/stats exists — status=200
-[FAIL] GET /api/public/characters missing (404)
+[PASS] GET /api/public/characters exists — status=200
 [PASS] GET /api/public/news exists — status=200
 [PASS] GET /api/public/gallery exists — status=200
 [PASS] GET /api/public/milestones exists — status=200
-[PASS] POST /api/register exists — status=429
+[PASS] POST /api/register exists — status=500
 [PASS] POST /api/stats/reset exists — status=401
 [PASS] POST /api/graphql exists — status=415
 [PASS] Link /favicon.ico?favicon.0b3bf435.ico resolves — status=200
@@ -45,7 +45,7 @@ Timestamp: 2026-03-23T10:04:46.097Z
 [PASS] /api/health returns JSON content-type
 [PASS] /api/settings returns JSON content-type
 [PASS] /api/stats returns JSON content-type
-[FAIL] /api/public/characters not reachable — status=404
+[PASS] /api/public/characters returns JSON content-type
 [PASS] /api/public/news returns JSON content-type
 [PASS] /api/public/gallery returns JSON content-type
 [PASS] /api/public/milestones returns JSON content-type
