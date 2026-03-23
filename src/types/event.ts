@@ -60,6 +60,10 @@ export interface StoreButton {
 }
 
 export interface EventSettings {
+  titleEn?: string;
+  titleTh?: string;
+  descriptionEn?: string;
+  descriptionTh?: string;
   badgeTextEn?: string;
   badgeTextTh?: string;
   milestoneBadgeEn?: string;
