@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Play, X } from 'lucide-react';
 import type { CMSCharacter } from '@/types/cms';
 
@@ -71,6 +71,44 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
   // Don't render section if no weapons uploaded
   if (itemCount === 0) return null;
 
+  /* Parallax Mouse Tracking */
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- Checked earlier
+  const mouseX = useMotionValue(0);
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- Checked earlier
+  const mouseY = useMotionValue(0);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const { clientX, clientY } = e;
+    const { innerWidth, innerHeight } = window;
+    // Normalize to -1 to 1
+    const x = (clientX / innerWidth - 0.5) * 2;
+    const y = (clientY / innerHeight - 0.5) * 2;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const springConfig = { damping: 25, stiffness: 120, mass: 0.5 };
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const smoothX = useSpring(mouseX, springConfig);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const smoothY = useSpring(mouseY, springConfig);
+
+  // Parallax strengths (background opposite, foreground same direction)
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const bgX = useTransform(smoothX, [-1, 1], [30, -30]);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const bgY = useTransform(smoothY, [-1, 1], [15, -15]);
+  
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const portraitX = useTransform(smoothX, [-1, 1], [-50, 50]);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const portraitY = useTransform(smoothY, [-1, 1], [-25, 25]);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const infoX = useTransform(smoothX, [-1, 1], [-20, 20]);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const infoY = useTransform(smoothY, [-1, 1], [-10, 10]);
+
   /* Animation variants */
   const bgVariants = {
     initial: { opacity: 0 },
@@ -87,7 +125,12 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
 
 
   return (
-    <section id="characters" className="char-showcase" aria-label="Weapon Showcase">
+    <section 
+      id="characters" 
+      className="char-showcase" 
+      aria-label="Weapon Showcase"
+      onMouseMove={handleMouseMove}
+    >
       {/* ── Layer 1: Background ── */}
       <div className="char-bg-layer">
         <AnimatePresence mode="wait">
@@ -99,6 +142,7 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
             exit="exit"
             transition={{ duration: 0.6 }}
             className="char-motion-absolute"
+            style={{ x: bgX, y: bgY, scale: 1.05 }}
           >
             {activeChar?.backgroundImage ? (
               <Image
@@ -128,7 +172,13 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
             animate="animate"
             exit="exit"
             transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-            style={{ width: '100%', height: '100%', position: 'relative' }}
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              position: 'relative',
+              x: portraitX,
+              y: portraitY 
+            }}
           >
             {activeChar?.portrait ? (
               <Image
@@ -150,17 +200,18 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
         <AnimatePresence mode="popLayout" custom={direction}>
           <motion.div
             key={`info-${activeIdx}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.5 }}
+            style={{ x: infoX, y: infoY }}
           >
             {activeChar?.infoImage && (
               <Image
                 src={activeChar.infoImage}
                 alt="Weapon Info"
-                width={400}
-                height={200}
+                width={800}
+                height={500}
                 className="char-weapon-info-img"
               />
             )}
