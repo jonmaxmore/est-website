@@ -5,10 +5,8 @@ import Link from 'next/link';
 import '@/app/styles/pages/admin-analytics.css';
 
 /* ═══════════════════════════════════════════════
-   EST Enterprise Analytics Dashboard
-   Multi-tab layout: Overview | Acquisition | Technology | Behavior
-   Reads from /api/analytics/dashboard (rollup-powered)
-   Falls back to /api/analytics (legacy) if rollups empty
+   EST Analytics Dashboard — Professional Edition
+   Google Analytics-inspired multi-tab layout
    ═══════════════════════════════════════════════ */
 
 // ─── Types ───
@@ -20,7 +18,6 @@ interface KPI {
 }
 
 interface Trend { change: number; direction: 'up' | 'down' | 'flat' }
-
 interface DailyPoint { date: string; pageviews: number; sessions: number; uniqueVisitors: number }
 
 interface DimensionRow {
@@ -37,18 +34,14 @@ interface DashboardData {
   dailyTrend: DailyPoint[];
   generatedAt: string;
   tab: string;
-  // Overview
   channels?: DimensionRow[];
   devices?: DimensionRow[];
   topPages?: DimensionRow[];
-  // Acquisition
   utmSources?: DimensionRow[];
   utmCampaigns?: DimensionRow[];
   referrers?: DimensionRow[];
-  // Technology
   browsers?: DimensionRow[];
   operatingSystems?: DimensionRow[];
-  // Behavior
   funnel?: FunnelStep[];
 }
 
@@ -74,18 +67,64 @@ function reducer(state: State, action: Action): State {
 
 const PERIODS = [
   { days: 1, label: 'Today' },
-  { days: 7, label: '7D' },
-  { days: 30, label: '30D' },
-  { days: 90, label: '90D' },
+  { days: 7, label: '7 Days' },
+  { days: 30, label: '30 Days' },
+  { days: 90, label: '90 Days' },
 ];
 
-const TABS: { id: Tab; label: string; icon: string }[] = [
-  { id: 'overview', label: 'Overview', icon: '📊' },
-  { id: 'acquisition', label: 'Acquisition', icon: '🔗' },
-  { id: 'technology', label: 'Technology', icon: '💻' },
-  { id: 'behavior', label: 'Behavior', icon: '🎯' },
+const TABS: { id: Tab; label: string }[] = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'acquisition', label: 'Acquisition' },
+  { id: 'technology', label: 'Technology' },
+  { id: 'behavior', label: 'Behavior' },
 ];
 
+// ─── SVG Icons ───
+function IconChart() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 4-8"/></svg>;
+}
+
+function IconGlobe() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>;
+}
+
+function IconTarget() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>;
+}
+
+function IconMonitor() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>;
+}
+
+function IconLink() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>;
+}
+
+function IconArrowLeft() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>;
+}
+
+function IconRefresh() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>;
+}
+
+function IconDownload() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>;
+}
+
+function IconFile() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>;
+}
+
+function IconSmartphone() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>;
+}
+
+function IconFilter() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>;
+}
+
+// ─── Helpers ───
 function fmt(n: number): string {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
   if (n >= 1_000) return (n / 1_000).toFixed(1) + 'K';
@@ -96,19 +135,19 @@ function fmtDuration(seconds: number): string {
   if (seconds < 60) return `${seconds}s`;
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
-  return `${m}m ${s}s`;
+  return s > 0 ? `${m}m ${s}s` : `${m}m`;
 }
 
-function trendBadge(trend?: Trend) {
+function TrendBadge({ trend }: { trend?: Trend }) {
   if (!trend) return null;
   const cls = trend.direction === 'up' ? 'trend-up' : trend.direction === 'down' ? 'trend-down' : 'trend-flat';
-  const arrow = trend.direction === 'up' ? '↑' : trend.direction === 'down' ? '↓' : '—';
+  const arrow = trend.direction === 'up' ? '\u2191' : trend.direction === 'down' ? '\u2193' : '\u2014';
   return <span className={`da-trend ${cls}`}>{arrow} {trend.change}%</span>;
 }
 
-// ─── Bar chart component ───
+// ─── Bar chart ───
 function BarChart({ data, valueKey, label }: { data: DailyPoint[]; valueKey: keyof DailyPoint; label: string }) {
-  if (data.length === 0) return <p className="da-empty">No data</p>;
+  if (data.length === 0) return <p className="da-empty">No data available</p>;
   const values = data.map(d => d[valueKey] as number);
   const max = Math.max(...values, 1);
   return (
@@ -127,18 +166,23 @@ function BarChart({ data, valueKey, label }: { data: DailyPoint[]; valueKey: key
   );
 }
 
-// ─── Dimension table component ───
-function DimTable({ rows, title, icon }: { rows?: DimensionRow[]; title: string; icon: string }) {
+// ─── Dimension table ───
+function DimTable({ rows, title, icon }: { rows?: DimensionRow[]; title: string; icon: React.ReactNode }) {
   if (!rows || rows.length === 0) return (
     <div className="da-card">
-      <h3 className="da-card-title">{icon} {title}</h3>
+      <div className="da-card-header">
+        <h3 className="da-card-title">{icon} {title}</h3>
+      </div>
       <p className="da-empty">No data yet</p>
     </div>
   );
   const maxSessions = rows[0]?.sessions || 1;
   return (
     <div className="da-card">
-      <h3 className="da-card-title">{icon} {title}</h3>
+      <div className="da-card-header">
+        <h3 className="da-card-title">{icon} {title}</h3>
+        <span style={{ color: 'var(--da-text-muted)', fontSize: '0.6875rem' }}>{rows.length} items</span>
+      </div>
       <div className="da-table-wrap">
         <table className="da-table">
           <thead>
@@ -147,14 +191,17 @@ function DimTable({ rows, title, icon }: { rows?: DimensionRow[]; title: string;
               <th>Sessions</th>
               <th>Visitors</th>
               <th>Bounce</th>
-              <th>Avg Dur</th>
+              <th>Duration</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r, i) => (
               <tr key={i}>
-                <td className="da-cell-name">{r.value}</td>
+                <td className="da-cell-name">
+                  <span className={`da-rank da-rank-${i < 3 ? i + 1 : ''}`}>{i + 1}</span>
+                  {r.value || '(direct)'}
+                </td>
                 <td className="da-cell-num">{fmt(r.sessions)}</td>
                 <td className="da-cell-num">{fmt(r.uniqueVisitors)}</td>
                 <td className="da-cell-num">{r.bounceRate}%</td>
@@ -187,6 +234,7 @@ function FunnelChart({ steps }: { steps?: FunnelStep[] }) {
         return (
           <div className="da-funnel-step" key={s.step}>
             <div className="da-funnel-label">
+              <span className="da-funnel-number">{i + 1}</span>
               <span className="da-funnel-name">{s.label}</span>
               <span className="da-funnel-count">{fmt(s.count)}</span>
               {i > 0 && dropoff > 0 && <span className="da-funnel-drop">-{dropoff}%</span>}
@@ -254,7 +302,6 @@ export default function AnalyticsDashboardPage() {
       if (res.status === 401) { dispatch({ type: 'FETCH_ERR', payload: 'unauthorized' }); return; }
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
-      // Check if rollups have data
       if (json.kpi && json.kpi.sessions === 0 && json.kpi.pageviews === 0 && !useLegacy) {
         setUseLegacy(true);
       }
@@ -271,9 +318,9 @@ export default function AnalyticsDashboardPage() {
     return (
       <div className="da-auth-wall">
         <div className="da-auth-card">
-          <h2>Admin Access Required</h2>
-          <p>Please login to the CMS admin panel first.</p>
-          <Link href="/admin" className="da-login-btn">Login to CMS</Link>
+          <h2>Authentication Required</h2>
+          <p>Sign in to the CMS admin panel to access analytics.</p>
+          <Link href="/admin" className="da-login-btn">Sign In</Link>
         </div>
       </div>
     );
@@ -287,10 +334,10 @@ export default function AnalyticsDashboardPage() {
   // Error
   if (state.error) {
     return (
-      <div className="da-error">
-        <h2>Error loading analytics</h2>
-        <p>{state.error}</p>
-        <button onClick={() => fetchData(state.days, state.tab)} className="da-retry-btn">Retry</button>
+      <div className="da-error-page">
+        <h2>Unable to load analytics</h2>
+        <p style={{ color: 'var(--da-text-secondary)', marginBottom: '1rem' }}>{state.error}</p>
+        <button onClick={() => fetchData(state.days, state.tab)} className="da-retry-btn">Try Again</button>
       </div>
     );
   }
@@ -300,72 +347,85 @@ export default function AnalyticsDashboardPage() {
 
   return (
     <div className="da-page">
-      {/* ─── Header ─── */}
-      <header className="da-header">
-        <div className="da-header-left">
-          <Link href="/admin" className="da-back">← CMS</Link>
-          <h1 className="da-title">Analytics</h1>
-          <span className="da-subtitle">Eternal Tower Saga</span>
+      {/* ─── Top Bar ─── */}
+      <div className="da-topbar">
+        <div className="da-topbar-inner">
+          <div className="da-topbar-left">
+            <Link href="/admin" className="da-back">
+              <IconArrowLeft /> CMS
+            </Link>
+            <div className="da-topbar-divider" />
+            <h1 className="da-topbar-title">Analytics</h1>
+          </div>
+          <div className="da-topbar-right">
+            <div className="da-periods">
+              {PERIODS.map(p => (
+                <button key={p.days} className={`da-period ${state.days === p.days ? 'active' : ''}`}
+                  onClick={() => dispatch({ type: 'SET_DAYS', payload: p.days })}>{p.label}</button>
+              ))}
+            </div>
+            <button className="da-icon-btn" onClick={() => fetchData(state.days, state.tab)} disabled={state.loading}
+              title="Refresh">
+              <IconRefresh />
+            </button>
+            <button className="da-export-btn" onClick={() => d && exportCSV(d)}>
+              <IconDownload /> Export
+            </button>
+          </div>
         </div>
-        <div className="da-header-right">
-          <div className="da-periods">
-            {PERIODS.map(p => (
-              <button key={p.days} className={`da-period ${state.days === p.days ? 'active' : ''}`}
-                onClick={() => dispatch({ type: 'SET_DAYS', payload: p.days })}>{p.label}</button>
-            ))}
-          </div>
-          <button className="da-btn-refresh" onClick={() => fetchData(state.days, state.tab)} disabled={state.loading}>
-            {state.loading ? '...' : '↻'}
-          </button>
-          <button className="da-btn-export" onClick={() => d && exportCSV(d)}>CSV</button>
-        </div>
-      </header>
+      </div>
 
-      {/* ─── Tabs ─── */}
-      <nav className="da-tabs">
-        {TABS.map(t => (
-          <button key={t.id} className={`da-tab ${state.tab === t.id ? 'active' : ''}`}
-            onClick={() => dispatch({ type: 'SET_TAB', payload: t.id })}>
-            <span className="da-tab-icon">{t.icon}</span> {t.label}
-          </button>
-        ))}
-      </nav>
+      <div className="da-container">
+        {/* ─── Tabs ─── */}
+        <nav className="da-tabs">
+          {TABS.map(t => (
+            <button key={t.id} className={`da-tab ${state.tab === t.id ? 'active' : ''}`}
+              onClick={() => dispatch({ type: 'SET_TAB', payload: t.id })}>
+              {t.id === 'overview' && <IconChart />}
+              {t.id === 'acquisition' && <IconLink />}
+              {t.id === 'technology' && <IconMonitor />}
+              {t.id === 'behavior' && <IconTarget />}
+              {t.label}
+            </button>
+          ))}
+        </nav>
 
-      {/* ─── KPI Row ─── */}
-      <section className="da-kpi-row">
-        <KPICard label="Page Views" value={fmt(k.pageviews)} trend={d.trends.pageviews} />
-        <KPICard label="Sessions" value={fmt(k.sessions)} trend={d.trends.sessions} />
-        <KPICard label="Visitors" value={fmt(k.uniqueVisitors)} trend={d.trends.uniqueVisitors} />
-        <KPICard label="Bounce Rate" value={`${k.bounceRate}%`} trend={d.trends.bounceRate} invertTrend />
-        <KPICard label="Avg Duration" value={fmtDuration(k.avgDuration)} />
-        <KPICard label="Pages/Session" value={String(k.pagesPerSession)} />
-        <KPICard label="Registrations" value={fmt(k.recentRegistrations)} trend={d.trends.registrations} highlight />
-        <KPICard label="Conversion" value={`${k.conversionRate}%`} />
-      </section>
-
-      {/* ─── Daily Trend Charts ─── */}
-      {d.dailyTrend.length > 0 && (
-        <section className="da-charts-row">
-          <div className="da-card da-card-wide">
-            <BarChart data={d.dailyTrend} valueKey="pageviews" label="Page Views" />
-          </div>
-          <div className="da-card da-card-wide">
-            <BarChart data={d.dailyTrend} valueKey="sessions" label="Sessions" />
-          </div>
+        {/* ─── KPI Row ─── */}
+        <section className="da-kpi-row">
+          <KPICard label="Page Views" value={fmt(k.pageviews)} trend={d.trends.pageviews} />
+          <KPICard label="Sessions" value={fmt(k.sessions)} trend={d.trends.sessions} />
+          <KPICard label="Unique Visitors" value={fmt(k.uniqueVisitors)} trend={d.trends.uniqueVisitors} />
+          <KPICard label="Bounce Rate" value={`${k.bounceRate}%`} trend={d.trends.bounceRate} invertTrend />
+          <KPICard label="Avg. Duration" value={fmtDuration(k.avgDuration)} />
+          <KPICard label="Pages / Session" value={String(k.pagesPerSession)} />
+          <KPICard label="Registrations" value={fmt(k.recentRegistrations)} trend={d.trends.registrations} highlight />
+          <KPICard label="Conversion Rate" value={`${k.conversionRate}%`} />
         </section>
-      )}
 
-      {/* ─── Tab Content ─── */}
-      {state.tab === 'overview' && <OverviewTab data={d} />}
-      {state.tab === 'acquisition' && <AcquisitionTab data={d} />}
-      {state.tab === 'technology' && <TechnologyTab data={d} />}
-      {state.tab === 'behavior' && <BehaviorTab data={d} />}
+        {/* ─── Daily Trend Charts ─── */}
+        {d.dailyTrend.length > 0 && (
+          <section className="da-charts-row">
+            <div className="da-card">
+              <BarChart data={d.dailyTrend} valueKey="pageviews" label="Page Views" />
+            </div>
+            <div className="da-card">
+              <BarChart data={d.dailyTrend} valueKey="sessions" label="Sessions" />
+            </div>
+          </section>
+        )}
 
-      {/* ─── Footer ─── */}
-      <footer className="da-footer">
-        <p>Internal analytics • Last updated: {new Date(d.generatedAt).toLocaleString()}</p>
-        {useLegacy && <p className="da-footer-note">Rollup data not yet available — run /api/analytics/rollup to populate</p>}
-      </footer>
+        {/* ─── Tab Content ─── */}
+        {state.tab === 'overview' && <OverviewTab data={d} />}
+        {state.tab === 'acquisition' && <AcquisitionTab data={d} />}
+        {state.tab === 'technology' && <TechnologyTab data={d} />}
+        {state.tab === 'behavior' && <BehaviorTab data={d} />}
+
+        {/* ─── Footer ─── */}
+        <footer className="da-footer">
+          <p>Last updated: {new Date(d.generatedAt).toLocaleString()}</p>
+          {useLegacy && <p className="da-footer-note">Rollup data pending — run POST /api/analytics/rollup to populate</p>}
+        </footer>
+      </div>
     </div>
   );
 }
@@ -380,9 +440,11 @@ function KPICard({ label, value, trend, highlight, invertTrend }: {
   } : trend;
   return (
     <div className={`da-kpi ${highlight ? 'da-kpi-highlight' : ''}`}>
+      <div className="da-kpi-top">
+        <span className="da-kpi-label">{label}</span>
+        <TrendBadge trend={effectiveTrend} />
+      </div>
       <div className="da-kpi-value">{value}</div>
-      <div className="da-kpi-label">{label}</div>
-      {effectiveTrend && trendBadge(effectiveTrend)}
     </div>
   );
 }
@@ -391,9 +453,9 @@ function KPICard({ label, value, trend, highlight, invertTrend }: {
 function OverviewTab({ data }: { data: DashboardData }) {
   return (
     <section className="da-grid-3">
-      <DimTable rows={data.topPages} title="Pages" icon="📄" />
-      <DimTable rows={data.channels} title="Channels" icon="🔗" />
-      <DimTable rows={data.devices} title="Devices" icon="📱" />
+      <DimTable rows={data.topPages} title="Pages" icon={<IconFile />} />
+      <DimTable rows={data.channels} title="Channels" icon={<IconLink />} />
+      <DimTable rows={data.devices} title="Devices" icon={<IconSmartphone />} />
     </section>
   );
 }
@@ -402,10 +464,10 @@ function OverviewTab({ data }: { data: DashboardData }) {
 function AcquisitionTab({ data }: { data: DashboardData }) {
   return (
     <section className="da-grid-2">
-      <DimTable rows={data.channels} title="Channels" icon="🔗" />
-      <DimTable rows={data.utmSources} title="UTM Sources" icon="📡" />
-      <DimTable rows={data.utmCampaigns} title="Campaigns" icon="📢" />
-      <DimTable rows={data.referrers} title="Referrer Domains" icon="🌐" />
+      <DimTable rows={data.channels} title="Channels" icon={<IconLink />} />
+      <DimTable rows={data.utmSources} title="UTM Sources" icon={<IconGlobe />} />
+      <DimTable rows={data.utmCampaigns} title="Campaigns" icon={<IconTarget />} />
+      <DimTable rows={data.referrers} title="Referrers" icon={<IconGlobe />} />
     </section>
   );
 }
@@ -414,9 +476,9 @@ function AcquisitionTab({ data }: { data: DashboardData }) {
 function TechnologyTab({ data }: { data: DashboardData }) {
   return (
     <section className="da-grid-3">
-      <DimTable rows={data.devices} title="Devices" icon="📱" />
-      <DimTable rows={data.browsers} title="Browsers" icon="🌐" />
-      <DimTable rows={data.operatingSystems} title="Operating Systems" icon="💻" />
+      <DimTable rows={data.devices} title="Devices" icon={<IconSmartphone />} />
+      <DimTable rows={data.browsers} title="Browsers" icon={<IconGlobe />} />
+      <DimTable rows={data.operatingSystems} title="Operating Systems" icon={<IconMonitor />} />
     </section>
   );
 }
@@ -425,9 +487,11 @@ function TechnologyTab({ data }: { data: DashboardData }) {
 function BehaviorTab({ data }: { data: DashboardData }) {
   return (
     <section className="da-grid-2">
-      <DimTable rows={data.topPages} title="Pages" icon="📄" />
+      <DimTable rows={data.topPages} title="Pages" icon={<IconFile />} />
       <div className="da-card">
-        <h3 className="da-card-title">🎯 Conversion Funnel</h3>
+        <div className="da-card-header">
+          <h3 className="da-card-title"><IconFilter /> Conversion Funnel</h3>
+        </div>
         <FunnelChart steps={data.funnel} />
       </div>
     </section>

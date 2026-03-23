@@ -43,6 +43,7 @@ export default buildConfig({
     },
     components: {
       afterDashboard: ['@/components/admin/AnalyticsDashboardWidget#default'],
+      afterNavLinks: ['@/components/admin/AnalyticsNavLink#default'],
     },
   },
   collections: [
