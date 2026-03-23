@@ -20,8 +20,9 @@
 }
 .event-hero-bg {
   position: absolute;
-  inset: 0;
+  inset: -15% 0 0 0;
   z-index: 0;
+  will-change: transform;
 }
 .event-hero-bg img {
   object-fit: cover;

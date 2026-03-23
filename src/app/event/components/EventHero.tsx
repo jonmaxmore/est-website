@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { useLang } from '@/lib/lang-context';
 import { useCountdown } from '@/hooks/useCountdown';
@@ -25,6 +25,9 @@ export default function EventHero({
 }: EventHeroProps) {
   const { t } = useLang();
   const countdown = useCountdown(countdownTarget);
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
 
   const scrollToForm = () => {
     const label = t(eventSettings.ctaButtonTh || 'ลงทะเบียนล่วงหน้าเลย', eventSettings.ctaButtonEn || 'Pre-Register Now');
@@ -41,9 +44,9 @@ export default function EventHero({
   const ctaImage = eventSettings.ctaButtonImage;
 
   return (
-    <section className="event-hero">
-      {/* Background */}
-      <div className="event-hero-bg">
+    <section className="event-hero" ref={heroRef}>
+      {/* Background with parallax */}
+      <motion.div className="event-hero-bg" style={{ y: bgY }}>
         <Image
           src={eventSettings.backgroundImage?.url || '/images/hero-bg.webp'}
           alt=""
@@ -53,7 +56,7 @@ export default function EventHero({
         />
         <div className="event-hero-gradient-top" />
         <div className="event-hero-gradient" />
-      </div>
+      </motion.div>
 
       <div className="event-hero-content">
         {/* Game Logo */}

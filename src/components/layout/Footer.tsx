@@ -1,11 +1,20 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MessageCircle, Facebook, Youtube, Music } from 'lucide-react';
 import { useLang } from '@/lib/lang-context';
 import SocialIcons from '@/components/ui/SocialIcons';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.12, duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+  }),
+};
 
 interface FooterProps {
   socialLinks: Record<string, string | null>;
@@ -25,42 +34,41 @@ const DEFAULT_SOCIAL: Record<string, string> = {
   tiktok: 'https://tiktok.com/@EternalTowerSaga',
 };
 
+function getSocialUrl(socialLinks: Record<string, string | null>, key: string): string | undefined {
+  const url = socialLinks[key];
+  if (url && url !== '#') return url;
+  return DEFAULT_SOCIAL[key] || undefined;
+}
+
+const COMMUNITY_CONFIG = [
+  { icon: MessageCircle, name: 'Discord', key: 'discord', thDesc: 'เข้าร่วมชุมชน Discord ของเรา', enDesc: 'Join our Discord community' },
+  { icon: Facebook, name: 'Facebook', key: 'facebook', thDesc: 'ติดตามข่าวสารบน Facebook', enDesc: 'Follow us on Facebook' },
+  { icon: Youtube, name: 'YouTube', key: 'youtube', thDesc: 'ดูวิดีโอและไลฟ์สตรีม', enDesc: 'Watch videos and livestreams' },
+  { icon: Music, name: 'TikTok', key: 'tiktok', thDesc: 'ติดตามเราบน TikTok', enDesc: 'Follow us on TikTok' },
+];
+
+function PlatformIcons() {
+  return (
+    <div className="footer-platform-icons">
+      <span className="footer-platform-icon" title="iOS">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83z"/><path d="M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      </span>
+      <span className="footer-platform-icon" title="Android">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814 13.792 12 3.609 22.186a.996.996 0 0 1-.609-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893 2.302 2.302-10.937 6.333 8.635-8.635zm3.199-1.707L15.6 8.9l-8.428-4.883 10.525 6.083zm.689.4 2.5 1.448c.68.394.68 1.036 0 1.43l-2.5 1.448L16.19 12l2.198-2.6z"/></svg>
+      </span>
+      <span className="footer-platform-icon" title="PC">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
+      </span>
+    </div>
+  );
+}
+
 export default function Footer({ socialLinks, footer }: FooterProps) {
   const { t } = useLang();
 
-  /* Merge CMS social links with defaults — filter out '#' and null */
-  const getSocialUrl = (key: string): string | undefined => {
-    const url = socialLinks[key];
-    if (url && url !== '#') return url;
-    return DEFAULT_SOCIAL[key] || undefined;
-  };
-
-  const communityLinks = [
-    {
-      icon: MessageCircle,
-      name: 'Discord',
-      desc: t('เข้าร่วมชุมชน Discord ของเรา', 'Join our Discord community'),
-      url: getSocialUrl('discord'),
-    },
-    {
-      icon: Facebook,
-      name: 'Facebook',
-      desc: t('ติดตามข่าวสารบน Facebook', 'Follow us on Facebook'),
-      url: getSocialUrl('facebook'),
-    },
-    {
-      icon: Youtube,
-      name: 'YouTube',
-      desc: t('ดูวิดีโอและไลฟ์สตรีม', 'Watch videos and livestreams'),
-      url: getSocialUrl('youtube'),
-    },
-    {
-      icon: Music,
-      name: 'TikTok',
-      desc: t('ติดตามเราบน TikTok', 'Follow us on TikTok'),
-      url: getSocialUrl('tiktok'),
-    },
-  ].filter(link => link.url !== null);
+  const communityLinks = COMMUNITY_CONFIG
+    .map(c => ({ ...c, desc: t(c.thDesc, c.enDesc), url: getSocialUrl(socialLinks, c.key) }))
+    .filter(link => link.url !== undefined);
 
   return (
     <footer className="main-footer">
@@ -68,7 +76,7 @@ export default function Footer({ socialLinks, footer }: FooterProps) {
 
       <div className="footer-inner-enhanced">
         {/* Column 1: Brand */}
-        <div className="footer-col footer-brand-col">
+        <motion.div className="footer-col footer-brand-col" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0}>
           <Image src="/images/logo.webp" alt="Eternal Tower Saga" width={180} height={120} className="footer-logo" />
           <p className="footer-brand-desc">
             {t(
@@ -77,10 +85,10 @@ export default function Footer({ socialLinks, footer }: FooterProps) {
             )}
           </p>
           <SocialIcons links={socialLinks} className="footer-social" />
-        </div>
+        </motion.div>
 
         {/* Column 2: Quick Links */}
-        <div className="footer-col">
+        <motion.div className="footer-col" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}>
           <h4 className="footer-col-title">{t('ลิงก์', 'Links')}</h4>
           <nav className="footer-nav">
             <Link href="/">{t('หน้าหลัก', 'Home')}</Link>
@@ -89,10 +97,10 @@ export default function Footer({ socialLinks, footer }: FooterProps) {
             <Link href="/download">{t('ดาวน์โหลด', 'Download')}</Link>
             <Link href="/faq">{t('คำถามที่พบบ่อย', 'FAQ')}</Link>
           </nav>
-        </div>
+        </motion.div>
 
         {/* Column 3: Support */}
-        <div className="footer-col">
+        <motion.div className="footer-col" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={2}>
           <h4 className="footer-col-title">{t('ช่วยเหลือ', 'Support')}</h4>
           <nav className="footer-nav">
             <Link href={footer.termsUrl}>{t('ข้อกำหนดการใช้งาน', 'Terms of Service')}</Link>
@@ -100,20 +108,14 @@ export default function Footer({ socialLinks, footer }: FooterProps) {
             <a href={footer.supportUrl}>{t('ฝ่ายบริการลูกค้า', 'Customer Service')}</a>
             <Link href="/faq">{t('คำถามที่พบบ่อย', 'FAQ')}</Link>
           </nav>
-        </div>
+        </motion.div>
 
         {/* Column 4: Join Our Community */}
-        <div className="footer-col">
+        <motion.div className="footer-col" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={3}>
           <h4 className="footer-col-title">{t('เข้าร่วมชุมชน', 'Join Our Community')}</h4>
           <div className="footer-community-links">
             {communityLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-community-link"
-              >
+              <a key={link.name} href={link.url} target="_blank" rel="noopener noreferrer" className="footer-community-link">
                 <link.icon size={20} className="footer-community-icon" />
                 <div>
                   <span className="footer-community-name">{link.name}</span>
@@ -129,29 +131,19 @@ export default function Footer({ socialLinks, footer }: FooterProps) {
               {t('เร็วๆ นี้ — สมัครรับข่าวสารและอัพเดตเกมก่อนใคร', 'Coming Soon — Subscribe for the latest news and game updates')}
             </p>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Platform Logos */}
-      <div className="footer-platforms">
+      <motion.div className="footer-platforms" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={4}>
         <span className="footer-platform-label">{t('รองรับแพลตฟอร์ม', 'Available on')}</span>
-        <div className="footer-platform-icons">
-          <span className="footer-platform-icon" title="iOS">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83z"/><path d="M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-          </span>
-          <span className="footer-platform-icon" title="Android">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814 13.792 12 3.609 22.186a.996.996 0 0 1-.609-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893 2.302 2.302-10.937 6.333 8.635-8.635zm3.199-1.707L15.6 8.9l-8.428-4.883 10.525 6.083zm.689.4 2.5 1.448c.68.394.68 1.036 0 1.43l-2.5 1.448L16.19 12l2.198-2.6z"/></svg>
-          </span>
-          <span className="footer-platform-icon" title="PC">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
-          </span>
-        </div>
-      </div>
+        <PlatformIcons />
+      </motion.div>
 
       {/* Bottom Bar */}
-      <div className="footer-bottom">
+      <motion.div className="footer-bottom" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={5}>
         <p>{footer.copyrightText.replace('Eternal Tower Saga', 'อัลติเมตเกม จำกัด (Ultimate Game Co., Ltd.)')}</p>
-      </div>
+      </motion.div>
     </footer>
   );
 }
