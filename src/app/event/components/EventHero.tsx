@@ -66,18 +66,31 @@ export default function EventHero({
           <Image src="/images/logo.webp" alt="Eternal Tower Saga" width={380} height={250} className="event-logo" priority />
         </motion.div>
 
-        {/* Tagline — CMS: Event Config → Copy & Text → Description */}
-        <motion.p
+        {/* Tagline — CMS: Event Config → Media → Tagline Image, or Copy & Text → Description */}
+        <motion.div
           className="event-tagline"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          {t(
-            eventSettings.descriptionTh || 'สัมผัสประสบการณ์ใหม่กับ Eternal Tower Saga (ETS)\n"อาวุธเปลี่ยน เกมก็เปลี่ยน จากผู้เล่น สู่...ผู้กุมเกม"',
-            eventSettings.descriptionEn || 'Rewrite the rules of the MMORPG!\nStep into a whole new experience with Eternal Tower Saga (ETS)\n"Switch your weapon. Shift the battlefield.\nRise from player... to ruler of the game."'
+          {t(eventSettings.descriptionImageTh?.url, eventSettings.descriptionImageEn?.url) ? (
+            <Image
+              src={t(eventSettings.descriptionImageTh?.url || '', eventSettings.descriptionImageEn?.url || '')}
+              alt={t(eventSettings.descriptionTh || '', eventSettings.descriptionEn || '')}
+              width={600}
+              height={200}
+              className="event-tagline-image"
+              style={{ maxWidth: '100%', height: 'auto' }}
+            />
+          ) : (
+            <p>
+              {t(
+                eventSettings.descriptionTh || 'สัมผัสประสบการณ์ใหม่กับ Eternal Tower Saga (ETS)\n"อาวุธเปลี่ยน เกมก็เปลี่ยน จากผู้เล่น สู่...ผู้กุมเกม"',
+                eventSettings.descriptionEn || 'Rewrite the rules of the MMORPG!\nStep into a whole new experience with Eternal Tower Saga (ETS)\n"Switch your weapon. Shift the battlefield.\nRise from player... to ruler of the game."'
+              )}
+            </p>
           )}
-        </motion.p>
+        </motion.div>
 
         {/* Countdown Timer */}
         <motion.div

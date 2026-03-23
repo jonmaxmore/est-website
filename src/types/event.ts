@@ -74,6 +74,8 @@ export interface EventSettings {
   countdownTarget?: string;
   heroImage?: { url: string } | null;
   backgroundImage?: { url: string } | null;
+  descriptionImageEn?: { url: string } | null;
+  descriptionImageTh?: { url: string } | null;
   contentSections?: Array<{
     contentType: string;
     textEn?: string;

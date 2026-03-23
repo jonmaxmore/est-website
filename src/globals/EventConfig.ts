@@ -194,6 +194,31 @@ export const EventConfig: GlobalConfig = {
               label: 'Hero Image (optional)',
               admin: { description: 'Overlay image in the hero section' },
             },
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'descriptionImageEn',
+                  type: 'upload',
+                  relationTo: 'media',
+                  label: 'Tagline Image EN (optional)',
+                  admin: {
+                    width: '50%',
+                    description: 'If uploaded, replaces description text (EN) with this image',
+                  },
+                },
+                {
+                  name: 'descriptionImageTh',
+                  type: 'upload',
+                  relationTo: 'media',
+                  label: 'Tagline Image TH (optional)',
+                  admin: {
+                    width: '50%',
+                    description: 'If uploaded, replaces description text (TH) with this image',
+                  },
+                },
+              ],
+            },
           ],
         },
         // ═══════════════════════════════════════

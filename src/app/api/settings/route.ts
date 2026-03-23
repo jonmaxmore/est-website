@@ -80,6 +80,12 @@ export async function GET() {
         backgroundImage: typeof eventConfig.backgroundImage === 'object' && eventConfig.backgroundImage ? {
           url: eventConfig.backgroundImage.url,
         } : null,
+        descriptionImageEn: typeof eventConfig.descriptionImageEn === 'object' && eventConfig.descriptionImageEn ? {
+          url: eventConfig.descriptionImageEn.url,
+        } : null,
+        descriptionImageTh: typeof eventConfig.descriptionImageTh === 'object' && eventConfig.descriptionImageTh ? {
+          url: eventConfig.descriptionImageTh.url,
+        } : null,
         contentSections: (eventConfig.contentSections as Array<Record<string, unknown>>)?.map((s) => ({
           contentType: s.contentType,
           textEn: s.textEn,
