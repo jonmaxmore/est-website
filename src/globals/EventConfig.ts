@@ -178,14 +178,15 @@ export const EventConfig: GlobalConfig = {
         // ═══════════════════════════════════════
         {
           label: 'Media',
-          description: 'Background images and hero assets',
+          description: 'Background images for each section',
           fields: [
+            // ── Section 1: Hero ──
             {
               name: 'backgroundImage',
               type: 'upload',
               relationTo: 'media',
-              label: 'Event Page Background',
-              admin: { description: 'Full-width hero background image' },
+              label: 'Section 1: Hero Background',
+              admin: { description: 'Full-width hero background image (parallax)' },
             },
             {
               name: 'heroImage',
@@ -218,6 +219,30 @@ export const EventConfig: GlobalConfig = {
                   },
                 },
               ],
+            },
+            // ── Section 2: Registration Form ──
+            {
+              name: 'formBackgroundImage',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Section 2: Registration Form Background',
+              admin: { description: 'Background image for the registration form section (parallax)' },
+            },
+            // ── Section 3: Milestones ──
+            {
+              name: 'milestonesBackgroundImage',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Section 3: Milestones Background',
+              admin: { description: 'Background image for the milestones section (parallax)' },
+            },
+            // ── Section 4: Leaderboard ──
+            {
+              name: 'leaderboardBackgroundImage',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Section 4: Leaderboard Background',
+              admin: { description: 'Background image for the referral leaderboard section (parallax)' },
             },
           ],
         },

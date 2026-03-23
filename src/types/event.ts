@@ -98,6 +98,10 @@ export interface EventSettings {
   storeUrls?: StoreUrls;
   // CTA button image (CMS upload)
   ctaButtonImage?: { url: string } | null;
+  // Section background images (CMS upload, parallax)
+  formBackgroundImage?: { url: string } | null;
+  milestonesBackgroundImage?: { url: string } | null;
+  leaderboardBackgroundImage?: { url: string } | null;
   // Referral point settings
   pointsLevel1?: number;
   pointsLevel2?: number;

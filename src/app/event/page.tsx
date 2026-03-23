@@ -5,6 +5,7 @@ import { useLang } from '@/lib/lang-context';
 import FloatingParticles from '@/components/ui/FloatingParticles';
 import LightRays from '@/components/ui/LightRays';
 import ScrollProgress from '@/components/ui/ScrollProgress';
+import ParallaxSection from '@/components/ui/ParallaxSection';
 
 /* Shared layout */
 import Navigation from '@/components/layout/Navigation';
@@ -145,61 +146,52 @@ export default function EventPage() {
           displayStoreButtons={displayStoreButtons}
         />
 
-        {/* ═══ ORNAMENT DIVIDER ═══ */}
-        <div className="ornament-divider">
-          <span className="ornament-line" />
-          <span className="ornament-diamond" />
-          <span className="ornament-center" aria-hidden="true">✦</span>
-          <span className="ornament-diamond" />
-          <span className="ornament-line" />
-        </div>
-
         {/* ═══ SCREEN 2: REGISTRATION FORM ═══ */}
-        <EventForm
-          eventSettings={eventSettings}
-          displayStoreButtons={displayStoreButtons}
-          email={form.email}
-          platform={form.platform}
-          region={form.region}
-          loading={form.loading}
-          error={form.error}
-          registered={form.registered}
-          referralCode={form.referralCode}
-          copied={form.copied}
-          setEmail={form.setEmail}
-          setPlatform={form.setPlatform}
-          setRegion={form.setRegion}
-          handleRegister={form.handleRegister}
-          copyReferralLink={form.copyReferralLink}
-        />
+        <ParallaxSection
+          backgroundUrl={eventSettings.formBackgroundImage?.url}
+          speed={0.25}
+          overlay="darker"
+        >
+          <EventForm
+            eventSettings={eventSettings}
+            displayStoreButtons={displayStoreButtons}
+            email={form.email}
+            platform={form.platform}
+            region={form.region}
+            loading={form.loading}
+            error={form.error}
+            registered={form.registered}
+            referralCode={form.referralCode}
+            copied={form.copied}
+            setEmail={form.setEmail}
+            setPlatform={form.setPlatform}
+            setRegion={form.setRegion}
+            handleRegister={form.handleRegister}
+            copyReferralLink={form.copyReferralLink}
+          />
+        </ParallaxSection>
 
-        {/* ═══ ORNAMENT DIVIDER ═══ */}
-        <div className="ornament-divider">
-          <span className="ornament-line" />
-          <span className="ornament-diamond" />
-          <span className="ornament-center" aria-hidden="true">✦</span>
-          <span className="ornament-diamond" />
-          <span className="ornament-line" />
-        </div>
+        {/* ═══ SCREEN 3: MILESTONES ═══ */}
+        <ParallaxSection
+          backgroundUrl={eventSettings.milestonesBackgroundImage?.url}
+          speed={0.3}
+          overlay="dark"
+        >
+          <EventMilestones
+            eventSettings={eventSettings}
+            milestones={milestones}
+            registrationCount={registrationCount}
+          />
+        </ParallaxSection>
 
-        {/* ═══ SCREEN 3: MILESTONES (registration count system) ═══ */}
-        <EventMilestones
-          eventSettings={eventSettings}
-          milestones={milestones}
-          registrationCount={registrationCount}
-        />
-
-        {/* ═══ ORNAMENT DIVIDER ═══ */}
-        <div className="ornament-divider">
-          <span className="ornament-line" />
-          <span className="ornament-diamond" />
-          <span className="ornament-center" aria-hidden="true">✦</span>
-          <span className="ornament-diamond" />
-          <span className="ornament-line" />
-        </div>
-
-        {/* ═══ SCREEN 4: REFERRAL LEADERBOARD (separate system) ═══ */}
-        <ReferralLeaderboard />
+        {/* ═══ SCREEN 4: REFERRAL LEADERBOARD ═══ */}
+        <ParallaxSection
+          backgroundUrl={eventSettings.leaderboardBackgroundImage?.url}
+          speed={0.2}
+          overlay="darker"
+        >
+          <ReferralLeaderboard />
+        </ParallaxSection>
       </main>
 
       <Footer socialLinks={socialLinks} footer={footer} />

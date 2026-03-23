@@ -86,6 +86,15 @@ export async function GET() {
         descriptionImageTh: typeof eventConfig.descriptionImageTh === 'object' && eventConfig.descriptionImageTh ? {
           url: eventConfig.descriptionImageTh.url,
         } : null,
+        formBackgroundImage: typeof eventConfig.formBackgroundImage === 'object' && eventConfig.formBackgroundImage ? {
+          url: eventConfig.formBackgroundImage.url,
+        } : null,
+        milestonesBackgroundImage: typeof eventConfig.milestonesBackgroundImage === 'object' && eventConfig.milestonesBackgroundImage ? {
+          url: eventConfig.milestonesBackgroundImage.url,
+        } : null,
+        leaderboardBackgroundImage: typeof eventConfig.leaderboardBackgroundImage === 'object' && eventConfig.leaderboardBackgroundImage ? {
+          url: eventConfig.leaderboardBackgroundImage.url,
+        } : null,
         contentSections: (eventConfig.contentSections as Array<Record<string, unknown>>)?.map((s) => ({
           contentType: s.contentType,
           textEn: s.textEn,
