@@ -24,10 +24,13 @@
   z-index: 0;
   will-change: transform;
 }
-.event-hero-bg img {
+.event-hero-bg img,
+.event-hero-video {
   object-fit: cover;
   width: 100%;
   height: 100%;
+  position: absolute;
+  inset: 0;
 }
 .event-hero-gradient {
   position: absolute;

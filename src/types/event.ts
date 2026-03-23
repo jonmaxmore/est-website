@@ -73,6 +73,7 @@ export interface EventSettings {
   footerText?: string;
   countdownTarget?: string;
   heroImage?: { url: string } | null;
+  backgroundVideo?: { url: string; mimeType?: string } | null;
   backgroundImage?: { url: string } | null;
   descriptionImageEn?: { url: string } | null;
   descriptionImageTh?: { url: string } | null;

@@ -77,6 +77,10 @@ export async function GET() {
         heroImage: typeof eventConfig.heroImage === 'object' && eventConfig.heroImage ? {
           url: eventConfig.heroImage.url,
         } : null,
+        backgroundVideo: typeof eventConfig.backgroundVideo === 'object' && eventConfig.backgroundVideo ? {
+          url: eventConfig.backgroundVideo.url,
+          mimeType: (eventConfig.backgroundVideo as Record<string, string>).mimeType,
+        } : null,
         backgroundImage: typeof eventConfig.backgroundImage === 'object' && eventConfig.backgroundImage ? {
           url: eventConfig.backgroundImage.url,
         } : null,

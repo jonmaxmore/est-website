@@ -182,11 +182,18 @@ export const EventConfig: GlobalConfig = {
           fields: [
             // ── Section 1: Hero ──
             {
+              name: 'backgroundVideo',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Section 1: Hero Video (optional)',
+              admin: { description: 'Fullscreen looping video for hero background. If uploaded, takes priority over image. Recommended: MP4, 1080p, under 15MB.' },
+            },
+            {
               name: 'backgroundImage',
               type: 'upload',
               relationTo: 'media',
-              label: 'Section 1: Hero Background',
-              admin: { description: 'Full-width hero background image (parallax)' },
+              label: 'Section 1: Hero Background Image',
+              admin: { description: 'Fallback image if no video, or poster frame while video loads (parallax)' },
             },
             {
               name: 'heroImage',

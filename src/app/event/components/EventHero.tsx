@@ -45,15 +45,28 @@ export default function EventHero({
 
   return (
     <section className="event-hero" ref={heroRef}>
-      {/* Background with parallax */}
-      <motion.div className="event-hero-bg" style={{ y: bgY }}>
-        <Image
-          src={eventSettings.backgroundImage?.url || '/images/hero-bg.webp'}
-          alt=""
-          fill
-          priority
-          style={{ objectFit: 'cover' }}
-        />
+      {/* Background — video (priority) or image with parallax */}
+      <motion.div className="event-hero-bg" style={{ y: eventSettings.backgroundVideo ? undefined : bgY }}>
+        {eventSettings.backgroundVideo?.url ? (
+          <video
+            className="event-hero-video"
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster={eventSettings.backgroundImage?.url || '/images/hero-bg.webp'}
+          >
+            <source src={eventSettings.backgroundVideo.url} type={eventSettings.backgroundVideo.mimeType || 'video/mp4'} />
+          </video>
+        ) : (
+          <Image
+            src={eventSettings.backgroundImage?.url || '/images/hero-bg.webp'}
+            alt=""
+            fill
+            priority
+            style={{ objectFit: 'cover' }}
+          />
+        )}
         <div className="event-hero-gradient-top" />
         <div className="event-hero-gradient" />
       </motion.div>
