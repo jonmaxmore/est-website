@@ -4,13 +4,20 @@
 .section-highlights {
   position: relative;
   min-height: 100vh;
+  height: 100vh;
+  max-height: 1080px;
+  aspect-ratio: 16 / 9;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5rem 0;
+  padding: 2rem 0;
   background: linear-gradient(180deg, var(--deeper-navy) 0%, var(--midnight) 100%);
+  background-size: cover;
+  background-position: center;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   z-index: 2;
+  overflow: hidden;
 }
 
 .highlights-grid {
