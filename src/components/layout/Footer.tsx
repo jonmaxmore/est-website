@@ -1,14 +1,14 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MessageCircle, Facebook, Youtube, Music } from 'lucide-react';
 import { useLang } from '@/lib/lang-context';
 import SocialIcons from '@/components/ui/SocialIcons';
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: (i: number) => ({
     opacity: 1, y: 0,
