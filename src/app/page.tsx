@@ -118,6 +118,10 @@ export default async function LandingPage() {
       infoImage: extractMediaUrl(c.infoImage),
       backgroundImage: extractMediaUrl(c.backgroundImage),
       icon: extractMediaUrl(c.icon),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      videoType: (c.videoType as any) || 'none',
+      videoUrl: (c.videoUrl as string) || null,
+      videoUpload: extractMediaUrl(c.videoUpload),
     }));
 
     // Build news array

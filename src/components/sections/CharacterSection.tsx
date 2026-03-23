@@ -3,7 +3,7 @@
 import React, { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Play, X } from 'lucide-react';
 import type { CMSCharacter } from '@/types/cms';
 
 /* ═══════════════════════════════════════════════
@@ -20,6 +20,7 @@ interface CharacterSectionProps {
 export default function CharacterSection({ characters }: CharacterSectionProps) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [videoOpen, setVideoOpen] = useState(false);
 
   const itemCount = characters.length;
   const activeChar = characters[activeIdx];
@@ -144,6 +145,40 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
         </AnimatePresence>
       </div>
 
+      {/* ── Layer 3: Weapon Info Overlay (Text Image + Video Button) ── */}
+      <div className="char-info-overlay">
+        <AnimatePresence mode="popLayout" custom={direction}>
+          <motion.div
+            key={`info-${activeIdx}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+          >
+            {activeChar?.infoImage && (
+              <Image
+                src={activeChar.infoImage}
+                alt="Weapon Info"
+                width={400}
+                height={200}
+                className="char-weapon-info-img"
+              />
+            )}
+            
+            {activeChar?.videoType !== 'none' && (
+              <button 
+                className="char-video-btn" 
+                onClick={() => setVideoOpen(true)}
+                aria-label="Play Action Video"
+              >
+                <div className="char-video-btn-icon"><Play size={20} /></div>
+                <span>Play Showcase</span>
+              </button>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
       {/* ── Layer 4: Navigation Arrows ── */}
       <button
         className="char-nav-arrow prev"
@@ -166,7 +201,6 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
         onKeyDown={handleKeyDown}
       >
         <div className="char-selector-header">
-          <span className="char-selector-badge">ARSENAL</span>
           <h3 className="char-selector-title">Select Weapon</h3>
           <div className="char-divider" />
         </div>
@@ -201,6 +235,38 @@ export default function CharacterSection({ characters }: CharacterSectionProps) 
           ))}
         </div>
       </div>
+
+      {/* ── Layer 6: Video Modal ── */}
+      <AnimatePresence>
+        {videoOpen && (
+          <motion.div
+            className="char-video-modal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="char-video-modal-backdrop" onClick={() => setVideoOpen(false)} />
+            <div className="char-video-modal-content">
+              <button className="char-video-close" onClick={() => setVideoOpen(false)} title="Close Video">
+                <X size={28} />
+              </button>
+              {activeChar.videoType === 'youtube' && activeChar.videoUrl ? (
+                <iframe 
+                  src={`https://www.youtube.com/embed/${activeChar.videoUrl.split('v=')[1] || activeChar.videoUrl.split('/').pop()}?autoplay=1`} 
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                  title="Showcase Video"
+                  className="char-video-iframe"
+                />
+              ) : activeChar.videoType === 'upload' && activeChar.videoUpload ? (
+                <video src={activeChar.videoUpload} controls autoPlay className="char-video-iframe" />
+              ) : (
+                <div className="char-video-error">Video Unavailable</div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

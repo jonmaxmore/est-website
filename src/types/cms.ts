@@ -39,6 +39,9 @@ export interface CMSCharacter {
   infoImage: string | null;
   backgroundImage: string | null;
   icon: string | null;
+  videoType?: 'none' | 'youtube' | 'upload';
+  videoUrl?: string | null;
+  videoUpload?: string | null;
 }
 
 // ──── News ────

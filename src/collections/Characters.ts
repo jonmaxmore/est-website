@@ -51,6 +51,36 @@ export const Characters: CollectionConfig = {
       admin: { description: 'รูปไอคอนวงกลมสำหรับเลือกอาวุธ' },
     },
     {
+      name: 'videoType',
+      type: 'select',
+      options: [
+        { label: 'None (ไม่แสดงวิดีโอ)', value: 'none' },
+        { label: 'YouTube Video', value: 'youtube' },
+        { label: 'Upload MP4', value: 'upload' }
+      ],
+      defaultValue: 'none',
+      label: 'Video Type',
+    },
+    {
+      name: 'videoUrl',
+      type: 'text',
+      label: 'YouTube ID or Full URL',
+      admin: {
+        condition: (data, siblingData) => siblingData.videoType === 'youtube',
+        description: 'ตัวอย่าง: https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      }
+    },
+    {
+      name: 'videoUpload',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Video File Upload',
+      admin: {
+        condition: (data, siblingData) => siblingData.videoType === 'upload',
+        description: 'อัปโหลดไฟล์วิดีโอ (ควรเป็น .mp4)'
+      }
+    },
+    {
       name: 'sortOrder',
       type: 'number',
       defaultValue: 0,
