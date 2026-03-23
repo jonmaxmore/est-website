@@ -1,4 +1,13 @@
 import type { CollectionConfig } from 'payload'
+import {
+  lexicalEditor,
+  AlignFeature,
+  BlockquoteFeature,
+  HeadingFeature,
+  HorizontalRuleFeature,
+  IndentFeature,
+  UploadFeature,
+} from '@payloadcms/richtext-lexical'
 
 export const News: CollectionConfig = {
   slug: 'news',
@@ -74,12 +83,56 @@ export const News: CollectionConfig = {
           type: 'richText',
           label: 'Content (English)',
           admin: { width: '50%' },
+          editor: lexicalEditor({
+            features: ({ defaultFeatures }) => [
+              ...defaultFeatures,
+              AlignFeature(),
+              BlockquoteFeature(),
+              HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
+              HorizontalRuleFeature(),
+              IndentFeature(),
+              UploadFeature({
+                collections: {
+                  media: {
+                    fields: [
+                      {
+                        name: 'caption',
+                        type: 'text',
+                      },
+                    ],
+                  },
+                },
+              }),
+            ],
+          }),
         },
         {
           name: 'contentTh',
           type: 'richText',
           label: 'Content (Thai)',
           admin: { width: '50%' },
+          editor: lexicalEditor({
+            features: ({ defaultFeatures }) => [
+              ...defaultFeatures,
+              AlignFeature(),
+              BlockquoteFeature(),
+              HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
+              HorizontalRuleFeature(),
+              IndentFeature(),
+              UploadFeature({
+                collections: {
+                  media: {
+                    fields: [
+                      {
+                        name: 'caption',
+                        type: 'text',
+                      },
+                    ],
+                  },
+                },
+              }),
+            ],
+          }),
         },
       ],
     },

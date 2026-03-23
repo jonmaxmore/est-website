@@ -59,7 +59,8 @@ function renderRichText(node: RichTextNode): string {
   // Text node
   if (node.text !== undefined) {
     let text = node.text;
-    if (node.format) {
+    // format on text node is bitwise for bold/italic/underline
+    if (typeof node.format === 'number') {
       if (node.format & 1) text = `<strong>${text}</strong>`; // bold
       if (node.format & 2) text = `<em>${text}</em>`; // italic
       if (node.format & 8) text = `<u>${text}</u>`; // underline
@@ -67,14 +68,20 @@ function renderRichText(node: RichTextNode): string {
     return text;
   }
 
-  // Element nodes
+  // Handling paragraph block level alignment
+  let textAlignStyle = '';
+  // @ts-expect-error Lexical node format is sometimes used for alignment on blocks format
+  if (['left', 'center', 'right', 'justify'].includes(node.format)) {
+    textAlignStyle = ` style="text-align: ${node.format}"`;
+  }
+
   const children = (node.children || []).map(renderRichText).join('');
 
   switch (node.type) {
     case 'heading':
-      return `<${node.tag || 'h2'}>${children}</${node.tag || 'h2'}>`;
+      return `<${node.tag || 'h2'}${textAlignStyle}>${children}</${node.tag || 'h2'}>`;
     case 'paragraph':
-      return `<p>${children}</p>`;
+      return `<p${textAlignStyle}>${children}</p>`;
     case 'list':
       const listTag = node.tag === 'ol' ? 'ol' : 'ul';
       return `<${listTag}>${children}</${listTag}>`;
@@ -87,6 +94,19 @@ function renderRichText(node: RichTextNode): string {
     }
     case 'quote':
       return `<blockquote>${children}</blockquote>`;
+    case 'horizontalrule':
+      return `<hr />`;
+    case 'upload': {
+      // @ts-expect-error upload value has media structure
+      const val = node.value || {};
+      const url = val.url || '';
+      const alt = val.alt || '';
+      if (!url) return '';
+      return `<figure style="margin: 2rem 0; text-align: center;">
+        <img src="${url}" alt="${alt}" style="max-width: 100%; height: auto; border-radius: 8px;" />
+        ${val.caption ? `<figcaption style="color: #A0ABC0; font-size: 0.85em; margin-top: 0.5rem;">${val.caption}</figcaption>` : ''}
+      </figure>`;
+    }
     default:
       return children;
   }

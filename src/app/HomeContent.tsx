@@ -28,21 +28,9 @@ const LUCIDE_ICONS: Record<string, LucideIcon> = {
   sparkles: Sparkles, shield: Shield, users: Users,
 };
 
-import Image from 'next/image';
 
 /** Render a CMS icon field — supports custom images, Lucide icon names, and emoji strings */
-function FeatureIcon({ icon, iconImage, index }: { icon: string; iconImage?: string | null; index: number }) {
-  if (iconImage) {
-    return (
-      <Image
-        src={iconImage}
-        alt=""
-        width={48}
-        height={48}
-        className="highlight-custom-icon"
-      />
-    );
-  }
+function FeatureIcon({ icon, index }: { icon: string; index: number }) {
 
   const name = icon.toLowerCase().trim();
   const LIcon = LUCIDE_ICONS[name];
@@ -119,10 +107,19 @@ export default function HomeContent({ settings, characters, news }: HomeContentP
             <div className="highlights-grid">
               {highlights.map((item, i) => (
                 <RevealSection key={item.key} delay={i * 0.06}>
-                  <div className="highlight-card">
-                    <div className="highlight-icon"><FeatureIcon icon={item.icon} iconImage={item.iconImage} index={item.key} /></div>
-                    <h3 className="highlight-title">{item.title}</h3>
-                    <p className="highlight-desc">{item.desc}</p>
+                  <div
+                    className={`highlight-card ${item.iconImage ? 'has-bg-image' : ''}`}
+                    style={item.iconImage ? { backgroundImage: `url(${item.iconImage})`, backgroundSize: 'cover', backgroundPosition: 'center', border: 'none' } : {}}
+                  >
+                    {!item.iconImage && (
+                      <div className="highlight-icon">
+                        <FeatureIcon icon={item.icon} index={item.key} />
+                      </div>
+                    )}
+                    <div className="highlight-card-content">
+                      <h3 className="highlight-title">{item.title}</h3>
+                      <p className="highlight-desc">{item.desc}</p>
+                    </div>
                   </div>
                 </RevealSection>
               ))}

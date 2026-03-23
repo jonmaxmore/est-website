@@ -1,4 +1,4 @@
-﻿@layer components {
+@layer components {
   /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ HERO SECTION Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
   .hero-section {
     position: relative;
@@ -9,6 +9,8 @@
     justify-content: center;
     overflow: hidden;
     cursor: default;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+    z-index: 5;
   }
 
   .hero-actions-row {
