@@ -73,7 +73,7 @@ export default function EventHero({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          {t(eventSettings.descriptionImageTh?.url, eventSettings.descriptionImageEn?.url) ? (
+          {(eventSettings.descriptionImageTh?.url || eventSettings.descriptionImageEn?.url) ? (
             <Image
               src={t(eventSettings.descriptionImageTh?.url || '', eventSettings.descriptionImageEn?.url || '')}
               alt={t(eventSettings.descriptionTh || '', eventSettings.descriptionEn || '')}
