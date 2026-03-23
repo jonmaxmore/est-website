@@ -16,6 +16,9 @@ import { Gallery } from './collections/Gallery'
 import { Users } from './collections/Users'
 import { PageViews } from './collections/PageViews'
 import { PageEvents } from './collections/PageEvents'
+import { AnalyticsSessions } from './collections/AnalyticsSessions'
+import { AnalyticsDailyRollups } from './collections/AnalyticsDailyRollups'
+import { AnalyticsFunnelEvents } from './collections/AnalyticsFunnelEvents'
 
 // Globals
 import { SiteSettings } from './globals/SiteSettings'
@@ -53,6 +56,9 @@ export default buildConfig({
     Gallery,
     PageViews,
     PageEvents,
+    AnalyticsSessions,
+    AnalyticsDailyRollups,
+    AnalyticsFunnelEvents,
   ],
   globals: [
     SiteSettings,

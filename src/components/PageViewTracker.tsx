@@ -8,6 +8,9 @@ import {
   resetScrollMilestones,
   startPageTimer,
   trackTimeOnPage,
+  startSessionHeartbeat,
+  incrementPageCount,
+  getUTMParams,
 } from '@/lib/tracking';
 
 // ─── Paths to exclude from tracking ───
@@ -24,6 +27,7 @@ const EXCLUDED = ['/admin', '/api/', '/_next/'];
 export default function PageViewTracker() {
   const pathname = usePathname();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const heartbeatStarted = useRef(false);
 
   // ─── Scroll handler ───
   const handleScroll = useCallback(() => {
@@ -37,6 +41,17 @@ export default function PageViewTracker() {
   useEffect(() => {
     // Skip admin/internal routes
     if (EXCLUDED.some(p => pathname.startsWith(p))) return;
+
+    // Capture UTM params on first load (sticky for session)
+    getUTMParams();
+
+    // Start session heartbeat once per page load
+    if (!heartbeatStarted.current) {
+      heartbeatStarted.current = true;
+      startSessionHeartbeat();
+    } else {
+      incrementPageCount();
+    }
 
     // Debounce: wait 300ms to avoid double-firing on fast SPA navigation
     if (timerRef.current) clearTimeout(timerRef.current);
