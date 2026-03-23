@@ -1,0 +1,53 @@
+Agent: Frontend Pages
+Target: http://178.128.127.161
+Pass: 48 | Fail: 0 | Skip: 0 | Rate: 100.0%
+Timestamp: 2026-03-23T10:04:36.051Z
+
+[PASS] Homepage (/) returns 200
+[PASS] Homepage returns HTML
+[PASS] Homepage contains "Eternal Tower Saga"
+[PASS] Character Page (/character) returns 200
+[PASS] Character Page returns HTML
+[PASS] Character Page contains "character"
+[PASS] Character Page contains "Characters"
+[PASS] News Page (/news) returns 200
+[PASS] News Page returns HTML
+[PASS] Gallery Page (/gallery) returns 200
+[PASS] Gallery Page returns HTML
+[PASS] Event Page (/event) returns 200
+[PASS] Event Page returns HTML
+[PASS] Story Page (/story) returns 200
+[PASS] Story Page returns HTML
+[PASS] Game Guide Page (/game-guide) returns 200
+[PASS] Game Guide Page returns HTML
+[PASS] Download Page (/download) returns 200
+[PASS] Download Page returns HTML
+[PASS] FAQ Page (/faq) returns 200
+[PASS] FAQ Page returns HTML
+[PASS] FAQ Page contains "FAQ"
+[PASS] Privacy Policy (/privacy) returns 200
+[PASS] Privacy Policy returns HTML
+[PASS] Terms of Service (/terms) returns 200
+[PASS] Terms of Service returns HTML
+[PASS] Support Page (/support) returns 200
+[PASS] Support Page returns HTML
+[PASS] Non-existent page returns 404
+[PASS] 404 page has custom content
+[PASS] Admin route accessible — status=200
+[PASS] Has <title> tag
+[PASS] Has og:title meta
+[PASS] Has og:description meta
+[PASS] Has og:type meta
+[PASS] Has twitter:card meta
+[PASS] Has viewport meta
+[PASS] Has JSON-LD structured data
+[PASS] Has favicon reference
+[PASS] HTML has lang attribute
+[PASS] Font references found in HTML
+[PASS] CSS references found
+[PASS] JS references found
+[PASS] JS bundle loads: /_next/static/chunks/e58bc33612759e62.js...
+[PASS] JS bundle loads: /_next/static/chunks/4af27f77bd5de33b.js...
+[PASS] JS bundle loads: /_next/static/chunks/5d420d97975eccac.js...
+[PASS] Dynamic news page /news/pre-registration-opens loads — status=200
+[PASS] Non-existent news slug handled — status=200

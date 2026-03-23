@@ -47,15 +47,18 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       articles,
-      totalDocs: result.totalDocs,
-      totalPages: result.totalPages,
-      page: result.page,
-      hasNextPage: result.hasNextPage,
+      pagination: {
+        totalDocs: result.totalDocs,
+        totalPages: result.totalPages,
+        page: result.page,
+        hasNextPage: result.hasNextPage,
+        limit,
+      }
     }, {
       headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120' },
     })
   } catch (error) {
     console.error('News API error:', error)
-    return NextResponse.json({ articles: [], totalDocs: 0, totalPages: 0, page: 1, hasNextPage: false })
+    return NextResponse.json({ articles: [], pagination: { totalDocs: 0, totalPages: 0, page: 1, hasNextPage: false, limit: 10 } })
   }
 }

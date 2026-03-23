@@ -1,0 +1,31 @@
+Agent: Security
+Target: http://178.128.127.161
+Pass: 21 | Fail: 2 | Skip: 3 | Rate: 91.3%
+Timestamp: 2026-03-23T10:04:52.531Z
+
+[PASS] X-Content-Type-Options: nosniff, nosniff
+[PASS] X-Frame-Options: SAMEORIGIN, SAMEORIGIN
+[PASS] X-XSS-Protection: 1; mode=block, 1; mode=block
+[PASS] Referrer-Policy: strict-origin-when-cross-origin, strict-origin-when-cross-origin
+[PASS] Strict-Transport-Security (HSTS): max-age=63072000; includeSubDomains; preload
+[PASS] No X-Powered-By header (good)
+[SKIP] Server header leaks version — nginx/1.24.0 (Ubuntu)
+[PASS] POST /api/stats/reset requires auth
+[PASS] POST /api/seed is restricted — status=401
+[PASS] POST /api/init-db is restricted — status=401
+[PASS] GET /api/users requires auth
+[PASS] POST /api/users requires auth
+[FAIL] XSS in email not caught — status=429
+[PASS] SQL injection in slug handled safely — status=404
+[FAIL] Oversized email not rejected — status=429
+[PASS] Path traversal blocked — status=404
+[SKIP] Content-Type enforcement — accepted text/plain (status=429)
+[PASS] Rate limiting triggered on /api/register (429)
+[SKIP] Stats rate limiting — would need 61 requests to test
+[PASS] CORS does not allow arbitrary origins — no ACAO header
+[PASS] .env file not accessible — status=404
+[PASS] .env.local file not accessible — status=404
+[PASS] payload.config.ts not accessible — status=404
+[PASS] Source maps not accessible — status=404
+[PASS] next.config.ts not accessible
+[PASS] X-Frame-Options set — SAMEORIGIN, SAMEORIGIN

@@ -15,14 +15,19 @@ export async function POST(request: NextRequest) {
   try {
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
 
-    if (!checkRateLimit(ip, 5, 60000)) {
-      return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
+    const contentLength = request.headers.get('content-length')
+    if (contentLength && parseInt(contentLength, 10) > 5000) {
+      return NextResponse.json({ error: 'Payload too large' }, { status: 413 })
     }
 
     const body = await request.json()
     const parsed = registrationSchema.safeParse(body)
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid input' }, { status: 400 })
+    }
+
+    if (!checkRateLimit(ip, 5, 60000)) {
+      return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
     }
 
     const { email, platform, region, referredByCode } = parsed.data

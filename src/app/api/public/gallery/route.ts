@@ -37,9 +37,9 @@ export async function GET() {
       })
     }
 
-    return NextResponse.json({ items })
+    return NextResponse.json({ gallery: items })
   } catch (error) {
     console.error('[API /gallery] Error fetching gallery:', error)
-    return NextResponse.json({ items: {} })
+    return NextResponse.json({ gallery: {} })
   }
 }

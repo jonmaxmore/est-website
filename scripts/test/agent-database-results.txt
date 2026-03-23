@@ -1,0 +1,25 @@
+Agent: Database Integrity
+Target: http://178.128.127.161
+Pass: 17 | Fail: 1 | Skip: 2 | Rate: 94.4%
+Timestamp: 2026-03-23T10:04:42.972Z
+
+[FAIL] Characters API unreachable
+[PASS] News collection has 3 published articles
+[PASS] All articles have required fields
+[PASS] No duplicate news slugs
+[PASS] All articles have valid categories
+[PASS] All publishedAt dates are valid
+[PASS] Articles sorted by date (newest first)
+[PASS] Milestones collection has 6 entries
+[PASS] All milestones have required fields
+[PASS] No duplicate thresholds
+[PASS] Milestones sorted by threshold ascending
+[SKIP] Gallery integrity — no gallery items in DB
+[PASS] Registration count is valid: 21408
+[PASS] Stats milestones is array
+[PASS] 1/6 milestones unlocked (display count: 21408)
+[PASS] Site name: "Eternal Tower Saga"
+[PASS] Footer copyright configured
+[PASS] Event config loaded
+[PASS] Hero section config loaded
+[SKIP] Media accessibility — characters API unavailable

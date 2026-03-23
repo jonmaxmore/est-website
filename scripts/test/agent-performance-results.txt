@@ -1,0 +1,33 @@
+Agent: Performance
+Target: http://178.128.127.161
+Pass: 26 | Fail: 1 | Skip: 1 | Rate: 96.3%
+Timestamp: 2026-03-23T10:04:54.891Z
+
+[PASS] Health responds in 112ms (< 500ms)
+[PASS] Settings responds in 78ms (< 2000ms)
+[PASS] Stats responds in 71ms (< 2000ms)
+[FAIL] Characters unreachable — status=404
+[PASS] News responds in 48ms (< 2000ms)
+[PASS] Gallery responds in 66ms (< 2000ms)
+[PASS] Milestones responds in 67ms (< 2000ms)
+[PASS] Homepage loads in 163ms (< 5000ms)
+[PASS] Character loads in 215ms (< 5000ms)
+[PASS] News loads in 44ms (< 5000ms)
+[PASS] FAQ loads in 43ms (< 3000ms)
+[PASS] Privacy loads in 42ms (< 3000ms)
+[PASS] Health payload: 0.1KB (< 5KB)
+[PASS] Settings payload: 7.8KB (< 50KB)
+[SKIP] Characters payload size — not reachable (status=404)
+[PASS] News payload: 0.8KB (< 200KB)
+[PASS] Stats payload: 2.2KB (< 20KB)
+[PASS] Homepage HTML: 58.6KB (< 500KB)
+[PASS] News has cache headers — public, s-maxage=60, stale-while-revalidate=120
+[PASS] Milestones has cache headers — public, s-maxage=30, stale-while-revalidate=60
+[PASS] Stats has cache headers — public, s-maxage=10, stale-while-revalidate=30
+[PASS] Settings has cache headers — public, s-maxage=30, stale-while-revalidate=60
+[PASS] Compression enabled: gzip
+[PASS] 10 concurrent health checks all succeeded
+[PASS] Concurrent batch completed in 142ms
+[PASS] Avg response: 103ms | Max: 141ms
+[PASS] Cold: 90ms → Warm: 88ms
+[PASS] Second request same or faster (cache working)
