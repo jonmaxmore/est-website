@@ -3,9 +3,13 @@ import {
   lexicalEditor,
   AlignFeature,
   BlockquoteFeature,
+  FixedToolbarFeature,
   HeadingFeature,
   HorizontalRuleFeature,
   IndentFeature,
+  LinkFeature,
+  OrderedListFeature,
+  UnorderedListFeature,
   UploadFeature,
 } from '@payloadcms/richtext-lexical'
 
@@ -82,11 +86,15 @@ export const News: CollectionConfig = {
       editor: lexicalEditor({
         features: ({ defaultFeatures }) => [
           ...defaultFeatures,
+          FixedToolbarFeature(),
           AlignFeature(),
           BlockquoteFeature(),
           HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
           HorizontalRuleFeature(),
           IndentFeature(),
+          LinkFeature(),
+          OrderedListFeature(),
+          UnorderedListFeature(),
           UploadFeature({
             collections: {
               media: {
@@ -109,11 +117,15 @@ export const News: CollectionConfig = {
       editor: lexicalEditor({
         features: ({ defaultFeatures }) => [
           ...defaultFeatures,
+          FixedToolbarFeature(),
           AlignFeature(),
           BlockquoteFeature(),
           HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
           HorizontalRuleFeature(),
           IndentFeature(),
+          LinkFeature(),
+          OrderedListFeature(),
+          UnorderedListFeature(),
           UploadFeature({
             collections: {
               media: {
