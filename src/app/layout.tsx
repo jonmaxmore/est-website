@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Noto_Sans_Thai, Cinzel } from "next/font/google";
+import { Outfit, IBM_Plex_Sans_Thai, Cinzel } from "next/font/google";
 import { LangProvider } from "@/lib/lang-context";
 import { BackToTop, CookieConsent } from "@/components/ui-overlays";
 import SmoothScroll from "@/components/ui/SmoothScroll";
@@ -45,9 +45,10 @@ const outfit = Outfit({
   display: "swap",
 });
 
-const notoSansThai = Noto_Sans_Thai({
+const ibmPlexSansThai = IBM_Plex_Sans_Thai({
   subsets: ["thai"],
-  variable: "--font-noto-thai",
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
+  variable: "--font-thai",
   display: "swap",
 });
 
@@ -116,7 +117,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="th" className={`${outfit.variable} ${notoSansThai.variable} ${cinzel.variable}`}>
+    <html lang="th" className={`${outfit.variable} ${ibmPlexSansThai.variable} ${cinzel.variable}`}>
       <head>
         <meta name="theme-color" content="#040E21" />
         {/* GEO: JSON-LD Structured Data — VideoGame + Organization + FAQPage */}
