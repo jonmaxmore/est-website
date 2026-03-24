@@ -76,73 +76,58 @@ export const News: CollectionConfig = {
       admin: { description: 'Displayed as fallback when no featured image' },
     },
     {
-      type: 'tabs',
-      tabs: [
-        {
-          label: 'Content (English)',
-          fields: [
-            {
-              name: 'contentEn',
-              type: 'richText',
-              label: ' ',
-              editor: lexicalEditor({
-                features: ({ defaultFeatures }) => [
-                  ...defaultFeatures,
-                  AlignFeature(),
-                  BlockquoteFeature(),
-                  HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-                  HorizontalRuleFeature(),
-                  IndentFeature(),
-                  UploadFeature({
-                    collections: {
-                      media: {
-                        fields: [
-                          {
-                            name: 'caption',
-                            type: 'text',
-                          },
-                        ],
-                      },
-                    },
-                  }),
+      name: 'contentEn',
+      type: 'richText',
+      label: 'Content (English)',
+      editor: lexicalEditor({
+        features: ({ defaultFeatures }) => [
+          ...defaultFeatures,
+          AlignFeature(),
+          BlockquoteFeature(),
+          HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
+          HorizontalRuleFeature(),
+          IndentFeature(),
+          UploadFeature({
+            collections: {
+              media: {
+                fields: [
+                  {
+                    name: 'caption',
+                    type: 'text',
+                  },
                 ],
-              }),
+              },
             },
-          ],
-        },
-        {
-          label: 'Content (Thai)',
-          fields: [
-            {
-              name: 'contentTh',
-              type: 'richText',
-              label: ' ',
-              editor: lexicalEditor({
-                features: ({ defaultFeatures }) => [
-                  ...defaultFeatures,
-                  AlignFeature(),
-                  BlockquoteFeature(),
-                  HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-                  HorizontalRuleFeature(),
-                  IndentFeature(),
-                  UploadFeature({
-                    collections: {
-                      media: {
-                        fields: [
-                          {
-                            name: 'caption',
-                            type: 'text',
-                          },
-                        ],
-                      },
-                    },
-                  }),
+          }),
+        ],
+      }),
+    },
+    {
+      name: 'contentTh',
+      type: 'richText',
+      label: 'Content (Thai)',
+      editor: lexicalEditor({
+        features: ({ defaultFeatures }) => [
+          ...defaultFeatures,
+          AlignFeature(),
+          BlockquoteFeature(),
+          HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
+          HorizontalRuleFeature(),
+          IndentFeature(),
+          UploadFeature({
+            collections: {
+              media: {
+                fields: [
+                  {
+                    name: 'caption',
+                    type: 'text',
+                  },
                 ],
-              }),
+              },
             },
-          ],
-        },
-      ],
+          }),
+        ],
+      }),
     },
     {
       name: 'publishedAt',

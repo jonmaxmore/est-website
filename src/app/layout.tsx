@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, IBM_Plex_Sans_Thai, Cinzel } from "next/font/google";
+import { IBM_Plex_Sans, IBM_Plex_Sans_Thai } from "next/font/google";
 import { LangProvider } from "@/lib/lang-context";
 import { BackToTop, CookieConsent } from "@/components/ui-overlays";
 import SmoothScroll from "@/components/ui/SmoothScroll";
@@ -39,9 +39,10 @@ import PageViewTracker from '@/components/PageViewTracker';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || '';
 
-const outfit = Outfit({
+const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
-  variable: "--font-outfit",
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
+  variable: "--font-ibm",
   display: "swap",
 });
 
@@ -49,12 +50,6 @@ const ibmPlexSansThai = IBM_Plex_Sans_Thai({
   subsets: ["thai"],
   weight: ["100", "200", "300", "400", "500", "600", "700"],
   variable: "--font-thai",
-  display: "swap",
-});
-
-const cinzel = Cinzel({
-  subsets: ["latin"],
-  variable: "--font-cinzel",
   display: "swap",
 });
 
@@ -117,7 +112,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="th" className={`${outfit.variable} ${ibmPlexSansThai.variable} ${cinzel.variable}`}>
+    <html lang="th" className={`${ibmPlexSans.variable} ${ibmPlexSansThai.variable}`}>
       <head>
         <meta name="theme-color" content="#040E21" />
         {/* GEO: JSON-LD Structured Data — VideoGame + Organization + FAQPage */}
