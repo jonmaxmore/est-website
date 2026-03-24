@@ -1,7 +1,7 @@
 Agent: Route Doctor
 Target: http://178.128.127.161
 Pass: 53 | Fail: 0 | Skip: 0 | Rate: 100.0%
-Timestamp: 2026-03-24T12:42:28.218Z
+Timestamp: 2026-03-24T13:15:10.818Z
 
 [PASS] Page / exists — status=200
 [PASS] Page /character exists — status=307
@@ -35,9 +35,9 @@ Timestamp: 2026-03-24T12:42:28.218Z
 [PASS] Link /#features resolves — status=200
 [PASS] Link /#news resolves — status=200
 [PASS] Link /event resolves — status=200
-[PASS] Link /news/News articles, updates, and announcementsฟปฟปฟป resolves — status=200
-[PASS] Link /news/News articles, updates, and announcements resolves — status=200
 [PASS] Link /news/pre-registration-opens resolves — status=200
+[PASS] Link /news/combat-system-reveal resolves — status=200
+[PASS] Link /news/developer-diary-arcatea resolves — status=200
 [PASS] Link /news resolves — status=200
 [PASS] Link /download resolves — status=200
 [PASS] Link /faq resolves — status=200
@@ -50,9 +50,9 @@ Timestamp: 2026-03-24T12:42:28.218Z
 [PASS] /api/public/news returns JSON content-type
 [PASS] /api/public/gallery returns JSON content-type
 [PASS] /api/public/milestones returns JSON content-type
-[PASS] /news/News articles, updates, and announcementsฟปฟปฟป resolves
-[PASS] /news/News articles, updates, and announcements resolves
 [PASS] /news/pre-registration-opens resolves
+[PASS] /news/combat-system-reveal resolves
+[PASS] /news/developer-diary-arcatea resolves
 [PASS] /character/ handled (no 404) — status=308
 [PASS] /news/ handled (no 404) — status=308
 [PASS] /faq/ handled (no 404) — status=308

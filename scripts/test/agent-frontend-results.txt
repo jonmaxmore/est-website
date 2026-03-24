@@ -1,7 +1,7 @@
 Agent: Frontend Pages
 Target: http://178.128.127.161
 Pass: 48 | Fail: 0 | Skip: 0 | Rate: 100.0%
-Timestamp: 2026-03-24T12:42:18.038Z
+Timestamp: 2026-03-24T13:14:58.628Z
 
 [PASS] Homepage (/) returns 200
 [PASS] Homepage returns HTML
@@ -49,5 +49,5 @@ Timestamp: 2026-03-24T12:42:18.038Z
 [PASS] JS bundle loads: /_next/static/chunks/9dd8541670f56a67.js...
 [PASS] JS bundle loads: /_next/static/chunks/5d420d97975eccac.js...
 [PASS] JS bundle loads: /_next/static/chunks/4af27f77bd5de33b.js...
-[PASS] Dynamic news page /news/News articles, updates, and announcementsฟปฟปฟป loads — status=200
+[PASS] Dynamic news page /news/pre-registration-opens loads — status=200
 [PASS] Non-existent news slug handled — status=200

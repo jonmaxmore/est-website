@@ -53,6 +53,14 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    min-height: 380px; /* prevent layout collapse during tab switch */
+    align-content: start;
+  }
+
+  /* Center cards when fewer than 3 — wrapping utility for the grid container */
+  .news-grid-wrapper {
+    min-height: 380px;
+    position: relative;
   }
 
   @media (max-width: 1023px) {

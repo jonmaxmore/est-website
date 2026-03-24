@@ -236,24 +236,27 @@ export default function NewsSection({
         </RevealSection>
 
         {/* ── Uniform News Cards Grid ── */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="news-cards-grid"
-          >
-            {filteredItems.map((item) => (
-              <NewsCard
-                key={item.key}
-                item={item}
-                meta={CATEGORY_META[item.category] || CATEGORY_META.event}
-              />
-            ))}
-          </motion.div>
-        </AnimatePresence>
+        <div className="news-grid-wrapper">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="news-cards-grid"
+              style={{ justifyItems: filteredItems.length < 3 ? 'center' : undefined }}
+            >
+              {filteredItems.map((item) => (
+                <NewsCard
+                  key={item.key}
+                  item={item}
+                  meta={CATEGORY_META[item.category] || CATEGORY_META.event}
+                />
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
         {/* Empty state */}
         {filteredItems.length === 0 && (
