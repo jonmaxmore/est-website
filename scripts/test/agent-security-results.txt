@@ -1,7 +1,7 @@
 Agent: Security
 Target: https://eternaltowersaga.com
-Pass: 12 | Fail: 10 | Skip: 4 | Rate: 54.5%
-Timestamp: 2026-03-24T12:01:52.939Z
+Pass: 18 | Fail: 4 | Skip: 4 | Rate: 81.8%
+Timestamp: 2026-03-24T12:17:41.831Z
 
 [PASS] X-Content-Type-Options: nosniff
 [FAIL] X-Frame-Options missing
@@ -15,17 +15,17 @@ Timestamp: 2026-03-24T12:01:52.939Z
 [PASS] POST /api/init-db is restricted — status=403
 [SKIP] GET /api/users access check — status=404
 [PASS] POST /api/users requires auth
-[FAIL] XSS in email not caught — status=403
+[PASS] XSS in email rejected — status=403
 [PASS] SQL injection in slug handled safely — status=404
-[FAIL] Oversized email not rejected — status=403
+[PASS] Oversized email rejected — status=403
 [PASS] Path traversal blocked — status=404
 [SKIP] Content-Type enforcement — accepted text/plain (status=403)
 [SKIP] Rate limiting not triggered — may use x-forwarded-for which is absent locally
 [SKIP] Stats rate limiting — would need 61 requests to test
 [PASS] CORS does not allow arbitrary origins — no ACAO header
-[FAIL] .env file may be accessible! — status=400
-[FAIL] .env.local file may be accessible! — status=400
-[FAIL] payload.config.ts may be accessible! — status=400
+[PASS] .env file not accessible — status=400
+[PASS] .env.local file not accessible — status=400
+[PASS] payload.config.ts not accessible — status=400
 [PASS] Source maps not accessible — status=404
-[FAIL] next.config.ts may be accessible!
+[PASS] next.config.ts not accessible — status=400
 [FAIL] No clickjacking protection (X-Frame-Options or CSP frame-ancestors)

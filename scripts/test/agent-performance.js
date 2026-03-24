@@ -181,6 +181,8 @@ async function testConcurrentRequests() {
   const totalTime = Date.now() - start;
 
   const successCount = responses.filter(r => r.ok).length;
+  const maxTime = Math.max(...responses.map(r => r.elapsed));
+  const avgTime = Math.round(responses.reduce((s, r) => s + r.elapsed, 0) / responses.length);
   successCount >= 8
     ? pass(`${successCount}/10 concurrent health checks succeeded`)
     : (successCount >= 5)

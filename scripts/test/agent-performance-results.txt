@@ -1,27 +1,3 @@
 Agent: Performance
-Target: https://eternaltowersaga.com
-Pass: 6 | Fail: 11 | Skip: 5 | Rate: 35.3%
-Timestamp: 2026-03-24T12:02:01.394Z
-
-[FAIL] Health unreachable — status=404
-[FAIL] Settings unreachable — status=404
-[FAIL] Stats unreachable — status=404
-[FAIL] Characters unreachable — status=404
-[FAIL] News unreachable — status=404
-[FAIL] Gallery unreachable — status=404
-[FAIL] Milestones unreachable — status=404
-[PASS] Homepage loads in 265ms (< 5000ms)
-[PASS] Character loads in 274ms (< 5000ms)
-[PASS] News loads in 264ms (< 5000ms)
-[FAIL] FAQ unreachable — status=404
-[FAIL] Privacy unreachable — status=404
-[SKIP] Health payload size — not reachable (status=404)
-[SKIP] Settings payload size — not reachable (status=404)
-[SKIP] Characters payload size — not reachable (status=404)
-[SKIP] News payload size — not reachable (status=404)
-[SKIP] Stats payload size — not reachable (status=404)
-[FAIL] Homepage HTML oversized: 600.8KB
-[PASS] Compression enabled: br
-[FAIL] Some concurrent requests failed (10/10)
-[PASS] Concurrent batch completed in 855ms
-[PASS] Avg response: 720ms | Max: 836ms
+Pass: 0 | Fail: 1 | Skip: 0 | Rate: 0%
+[FAIL] Agent crashed — avgTime is not defined

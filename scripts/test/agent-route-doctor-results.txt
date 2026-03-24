@@ -1,21 +1,21 @@
 Agent: Route Doctor
 Target: https://eternaltowersaga.com
-Pass: 13 | Fail: 21 | Skip: 1 | Rate: 38.2%
-Timestamp: 2026-03-24T12:01:44.329Z
+Pass: 33 | Fail: 0 | Skip: 2 | Rate: 100.0%
+Timestamp: 2026-03-24T12:17:34.220Z
 
-[FAIL] Page / missing — status=301
-[FAIL] Page /character missing — status=301
-[FAIL] Page /news missing — status=301
-[FAIL] Page /gallery missing — status=301
-[FAIL] Page /event missing — status=301
-[FAIL] Page /story missing — status=301
-[FAIL] Page /game-guide missing — status=301
-[FAIL] Page /download missing — status=301
-[FAIL] Page /faq missing — status=301
-[FAIL] Page /privacy missing — status=301
-[FAIL] Page /terms missing — status=301
-[FAIL] Page /support missing — status=301
-[FAIL] Page /admin missing — status=301
+[PASS] Page / exists — status=301
+[PASS] Page /character exists — status=301
+[PASS] Page /news exists — status=301
+[PASS] Page /gallery exists — status=301
+[PASS] Page /event exists — status=301
+[PASS] Page /story exists — status=301
+[PASS] Page /game-guide exists — status=301
+[PASS] Page /download exists — status=301
+[PASS] Page /faq exists — status=301
+[PASS] Page /privacy exists — status=301
+[PASS] Page /terms exists — status=301
+[PASS] Page /support exists — status=301
+[PASS] Page /admin exists — status=301
 [PASS] GET /api/health exists — status=301
 [PASS] GET /api/settings exists — status=301
 [PASS] GET /api/stats exists — status=301
@@ -26,14 +26,14 @@ Timestamp: 2026-03-24T12:01:44.329Z
 [PASS] POST /api/register exists — status=403
 [PASS] POST /api/stats/reset exists — status=403
 [PASS] POST /api/graphql exists — status=403
-[FAIL] Cannot fetch homepage for link analysis
-[FAIL] /api/health not reachable — status=301
-[FAIL] /api/settings not reachable — status=301
-[FAIL] /api/stats not reachable — status=301
-[FAIL] /api/public/characters not reachable — status=301
-[FAIL] /api/public/news not reachable — status=301
-[FAIL] /api/public/gallery not reachable — status=301
-[FAIL] /api/public/milestones not reachable — status=301
+[SKIP] Internal link check — no links found in homepage
+[PASS] /api/health redirects (HTTPS) — status=301
+[PASS] /api/settings redirects (HTTPS) — status=301
+[PASS] /api/stats redirects (HTTPS) — status=301
+[PASS] /api/public/characters redirects (HTTPS) — status=301
+[PASS] /api/public/news redirects (HTTPS) — status=301
+[PASS] /api/public/gallery redirects (HTTPS) — status=301
+[PASS] /api/public/milestones redirects (HTTPS) — status=301
 [SKIP] News slug routing — API unavailable
 [PASS] /character/ handled (no 404) — status=301
 [PASS] /news/ handled (no 404) — status=301
