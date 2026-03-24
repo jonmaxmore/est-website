@@ -1,60 +1,28 @@
 Agent: Backend API
-Target: http://178.128.127.161
-Pass: 52 | Fail: 0 | Skip: 3 | Rate: 100.0%
-Timestamp: 2026-03-23T10:25:47.553Z
+Target: https://eternaltowersaga.com
+Pass: 4 | Fail: 18 | Skip: 1 | Rate: 18.2%
+Timestamp: 2026-03-24T12:01:17.489Z
 
-[PASS] GET /api/health returns 200 — status=200
-[PASS] Health response has status=ok
-[PASS] Health response has uptime
-[PASS] Health response has version
-[PASS] GET /api/settings returns 200
-[PASS] Settings has site config
-[PASS] Settings has hero config
-[PASS] Settings has characters config
-[PASS] Settings has highlights config
-[PASS] Settings has news config
-[PASS] Settings has storeButtons
-[SKIP] Settings Cache-Control header — not set
-[PASS] GET /api/public/characters returns 200
-[PASS] Characters response is array
-[PASS] Character has id
-[PASS] Character has name
-[PASS] Characters collection has data — 4 characters
-[PASS] GET /api/public/news returns 200
-[PASS] News response has articles array
-[PASS] News response has pagination
-[PASS] News pagination limit works — got 2 items
-[PASS] News category filter accepted
-[PASS] News limit capped at 50
-[PASS] News detail without slug returns 400
+[FAIL] GET /api/health returns 200 — status=404
+[FAIL] GET /api/settings returns 200 — status=404
+[FAIL] GET /api/public/characters returns 200 — status=404
+[FAIL] GET /api/public/news returns 200 — status=404
+[FAIL] News detail without slug returns 400 — status=404
 [PASS] News detail non-existent slug returns 404
-[PASS] News detail with valid slug returns 200 — slug=pre-registration-opens
-[PASS] News detail has article object
-[PASS] News detail has related articles
-[PASS] GET /api/public/gallery returns 200
-[PASS] Gallery response has gallery object
-[SKIP] Gallery categories — no data
-[PASS] GET /api/public/milestones returns 200
-[PASS] Milestones response is array
-[PASS] Milestone has threshold
-[PASS] Milestone has reward text
-[PASS] Milestones collection has data — 6 milestones
-[PASS] GET /api/stats returns 200
-[PASS] Stats has totalRegistrations
-[PASS] totalRegistrations is number
-[PASS] Stats has milestones
-[PASS] GET /api/register not allowed — status=405
-[PASS] Register with empty body returns 400
-[PASS] Register with invalid email returns 400
-[PASS] Register with invalid platform returns 400
-[PASS] Register with invalid region returns 400
-[PASS] Valid registration returns referralCode — code=20L3g6lq
-[PASS] Valid registration accepted — email=carpet-bomb-test-1774261546570@test-delete.com
-[SKIP] Duplicate email check — status=500
-[PASS] Stats reset without auth returns 401/403 — status=401
+[FAIL] GET /api/public/gallery returns 200 — status=404
+[FAIL] GET /api/public/milestones returns 200 — status=404
+[FAIL] GET /api/stats returns 200 — status=404
+[PASS] GET /api/register not allowed — status=404
+[FAIL] Register with empty body returns 400 — status=403
+[FAIL] Register with invalid email returns 400 — status=403
+[FAIL] Register with invalid platform returns 400 — status=403
+[FAIL] Register with invalid region returns 400 — status=403
+[FAIL] Valid registration failed — status=403
+[SKIP] Duplicate email check — status=403
+[PASS] Stats reset without auth returns 401/403 — status=403
 [PASS] Stats reset with fake token rejected — status=403
-[PASS] GraphQL endpoint responds
-[PASS] DELETE /api/health not allowed — status=405
-[PASS] DELETE /api/settings not allowed — status=405
-[PASS] DELETE /api/public/characters not allowed — status=405
-[PASS] DELETE /api/public/news not allowed — status=405
+[FAIL] GraphQL endpoint failed — status=403
+[FAIL] DELETE /api/health should be blocked — status=403
+[FAIL] DELETE /api/settings should be blocked — status=403
+[FAIL] DELETE /api/public/characters should be blocked — status=403
+[FAIL] DELETE /api/public/news should be blocked — status=403

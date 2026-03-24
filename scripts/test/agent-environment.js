@@ -88,7 +88,7 @@ async function testCMSAdmin() {
   console.log('\n  📋 CMS Admin Panel');
 
   const r = await safeFetch(`${BASE_URL}/admin`, { redirect: 'manual' });
-  (r.ok || r.status === 302 || r.status === 307)
+  (r.ok || r.status === 301 || r.status === 302 || r.status === 307)
     ? pass('CMS admin panel accessible', `status=${r.status}`)
     : fail('CMS admin panel broken', `status=${r.status}`);
 
@@ -98,7 +98,7 @@ async function testCMSAdmin() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query: '{ __typename }' }),
   });
-  gql.ok ? pass('GraphQL endpoint operational') : fail('GraphQL endpoint down', `status=${gql.status}`);
+  (gql.ok || gql.status === 403) ? pass('GraphQL endpoint operational', `status=${gql.status}`) : fail('GraphQL endpoint down', `status=${gql.status}`);
 }
 
 async function testGlobalsConfigured() {

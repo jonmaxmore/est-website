@@ -1,33 +1,27 @@
 Agent: Performance
-Target: http://178.128.127.161
-Pass: 27 | Fail: 0 | Skip: 1 | Rate: 100.0%
-Timestamp: 2026-03-23T10:26:08.531Z
+Target: https://eternaltowersaga.com
+Pass: 6 | Fail: 11 | Skip: 5 | Rate: 35.3%
+Timestamp: 2026-03-24T12:02:01.394Z
 
-[PASS] Health responds in 108ms (< 500ms)
-[PASS] Settings responds in 67ms (< 2000ms)
-[PASS] Stats responds in 65ms (< 2000ms)
-[PASS] Characters responds in 69ms (< 2000ms)
-[PASS] News responds in 93ms (< 2000ms)
-[PASS] Gallery responds in 53ms (< 2000ms)
-[PASS] Milestones responds in 51ms (< 2000ms)
-[PASS] Homepage loads in 187ms (< 5000ms)
-[PASS] Character loads in 185ms (< 5000ms)
-[PASS] News loads in 41ms (< 5000ms)
-[PASS] FAQ loads in 39ms (< 3000ms)
-[PASS] Privacy loads in 39ms (< 3000ms)
-[PASS] Health payload: 0.1KB (< 5KB)
-[PASS] Settings payload: 7.7KB (< 50KB)
-[PASS] Characters payload: 1.1KB (< 100KB)
-[PASS] News payload: 0.9KB (< 200KB)
-[PASS] Stats payload: 2.2KB (< 20KB)
-[PASS] Homepage HTML: 58.6KB (< 500KB)
-[PASS] News has cache headers — public, s-maxage=60, stale-while-revalidate=120
-[PASS] Milestones has cache headers — public, s-maxage=30, stale-while-revalidate=60
-[PASS] Stats has cache headers — public, s-maxage=10, stale-while-revalidate=30
-[PASS] Settings has cache headers — public, s-maxage=30, stale-while-revalidate=60
-[PASS] Compression enabled: gzip
-[PASS] 10 concurrent health checks all succeeded
-[PASS] Concurrent batch completed in 115ms
-[PASS] Avg response: 85ms | Max: 114ms
-[PASS] Cold: 66ms → Warm: 75ms
-[SKIP] Second request slower — may vary due to server load
+[FAIL] Health unreachable — status=404
+[FAIL] Settings unreachable — status=404
+[FAIL] Stats unreachable — status=404
+[FAIL] Characters unreachable — status=404
+[FAIL] News unreachable — status=404
+[FAIL] Gallery unreachable — status=404
+[FAIL] Milestones unreachable — status=404
+[PASS] Homepage loads in 265ms (< 5000ms)
+[PASS] Character loads in 274ms (< 5000ms)
+[PASS] News loads in 264ms (< 5000ms)
+[FAIL] FAQ unreachable — status=404
+[FAIL] Privacy unreachable — status=404
+[SKIP] Health payload size — not reachable (status=404)
+[SKIP] Settings payload size — not reachable (status=404)
+[SKIP] Characters payload size — not reachable (status=404)
+[SKIP] News payload size — not reachable (status=404)
+[SKIP] Stats payload size — not reachable (status=404)
+[FAIL] Homepage HTML oversized: 600.8KB
+[PASS] Compression enabled: br
+[FAIL] Some concurrent requests failed (10/10)
+[PASS] Concurrent batch completed in 855ms
+[PASS] Avg response: 720ms | Max: 836ms

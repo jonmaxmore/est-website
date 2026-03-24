@@ -68,6 +68,7 @@ const nextConfig: NextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               "connect-src 'self' https://www.google-analytics.com https://www.google.com",
               "frame-src 'self' https://www.google.com https://www.youtube.com",
+              "frame-ancestors 'self'",
               "media-src 'self' blob:",
               "object-src 'none'",
               "base-uri 'self'",

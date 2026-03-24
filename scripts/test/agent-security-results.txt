@@ -1,31 +1,31 @@
 Agent: Security
-Target: http://178.128.127.161
-Pass: 23 | Fail: 0 | Skip: 3 | Rate: 100.0%
-Timestamp: 2026-03-23T10:26:06.371Z
+Target: https://eternaltowersaga.com
+Pass: 12 | Fail: 10 | Skip: 4 | Rate: 54.5%
+Timestamp: 2026-03-24T12:01:52.939Z
 
-[PASS] X-Content-Type-Options: nosniff, nosniff
-[PASS] X-Frame-Options: SAMEORIGIN, SAMEORIGIN
-[PASS] X-XSS-Protection: 1; mode=block, 1; mode=block
-[PASS] Referrer-Policy: strict-origin-when-cross-origin, strict-origin-when-cross-origin
-[PASS] Strict-Transport-Security (HSTS): max-age=63072000; includeSubDomains; preload
+[PASS] X-Content-Type-Options: nosniff
+[FAIL] X-Frame-Options missing
+[FAIL] X-XSS-Protection missing
+[FAIL] Referrer-Policy missing
+[PASS] Strict-Transport-Security (HSTS): max-age=31556952
 [PASS] No X-Powered-By header (good)
-[SKIP] Server header leaks version — nginx/1.24.0 (Ubuntu)
+[PASS] Server header does not leak version
 [PASS] POST /api/stats/reset requires auth
-[PASS] POST /api/seed is restricted — status=401
-[PASS] POST /api/init-db is restricted — status=401
-[PASS] GET /api/users requires auth
+[PASS] POST /api/seed is restricted — status=403
+[PASS] POST /api/init-db is restricted — status=403
+[SKIP] GET /api/users access check — status=404
 [PASS] POST /api/users requires auth
-[PASS] XSS in email rejected
+[FAIL] XSS in email not caught — status=403
 [PASS] SQL injection in slug handled safely — status=404
-[PASS] Oversized email rejected — status=413
+[FAIL] Oversized email not rejected — status=403
 [PASS] Path traversal blocked — status=404
-[SKIP] Content-Type enforcement — accepted text/plain (status=429)
-[PASS] Rate limiting triggered on /api/register (429)
+[SKIP] Content-Type enforcement — accepted text/plain (status=403)
+[SKIP] Rate limiting not triggered — may use x-forwarded-for which is absent locally
 [SKIP] Stats rate limiting — would need 61 requests to test
 [PASS] CORS does not allow arbitrary origins — no ACAO header
-[PASS] .env file not accessible — status=404
-[PASS] .env.local file not accessible — status=404
-[PASS] payload.config.ts not accessible — status=404
+[FAIL] .env file may be accessible! — status=400
+[FAIL] .env.local file may be accessible! — status=400
+[FAIL] payload.config.ts may be accessible! — status=400
 [PASS] Source maps not accessible — status=404
-[PASS] next.config.ts not accessible
-[PASS] X-Frame-Options set — SAMEORIGIN, SAMEORIGIN
+[FAIL] next.config.ts may be accessible!
+[FAIL] No clickjacking protection (X-Frame-Options or CSP frame-ancestors)
