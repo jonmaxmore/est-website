@@ -142,14 +142,14 @@ export async function GET() {
           descriptionTh: f.descriptionTh,
         })) || [],
       },
-      characters: {
-        bgImage: typeof homepage.charactersBgImage === 'object' && homepage.charactersBgImage ? {
-          url: (homepage.charactersBgImage as { url: string }).url,
+      weapons: {
+        bgImage: typeof homepage.weaponsBgImage === 'object' && homepage.weaponsBgImage ? {
+          url: (homepage.weaponsBgImage as { url: string }).url,
         } : null,
-        badgeEn: homepage.charactersBadgeEn || 'CHOOSE YOUR WEAPON',
-        badgeTh: homepage.charactersBadgeTh || 'เลือกอาวุธของคุณ',
-        titleEn: homepage.charactersTitleEn || 'Weapons of Arcatea',
-        titleTh: homepage.charactersTitleTh || 'อาวุธแห่ง Arcatea',
+        badgeEn: homepage.weaponsBadgeEn || 'CHOOSE YOUR WEAPON',
+        badgeTh: homepage.weaponsBadgeTh || 'เลือกอาวุธของคุณ',
+        titleEn: homepage.weaponsTitleEn || 'Weapons of Arcatea',
+        titleTh: homepage.weaponsTitleTh || 'อาวุธแห่ง Arcatea',
       },
       highlights: {
         badgeEn: homepage.highlightsBadgeEn || 'GAME FEATURES',

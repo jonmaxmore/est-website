@@ -204,33 +204,39 @@
     position: relative;
     z-index: 10;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    gap: 0;
-    text-align: center;
-    padding: 5rem 1rem 2.5rem;
-    max-width: 900px;
+    padding: 0 6vw;
     width: 100%;
     height: 100%;
     min-height: 100dvh;
+    box-sizing: border-box;
   }
 
-  /* Bottom action zone Ã¢â‚¬â€ no box, natural flow over gradient */
+  .hero-content-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    max-width: 800px;
+    width: 100%;
+    margin-top: 5vh;
+  }
+
+  /* Bottom action zone */
   .hero-bottom-actions {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-    max-width: 750px;
+    align-items: flex-start;
+    gap: 2rem;
     width: 100%;
+    margin-top: 1.5rem;
   }
 
   .hero-store-badges {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 1.5rem;
     flex-wrap: wrap;
   }
@@ -238,21 +244,28 @@
   .hero-store-badge-link {
     display: flex;
     align-items: center;
-    height: 70px;
+    height: 60px;
   }
 
   .hero-store-badge-img {
-    height: 70px;
+    height: 60px;
     width: auto;
     object-fit: contain;
   }
 
   .hero-tagline {
-    margin-bottom: 1.5rem;
+    font-family: var(--font-display);
+    font-size: var(--text-5xl);
+    font-weight: 500;
+    color: var(--white);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-shadow: var(--shadow-epic);
+    max-width: 700px;
   }
 
   .hero-actions-row {
-    margin-bottom: 1.5rem;
+    margin-top: 1rem;
   }
 
   /* Mobile: stack vertically, same size, slightly smaller */
@@ -316,9 +329,10 @@
 
   .hero-logo-container {
     position: relative;
-    filter: drop-shadow(0 8px 30px rgba(0,0,0,0.5));
-    max-width: 420px;
-    width: 65vw;
+    filter: drop-shadow(0 10px 40px rgba(0, 0, 0, 0.8));
+    max-width: 500px;
+    width: 100%;
+    margin-bottom: 2rem;
   }
 
   @media (max-width: 768px) {
@@ -352,44 +366,47 @@
     max-width: 520px;
   }
 
-  /* CTA Button Ã¢â‚¬â€ premium with glow */
+  /* CTA Button — premium with glow */
   .hero-cta {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem 3.5rem;
-    border-radius: 50px;
-    background: linear-gradient(135deg, var(--cta-blue), var(--medium-blue));
-    border: 2px solid rgba(255,255,255,0.3);
+    padding: 1.15rem 3.5rem;
+    border-radius: 4px; /* Sharper edges for dark fantasy */
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    border: 1px solid rgba(255, 215, 0, 0.4);
     text-decoration: none;
     cursor: pointer;
     overflow: hidden;
     transition: all 0.4s var(--ease-out-expo);
+    box-shadow: 0 4px 20px rgba(212, 168, 67, 0.2);
   }
 
   .hero-cta-glow {
     position: absolute;
     inset: -2px;
-    background: linear-gradient(135deg, rgba(91,192,235,0.4), rgba(30,111,191,0.4));
-    border-radius: 50px;
-    filter: blur(15px);
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.6), rgba(212, 168, 67, 0.6));
+    border-radius: 4px;
+    filter: blur(20px);
     opacity: 0;
-    transition: opacity 0.4s;
+    transition: opacity 0.4s var(--ease-out-expo);
     z-index: 0;
   }
 
   .hero-cta:hover .hero-cta-glow { opacity: 1; }
-  .hero-cta:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.6); }
+  .hero-cta:hover { transform: translateY(-3px) scale(1.02); border-color: rgba(255, 255, 255, 0.8); box-shadow: 0 10px 30px rgba(212, 168, 67, 0.4); }
   .hero-cta:active { transform: translateY(0); }
 
   .hero-cta-text {
     position: relative;
     z-index: 1;
-    font-size: 1.25rem;
+    font-size: var(--text-lg);
+    font-family: var(--font-display);
     font-weight: 700;
-    color: white;
-    letter-spacing: 0.02em;
+    color: var(--midnight);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
 
   /* Store buttons */

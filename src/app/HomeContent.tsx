@@ -12,6 +12,7 @@ import type { CMSSettings, CMSWeapon, CMSNewsArticle } from '@/types/cms';
 import ScrollProgress from '@/components/ui/ScrollProgress';
 import RevealSection from '@/components/ui/RevealSection';
 import LoadingScreen from '@/components/ui/LoadingScreen';
+import ParallaxSection from '@/components/ui/ParallaxSection';
 
 /* ─── Section Components ─── */
 import HeroSection from '@/components/sections/HeroSection';
@@ -54,6 +55,7 @@ interface HomeContentProps {
   news: CMSNewsArticle[];
 }
 
+// eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function HomeContent({ settings, weapons, news }: HomeContentProps) {
   const { t } = useLang();
 
@@ -91,44 +93,58 @@ export default function HomeContent({ settings, weapons, news }: HomeContentProp
         <WeaponSection weapons={weapons} />
 
         {/* ═══ SECTION 3: HIGHLIGHTS STRIP — Compact feature showcase ═══ */}
-        <section
-          id="features"
+        <ParallaxSection
+          backgroundUrl={settings?.highlights?.bgImage?.url}
+          speed={0.2}
+          overlay="dark"
           className="section-highlights"
-          style={settings?.highlights?.bgImage ? { backgroundImage: `url(${settings.highlights.bgImage.url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
         >
-          <div className="container-custom">
-            <RevealSection>
-              <div className="section-header">
-                <span className="section-badge">{settings?.highlights ? t(settings.highlights.badgeTh, settings.highlights.badgeEn) : 'GAME FEATURES'}</span>
-                <h2 className="section-title-gold">{settings?.highlights ? t(settings.highlights.titleTh, settings.highlights.titleEn) : t('ไฮไลท์เกม', 'Game Highlights')}</h2>
-              </div>
-            </RevealSection>
+          <section id="features">
+            <div className="container-custom">
+              <RevealSection>
+                <div className="section-header">
+                  <span className="section-badge">{settings?.highlights ? t(settings.highlights.badgeTh, settings.highlights.badgeEn) : 'GAME FEATURES'}</span>
+                  <h2 className="section-title-gold">{settings?.highlights ? t(settings.highlights.titleTh, settings.highlights.titleEn) : t('ไฮไลท์เกม', 'Game Highlights')}</h2>
+                </div>
+              </RevealSection>
 
-            <div className="highlights-grid">
-              {highlights.map((item, i) => (
-                <RevealSection key={item.key} delay={i * 0.06}>
-                  <div
-                    className={`highlight-card ${item.iconImage ? 'has-bg-image' : ''}`}
-                    style={item.iconImage ? { backgroundImage: `url(${item.iconImage})`, backgroundSize: 'cover', backgroundPosition: 'center', border: 'none' } : {}}
-                  >
-                    {!item.iconImage && (
-                      <div className="highlight-icon">
-                        <FeatureIcon icon={item.icon} index={item.key} />
+              <div className="highlights-grid">
+                {highlights.map((item, i) => (
+                  <RevealSection key={item.key} delay={i * 0.06}>
+                    <div className={`highlight-card ${item.iconImage ? 'has-bg-image' : ''}`}>
+                      {item.iconImage && (
+                        <>
+                          <div className="highlight-bg" style={{ backgroundImage: `url(${item.iconImage})` }} />
+                          <div className="highlight-overlay" />
+                        </>
+                      )}
+
+                      {!item.iconImage && (
+                        <div className="highlight-icon">
+                          <FeatureIcon icon={item.icon} index={item.key} />
+                        </div>
+                      )}
+
+                      <div className="highlight-card-content">
+                        <h3 className="highlight-title">{item.title}</h3>
+                        <p className="highlight-desc">{item.desc}</p>
                       </div>
-                    )}
-                    <div className="highlight-card-content">
-                      <h3 className="highlight-title">{item.title}</h3>
-                      <p className="highlight-desc">{item.desc}</p>
                     </div>
-                  </div>
-                </RevealSection>
-              ))}
+                  </RevealSection>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </ParallaxSection>
 
         {/* ═══ SECTION 4: NEWS — Compact 3-card grid ═══ */}
-        <NewsSection news={news} sectionConfig={settings?.news} />
+        <ParallaxSection
+          backgroundUrl={settings?.news?.bgImage?.url}
+          speed={0.15}
+          overlay="darker"
+        >
+          <NewsSection news={news} sectionConfig={settings?.news} />
+        </ParallaxSection>
       </main>
 
       {/* ═══ FOOTER — Includes community links, FAQ link, newsletter ═══ */}

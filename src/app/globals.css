@@ -7,45 +7,65 @@
 
 @layer base {
   :root {
-    /* Primary Palette — from existing site */
+    /* ─────────────────────────────────────────────────
+       Dark Fantasy Color Palette (Rich & Tinted)
+       ───────────────────────────────────────────────── */
     --sky-blue: #87CEEB;
-    --royal-blue: #1E6FBF;
-    --medium-blue: #2B7FC9;
-    --dark-navy: #0D2B5C;
-    --deeper-navy: #071833;
-    --midnight: #040E21;
+    --royal-blue: #1A5B9C;
+    --medium-blue: #2365A3;
+    --dark-navy: #0A1C3A;
+    --deeper-navy: #040B18;
+    --midnight: #02050D; /* Deepest blue-black */
 
-    /* Gold / Accent */
+    /* Magical Accents */
     --gold: #D4A843;
     --gold-light: #F5D178;
     --gold-dark: #8B6914;
     --orange-accent: #F5A623;
     --amber-glow: #FFB84D;
-    --warm-orange: #E8941A;
+    --magic-cyan: #4DEEFA;
+    --magic-purple: #B266FF;
 
-    /* CTA */
-    --cta-blue: #5BC0EB;
-    --cta-blue-hover: #4AB0DB;
-
-    /* Neutral */
+    /* Neutrals */
     --white: #FFFFFF;
-    --off-white: #F5F5F5;
-    --light-gray: #E5E5E5;
-    --text-muted: rgba(255, 255, 255, 0.65);
+    --off-white: #F0F2F5; /* Slightly cool white */
+    --light-gray: #D1D5DB;
+    --text-muted: rgba(240, 245, 255, 0.65); /* Cool tinted gray */
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --surface-glass: rgba(10, 28, 58, 0.4);
 
-    /* Typography */
-    --font-heading: 'Outfit', sans-serif;
-    --font-body: 'Outfit', 'Noto Sans Thai', sans-serif;
+    /* ─────────────────────────────────────────────────
+       Typography
+       ───────────────────────────────────────────────── */
+    --font-display: var(--font-cinzel), 'Outfit', serif;
+    --font-heading: var(--font-outfit), sans-serif;
+    --font-body: var(--font-outfit), var(--font-noto-thai), sans-serif;
 
-    /* Spacing Scale */
-    --space-xs: 0.25rem;   /* 4px */
-    --space-sm: 0.5rem;    /* 8px */
-    --space-md: 1rem;      /* 16px */
-    --space-lg: 1.5rem;    /* 24px */
-    --space-xl: 2rem;      /* 32px */
-    --space-2xl: 3rem;     /* 48px */
-    --space-3xl: 5rem;     /* 80px */
-    --container-max: 1280px;
+    /* Fluid Typographic Scale (Clamp) */
+    --text-xs: clamp(0.75rem, 0.7vw + 0.5rem, 0.875rem);
+    --text-sm: clamp(0.875rem, 0.8vw + 0.5rem, 1rem);
+    --text-base: clamp(1rem, 1vw + 0.5rem, 1.125rem);
+    --text-lg: clamp(1.125rem, 1.2vw + 0.5rem, 1.25rem);
+    --text-xl: clamp(1.25rem, 1.5vw + 0.5rem, 1.5rem);
+    --text-2xl: clamp(1.5rem, 2vw + 0.5rem, 2rem);
+    --text-3xl: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+    --text-4xl: clamp(2rem, 4vw + 1rem, 3.5rem);
+    --text-5xl: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+    --text-6xl: clamp(3rem, 7vw + 1rem, 6rem);
+    --text-7xl: clamp(3.5rem, 9vw + 1rem, 8rem);
+
+    /* ─────────────────────────────────────────────────
+       Spacing & Layout
+       ───────────────────────────────────────────────── */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-3xl: 5rem;
+    --space-4xl: 8rem;
+    --container-max: 1440px;
 
     /* Border Radius Scale */
     --radius-sm: 6px;
@@ -55,8 +75,12 @@
     --radius-2xl: 20px;
     --radius-full: 50px;
 
-    /* Animation */
+    /* Animation & Polish */
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out-circ: cubic-bezier(0.85, 0, 0.15, 1);
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    --shadow-epic: 0 20px 40px -10px rgba(0, 0, 0, 0.7), 0 0 20px rgba(77, 238, 250, 0.1);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }

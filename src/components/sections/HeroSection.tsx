@@ -128,122 +128,120 @@ export default function HeroSection({ settings }: HeroProps) {
       <div className="hero-gradient-bottom" />
       <div className="hero-vignette" />
 
-      {/* Content — scroll parallax: moves faster than bg for depth */}
+      {/* Content — Cinematic Asymmetric Reveal */}
       <motion.div
         className="hero-content"
         style={{ y: contentYScroll, opacity: contentOpacity, willChange: 'transform, opacity' }}
       >
-        <motion.div
-          style={{ x: logoX, y: logoYMouse }}
-          initial={{ opacity: 0, scale: 0.7, y: 40 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="hero-logo-container"
-        >
-          <h1 className="sr-only">Eternal Tower Saga</h1>
-          <Image
-            src="/images/logo.webp"
-            alt="Eternal Tower Saga"
-            width={450}
-            height={320}
-            className="hero-logo"
-            priority
-          />
-        </motion.div>
-
-        {/* Spacer — keeps character art visible in the middle */}
-        <div style={{ flex: 1 }} />
-
-        {/* Bottom action zone — glassmorphism panel */}
-        <div className="hero-bottom-actions">
-          {/* Tagline: image or text */}
+        <div className="hero-content-inner">
           <motion.div
-            className="hero-tagline"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
+            style={{ x: logoX, y: logoYMouse }}
+            initial={{ opacity: 0, scale: 0.9, x: -40 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="hero-logo-container"
           >
-            {taglineImageUrl ? (
-              <Image
-                src={taglineImageUrl}
-                alt={tagline}
-                width={700}
-                height={100}
-                className="hero-tagline-img"
-                style={{ width: 'auto', height: 'auto', maxWidth: '90%', maxHeight: '80px' }}
-              />
-            ) : (
-              <p style={{ margin: 0 }}>{tagline}</p>
-            )}
+            <h1 className="sr-only">Eternal Tower Saga</h1>
+            <Image
+              src="/images/logo.webp"
+              alt="Eternal Tower Saga"
+              width={450}
+              height={320}
+              className="hero-logo"
+              priority
+            />
           </motion.div>
 
-          {/* CTA Button */}
-          <motion.div
-            className="hero-actions-row"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9 }}
-          >
-            <Link href={ctaLink} className="hero-cta hero-cta-primary">
-              <span className="hero-cta-glow" />
-              <span className="hero-cta-shimmer" />
-              <span className="hero-cta-text">{ctaText}</span>
-            </Link>
-          </motion.div>
+          <div className="hero-bottom-actions">
+            {/* Tagline: using display font now */}
+            <motion.div
+              className="hero-tagline"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {taglineImageUrl ? (
+                <Image
+                  src={taglineImageUrl}
+                  alt={tagline}
+                  width={700}
+                  height={100}
+                  className="hero-tagline-img"
+                  style={{ width: 'auto', height: 'auto', maxWidth: '90%', maxHeight: '80px' }}
+                />
+              ) : (
+                <p style={{ margin: 0 }}>{tagline}</p>
+              )}
+            </motion.div>
 
-          {/* Store Badge Images */}
-          <motion.div
-            className="hero-store-badges"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-          >
-            {storeButtons
-              .filter((btn) => btn.platform === 'ios' || btn.platform === 'android')
-              .map((btn) => {
-              const badgeSrc = btn.platform === 'android'
-                ? '/images/badge-google-play.webp'
-                : '/images/badge-app-store.webp';
-              return (
-                <a
-                  key={btn.platform}
-                  href={btn.url}
-                  className="hero-store-badge-link"
-                  title={`${btn.sublabel} ${btn.label}`}
-                  onClick={() => {
-                    import('@/lib/tracking').then((m) => m.trackStoreClick(btn.platform, btn.url));
-                  }}
-                >
-                  <Image
-                    src={badgeSrc}
-                    alt={`${btn.sublabel} ${btn.label}`}
-                    width={188}
-                    height={56}
-                    className="hero-store-badge-img"
-                  />
-                </a>
-              );
-            })}
-            {/* PC/Windows Coming Soon — text style */}
-            {storeButtons
-              .filter((btn) => btn.platform !== 'ios' && btn.platform !== 'android')
-              .map((btn) => (
-                <a
-                  key={btn.platform}
-                  href={btn.url}
-                  className="store-btn store-btn-sm store-btn-hero"
-                  onClick={() => {
-                    import('@/lib/tracking').then((m) => m.trackStoreClick(btn.platform, btn.url));
-                  }}
-                >
-                  {STORE_ICONS[btn.platform] || null}
-                  <div>
-                    <small className="store-sublabel">{btn.sublabel}</small>
-                    <strong className="store-label">{btn.label}</strong>
-                  </div>
-                </a>
-              ))}
-          </motion.div>
+            {/* CTA Button */}
+            <motion.div
+              className="hero-actions-row"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9 }}
+            >
+              <Link href={ctaLink} className="hero-cta hero-cta-primary">
+                <span className="hero-cta-glow" />
+                <span className="hero-cta-shimmer" />
+                <span className="hero-cta-text">{ctaText}</span>
+              </Link>
+            </motion.div>
+
+            {/* Store Badge Images */}
+            <motion.div
+              className="hero-store-badges"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
+            >
+              {storeButtons
+                .filter((btn) => btn.platform === 'ios' || btn.platform === 'android')
+                .map((btn) => {
+                const badgeSrc = btn.platform === 'android'
+                  ? '/images/badge-google-play.webp'
+                  : '/images/badge-app-store.webp';
+                return (
+                  <a
+                    key={btn.platform}
+                    href={btn.url}
+                    className="hero-store-badge-link"
+                    title={`${btn.sublabel} ${btn.label}`}
+                    onClick={() => {
+                      import('@/lib/tracking').then((m) => m.trackStoreClick(btn.platform, btn.url));
+                    }}
+                  >
+                    <Image
+                      src={badgeSrc}
+                      alt={`${btn.sublabel} ${btn.label}`}
+                      width={188}
+                      height={56}
+                      className="hero-store-badge-img"
+                    />
+                  </a>
+                );
+              })}
+              {/* PC/Windows Coming Soon — text style */}
+              {storeButtons
+                .filter((btn) => btn.platform !== 'ios' && btn.platform !== 'android')
+                .map((btn) => (
+                  <a
+                    key={btn.platform}
+                    href={btn.url}
+                    className="store-btn store-btn-sm store-btn-hero"
+                    onClick={() => {
+                      import('@/lib/tracking').then((m) => m.trackStoreClick(btn.platform, btn.url));
+                    }}
+                  >
+                    {STORE_ICONS[btn.platform] || null}
+                    <div>
+                      <small className="store-sublabel">{btn.sublabel}</small>
+                      <strong className="store-label">{btn.label}</strong>
+                    </div>
+                  </a>
+                ))}
+            </motion.div>
+          </div>
         </div>
       </motion.div>
 

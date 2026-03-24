@@ -19,53 +19,145 @@
 
   .news-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2rem;
     position: relative;
     z-index: 5;
+    margin-top: 2.5rem;
   }
 
   .news-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
+    background: transparent;
+    border: none;
     overflow: hidden;
     cursor: pointer;
-    transition: all 0.4s var(--ease-out-expo);
+    transition: all 0.5s var(--ease-out-expo);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
 
-  .news-card:hover {
-    border-color: rgba(255,255,255,0.15);
+  /* ── Hero Article (1st) ── */
+  .news-card:nth-child(1) {
+    grid-column: span 7;
+    grid-row: span 2;
+    min-height: 480px;
+  }
+
+  .news-card:nth-child(1) .news-card-thumb {
+    height: 380px;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .news-card:nth-child(1) .news-card-title {
+    font-size: var(--text-2xl);
+    font-family: var(--font-display);
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ── Secondary Articles (Stack) ── */
+  .news-card:not(:nth-child(1)) {
+    grid-column: span 5;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1.5rem;
+  }
+
+  .news-card:not(:nth-child(1)):last-child {
+    border-bottom: none;
+  }
+
+  .news-card:not(:nth-child(1)) .news-card-thumb {
+    width: 200px;
+    height: 140px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .news-card:not(:nth-child(1)) .news-card-body {
+    padding: 0;
+  }
+
+  /* General Card Hover */
+  .news-card:hover .news-card-thumb img {
+    transform: scale(1.05);
+  }
+  
+  .news-card-thumb img {
+    transition: transform 0.6s var(--ease-out-expo);
   }
 
   /* .news-card-thumb Ã¢â‚¬â€ see canonical version below with position:relative + overflow:hidden */
 
   .news-card-emoji { font-size: 3rem; }
 
-  .news-card-body { padding: 1.25rem; }
+  .news-card-body { 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+  }
 
   .news-card-tag {
     display: inline-block;
-    padding: 0.2rem 0.6rem;
-    border-radius: 100px;
-    font-size: 0.65rem;
+    padding: 0.25rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
     font-weight: 700;
-    color: white;
+    color: var(--midnight);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.8rem;
+    align-self: flex-start;
   }
 
   .news-card-title {
-    font-weight: 700;
-    font-size: 0.95rem;
-    margin-bottom: 0.4rem;
-    line-height: 1.4;
+    font-weight: 500;
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    color: var(--white);
+    transition: color 0.3s;
+  }
+
+  .news-card:hover .news-card-title {
+    color: var(--gold-light);
   }
 
   .news-card-date {
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.4);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+  }
+
+  @media (max-width: 1024px) {
+    .news-grid {
+      grid-template-columns: 1fr;
+    }
+    .news-card:nth-child(1), .news-card:not(:nth-child(1)) {
+      grid-column: span 1;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .news-card:not(:nth-child(1)) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .news-card:not(:nth-child(1)) .news-card-thumb {
+      width: 100%;
+      height: 200px;
+    }
   }
 
 

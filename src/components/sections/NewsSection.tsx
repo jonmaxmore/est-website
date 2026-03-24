@@ -18,7 +18,6 @@ const CATEGORY_PLACEHOLDERS: Record<string, { gradient: string; Icon: React.Comp
   maintenance: { gradient: 'linear-gradient(135deg, #E74C3C 0%, #C0392B 50%, #A93226 100%)', Icon: Wrench },
   announcement: { gradient: 'linear-gradient(135deg, #2ECC71 0%, #27AE60 50%, #219A52 100%)', Icon: Megaphone },
 };
-// eslint-disable-next-line max-lines-per-function
 export default function NewsSection({ news, sectionConfig }: { news: CMSNewsArticle[]; sectionConfig?: CMSNewsSectionConfig }) {
   const { t } = useLang();
 
@@ -42,7 +41,6 @@ export default function NewsSection({ news, sectionConfig }: { news: CMSNewsArti
     <section
       id="news"
       className="section-news"
-      style={sectionConfig?.bgImage ? { backgroundImage: `url(${sectionConfig.bgImage.url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
     >
       <div className="container-custom">
         <RevealSection>
