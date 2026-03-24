@@ -58,72 +58,7 @@ const cardVariants = {
   },
 };
 
-/* ── Featured News Card ── */
-function FeaturedNewsCard({ item, meta }: {
-  item: { slug: string; title: string; tag: string; date: string; thumb: string | null; category: string };
-  meta: typeof CATEGORY_META[string];
-}) {
-  const inner = (
-    <motion.div variants={cardVariants} layout>
-      <Card className={cn(
-        'group/featured relative overflow-hidden border-0 rounded-2xl',
-        'bg-gradient-to-br from-white/[0.06] to-white/[0.02]',
-        'ring-1 ring-white/10 hover:ring-amber-500/30',
-        'transition-all duration-500 ease-out',
-        'hover:shadow-[0_8px_40px_rgba(245,166,35,0.15)]',
-        'p-0'
-      )}>
-        {/* Image area — cinematic ratio for featured */}
-        <div className="relative aspect-[21/9] w-full overflow-hidden">
-          {item.thumb ? (
-            <Image
-              src={item.thumb}
-              alt={item.title}
-              fill
-              className="object-cover transition-transform duration-700 ease-out group-hover/featured:scale-105"
-            />
-          ) : (
-            <div className={cn(
-              'flex h-full w-full items-center justify-center bg-gradient-to-br',
-              meta.gradient,
-              'bg-[rgba(15,15,25,0.8)]'
-            )}>
-              <meta.Icon size={64} className="text-white/30" />
-            </div>
-          )}
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-
-          {/* Badge on image */}
-          <div className="absolute top-4 left-4">
-            <Badge
-              className={cn(
-                'h-6 rounded-md px-3 text-[0.65rem] font-bold uppercase tracking-wider border-0',
-              )}
-              style={{ backgroundColor: meta.color, color: '#0f0f19' }}
-            >
-              {item.tag}
-            </Badge>
-          </div>
-
-          {/* Title overlay at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-            <h3 className="font-display text-xl md:text-2xl lg:text-3xl font-semibold text-white leading-tight mb-2 drop-shadow-lg group-hover/featured:text-amber-200 transition-colors duration-300">
-              {item.title}
-            </h3>
-            <time className="text-sm text-white/60 font-body">{item.date}</time>
-          </div>
-        </div>
-      </Card>
-    </motion.div>
-  );
-
-  return item.slug ? (
-    <Link href={`/news/${item.slug}`} className="block">
-      {inner}
-    </Link>
-  ) : inner;
-}
+/* ── Removed separate FeaturedNewsCard — all cards now use the same uniform NewsCard for symmetry ──  */
 
 /* ── Regular News Card ── */
 function NewsCard({ item, meta }: {
@@ -227,9 +162,6 @@ export default function NewsSection({
 
   if (items.length === 0) return null;
 
-  const featured = filteredItems[0];
-  const rest = filteredItems.slice(1);
-
   return (
     <section id="news" className="news-section">
       {/* Background decorations */}
@@ -303,26 +235,7 @@ export default function NewsSection({
           </div>
         </RevealSection>
 
-        {/* ── Featured News Card ── */}
-        {filteredItems.length > 0 && featured && (
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`featured-${activeTab}`}
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="mb-6"
-            >
-              <FeaturedNewsCard
-                item={featured}
-                meta={CATEGORY_META[featured.category] || CATEGORY_META.event}
-              />
-            </motion.div>
-          </AnimatePresence>
-        )}
-
-        {/* ── News Cards Grid ── */}
+        {/* ── Uniform News Cards Grid ── */}
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -330,14 +243,9 @@ export default function NewsSection({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={cn(
-              'grid gap-5',
-              'grid-cols-1',
-              'sm:grid-cols-2',
-              'lg:grid-cols-3',
-            )}
+            className="news-cards-grid"
           >
-            {rest.map((item) => (
+            {filteredItems.map((item) => (
               <NewsCard
                 key={item.key}
                 item={item}
