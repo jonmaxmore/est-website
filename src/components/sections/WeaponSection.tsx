@@ -4,6 +4,7 @@ import React, { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Play, X } from 'lucide-react';
+import { useLang } from '@/lib/lang-context';
 import type { CMSWeapon } from '@/types/cms';
 
 /* ═══════════════════════════════════════════════
@@ -18,6 +19,7 @@ interface WeaponSectionProps {
 
 // eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function WeaponSection({ weapons }: WeaponSectionProps) {
+  const { t } = useLang();
   const [activeIdx, setActiveIdx] = useState(0);
   const [direction, setDirection] = useState(0);
   const [videoOpen, setVideoOpen] = useState(false);
@@ -215,7 +217,17 @@ export default function WeaponSection({ weapons }: WeaponSectionProps) {
                 className="weapon-weapon-info-img"
               />
             )}
-            
+
+            {/* Text description — shown when available */}
+            {(activeWeapon?.descriptionEn || activeWeapon?.descriptionTh) && (
+              <div className="weapon-text-info">
+                <h3 className="weapon-text-name">{activeWeapon.name}</h3>
+                <p className="weapon-text-desc">
+                  {t(activeWeapon.descriptionTh || '', activeWeapon.descriptionEn || '')}
+                </p>
+              </div>
+            )}
+
             {activeWeapon?.videoType !== 'none' && (
               <button 
                 className="weapon-video-btn" 

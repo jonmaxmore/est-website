@@ -114,6 +114,8 @@ export default async function LandingPage() {
     weapons = weaponsRes.docs.map((c: Record<string, unknown>) => ({
       id: c.id as number,
       name: (c.name || '') as string,
+      descriptionEn: (c.descriptionEn as string) || null,
+      descriptionTh: (c.descriptionTh as string) || null,
       portrait: extractMediaUrl(c.portrait),
       infoImage: extractMediaUrl(c.infoImage),
       backgroundImage: extractMediaUrl(c.backgroundImage),

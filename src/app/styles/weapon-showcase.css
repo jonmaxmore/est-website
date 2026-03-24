@@ -459,6 +459,50 @@
   }
 }
 
+/* ── Weapon Text Description ── */
+.weapon-text-info {
+  max-width: 420px;
+  padding: 1.25rem 1.5rem;
+  background: rgba(2, 5, 13, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 168, 67, 0.15);
+  border-radius: 4px;
+}
+
+.weapon-text-name {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--gold-light);
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.weapon-text-desc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: rgba(240, 245, 255, 0.75);
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .weapon-text-info {
+    max-width: 100%;
+    padding: 0.75rem 1rem;
+  }
+
+  .weapon-text-name {
+    font-size: var(--text-lg);
+  }
+
+  .weapon-text-desc {
+    font-size: var(--text-xs);
+  }
+}
+
 /* ── Video Overlay Button ── */
 .weapon-info-overlay {
   display: flex;

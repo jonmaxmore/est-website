@@ -35,6 +35,8 @@ export function extractMedia(field: unknown): { url: string } | null {
 export interface CMSWeapon {
   id: number;
   name: string;
+  descriptionEn?: string | null;
+  descriptionTh?: string | null;
   portrait: string | null;
   infoImage: string | null;
   backgroundImage: string | null;

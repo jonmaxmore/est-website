@@ -47,6 +47,18 @@ export const Weapons: CollectionConfig = {
       admin: { description: 'รูปไอคอนวงกลมสำหรับเลือกอาวุธ' },
     },
     {
+      name: 'descriptionEn',
+      type: 'textarea',
+      label: 'Description (English)',
+      admin: { description: 'คำอธิบายอาวุธภาษาอังกฤษ — แสดงในหน้า Weapon Showcase' },
+    },
+    {
+      name: 'descriptionTh',
+      type: 'textarea',
+      label: 'Description (Thai)',
+      admin: { description: 'คำอธิบายอาวุธภาษาไทย — แสดงในหน้า Weapon Showcase' },
+    },
+    {
       name: 'videoType',
       type: 'select',
       options: [
