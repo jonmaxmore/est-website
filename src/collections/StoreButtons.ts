@@ -4,7 +4,7 @@ export const StoreButtons: CollectionConfig = {
   slug: 'store-buttons',
   admin: {
     useAsTitle: 'platform',
-    description: 'App store download buttons',
+    description: 'App store download buttons — iOS, Android, PC, Steam',
     group: 'Event',
     defaultColumns: ['platform', 'label', 'url', 'visible'],
   },
@@ -16,28 +16,60 @@ export const StoreButtons: CollectionConfig = {
   },
   fields: [
     {
-      name: 'platform',
-      type: 'select',
-      required: true,
-      options: [
-        { label: 'App Store (iOS)', value: 'ios' },
-        { label: 'Google Play', value: 'android' },
-        { label: 'Windows PC', value: 'pc' },
-        { label: 'Steam', value: 'steam' },
+      type: 'row',
+      fields: [
+        {
+          name: 'platform',
+          type: 'select',
+          required: true,
+          label: 'Platform',
+          options: [
+            { label: '🍎 App Store (iOS)', value: 'ios' },
+            { label: '🤖 Google Play', value: 'android' },
+            { label: '🖥️ Windows PC', value: 'pc' },
+            { label: '🎮 Steam', value: 'steam' },
+          ],
+          admin: { width: '33%' },
+        },
+        {
+          name: 'sortOrder',
+          type: 'number',
+          defaultValue: 0,
+          label: 'Sort Order',
+          admin: { width: '33%' },
+        },
+        {
+          name: 'visible',
+          type: 'checkbox',
+          defaultValue: true,
+          label: 'Visible',
+          admin: { width: '33%' },
+        },
       ],
     },
     {
-      name: 'label',
-      type: 'text',
-      required: true,
-      label: 'Button Label',
-      admin: { description: 'e.g. "App Store", "Google Play"' },
-    },
-    {
-      name: 'sublabel',
-      type: 'text',
-      label: 'Sub Label',
-      admin: { description: 'e.g. "Pre-order on the", "PRE-REGISTER ON"' },
+      type: 'row',
+      fields: [
+        {
+          name: 'label',
+          type: 'text',
+          required: true,
+          label: 'Button Label',
+          admin: {
+            width: '50%',
+            description: 'e.g. "App Store", "Google Play"',
+          },
+        },
+        {
+          name: 'sublabel',
+          type: 'text',
+          label: 'Sub Label',
+          admin: {
+            width: '50%',
+            description: 'e.g. "Pre-order on the", "PRE-REGISTER ON"',
+          },
+        },
+      ],
     },
     {
       name: 'url',
@@ -50,17 +82,8 @@ export const StoreButtons: CollectionConfig = {
       name: 'icon',
       type: 'upload',
       relationTo: 'media',
-      label: 'Custom Icon',
-    },
-    {
-      name: 'sortOrder',
-      type: 'number',
-      defaultValue: 0,
-    },
-    {
-      name: 'visible',
-      type: 'checkbox',
-      defaultValue: true,
+      label: 'Custom Icon (optional)',
+      admin: { description: 'Overrides default platform icon' },
     },
   ],
 }

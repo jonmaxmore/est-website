@@ -1,9 +1,11 @@
-import { CollectionConfig } from 'payload'
+import type { CollectionConfig } from 'payload'
 
 export const Weapons: CollectionConfig = {
   slug: 'weapons',
   admin: {
     useAsTitle: 'name',
+    description: 'Weapons for the Weapon Showcase section on the homepage',
+    group: 'Content',
     defaultColumns: ['name', 'sortOrder', 'visible', 'updatedAt'],
   },
   access: {
@@ -11,94 +13,162 @@ export const Weapons: CollectionConfig = {
     delete: ({ req: { user } }) => !!user,
   },
   fields: [
+    // ── Basic Info ──────────────────────────────────
     {
-      name: 'name',
-      type: 'text',
-      required: true,
-      label: 'Weapon Name (Admin Only)',
-      admin: { description: 'ชื่ออาวุธสำหรับจัดการใน CMS เช่น SWORD, BOW, CRYSTAL_ORB, WAND' },
-    },
-    {
-      name: 'portrait',
-      type: 'upload',
-      relationTo: 'media',
-      label: 'Weapon Portrait (60% ของหน้าจอ)',
-      admin: { description: 'รูปตัวละครถืออาวุธแบบ full-body — แสดงทางซ้าย 60% ของหน้าจอ' },
-    },
-    {
-      name: 'infoImage',
-      type: 'upload',
-      relationTo: 'media',
-      label: 'Weapon Info Image (ข้อความแนะนำ)',
-      admin: { description: 'รูปข้อความอาวุธ เช่น "Weapon: BOW" — แสดงด้านล่างซ้าย' },
-    },
-    {
-      name: 'backgroundImage',
-      type: 'upload',
-      relationTo: 'media',
-      label: 'Background Image (แบคกราว)',
-      admin: { description: 'รูปแบคกราวเต็มจอเมื่อเลือกอาวุธนี้' },
-    },
-    {
-      name: 'icon',
-      type: 'upload',
-      relationTo: 'media',
-      label: 'Selector Icon (ไอคอนเปลี่ยนแทป)',
-      admin: { description: 'รูปไอคอนวงกลมสำหรับเลือกอาวุธ' },
-    },
-    {
-      name: 'descriptionEn',
-      type: 'textarea',
-      label: 'Description (English)',
-      admin: { description: 'คำอธิบายอาวุธภาษาอังกฤษ — แสดงในหน้า Weapon Showcase' },
-    },
-    {
-      name: 'descriptionTh',
-      type: 'textarea',
-      label: 'Description (Thai)',
-      admin: { description: 'คำอธิบายอาวุธภาษาไทย — แสดงในหน้า Weapon Showcase' },
-    },
-    {
-      name: 'videoType',
-      type: 'select',
-      options: [
-        { label: 'None (ไม่แสดงวิดีโอ)', value: 'none' },
-        { label: 'YouTube Video', value: 'youtube' },
-        { label: 'Upload MP4', value: 'upload' }
+      type: 'row',
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+          label: 'Weapon Name',
+          admin: {
+            width: '40%',
+            description: 'Internal name: SWORD, BOW, CRYSTAL_ORB, WAND',
+          },
+        },
+        {
+          name: 'sortOrder',
+          type: 'number',
+          defaultValue: 0,
+          label: 'Sort Order',
+          admin: {
+            width: '30%',
+            description: 'Lower = appears first',
+          },
+        },
+        {
+          name: 'visible',
+          type: 'checkbox',
+          defaultValue: true,
+          label: 'Visible on Website',
+          admin: { width: '30%' },
+        },
       ],
-      defaultValue: 'none',
-      label: 'Video Type',
     },
+
+    // ── Descriptions (EN/TH) ───────────────────────
     {
-      name: 'videoUrl',
-      type: 'text',
-      label: 'YouTube ID or Full URL',
-      admin: {
-        condition: (data, siblingData) => siblingData.videoType === 'youtube',
-        description: 'ตัวอย่าง: https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-      }
+      type: 'collapsible',
+      label: '📝 Descriptions',
+      admin: { initCollapsed: false },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'descriptionEn',
+              type: 'textarea',
+              label: 'Description (English)',
+              admin: { width: '50%' },
+            },
+            {
+              name: 'descriptionTh',
+              type: 'textarea',
+              label: 'Description (Thai)',
+              admin: { width: '50%' },
+            },
+          ],
+        },
+      ],
     },
+
+    // ── Images ──────────────────────────────────────
     {
-      name: 'videoUpload',
-      type: 'upload',
-      relationTo: 'media',
-      label: 'Video File Upload',
-      admin: {
-        condition: (data, siblingData) => siblingData.videoType === 'upload',
-        description: 'อัปโหลดไฟล์วิดีโอ (ควรเป็น .mp4)'
-      }
+      type: 'collapsible',
+      label: '🖼️ Images',
+      admin: { initCollapsed: false },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'portrait',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Character Portrait',
+              admin: {
+                width: '50%',
+                description: 'Full-body character holding weapon — left 60% of screen',
+              },
+            },
+            {
+              name: 'infoImage',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Weapon Info Image',
+              admin: {
+                width: '50%',
+                description: 'Weapon name/description overlay — bottom-left area',
+              },
+            },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'backgroundImage',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Background Image',
+              admin: {
+                width: '50%',
+                description: 'Full-screen background when this weapon is selected',
+              },
+            },
+            {
+              name: 'icon',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Selector Icon',
+              admin: {
+                width: '50%',
+                description: 'Circle icon for weapon tab selector',
+              },
+            },
+          ],
+        },
+      ],
     },
+
+    // ── Video ───────────────────────────────────────
     {
-      name: 'sortOrder',
-      type: 'number',
-      defaultValue: 0,
-      admin: { description: 'ลำดับ — เลขน้อย = แสดงก่อน' },
-    },
-    {
-      name: 'visible',
-      type: 'checkbox',
-      defaultValue: true,
-      label: 'Visible on Website',
+      type: 'collapsible',
+      label: '🎬 Video (Optional)',
+      admin: { initCollapsed: true },
+      fields: [
+        {
+          name: 'videoType',
+          type: 'select',
+          options: [
+            { label: '🚫 None', value: 'none' },
+            { label: '▶️ YouTube', value: 'youtube' },
+            { label: '📁 Upload MP4', value: 'upload' },
+          ],
+          defaultValue: 'none',
+          label: 'Video Type',
+        },
+        {
+          name: 'videoUrl',
+          type: 'text',
+          label: 'YouTube URL or Video ID',
+          admin: {
+            condition: (data, siblingData) => siblingData.videoType === 'youtube',
+            description: 'e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          },
+        },
+        {
+          name: 'videoUpload',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Video File',
+          admin: {
+            condition: (data, siblingData) => siblingData.videoType === 'upload',
+            description: 'Upload .mp4 file directly',
+          },
+        },
+      ],
     },
   ],
 }

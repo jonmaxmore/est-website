@@ -15,8 +15,8 @@ export const Media: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'alt',
-    description: 'Upload and manage all website images',
-    group: 'Content',
+    description: 'Upload and manage all website images and videos',
+    group: 'System',
   },
   access: {
     read: () => true,
@@ -26,15 +26,28 @@ export const Media: CollectionConfig = {
   },
   fields: [
     {
-      name: 'alt',
-      type: 'text',
-      required: true,
-      label: 'Alt Text (SEO)',
-    },
-    {
-      name: 'caption',
-      type: 'text',
-      label: 'Caption',
+      type: 'row',
+      fields: [
+        {
+          name: 'alt',
+          type: 'text',
+          required: true,
+          label: 'Alt Text (SEO)',
+          admin: {
+            width: '50%',
+            description: 'Descriptive text for accessibility and search engines',
+          },
+        },
+        {
+          name: 'caption',
+          type: 'text',
+          label: 'Caption',
+          admin: {
+            width: '50%',
+            description: 'Optional caption displayed below the image',
+          },
+        },
+      ],
     },
   ],
 }

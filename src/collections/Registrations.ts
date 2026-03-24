@@ -15,100 +15,153 @@ export const Registrations: CollectionConfig = {
     delete: ({ req: { user } }) => !!user,
   },
   fields: [
-    {
-      name: 'email',
-      type: 'email',
-      required: true,
-      unique: true,
-    },
-    {
-      name: 'platform',
-      type: 'select',
-      required: true,
-      options: [
-        { label: 'iOS', value: 'ios' },
-        { label: 'Android', value: 'android' },
-        { label: 'PC', value: 'pc' },
-      ],
-    },
-    {
-      name: 'region',
-      type: 'select',
-      required: true,
-      options: [
-        { label: 'Thailand', value: 'th' },
-        { label: 'Malaysia', value: 'my' },
-        { label: 'Indonesia', value: 'id' },
-        { label: 'Philippines', value: 'ph' },
-        { label: 'Singapore', value: 'sg' },
-      ],
-    },
-    {
-      name: 'referralCode',
-      type: 'text',
-      unique: true,
-      label: 'Referral Code',
-      admin: { description: 'Auto-generated unique referral code for this user' },
-    },
-    {
-      name: 'referredBy',
-      type: 'text',
-      label: 'Referred By (code)',
-      admin: { description: 'The referral code of the person who invited this user (Level 1 parent)' },
-    },
-    // ── 2-Level Referral Tracking ──
+    // ── User Info ──────────────────────────────────
     {
       type: 'row',
       fields: [
         {
-          name: 'referralLevel1Count',
-          type: 'number',
-          defaultValue: 0,
-          label: 'Level 1 Referrals',
-          admin: {
-            width: '33%',
-            description: 'Direct invites',
-          },
+          name: 'email',
+          type: 'email',
+          required: true,
+          unique: true,
+          label: 'Email',
+          admin: { width: '40%' },
         },
         {
-          name: 'referralLevel2Count',
-          type: 'number',
-          defaultValue: 0,
-          label: 'Level 2 Referrals',
-          admin: {
-            width: '33%',
-            description: 'Invites by your Level 1 referrals',
-          },
+          name: 'platform',
+          type: 'select',
+          required: true,
+          label: 'Platform',
+          options: [
+            { label: '🍎 iOS', value: 'ios' },
+            { label: '🤖 Android', value: 'android' },
+            { label: '🖥️ PC', value: 'pc' },
+          ],
+          admin: { width: '30%' },
         },
         {
-          name: 'referralPoints',
-          type: 'number',
-          defaultValue: 0,
-          label: 'Total Referral Points',
-          admin: {
-            width: '33%',
-            description: 'L1 × pointsLevel1 + L2 × pointsLevel2',
-          },
+          name: 'region',
+          type: 'select',
+          required: true,
+          label: 'Region',
+          options: [
+            { label: '🇹🇭 Thailand', value: 'th' },
+            { label: '🇲🇾 Malaysia', value: 'my' },
+            { label: '🇮🇩 Indonesia', value: 'id' },
+            { label: '🇵🇭 Philippines', value: 'ph' },
+            { label: '🇸🇬 Singapore', value: 'sg' },
+          ],
+          admin: { width: '30%' },
         },
       ],
     },
-    // Legacy field — kept for backward compat
+
+    // ── Referral Tracking ──────────────────────────
     {
-      name: 'referralCount',
-      type: 'number',
-      defaultValue: 0,
-      label: 'Referral Count (legacy)',
-      admin: { description: 'Deprecated — use referralLevel1Count instead' },
+      type: 'collapsible',
+      label: '🔗 Referral Tracking',
+      admin: { initCollapsed: false },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'referralCode',
+              type: 'text',
+              unique: true,
+              label: 'Referral Code',
+              admin: {
+                width: '50%',
+                readOnly: true,
+                description: 'Auto-generated unique code',
+              },
+            },
+            {
+              name: 'referredBy',
+              type: 'text',
+              label: 'Referred By',
+              admin: {
+                width: '50%',
+                description: 'Code of the person who invited this user',
+              },
+            },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'referralLevel1Count',
+              type: 'number',
+              defaultValue: 0,
+              label: 'Level 1 Referrals',
+              admin: {
+                width: '33%',
+                readOnly: true,
+                description: 'Direct invites',
+              },
+            },
+            {
+              name: 'referralLevel2Count',
+              type: 'number',
+              defaultValue: 0,
+              label: 'Level 2 Referrals',
+              admin: {
+                width: '33%',
+                readOnly: true,
+                description: 'Invites by Level 1 referrals',
+              },
+            },
+            {
+              name: 'referralPoints',
+              type: 'number',
+              defaultValue: 0,
+              label: 'Total Points',
+              admin: {
+                width: '33%',
+                readOnly: true,
+                description: 'L1 × pointsLevel1 + L2 × pointsLevel2',
+              },
+            },
+          ],
+        },
+      ],
     },
+
+    // ── System Data ─────────────────────────────────
     {
-      name: 'ipAddress',
-      type: 'text',
-      admin: { readOnly: true },
-    },
-    {
-      name: 'userAgent',
-      type: 'text',
-      admin: { readOnly: true },
+      type: 'collapsible',
+      label: '⚙️ System Data',
+      admin: { initCollapsed: true },
+      fields: [
+        {
+          name: 'referralCount',
+          type: 'number',
+          defaultValue: 0,
+          label: 'Referral Count (legacy)',
+          admin: {
+            readOnly: true,
+            description: 'Deprecated — use referralLevel1Count instead',
+          },
+        },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'ipAddress',
+              type: 'text',
+              label: 'IP Address',
+              admin: { readOnly: true, width: '50%' },
+            },
+            {
+              name: 'userAgent',
+              type: 'text',
+              label: 'User Agent',
+              admin: { readOnly: true, width: '50%' },
+            },
+          ],
+        },
+      ],
     },
   ],
   timestamps: true,

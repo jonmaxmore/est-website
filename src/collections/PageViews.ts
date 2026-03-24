@@ -10,85 +10,133 @@ export const PageViews: CollectionConfig = {
   },
   access: {
     read: ({ req: { user } }) => !!user,
-    create: () => true, // Allow API to create
+    create: () => true,
     update: () => false,
     delete: ({ req: { user } }) => !!user,
   },
   fields: [
+    // ── Core Info ───────────────────────────────────
     {
-      name: 'path',
-      type: 'text',
-      required: true,
-      index: true,
-      label: 'Page Path',
-    },
-    {
-      name: 'ip',
-      type: 'text',
-      index: true,
-      label: 'IP Address',
-    },
-    {
-      name: 'userAgent',
-      type: 'text',
-      label: 'User Agent',
-    },
-    {
-      name: 'referrer',
-      type: 'text',
-      label: 'Referrer URL',
-    },
-    {
-      name: 'sessionId',
-      type: 'text',
-      index: true,
-      label: 'Session ID',
-    },
-    {
-      name: 'language',
-      type: 'text',
-      label: 'Browser Language',
-    },
-    {
-      name: 'deviceType',
-      type: 'text',
-      label: 'Device Type',
-      defaultValue: 'desktop',
-      index: true,
-      admin: { description: 'Detected from user-agent: desktop, mobile, or tablet' },
-    },
-
-    // ─── Enhanced fields (Sprint 1) ───
-    { name: 'visitorId', type: 'text', index: true, label: 'Visitor ID' },
-    { name: 'browser', type: 'text', index: true, label: 'Browser' },
-    { name: 'browserVersion', type: 'text', label: 'Browser Version' },
-    { name: 'os', type: 'text', index: true, label: 'Operating System' },
-    { name: 'osVersion', type: 'text', label: 'OS Version' },
-    { name: 'screenWidth', type: 'number', label: 'Screen Width' },
-    { name: 'screenHeight', type: 'number', label: 'Screen Height' },
-    { name: 'country', type: 'text', index: true, label: 'Country Code' },
-    {
-      name: 'channel',
-      type: 'select',
-      index: true,
-      label: 'Traffic Channel',
-      options: [
-        { label: 'Direct', value: 'direct' },
-        { label: 'Organic Search', value: 'organic' },
-        { label: 'Social', value: 'social' },
-        { label: 'Referral', value: 'referral' },
-        { label: 'Paid Search', value: 'paid_search' },
-        { label: 'Paid Social', value: 'paid_social' },
-        { label: 'Email', value: 'email' },
-        { label: 'Display', value: 'display' },
-        { label: 'Other', value: 'other' },
+      type: 'row',
+      fields: [
+        {
+          name: 'path',
+          type: 'text',
+          required: true,
+          index: true,
+          label: 'Page Path',
+          admin: { width: '33%', readOnly: true },
+        },
+        {
+          name: 'sessionId',
+          type: 'text',
+          index: true,
+          label: 'Session ID',
+          admin: { width: '33%', readOnly: true },
+        },
+        {
+          name: 'visitorId',
+          type: 'text',
+          index: true,
+          label: 'Visitor ID',
+          admin: { width: '33%', readOnly: true },
+        },
       ],
     },
-    { name: 'utmSource', type: 'text', index: true, label: 'UTM Source' },
-    { name: 'utmMedium', type: 'text', label: 'UTM Medium' },
-    { name: 'utmCampaign', type: 'text', index: true, label: 'UTM Campaign' },
-    { name: 'utmTerm', type: 'text', label: 'UTM Term' },
-    { name: 'utmContent', type: 'text', label: 'UTM Content' },
+
+    // ── Device & Browser ───────────────────────────
+    {
+      type: 'collapsible',
+      label: '📱 Device & Browser',
+      admin: { initCollapsed: true },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            { name: 'deviceType', type: 'text', label: 'Device Type', defaultValue: 'desktop', index: true, admin: { width: '33%', readOnly: true } },
+            { name: 'browser', type: 'text', index: true, label: 'Browser', admin: { width: '33%', readOnly: true } },
+            { name: 'browserVersion', type: 'text', label: 'Browser Version', admin: { width: '33%', readOnly: true } },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'os', type: 'text', index: true, label: 'Operating System', admin: { width: '33%', readOnly: true } },
+            { name: 'osVersion', type: 'text', label: 'OS Version', admin: { width: '33%', readOnly: true } },
+            { name: 'language', type: 'text', label: 'Browser Language', admin: { width: '33%', readOnly: true } },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'screenWidth', type: 'number', label: 'Screen Width', admin: { width: '50%', readOnly: true } },
+            { name: 'screenHeight', type: 'number', label: 'Screen Height', admin: { width: '50%', readOnly: true } },
+          ],
+        },
+      ],
+    },
+
+    // ── Traffic Source ──────────────────────────────
+    {
+      type: 'collapsible',
+      label: '🔗 Traffic Source',
+      admin: { initCollapsed: true },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            { name: 'referrer', type: 'text', label: 'Referrer URL', admin: { width: '50%', readOnly: true } },
+            {
+              name: 'channel', type: 'select', index: true, label: 'Traffic Channel',
+              options: [
+                { label: 'Direct', value: 'direct' },
+                { label: 'Organic Search', value: 'organic' },
+                { label: 'Social', value: 'social' },
+                { label: 'Referral', value: 'referral' },
+                { label: 'Paid Search', value: 'paid_search' },
+                { label: 'Paid Social', value: 'paid_social' },
+                { label: 'Email', value: 'email' },
+                { label: 'Display', value: 'display' },
+                { label: 'Other', value: 'other' },
+              ],
+              admin: { width: '50%', readOnly: true },
+            },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'utmSource', type: 'text', index: true, label: 'UTM Source', admin: { width: '33%', readOnly: true } },
+            { name: 'utmMedium', type: 'text', label: 'UTM Medium', admin: { width: '33%', readOnly: true } },
+            { name: 'utmCampaign', type: 'text', index: true, label: 'UTM Campaign', admin: { width: '33%', readOnly: true } },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'utmTerm', type: 'text', label: 'UTM Term', admin: { width: '50%', readOnly: true } },
+            { name: 'utmContent', type: 'text', label: 'UTM Content', admin: { width: '50%', readOnly: true } },
+          ],
+        },
+      ],
+    },
+
+    // ── System ──────────────────────────────────────
+    {
+      type: 'collapsible',
+      label: '⚙️ System',
+      admin: { initCollapsed: true },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            { name: 'ip', type: 'text', index: true, label: 'IP Address', admin: { width: '33%', readOnly: true } },
+            { name: 'country', type: 'text', index: true, label: 'Country Code', admin: { width: '33%', readOnly: true } },
+            { name: 'userAgent', type: 'text', label: 'User Agent', admin: { width: '33%', readOnly: true } },
+          ],
+        },
+      ],
+    },
   ],
   timestamps: true,
 }
