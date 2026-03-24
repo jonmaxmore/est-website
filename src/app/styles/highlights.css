@@ -1,23 +1,73 @@
 /* ═══════════════════════════════════════════════════════
-   HIGHLIGHTS SECTION — Feature Cards Grid (v2)
-   Dark glass cards with gold accent borders on hover
+   HIGHLIGHTS SECTION — Lineage 2M Inspired
+   Cinematic parallax with atmospheric depth effects
    ═══════════════════════════════════════════════════════ */
 
 /* ─── Section container ─── */
 .section-highlights {
   position: relative;
-  min-height: 100vh;
+  min-height: 80vh;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 6rem 0;
-  background: linear-gradient(180deg, var(--deeper-navy) 0%, var(--midnight) 100%);
-  background-size: cover;
-  background-position: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(180deg,
+    var(--midnight, #040E21) 0%,
+    rgba(8, 16, 36, 0.95) 15%,
+    rgba(12, 22, 48, 0.9) 50%,
+    rgba(8, 16, 36, 0.95) 85%,
+    var(--midnight, #040E21) 100%);
   z-index: 2;
   overflow: hidden;
+}
+
+/* ─── Atmospheric glow effects (L2M style) ─── */
+.section-highlights::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 800px 500px at 20% 30%, rgba(212, 168, 67, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 400px at 80% 70%, rgba(91, 192, 235, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 400px at 50% 50%, rgba(212, 168, 67, 0.03) 0%, transparent 60%);
+}
+
+/* Floating particles animation */
+.section-highlights::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(212, 168, 67, 0.4) 50%, transparent 50%),
+    radial-gradient(1px 1px at 30% 60%, rgba(212, 168, 67, 0.3) 50%, transparent 50%),
+    radial-gradient(1px 1px at 50% 35%, rgba(245, 209, 120, 0.35) 50%, transparent 50%),
+    radial-gradient(1px 1px at 70% 80%, rgba(212, 168, 67, 0.25) 50%, transparent 50%),
+    radial-gradient(1px 1px at 90% 15%, rgba(245, 209, 120, 0.3) 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 25% 85%, rgba(212, 168, 67, 0.2) 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 75% 45%, rgba(245, 209, 120, 0.15) 50%, transparent 50%),
+    radial-gradient(1px 1px at 85% 55%, rgba(212, 168, 67, 0.35) 50%, transparent 50%);
+  animation: highlightsParticleFloat 20s ease-in-out infinite;
+}
+
+@keyframes highlightsParticleFloat {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.6; }
+  25% { transform: translateY(-8px) translateX(4px); opacity: 0.9; }
+  50% { transform: translateY(-4px) translateX(-6px); opacity: 0.7; }
+  75% { transform: translateY(-12px) translateX(2px); opacity: 0.85; }
+}
+
+/* Cinematic vignette effect */
+.highlights-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 200px 60px rgba(0, 0, 0, 0.4);
 }
 
 /* ─── Section header ─── */
@@ -27,6 +77,8 @@
   align-items: center;
   text-align: center;
   margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
 }
 
 .highlights-badge {
@@ -52,6 +104,8 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 @media (min-width: 640px) {
@@ -67,7 +121,7 @@
   }
 }
 
-/* ─── Card base ─── */
+/* ─── Card base — enhanced with L2M glow ─── */
 .highlights-card {
   position: relative;
   overflow: hidden;
@@ -82,25 +136,24 @@
   background: rgba(8, 16, 36, 0.7) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(212, 168, 67, 0.08) !important;
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
 
-  /* Ring override — remove default shadcn ring */
+  /* Ring override */
   --tw-ring-color: transparent;
   --tw-ring-offset-color: transparent;
-  ring: none !important;
-  outline: none !important;
 }
 
 .highlights-card:hover {
-  border-color: rgba(212, 168, 67, 0.4) !important;
+  border-color: rgba(212, 168, 67, 0.35) !important;
   box-shadow:
     0 16px 48px rgba(0, 0, 0, 0.6),
-    0 0 24px rgba(212, 168, 67, 0.08),
+    0 0 40px rgba(212, 168, 67, 0.08),
+    0 0 80px rgba(212, 168, 67, 0.04),
     inset 0 1px 0 rgba(212, 168, 67, 0.1);
-  transform: translateY(-4px);
+  transform: translateY(-6px);
 }
 
 /* ─── Background image card variant ─── */
@@ -164,7 +217,9 @@
 
 .highlights-card:hover .highlights-card__icon {
   transform: scale(1.1);
-  box-shadow: 0 6px 24px rgba(212, 168, 67, 0.2);
+  box-shadow:
+    0 6px 24px rgba(212, 168, 67, 0.2),
+    0 0 20px rgba(212, 168, 67, 0.1);
 }
 
 .highlights-icon-svg {
@@ -198,7 +253,7 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
-/* ─── Gold accent line on hover ─── */
+/* ─── Gold accent line on hover (enhanced glow) ─── */
 .highlights-card::after {
   content: '';
   position: absolute;
@@ -209,11 +264,14 @@
   height: 2px;
   background: linear-gradient(90deg,
     transparent,
-    rgba(212, 168, 67, 0.6),
+    rgba(212, 168, 67, 0.8),
+    rgba(245, 209, 120, 0.6),
+    rgba(212, 168, 67, 0.8),
     transparent);
   transition: transform 0.5s var(--ease-out-expo);
   z-index: 3;
   border-radius: 1px;
+  box-shadow: 0 0 12px rgba(212, 168, 67, 0.3);
 }
 
 .highlights-card:hover::after {

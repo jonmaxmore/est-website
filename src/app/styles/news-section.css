@@ -1,25 +1,58 @@
 @layer components {
-  /* ─── NEWS SECTION ─── */
+  /* ═══════════════════════════════════════════════
+     NEWS SECTION — Lineage 2M Cinematic Style
+     Atmospheric depth with parallax-ready background
+     ═══════════════════════════════════════════════ */
+
   .news-section {
     position: relative;
     width: 100%;
-    min-height: 100vh;
+    min-height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 5rem 0;
-    background: var(--midnight, #0a0a14);
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4);
+    padding: 6rem 0;
+    background: linear-gradient(180deg,
+      var(--midnight, #040E21) 0%,
+      rgba(6, 12, 28, 0.98) 15%,
+      rgba(10, 18, 38, 0.95) 50%,
+      rgba(6, 12, 28, 0.98) 85%,
+      var(--midnight, #0a0a14) 100%);
     z-index: 3;
     overflow: hidden;
   }
 
-  /* ─── Uniform news cards grid ─── */
+  /* ── Atmospheric glow (gold + purple accents) ── */
+  .news-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 700px 500px at 15% 25%, rgba(212, 168, 67, 0.05) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 400px at 85% 75%, rgba(155, 89, 182, 0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 600px 300px at 50% 90%, rgba(212, 168, 67, 0.03) 0%, transparent 60%);
+  }
+
+  /* Cinematic vignette */
+  .news-section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 180px 50px rgba(0, 0, 0, 0.35);
+  }
+
+  /* ── Uniform news cards grid (3 → 2 → 1 columns) ── */
   .news-cards-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
   @media (max-width: 1023px) {
@@ -35,12 +68,13 @@
     }
   }
 
-  /* ─── Background Glow Effects ─── */
+  /* ── Background Glow Orbs (animated) ── */
   .news-section-bg {
     position: absolute;
     inset: 0;
     pointer-events: none;
     overflow: hidden;
+    z-index: 0;
   }
 
   .news-section-glow {
@@ -49,25 +83,33 @@
     height: 600px;
     border-radius: 50%;
     filter: blur(120px);
-    opacity: 0.07;
+    opacity: 0.08;
+    animation: newsGlowPulse 8s ease-in-out infinite;
   }
 
   .news-section-glow--left {
     top: -200px;
     left: -200px;
     background: radial-gradient(circle, #f5a623 0%, transparent 70%);
+    animation-delay: 0s;
   }
 
   .news-section-glow--right {
     bottom: -200px;
     right: -200px;
     background: radial-gradient(circle, #9b59b6 0%, transparent 70%);
+    animation-delay: 4s;
   }
 
-  /* ─── Responsive padding adjustments ─── */
+  @keyframes newsGlowPulse {
+    0%, 100% { opacity: 0.06; transform: scale(1); }
+    50% { opacity: 0.12; transform: scale(1.1); }
+  }
+
+  /* ── Responsive padding adjustments ── */
   @media (max-width: 768px) {
     .news-section {
-      padding: 3rem 0;
+      padding: 4rem 0;
       min-height: auto;
     }
   }

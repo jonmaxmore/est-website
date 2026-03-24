@@ -55,27 +55,13 @@ export default function HomeContent({ settings, weapons, news }: HomeContentProp
         {/* ═══ SECTION 1: HERO ═══ */}
         <HeroSection settings={settings} />
 
-        {/* ─── Transition divider ─── */}
-        <div className="section-divider" aria-hidden="true">
-          <AnimatedSection variant="scaleUp" duration={1}>
-            <div className="section-divider-glow" />
-          </AnimatedSection>
-        </div>
-
         {/* ═══ SECTION 2: WEAPONS — Image-only weapon showcase ═══ */}
         <WeaponSection weapons={weapons} />
 
-        {/* ─── Transition divider ─── */}
-        <div className="section-divider" aria-hidden="true">
-          <AnimatedSection variant="scaleUp" duration={1}>
-            <div className="section-divider-glow" />
-          </AnimatedSection>
-        </div>
-
-        {/* ═══ SECTION 3: HIGHLIGHTS — Feature showcase with shadcn Cards ═══ */}
+        {/* ═══ SECTION 3: HIGHLIGHTS — Feature showcase with parallax (L2M style) ═══ */}
         <ParallaxSection
           backgroundUrl={settings?.highlights?.bgImage?.url}
-          speed={0.2}
+          speed={0.3}
           overlay="dark"
           className="section-highlights"
         >
@@ -85,17 +71,10 @@ export default function HomeContent({ settings, weapons, news }: HomeContentProp
           />
         </ParallaxSection>
 
-        {/* ─── Transition divider ─── */}
-        <div className="section-divider" aria-hidden="true">
-          <AnimatedSection variant="scaleUp" duration={1}>
-            <div className="section-divider-glow" />
-          </AnimatedSection>
-        </div>
-
-        {/* ═══ SECTION 4: NEWS — Compact 3-card grid ═══ */}
+        {/* ═══ SECTION 4: NEWS — Uniform card grid with parallax ═══ */}
         <ParallaxSection
           backgroundUrl={settings?.news?.bgImage?.url}
-          speed={0.15}
+          speed={0.2}
           overlay="darker"
         >
           <AnimatedSection variant="fadeIn" delay={0.05}>
