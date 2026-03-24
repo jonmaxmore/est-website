@@ -88,6 +88,9 @@
 }
 
 @media (max-width: 768px) {
+  .section-faq {
+    padding: 3rem 0;
+  }
   .faq-question {
     padding: 1rem 1.25rem;
     font-size: 0.95rem;
@@ -95,6 +98,30 @@
   .faq-answer {
     padding: 0 1.25rem 1rem;
     font-size: 0.9rem;
+  }
+  .faq-list {
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-faq {
+    padding: 2.5rem 0;
+  }
+  .faq-question {
+    padding: 0.85rem 1rem;
+    font-size: 0.9rem;
+  }
+  .faq-answer {
+    padding: 0 1rem 0.85rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+  .faq-icon {
+    font-size: 1.1rem;
+  }
+  .faq-item {
+    border-radius: 10px;
   }
 }
 

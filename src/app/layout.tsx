@@ -3,6 +3,7 @@ import { Outfit, Noto_Sans_Thai, Cinzel } from "next/font/google";
 import { LangProvider } from "@/lib/lang-context";
 import { BackToTop, CookieConsent } from "@/components/ui-overlays";
 import SmoothScroll from "@/components/ui/SmoothScroll";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
 /* Modular CSS — Homepage Components */
@@ -255,12 +256,14 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <LangProvider>
-          <PageViewTracker />
-          <SmoothScroll>
-            {children}
-          </SmoothScroll>
-          <BackToTop />
-          <CookieConsent />
+          <TooltipProvider>
+            <PageViewTracker />
+            <SmoothScroll>
+              {children}
+            </SmoothScroll>
+            <BackToTop />
+            <CookieConsent />
+          </TooltipProvider>
         </LangProvider>
       </body>
     </html>

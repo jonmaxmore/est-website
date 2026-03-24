@@ -149,14 +149,70 @@
 /*    CHARACTER PAGE Ã¢â‚¬â€ Detail View
    Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 /* Responsive */
+@media (max-width: 1024px) {
+  .section-story-content {
+    padding: 4rem 0 5rem;
+  }
+
+  .story-block {
+    max-width: 680px;
+    margin-bottom: 3rem;
+  }
+}
+
 @media (max-width: 768px) {
   .page-hero {
     padding: 7rem 0 3rem;
     min-height: 260px;
   }
 
+  .section-story-content {
+    padding: 3rem 0 4rem;
+  }
+
   .story-block {
     padding: 1.5rem;
     margin-bottom: 2rem;
+  }
+
+  .story-block::after {
+    font-size: 0.65rem;
+    left: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-story-content {
+    padding: 2.5rem 0 3rem;
+  }
+
+  .story-block {
+    padding: 1.25rem 1rem 1.25rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+  }
+
+  .story-block::before {
+    top: 1rem;
+    bottom: 1rem;
+    width: 2px;
+  }
+
+  .story-block::after {
+    font-size: 0.6rem;
+    left: 1rem;
+  }
+
+  .story-block-title {
+    font-size: 1.1rem;
+  }
+
+  .story-block-text {
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .story-block:first-child .story-block-text::first-letter {
+    font-size: 2.5rem;
   }
 }

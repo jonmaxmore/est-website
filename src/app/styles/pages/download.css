@@ -259,5 +259,61 @@
   .download-section-title {
     font-size: clamp(1.1rem, 3vw, 1.5rem);
   }
+  .download-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 450px;
+    gap: 1rem;
+  }
+  .download-platform-card {
+    padding: 1.5rem 1rem;
+  }
+  .download-cta-text {
+    font-size: 0.95rem;
+  }
+  .download-cta-btn {
+    padding: 0.75rem 2rem;
+    font-size: 0.9rem;
+  }
+  .download-req-label {
+    font-size: 0.8rem;
+  }
+  .download-req-value {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .download-hero {
+    padding: 5rem 0 1.5rem;
+  }
+  .download-title {
+    font-size: 1.4rem;
+  }
+  .download-sub {
+    font-size: 0.9rem;
+  }
+  .download-buttons {
+    grid-template-columns: 1fr;
+    max-width: 300px;
+  }
+  .download-platform-card {
+    padding: 1.25rem 1rem;
+  }
+  .download-platform-name {
+    font-size: 1rem;
+  }
+  .download-platform-action {
+    font-size: 0.8rem;
+  }
+  .download-req-tabs {
+    flex-wrap: wrap;
+  }
+  .download-req-tab {
+    font-size: 0.8rem;
+    padding: 0.4rem 1rem;
+  }
+  .download-cta-section {
+    padding: 2rem 0;
+  }
 }
 

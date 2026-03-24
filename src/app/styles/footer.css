@@ -497,3 +497,31 @@
   }
 }
 
+/* ─── Footer Responsive — Tablet ─── */
+@media (max-width: 1024px) {
+  .footer-inner-enhanced {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* ─── Footer Responsive — Small Phone ─── */
+@media (max-width: 480px) {
+  .footer-inner-enhanced {
+    padding: 1.5rem 1rem;
+  }
+  .footer-brand-desc {
+    font-size: 0.75rem;
+  }
+  .footer-bottom p {
+    font-size: 0.7rem;
+  }
+  .footer-platforms {
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+  }
+  .footer-platform-label {
+    font-size: 0.65rem;
+  }
+}
+

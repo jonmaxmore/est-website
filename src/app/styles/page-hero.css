@@ -50,3 +50,42 @@
   margin: 0 auto;
 }
 
+/* ─── Page Hero Responsive ─── */
+@media (max-width: 1024px) {
+  .page-hero {
+    padding: 7rem 0 3rem;
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-hero {
+    padding: 6rem 0 2.5rem;
+    min-height: 240px;
+  }
+
+  .page-hero-content {
+    padding: 0 1.25rem;
+  }
+
+  .page-hero-subtitle {
+    max-width: 440px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-hero {
+    padding: 5.5rem 0 2rem;
+    min-height: 200px;
+  }
+
+  .page-hero-content {
+    padding: 0 1rem;
+  }
+
+  .page-hero-subtitle {
+    max-width: 100%;
+    font-size: 0.85rem;
+  }
+}
+
