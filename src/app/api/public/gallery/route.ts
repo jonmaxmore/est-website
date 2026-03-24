@@ -1,19 +1,21 @@
 import { NextResponse } from 'next/server'
-import { getPayload } from 'payload'
-import config from '@/payload.config'
+import { getPayloadClient } from '@/lib/payload'
+
+export const dynamic = 'force-dynamic'
 
 /**
- * GET /api/gallery — Gallery images from CMS
+ * GET /api/public/gallery — Gallery images from CMS
  * Groups items by category (screenshots, wallpapers, concept)
  */
 export async function GET() {
   try {
-    const payload = await getPayload({ config })
+    const payload = await getPayloadClient()
 
     const result = await payload.find({
       collection: 'gallery',
       limit: 100,
       sort: 'order',
+      depth: 2,
     })
 
     // Group by category
@@ -37,9 +39,11 @@ export async function GET() {
       })
     }
 
-    return NextResponse.json({ gallery: items })
+    return NextResponse.json({ gallery: items }, {
+      headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120' },
+    })
   } catch (error) {
-    console.error('[API /gallery] Error fetching gallery:', error)
+    console.error('[API /public/gallery] Error:', error)
     return NextResponse.json({ gallery: {} })
   }
 }
