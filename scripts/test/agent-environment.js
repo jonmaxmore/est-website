@@ -222,7 +222,14 @@ async function testHTTPSReadiness() {
 
   // Check for mixed content in homepage HTML
   const html = await (await fetch(BASE_URL)).text();
-  const httpRefs = html.match(/http:\/\/(?!localhost|178\.128\.127\.161)/g) || [];
+  const allHttpRefs = html.match(/http:\/\/(?!localhost|127\.0\.0\.1|178\.128\.127\.161)[^\s"'<>\\]+/g) || [];
+  // Filter out spec URIs that aren't actual mixed content
+  const httpRefs = allHttpRefs.filter(ref => 
+    !ref.includes('schema.org') && 
+    !ref.includes('w3.org') && 
+    !ref.includes('xmlns') &&
+    !ref.includes('purl.org')
+  );
   httpRefs.length === 0
     ? pass('No mixed content (http://) references')
     : fail(`Mixed content detected: ${httpRefs.length} http:// references`);

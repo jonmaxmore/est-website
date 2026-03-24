@@ -1,40 +1,58 @@
 Agent: Route Doctor
-Target: https://eternaltowersaga.com
-Pass: 33 | Fail: 0 | Skip: 2 | Rate: 100.0%
-Timestamp: 2026-03-24T12:17:34.220Z
+Target: http://178.128.127.161
+Pass: 53 | Fail: 0 | Skip: 0 | Rate: 100.0%
+Timestamp: 2026-03-24T12:31:04.184Z
 
-[PASS] Page / exists — status=301
-[PASS] Page /character exists — status=301
-[PASS] Page /news exists — status=301
-[PASS] Page /gallery exists — status=301
-[PASS] Page /event exists — status=301
-[PASS] Page /story exists — status=301
-[PASS] Page /game-guide exists — status=301
-[PASS] Page /download exists — status=301
-[PASS] Page /faq exists — status=301
-[PASS] Page /privacy exists — status=301
-[PASS] Page /terms exists — status=301
-[PASS] Page /support exists — status=301
-[PASS] Page /admin exists — status=301
-[PASS] GET /api/health exists — status=301
-[PASS] GET /api/settings exists — status=301
-[PASS] GET /api/stats exists — status=301
-[PASS] GET /api/public/characters exists — status=301
-[PASS] GET /api/public/news exists — status=301
-[PASS] GET /api/public/gallery exists — status=301
-[PASS] GET /api/public/milestones exists — status=301
-[PASS] POST /api/register exists — status=403
-[PASS] POST /api/stats/reset exists — status=403
-[PASS] POST /api/graphql exists — status=403
-[SKIP] Internal link check — no links found in homepage
-[PASS] /api/health redirects (HTTPS) — status=301
-[PASS] /api/settings redirects (HTTPS) — status=301
-[PASS] /api/stats redirects (HTTPS) — status=301
-[PASS] /api/public/characters redirects (HTTPS) — status=301
-[PASS] /api/public/news redirects (HTTPS) — status=301
-[PASS] /api/public/gallery redirects (HTTPS) — status=301
-[PASS] /api/public/milestones redirects (HTTPS) — status=301
-[SKIP] News slug routing — API unavailable
-[PASS] /character/ handled (no 404) — status=301
-[PASS] /news/ handled (no 404) — status=301
-[PASS] /faq/ handled (no 404) — status=301
+[PASS] Page / exists — status=200
+[PASS] Page /character exists — status=307
+[PASS] Page /news exists — status=200
+[PASS] Page /gallery exists — status=200
+[PASS] Page /event exists — status=200
+[PASS] Page /story exists — status=200
+[PASS] Page /game-guide exists — status=200
+[PASS] Page /download exists — status=200
+[PASS] Page /faq exists — status=200
+[PASS] Page /privacy exists — status=200
+[PASS] Page /terms exists — status=200
+[PASS] Page /support exists — status=200
+[PASS] Page /admin exists — status=200
+[PASS] GET /api/health exists — status=200
+[PASS] GET /api/settings exists — status=200
+[PASS] GET /api/stats exists — status=200
+[PASS] GET /api/public/characters exists — status=200
+[PASS] GET /api/public/news exists — status=200
+[PASS] GET /api/public/gallery exists — status=200
+[PASS] GET /api/public/milestones exists — status=200
+[PASS] POST /api/register exists — status=500
+[PASS] POST /api/stats/reset exists — status=401
+[PASS] POST /api/graphql exists — status=415
+[PASS] Link /favicon.ico?favicon.0b3bf435.ico resolves — status=200
+[PASS] Link /favicon.ico resolves — status=200
+[PASS] Link /images/logo.webp resolves — status=200
+[PASS] Link / resolves — status=200
+[PASS] Link /#hero resolves — status=200
+[PASS] Link /#weapons resolves — status=200
+[PASS] Link /#features resolves — status=200
+[PASS] Link /#news resolves — status=200
+[PASS] Link /event resolves — status=200
+[PASS] Link /news/News articles, updates, and announcementsฟปฟปฟป resolves — status=200
+[PASS] Link /news/News articles, updates, and announcements resolves — status=200
+[PASS] Link /news/pre-registration-opens resolves — status=200
+[PASS] Link /news resolves — status=200
+[PASS] Link /download resolves — status=200
+[PASS] Link /faq resolves — status=200
+[PASS] Link /terms resolves — status=200
+[PASS] Link /privacy resolves — status=200
+[PASS] /api/health returns JSON content-type
+[PASS] /api/settings returns JSON content-type
+[PASS] /api/stats returns JSON content-type
+[PASS] /api/public/characters returns JSON content-type
+[PASS] /api/public/news returns JSON content-type
+[PASS] /api/public/gallery returns JSON content-type
+[PASS] /api/public/milestones returns JSON content-type
+[PASS] /news/News articles, updates, and announcementsฟปฟปฟป resolves
+[PASS] /news/News articles, updates, and announcements resolves
+[PASS] /news/pre-registration-opens resolves
+[PASS] /character/ handled (no 404) — status=308
+[PASS] /news/ handled (no 404) — status=308
+[PASS] /faq/ handled (no 404) — status=308

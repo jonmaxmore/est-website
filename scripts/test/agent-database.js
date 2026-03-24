@@ -278,7 +278,7 @@ async function testMediaAccessibility() {
       if (url) {
         const fullUrl = url.startsWith('http') ? url : `${BASE_URL}${url}`;
         try {
-          const mr = await fetch(fullUrl, { method: 'HEAD', signal: AbortSignal.timeout(5000) });
+          const mr = await fetch(fullUrl, { method: 'GET', signal: AbortSignal.timeout(5000), headers: { 'Range': 'bytes=0-0' } });
           tested++;
           mr.ok ? pass(`Media loads: ${c.name} ${field}`) : (broken++, fail(`Media broken: ${c.name} ${field}`, `status=${mr.status}`));
         } catch {
