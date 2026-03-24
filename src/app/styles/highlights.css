@@ -1,6 +1,9 @@
-/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
-   HIGHLIGHTS SECTION Ã¢â‚¬â€ Feature Cards Grid
-   Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
+/* ═══════════════════════════════════════════════════════
+   HIGHLIGHTS SECTION — Feature Cards Grid (v2)
+   Dark glass cards with gold accent borders on hover
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Section container ─── */
 .section-highlights {
   position: relative;
   min-height: 100vh;
@@ -20,43 +23,93 @@
   overflow: hidden;
 }
 
-.highlights-grid {
+/* ─── Section header ─── */
+.highlights-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.highlights-badge {
+  background: linear-gradient(135deg, rgba(212, 168, 67, 0.2), rgba(245, 209, 120, 0.1)) !important;
+  color: var(--gold-light) !important;
+  border: 1px solid rgba(212, 168, 67, 0.3) !important;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.35rem 1rem !important;
+  height: auto !important;
+  border-radius: 9999px !important;
+  margin-bottom: 1rem;
+}
+
+/* ─── Responsive grid: 1 col → 2 col → 3 col ─── */
+.highlights-grid-v2 {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 280px;
-  gap: 1.5rem;
-  margin-top: 3rem;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
   width: 100%;
 }
 
-.highlight-card {
+@media (min-width: 640px) {
+  .highlights-grid-v2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .highlights-grid-v2 {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* ─── Card base ─── */
+.highlights-card {
   position: relative;
-  padding: 2rem 1.5rem;
-  background: var(--deeper-navy);
-  border: none;
-  border-radius: 20px;
-  text-align: left;
-  transition: all 0.5s var(--ease-out-expo);
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  border-radius: 16px !important;
+  min-height: 220px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  transition: all 0.5s var(--ease-out-expo);
+
+  /* Dark glass effect */
+  background: rgba(8, 16, 36, 0.7) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  /* Ring override — remove default shadcn ring */
+  --tw-ring-color: transparent;
+  --tw-ring-offset-color: transparent;
+  ring: none !important;
+  outline: none !important;
 }
 
-/* Bento Grid Spans */
-.highlight-card:nth-child(1) { grid-column: span 2; grid-row: span 2; }
-.highlight-card:nth-child(2) { grid-column: span 1; grid-row: span 1; }
-.highlight-card:nth-child(3) { grid-column: span 1; grid-row: span 1; }
-.highlight-card:nth-child(4) { grid-column: span 1; grid-row: span 1; }
-.highlight-card:nth-child(5) { grid-column: span 1; grid-row: span 1; }
-.highlight-card:nth-child(6) { grid-column: span 2; grid-row: span 1; }
-
-.highlight-card.has-bg-image {
-  padding: 2rem;
+.highlights-card:hover {
+  border-color: rgba(212, 168, 67, 0.4) !important;
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.6),
+    0 0 24px rgba(212, 168, 67, 0.08),
+    inset 0 1px 0 rgba(212, 168, 67, 0.1);
+  transform: translateY(-4px);
 }
 
-.highlight-bg {
+/* ─── Background image card variant ─── */
+.highlights-card--has-bg {
+  min-height: 280px;
+}
+
+.highlights-card__bg {
   position: absolute;
   inset: 0;
   background-size: cover;
@@ -65,91 +118,128 @@
   transition: transform 0.7s var(--ease-out-expo);
 }
 
-.highlight-card:hover .highlight-bg {
-  transform: scale(1.05);
+.highlights-card:hover .highlights-card__bg {
+  transform: scale(1.06);
 }
 
-.highlight-overlay {
+.highlights-card__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(2,5,13,0.1) 0%, rgba(2,5,13,0.9) 100%);
+  background: linear-gradient(180deg,
+    rgba(2, 5, 13, 0.15) 0%,
+    rgba(2, 5, 13, 0.85) 100%);
   z-index: 1;
   transition: opacity 0.5s var(--ease-out-expo);
 }
 
-.highlight-card:hover .highlight-overlay {
-  background: linear-gradient(180deg, rgba(2,5,13,0.3) 0%, rgba(2,5,13,0.95) 100%);
+.highlights-card:hover .highlights-card__overlay {
+  background: linear-gradient(180deg,
+    rgba(2, 5, 13, 0.3) 0%,
+    rgba(2, 5, 13, 0.92) 100%);
 }
 
-.highlight-card-content {
+/* ─── Card inner elements ─── */
+.highlights-card__header {
   position: relative;
   z-index: 2;
-  transform: translateY(10px);
-  transition: transform 0.5s var(--ease-out-expo);
+  padding: 1.5rem 1.5rem 0 !important;
+  gap: 0.75rem !important;
 }
 
-.highlight-card:hover .highlight-card-content {
-  transform: translateY(0);
-}
-
-.highlight-card:hover {
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 168, 67, 0.1);
-}
-
-.highlight-icon {
+.highlights-card__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(212, 168, 67, 0.12), rgba(245, 209, 120, 0.06));
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg,
+    rgba(212, 168, 67, 0.15),
+    rgba(245, 209, 120, 0.06));
   color: var(--gold-light);
-  margin-bottom: 1rem;
   box-shadow: 0 4px 16px rgba(212, 168, 67, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.4s var(--ease-out-expo),
+    box-shadow 0.4s var(--ease-out-expo);
+  flex-shrink: 0;
 }
 
-.highlight-card:hover .highlight-icon {
-  transform: scale(1.08);
-  box-shadow: 0 6px 24px rgba(212, 168, 67, 0.18);
+.highlights-card:hover .highlights-card__icon {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px rgba(212, 168, 67, 0.2);
 }
 
-.highlight-title {
-  font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  font-weight: 500;
-  color: var(--white);
-  margin-bottom: 0.5rem;
+.highlights-icon-svg {
+  color: var(--gold-light);
+}
+
+.highlights-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.highlights-card__title {
+  font-family: var(--font-display) !important;
+  font-size: 1.15rem !important;
+  font-weight: 500 !important;
+  color: var(--white) !important;
   letter-spacing: 0.02em;
+  line-height: 1.3 !important;
 }
 
-.highlight-desc {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+.highlights-card__content {
+  position: relative;
+  z-index: 2;
+  padding: 0 1.5rem 1.5rem !important;
 }
 
-@media (max-width: 1024px) {
-  .highlights-grid {
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 240px;
+.highlights-card__desc {
+  font-size: 0.85rem !important;
+  color: var(--text-muted) !important;
+  line-height: 1.6 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* ─── Gold accent line on hover ─── */
+.highlights-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 60%;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(212, 168, 67, 0.6),
+    transparent);
+  transition: transform 0.5s var(--ease-out-expo);
+  z-index: 3;
+  border-radius: 1px;
+}
+
+.highlights-card:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* ─── Mobile adjustments ─── */
+@media (max-width: 639px) {
+  .highlights-header {
+    margin-bottom: 2rem;
   }
-  .highlight-card:nth-child(1), .highlight-card:nth-child(6) { grid-column: span 2; }
-  .highlight-card:nth-child(2), .highlight-card:nth-child(3), .highlight-card:nth-child(4), .highlight-card:nth-child(5) { grid-column: span 1; }
-}
 
-@media (max-width: 640px) {
-  .highlights-grid {
-    grid-template-columns: 1fr;
-    grid-auto-rows: min-content;
+  .highlights-card {
+    min-height: 180px;
   }
-  .highlight-card {
-    grid-column: span 1 !important;
-    grid-row: span 1 !important;
-    min-height: 250px;
-    padding: 1.5rem 1.25rem;
+
+  .highlights-card--has-bg {
+    min-height: 240px;
+  }
+
+  .highlights-card__header {
+    padding: 1.25rem 1.25rem 0 !important;
+  }
+
+  .highlights-card__content {
+    padding: 0 1.25rem 1.25rem !important;
   }
 }
-
