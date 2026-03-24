@@ -71,11 +71,10 @@ function FeaturedNewsCard({ item, meta }: {
         'ring-1 ring-white/10 hover:ring-amber-500/30',
         'transition-all duration-500 ease-out',
         'hover:shadow-[0_8px_40px_rgba(245,166,35,0.15)]',
-        'md:col-span-2 lg:col-span-2 row-span-2',
         'p-0'
       )}>
-        {/* Image area */}
-        <div className="relative aspect-[16/10] w-full overflow-hidden">
+        {/* Image area — cinematic ratio for featured */}
+        <div className="relative aspect-[21/9] w-full overflow-hidden">
           {item.thumb ? (
             <Image
               src={item.thumb}
@@ -108,7 +107,7 @@ function FeaturedNewsCard({ item, meta }: {
           </div>
 
           {/* Title overlay at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 p-6">
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
             <h3 className="font-display text-xl md:text-2xl lg:text-3xl font-semibold text-white leading-tight mb-2 drop-shadow-lg group-hover/featured:text-amber-200 transition-colors duration-300">
               {item.title}
             </h3>
@@ -120,12 +119,10 @@ function FeaturedNewsCard({ item, meta }: {
   );
 
   return item.slug ? (
-    <Link href={`/news/${item.slug}`} className="block md:col-span-2 lg:col-span-2 row-span-2">
+    <Link href={`/news/${item.slug}`} className="block">
       {inner}
     </Link>
-  ) : (
-    <div className="md:col-span-2 lg:col-span-2 row-span-2">{inner}</div>
-  );
+  ) : inner;
 }
 
 /* ── Regular News Card ── */
@@ -306,7 +303,26 @@ export default function NewsSection({
           </div>
         </RevealSection>
 
-        {/* ── News Grid ── */}
+        {/* ── Featured News Card ── */}
+        {filteredItems.length > 0 && featured && (
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`featured-${activeTab}`}
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="mb-6"
+            >
+              <FeaturedNewsCard
+                item={featured}
+                meta={CATEGORY_META[featured.category] || CATEGORY_META.event}
+              />
+            </motion.div>
+          </AnimatePresence>
+        )}
+
+        {/* ── News Cards Grid ── */}
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -317,17 +333,10 @@ export default function NewsSection({
             className={cn(
               'grid gap-5',
               'grid-cols-1',
-              'md:grid-cols-2',
+              'sm:grid-cols-2',
               'lg:grid-cols-3',
             )}
           >
-            {filteredItems.length > 0 && featured && (
-              <FeaturedNewsCard
-                item={featured}
-                meta={CATEGORY_META[featured.category] || CATEGORY_META.event}
-              />
-            )}
-
             {rest.map((item) => (
               <NewsCard
                 key={item.key}
