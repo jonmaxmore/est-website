@@ -76,6 +76,21 @@
       "sourceType": "github",
       "computedHash": "c31ddd68ba5798a79a516c619b1e1fc4408cc4876ad600fefa4f5add4425719d"
     },
+    "payload": {
+      "source": "payloadcms/skills",
+      "sourceType": "github",
+      "computedHash": "54e470359fccf4dbb7c0da3a00855312470f748cda5e2329b75e6667ceed1eb8"
+    },
+    "payload-cli": {
+      "source": "unlimiting-studio/payload-cli",
+      "sourceType": "github",
+      "computedHash": "35f3a73851d3211e2ba128239dfabfe3e6d756aa101798920393207c4512695c"
+    },
+    "payload-cms": {
+      "source": "connorads/dotfiles",
+      "sourceType": "github",
+      "computedHash": "8a03ac18b5264c95cd1c27de99659274933050a69252e073970736d09dac6627"
+    },
     "polish": {
       "source": "pbakaus/impeccable",
       "sourceType": "github",
