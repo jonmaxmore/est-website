@@ -52,9 +52,6 @@ export default function Navigation() {
 
     if (current !== activeSection) {
       setActiveSection(current);
-      // Update URL hash without triggering scroll
-      const hash = current === 'hero' ? '' : `#${current}`;
-      window.history.replaceState(null, '', `/${hash}`);
     }
   }, [isHomepage, activeSection]);
 
@@ -85,9 +82,6 @@ export default function Navigation() {
 
     isScrollingRef.current = true;
     setActiveSection(sectionId);
-
-    const hash = sectionId === 'hero' ? '' : `#${sectionId}`;
-    window.history.replaceState(null, '', `/${hash}`);
 
     el.scrollIntoView({ behavior: 'smooth' });
 
