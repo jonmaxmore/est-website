@@ -33,7 +33,7 @@ export default async function LandingPage() {
         payload.findGlobal({ slug: 'homepage' }).catch((e) => { console.error('Failed to fetch homepage:', e); return null; }),
         payload.find({ collection: 'store-buttons', where: { visible: { equals: true } }, sort: 'sortOrder' }).catch(() => ({ docs: [] })),
         payload.find({ collection: 'weapons', where: { visible: { equals: true } }, sort: 'sortOrder', limit: 20, depth: 2 }).catch(() => ({ docs: [] })),
-        payload.find({ collection: 'news', where: { status: { equals: 'published' } }, sort: '-publishedAt', limit: 3 }).catch(() => ({ docs: [] })),
+        payload.find({ collection: 'news', where: { status: { equals: 'published' }, publishedAt: { exists: true } }, sort: '-publishedAt', limit: 3 }).catch(() => ({ docs: [] })),
       ]);
 
     // Build settings object

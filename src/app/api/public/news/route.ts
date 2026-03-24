@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
 
     const where: Where = {
       status: { equals: 'published' },
+      publishedAt: { exists: true },
     }
 
     if (category) {
