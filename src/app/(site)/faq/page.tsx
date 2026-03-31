@@ -92,8 +92,8 @@ export default function FAQPage() {
         </section>
 
         <section className="section-highlights">
-          <div className="container-custom" style={{ maxWidth: '800px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingBottom: '4rem' }}>
+          <div className="container-custom faq-container">
+            <div className="faq-list">
               {faqItems.map((item, index) => (
                 <motion.div
                   key={`${item.q.en}-${index}`}
@@ -103,7 +103,7 @@ export default function FAQPage() {
                 >
                   <details className="faq-detail-card">
                     <summary className="faq-summary">
-                      <span style={{ flex: 1 }}>{t(item.q.th, item.q.en)}</span>
+                      <span className="faq-summary-text">{t(item.q.th, item.q.en)}</span>
                       <svg
                         width="20"
                         height="20"

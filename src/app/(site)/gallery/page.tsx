@@ -88,7 +88,7 @@ export default function GalleryPage() {
           </div>
         </section>
 
-        <section className="section-highlights" style={{ paddingTop: '2rem' }}>
+        <section className="section-highlights gallery-content-section">
           <div className="container-custom">
             <div className="gallery-tabs">
               {TABS.map((tab) => (
@@ -116,8 +116,7 @@ export default function GalleryPage() {
                     onClick={() => setSelectedItem(item)}
                   >
                     <div
-                      className="gallery-item-inner"
-                      style={{ background: item.image ? undefined : (item.gradient || 'var(--deeper-navy)') }}
+                        className="gallery-item-inner"
                     >
                       {item.image ? (
                         <Image
@@ -172,18 +171,17 @@ export default function GalleryPage() {
               onClick={(event) => event.stopPropagation()}
             >
               {selectedItem.image ? (
-                <div className="gallery-lightbox-image" style={{ position: 'relative', width: '100%', aspectRatio: '16/9' }}>
+                <div className="gallery-lightbox-image gallery-lightbox-image-wrapper">
                   <Image
                     src={selectedItem.image.url}
                     alt={selectedItem.title}
                     fill
                     className="object-cover"
-                    style={{ borderRadius: '12px' }}
                     unoptimized={isCmsMediaUrl(selectedItem.image.url)}
                   />
                 </div>
               ) : (
-                <div className="gallery-lightbox-image" style={{ background: selectedItem.gradient }}>
+                <div className="gallery-lightbox-image">
                   <span className="gallery-lightbox-icon">{selectedItem.icon}</span>
                   <h3>{selectedItem.title}</h3>
                   <p className="gallery-lightbox-hint">{t('รูปจริงจะอัปโหลดผ่าน CMS', 'Actual image will be uploaded via CMS')}</p>

@@ -162,7 +162,7 @@ export default function SupportPage() {
         </section>
 
         <section className="section-highlights">
-          <div className="container-custom" style={{ maxWidth: '960px' }}>
+          <div className="container-custom support-container">
             <AnimatedSection variant="fadeUp">
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 mb-12">
                 {channels.map((channel, index) => (

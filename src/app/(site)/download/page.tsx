@@ -83,7 +83,7 @@ export default function DownloadPage() {
       <ScrollProgress />
       <Navigation logoUrl={logoUrl} />
 
-      <main className="download-main" style={{ paddingTop: '5rem' }}>
+      <main className="download-main download-main-padded">
         <section className="download-hero">
           <FloatingParticles count={10} />
           <div className="download-hero-glow" />
