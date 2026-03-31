@@ -101,8 +101,9 @@ export default function WeaponsPage() {
     fetch('/api/public/weapons')
       .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data?.docs) && data.docs.length > 0) {
-          setWeapons(data.docs.map((w: Record<string, unknown>) => ({
+        const docs = Array.isArray(data?.docs) ? data.docs : Array.isArray(data?.weapons) ? data.weapons : [];
+        if (docs.length > 0) {
+          setWeapons(docs.map((w: Record<string, unknown>) => ({
             id: w.id as number,
             name: (w.name as string) || '',
             descriptionEn: (w.descriptionEn as string) || null,
