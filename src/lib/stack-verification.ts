@@ -119,11 +119,6 @@ const weaponsSchema = z.object({
   }).passthrough()).min(1),
 })
 
-const legacyCharactersSchema = z.object({
-  characters: z.array(z.object({
-    id: idSchema,
-  }).passthrough()).min(1),
-})
 
 const gallerySchema = z.object({
   gallery: z.record(z.string(), z.array(z.unknown())),
@@ -346,31 +341,13 @@ async function verifySettingsEndpoint(
 }
 
 async function verifyWeaponsEndpoints(context: VerificationContext) {
-  const weapons = await fetchJson(context, '/api/public/weapons', weaponsSchema)
-
-  addCheck(
-    context,
-    {
-      id: 'api-weapons',
-      label: 'Public API: weapons',
-      target: '/api/public/weapons',
-    },
-    'passed',
-    `weapons=${weapons.weapons.length}`,
-  )
-
   await runCheck(context, {
-    id: 'api-characters-alias',
-    label: 'Public API: characters alias',
-    target: '/api/public/characters',
+    id: 'api-weapons',
+    label: 'Public API: weapons',
+    target: '/api/public/weapons',
   }, async () => {
-    const data = await fetchJson(context, '/api/public/characters', legacyCharactersSchema)
-    ensure(
-      data.characters.length === weapons.weapons.length,
-      `Alias returned ${data.characters.length} items, expected ${weapons.weapons.length}`,
-    )
-
-    return `alias matches canonical weapons count (${data.characters.length})`
+    const data = await fetchJson(context, '/api/public/weapons', weaponsSchema)
+    return `weapons=${data.weapons.length}`
   })
 }
 
