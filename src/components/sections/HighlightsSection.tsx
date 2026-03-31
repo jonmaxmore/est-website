@@ -86,8 +86,8 @@ function buildHighlightItems(
     title: t(feature.titleTh, feature.titleEn || feature.titleTh),
     desc: t(feature.descriptionTh, feature.descriptionEn || feature.descriptionTh),
     ctaLabel: feature.ctaLabelEn || feature.ctaLabelTh
-      ? t(feature.ctaLabelTh || 'ดูรายละเอียด', feature.ctaLabelEn || 'Learn more')
-      : t('ดูรายละเอียด', 'Learn more'),
+      ? t(feature.ctaLabelTh || '', feature.ctaLabelEn || '')
+      : '',
   }));
 }
 

@@ -98,11 +98,11 @@ export default function DownloadPage() {
                 className="download-logo"
               />
             ) : null}
-            <h1 className="download-title">{t(dlConfig?.titleTh || 'ดาวน์โหลดเกม', dlConfig?.titleEn || 'Download the Game')}</h1>
+            <h1 className="download-title">{t(dlConfig?.titleTh || '', dlConfig?.titleEn || '')}</h1>
             <p className="download-sub">
               {t(
-                dlConfig?.subtitleTh || 'เลือกแพลตฟอร์มของคุณและเริ่มผจญภัยใน Eternal Tower Saga',
-                dlConfig?.subtitleEn || 'Choose your platform and begin your adventure in Eternal Tower Saga',
+                dlConfig?.subtitleTh || '',
+                dlConfig?.subtitleEn || '',
               )}
             </p>
           </div>
@@ -178,8 +178,8 @@ export default function DownloadPage() {
         <section className="download-cta-section">
           <p className="download-cta-text">
             {t(
-              dlConfig?.ctaCopyTh || 'เกมยังไม่เปิดให้ดาวน์โหลด? ลงทะเบียนล่วงหน้าเพื่อรับรางวัลพิเศษ!',
-              dlConfig?.ctaCopyEn || 'Game not out yet? Pre-register first to lock in your launch rewards.',
+              dlConfig?.ctaCopyTh || '',
+              dlConfig?.ctaCopyEn || '',
             )}
           </p>
           <Link href="/event" className="download-cta-btn">

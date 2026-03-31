@@ -15,9 +15,9 @@ export default function PublicStructuredData() {
   const { settings, logoUrl, socialLinks } = useSiteSettings();
 
   const structuredData = useMemo(() => {
-    const siteName = settings?.site?.name || 'Eternal Tower Saga';
+    const siteName = settings?.site?.name || '';
     const siteDescription = settings?.site?.description
-      || 'Mobile RPG — explore, fight, and climb the tower with friends.';
+      || '';
     const socialUrls = Object.values(socialLinks).filter(
       (value): value is string => typeof value === 'string' && value.trim().length > 0 && value !== '#',
     );

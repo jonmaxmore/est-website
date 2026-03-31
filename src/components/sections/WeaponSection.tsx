@@ -44,16 +44,16 @@ function buildWeaponCopy(
   return {
     badgeText: sectionConfig
       ? t(sectionConfig.badgeTh, sectionConfig.badgeEn)
-      : t('เลือกอาวุธของคุณ', 'Choose your weapon'),
+      : '',
     titleText: sectionConfig
       ? t(sectionConfig.titleTh, sectionConfig.titleEn)
-      : t('อาวุธแห่ง Arcatea', 'Weapons of Arcatea'),
+      : '',
     introCopy: sectionConfig?.introEn || sectionConfig?.introTh
       ? t(sectionConfig.introTh || '', sectionConfig.introEn || '')
       : '',
     description: t(
-      activeWeapon.descriptionTh || 'เลือกบทบาทที่เหมาะกับสไตล์การเล่นของคุณ แล้วควบคุมจังหวะการต่อสู้ให้ได้เปรียบตลอดเกม',
-      activeWeapon.descriptionEn || 'Choose the role that fits your style and control the pace of every encounter.',
+      activeWeapon.descriptionTh || '',
+      activeWeapon.descriptionEn || '',
     ),
     roleLabel: t('Combat role', 'Combat role'),
     playLabel: t('ดูวิดีโอแนะนำ', 'Play showcase'),

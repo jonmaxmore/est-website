@@ -131,7 +131,7 @@ function buildSiteConfig(siteSettings: CmsRecord) {
   const footerGroups = mapFooterGroups(footerValue);
 
   return {
-    name: (siteSettings.siteName as string) || 'Eternal Tower Saga',
+    name: (siteSettings.siteName as string) || '',
     description: (siteSettings.siteDescription as string) || '',
     logo: extractMediaUrl(siteSettings.logo),
     registrationUrl: (siteSettings.registrationUrl as string) || DEFAULT_REGISTRATION_URL,
@@ -147,12 +147,12 @@ function buildSiteConfig(siteSettings: CmsRecord) {
 
 function buildHeroConfig(homepage: CmsRecord) {
   return {
-    taglineEn: (homepage.taglineEn as string) || 'Adventure together, climb higher',
-    taglineTh: (homepage.taglineTh as string) || 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย',
+    taglineEn: (homepage.taglineEn as string) || '',
+    taglineTh: (homepage.taglineTh as string) || '',
     taglineImageEn: extractMedia(homepage.taglineImageEn),
     taglineImageTh: extractMedia(homepage.taglineImageTh),
-    ctaTextEn: (homepage.ctaTextEn as string) || 'Join the pre-registration',
-    ctaTextTh: (homepage.ctaTextTh as string) || 'ลงทะเบียนล่วงหน้าเลย',
+    ctaTextEn: (homepage.ctaTextEn as string) || '',
+    ctaTextTh: (homepage.ctaTextTh as string) || '',
     ctaLink: (homepage.ctaLink as string) || '/event',
     backgroundImage: extractMedia(homepage.backgroundImage),
     backgroundVideo: extractMedia(homepage.backgroundVideo),
@@ -175,10 +175,10 @@ function buildEventConfig(eventConfig: CmsRecord | null) {
 function buildWeaponSectionConfig(homepage: CmsRecord) {
   return {
     bgImage: extractMedia(homepage.weaponsBgImage),
-    badgeEn: (homepage.weaponsBadgeEn as string) || 'CHOOSE YOUR WEAPON',
-    badgeTh: (homepage.weaponsBadgeTh as string) || 'เลือกอาวุธของคุณ',
-    titleEn: (homepage.weaponsTitleEn as string) || 'Weapons of Arcatea',
-    titleTh: (homepage.weaponsTitleTh as string) || 'อาวุธแห่ง Arcatea',
+    badgeEn: (homepage.weaponsBadgeEn as string) || '',
+    badgeTh: (homepage.weaponsBadgeTh as string) || '',
+    titleEn: (homepage.weaponsTitleEn as string) || '',
+    titleTh: (homepage.weaponsTitleTh as string) || '',
     introEn: (homepage.weaponsIntroEn as string) || '',
     introTh: (homepage.weaponsIntroTh as string) || '',
   };
@@ -186,10 +186,10 @@ function buildWeaponSectionConfig(homepage: CmsRecord) {
 
 function buildHighlightsConfig(homepage: CmsRecord) {
   return {
-    badgeEn: (homepage.highlightsBadgeEn as string) || 'GAME FEATURES',
-    badgeTh: (homepage.highlightsBadgeTh as string) || 'ฟีเจอร์เกม',
-    titleEn: (homepage.highlightsTitleEn as string) || 'Game Highlights',
-    titleTh: (homepage.highlightsTitleTh as string) || 'ไฮไลท์เกม',
+    badgeEn: (homepage.highlightsBadgeEn as string) || '',
+    badgeTh: (homepage.highlightsBadgeTh as string) || '',
+    titleEn: (homepage.highlightsTitleEn as string) || '',
+    titleTh: (homepage.highlightsTitleTh as string) || '',
     bgImage: extractMedia(homepage.highlightsBgImage),
     introEn: (homepage.highlightsIntroEn as string) || '',
     introTh: (homepage.highlightsIntroTh as string) || '',
@@ -198,10 +198,10 @@ function buildHighlightsConfig(homepage: CmsRecord) {
 
 function buildNewsConfig(homepage: CmsRecord) {
   return {
-    badgeEn: (homepage.newsBadgeEn as string) || 'LATEST NEWS',
-    badgeTh: (homepage.newsBadgeTh as string) || 'ข่าวล่าสุด',
-    titleEn: (homepage.newsTitleEn as string) || 'News & Updates',
-    titleTh: (homepage.newsTitleTh as string) || 'ข่าวสารและอัปเดต',
+    badgeEn: (homepage.newsBadgeEn as string) || '',
+    badgeTh: (homepage.newsBadgeTh as string) || '',
+    titleEn: (homepage.newsTitleEn as string) || '',
+    titleTh: (homepage.newsTitleTh as string) || '',
     bgImage: extractMedia(homepage.newsBgImage),
     introEn: (homepage.newsIntroEn as string) || '',
     introTh: (homepage.newsIntroTh as string) || '',

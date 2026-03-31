@@ -238,10 +238,10 @@ function NewsHero({
 
       <div className="news-hero__copy">
         <span className="news-hero-kicker">
-          {t(config?.badgeTh || 'อัปเดตล่าสุด', config?.badgeEn || 'Latest updates')}
+          {t(config?.badgeTh || '', config?.badgeEn || '')}
         </span>
         <h1 className="news-hero-title">
-          {t(config?.titleTh || 'ข่าวสารและประกาศ', config?.titleEn || 'News and announcements')}
+          {t(config?.titleTh || '', config?.titleEn || '')}
         </h1>
         <p className="news-hero-sub">{subtitle}</p>
 

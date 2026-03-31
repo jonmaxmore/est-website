@@ -77,7 +77,7 @@ export default function EventForm({
         {!registered ? (
           <>
             <h2 className="event-form-title">
-              {t(eventSettings.modalTitleTh || 'ลงทะเบียนล่วงหน้า', eventSettings.modalTitleEn || 'Pre-registration')}
+              {t(eventSettings.modalTitleTh || '', eventSettings.modalTitleEn || '')}
             </h2>
 
             <p className="event-form-step">
@@ -91,7 +91,7 @@ export default function EventForm({
               {/* Email */}
               <input
                 type="email"
-                placeholder={t(eventSettings.emailPlaceholderTh || 'กรุณากรอก E-MAIL ของคุณ', eventSettings.emailPlaceholderEn || 'Please enter your E-mail address')}
+                placeholder={t(eventSettings.emailPlaceholderTh || '', eventSettings.emailPlaceholderEn || '')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -120,8 +120,8 @@ export default function EventForm({
               {/* Step 2 */}
               <p className="event-form-step">
                 <strong>2.</strong> {t(
-                  eventSettings.storeLabelTh || 'คลิกเลือกอุปกรณ์เพื่อลงทะเบียน เมื่อคลิกจะไปยังหน้าสโตร์โดยอัตโนมัติ',
-                  eventSettings.storeLabelEn || 'Select your device to proceed and confirm your registration.'
+                  eventSettings.storeLabelTh || '',
+                  eventSettings.storeLabelEn || ''
                 )}
               </p>
 
@@ -149,7 +149,7 @@ export default function EventForm({
               >
                 {loading
                   ? t('กำลังลงทะเบียน...', 'Registering...')
-                  : t(eventSettings.submitButtonTh || 'กดลงทะเบียน', eventSettings.submitButtonEn || 'Confirm Registration')
+                  : t(eventSettings.submitButtonTh || '', eventSettings.submitButtonEn || '')
                 }
               </button>
             </form>
@@ -158,7 +158,7 @@ export default function EventForm({
           /* After registration — show success inline + referral stats */
           <div className="event-success-inline">
             <p className="event-success-title">
-              ✅ {t(eventSettings.successTitleTh || 'ลงทะเบียนสำเร็จ!', eventSettings.successTitleEn || 'Registration Successful!')}
+              ✅ {t(eventSettings.successTitleTh || '', eventSettings.successTitleEn || '')}
             </p>
             <p className="event-form-step">
               {t('แชร์ให้เพื่อนเพื่อรับรางวัลพิเศษ', 'Share with friends for bonus rewards')}

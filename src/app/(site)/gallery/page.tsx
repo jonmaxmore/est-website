@@ -41,8 +41,8 @@ export default function GalleryPage() {
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
   const [galleryData, setGalleryData] = useState<Record<string, GalleryItem[]>>(PLACEHOLDER_ITEMS);
 
-  const heroBadge = galleryConfig ? t(galleryConfig.badgeTh || 'GALLERY', galleryConfig.badgeEn || 'GALLERY') : t('แกลเลอรี่', 'GALLERY');
-  const heroTitle = galleryConfig ? t(galleryConfig.titleTh || 'แกลเลอรี่', galleryConfig.titleEn || 'Gallery') : t('แกลเลอรี่', 'Gallery');
+  const heroBadge = galleryConfig ? t(galleryConfig.badgeTh || '', galleryConfig.badgeEn || '') : '';
+  const heroTitle = galleryConfig ? t(galleryConfig.titleTh || '', galleryConfig.titleEn || '') : '';
   const heroSubtitle = galleryConfig ? t(galleryConfig.subtitleTh || '', galleryConfig.subtitleEn || '') : t('ภาพและวอลเปเปอร์จากโลกของ Arcatea', 'Images and wallpapers from the world of Arcatea');
   const emptyMessage = galleryConfig ? t(galleryConfig.emptyMessageTh || '', galleryConfig.emptyMessageEn || '') : t('ภาพเพิ่มเติมจะอัปเดตเร็ว ๆ นี้ ติดตามข่าวสารไว้ได้เลย', 'More images coming soon. Stay tuned.');
 

@@ -40,8 +40,8 @@ export default function FAQPage() {
     : DEFAULT_FAQ_ITEMS;
 
   const heroTitle = faqPageConfig
-    ? t(faqPageConfig.titleTh || 'คำถามที่พบบ่อย', faqPageConfig.titleEn || 'Frequently Asked Questions')
-    : t('คำถามที่พบบ่อย', 'Frequently Asked Questions');
+    ? t(faqPageConfig.titleTh || '', faqPageConfig.titleEn || '')
+    : '';
 
   if (!faqItems.length) {
     return (

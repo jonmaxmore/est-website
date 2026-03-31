@@ -105,12 +105,12 @@ export default function SupportPage() {
   const { settings, socialLinks, footer } = useSiteSettings();
   const spConfig = (settings?.supportPage as Record<string, unknown> | undefined) || null;
 
-  const heroBadge = spConfig ? t((spConfig.badgeTh as string) || 'ช่วยเหลือ', (spConfig.badgeEn as string) || 'SUPPORT') : t('ช่วยเหลือ', 'SUPPORT');
-  const heroTitle = spConfig ? t((spConfig.titleTh as string) || 'ศูนย์ช่วยเหลือ', (spConfig.titleEn as string) || 'Support Center') : t('ศูนย์ช่วยเหลือ', 'Support Center');
-  const heroSubtitle = spConfig ? t((spConfig.subtitleTh as string) || '', (spConfig.subtitleEn as string) || '') : t('มีคำถามหรือต้องการความช่วยเหลือ? ทีมงานพร้อมดูแลคุณ', 'Need help? Our team is here for you.');
+  const heroBadge = spConfig ? t((spConfig.badgeTh as string) || '', (spConfig.badgeEn as string) || '') : '';
+  const heroTitle = spConfig ? t((spConfig.titleTh as string) || '', (spConfig.titleEn as string) || '') : '';
+  const heroSubtitle = spConfig ? t((spConfig.subtitleTh as string) || '', (spConfig.subtitleEn as string) || '') : '';
   const supportEmail = (spConfig?.supportEmail as string) || 'support@eternaltowersaga.com';
-  const contactBadge = spConfig ? t((spConfig.contactBadgeTh as string) || 'ติดต่อโดยตรง', (spConfig.contactBadgeEn as string) || 'DIRECT CONTACT') : t('ติดต่อโดยตรง', 'DIRECT CONTACT');
-  const contactLabel = spConfig ? t((spConfig.contactLabelTh as string) || 'อีเมลทีมซัพพอร์ต', (spConfig.contactLabelEn as string) || 'Support team email') : t('อีเมลทีมซัพพอร์ต', 'Support team email');
+  const contactBadge = spConfig ? t((spConfig.contactBadgeTh as string) || '', (spConfig.contactBadgeEn as string) || '') : '';
+  const contactLabel = spConfig ? t((spConfig.contactLabelTh as string) || '', (spConfig.contactLabelEn as string) || '') : '';
 
   const cmsChannels = Array.isArray((spConfig as Record<string, unknown>)?.channels) ? (spConfig as Record<string, unknown>).channels as Array<Record<string, unknown>> : null;
   const channels = cmsChannels?.length ? cmsChannels.map((ch) => ({

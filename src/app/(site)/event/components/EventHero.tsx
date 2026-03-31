@@ -32,7 +32,7 @@ export default function EventHero({
   const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
 
   const scrollToForm = () => {
-    const label = t(eventSettings.ctaButtonTh || 'ลงทะเบียนล่วงหน้าเลย', eventSettings.ctaButtonEn || 'Join the pre-registration');
+    const label = t(eventSettings.ctaButtonTh || '', eventSettings.ctaButtonEn || '');
     trackCTAClick(label);
     document.getElementById('register-form')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -103,8 +103,8 @@ export default function EventHero({
           ) : (
             <p>
               {t(
-                eventSettings.descriptionTh || 'สัมผัสประสบการณ์ใหม่กับ Eternal Tower Saga (ETS)\n"อาวุธเปลี่ยน เกมก็เปลี่ยน จากผู้เล่น สู่...ผู้กุมเกม"',
-                eventSettings.descriptionEn || 'Pre-register for Eternal Tower Saga.\nCheck milestone rewards, pick your platform, and follow launch updates here.'
+                eventSettings.descriptionTh || '',
+                eventSettings.descriptionEn || ''
               )}
             </p>
           )}
@@ -162,7 +162,7 @@ export default function EventHero({
           {ctaImage?.url ? (
             <Image
               src={ctaImage.url}
-              alt={t(eventSettings.ctaButtonTh || 'ลงทะเบียน', eventSettings.ctaButtonEn || 'Join the pre-registration')}
+              alt={t(eventSettings.ctaButtonTh || '', eventSettings.ctaButtonEn || '')}
               width={300}
               height={60}
               className="event-cta-image"
@@ -171,7 +171,7 @@ export default function EventHero({
             <>
               <span className="hero-cta-shimmer" />
               <span className="event-cta-text">
-                {t(eventSettings.ctaButtonTh || 'ลงทะเบียนล่วงหน้าเลย', eventSettings.ctaButtonEn || 'Join the pre-registration')}
+                {t(eventSettings.ctaButtonTh || '', eventSettings.ctaButtonEn || '')}
               </span>
             </>
           )}

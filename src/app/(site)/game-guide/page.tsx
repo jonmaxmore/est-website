@@ -239,7 +239,7 @@ function GuideSystemsSpotlight({
 
           {activeFeature.href ? (
             <CmsLink href={activeFeature.href} className="guide-systemSpotlight__cta">
-              {t(activeFeature.ctaLabelTh || 'ดูรายละเอียด', activeFeature.ctaLabelEn || 'Learn more')}
+              {t(activeFeature.ctaLabelTh || '', activeFeature.ctaLabelEn || '')}
             </CmsLink>
           ) : null}
         </div>

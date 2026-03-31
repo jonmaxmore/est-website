@@ -28,22 +28,22 @@ export default function HeroSection({ settings }: HeroProps) {
   const contentOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0.35]);
 
   const eyebrow = settings?.event?.enabled
-    ? t(settings?.event?.titleTh || 'กิจกรรมเปิดตัว', settings?.event?.titleEn || 'Launch event')
-    : t('เกมมือถือ Action RPG', 'Action RPG for mobile');
+    ? t(settings?.event?.titleTh || '', settings?.event?.titleEn || '')
+    : '';
 
   const tagline = t(
-    settings?.hero?.taglineTh || 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย',
-    settings?.hero?.taglineEn || 'Adventure together, climb higher',
+    settings?.hero?.taglineTh || '',
+    settings?.hero?.taglineEn || '',
   );
 
   const description = t(
-    settings?.site?.description || 'รวมทีม ออกสำรวจโลก และค่อย ๆ ไต่หอคอยไปพร้อมกันในจังหวะที่เล่นแล้วเข้าใจง่าย',
-    settings?.site?.description || 'Bring your party together, explore the world, and climb the tower — combat reads fast so you can focus on the fight.',
+    settings?.site?.description || '',
+    settings?.site?.description || '',
   );
 
   const ctaText = t(
-    settings?.hero?.ctaTextTh || 'ลงทะเบียนล่วงหน้า',
-    settings?.hero?.ctaTextEn || 'Join the pre-registration',
+    settings?.hero?.ctaTextTh || '',
+    settings?.hero?.ctaTextEn || '',
   );
 
   const taglineImageUrl = t(
@@ -52,8 +52,8 @@ export default function HeroSection({ settings }: HeroProps) {
   ) || null;
 
   const mastheadCopy = t(
-    'โอเพนเวิลด์แฟนตาซีที่เล่นร่วมกันได้ และค่อย ๆ เปิดโลกให้สำรวจมากขึ้นตามความคืบหน้า',
-    'Open-world fantasy RPG. Play with friends, explore at your pace, and see more of the map the further you get.',
+    settings?.site?.description || '',
+    settings?.site?.description || '',
   );
   const ctaLink = settings?.hero?.ctaLink || '/event';
   const brandLogoUrl = settings?.site?.logo || null;
@@ -100,7 +100,7 @@ export default function HeroSection({ settings }: HeroProps) {
         <div className="home-shell home-hero__shell">
           <div className="home-hero__copy">
             <div className="home-hero__masthead">
-              <span className="home-hero__mastheadTitle">{settings?.site?.name || 'Eternal Tower Saga'}</span>
+              <span className="home-hero__mastheadTitle">{settings?.site?.name || ''}</span>
               <span className="home-hero__mastheadDivider" aria-hidden="true" />
               <span className="home-hero__mastheadCopy">{mastheadCopy}</span>
             </div>
@@ -116,7 +116,7 @@ export default function HeroSection({ settings }: HeroProps) {
               >
                 <Image
                   src={brandLogoUrl}
-                  alt={settings?.site?.name || 'Eternal Tower Saga'}
+                  alt={settings?.site?.name || ''}
                   width={520}
                   height={320}
                   priority
