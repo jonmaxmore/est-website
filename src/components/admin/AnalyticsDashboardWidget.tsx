@@ -43,6 +43,32 @@ interface DashboardResponse {
   generatedAt: string
 }
 
+interface ContentHealthIssue {
+  code: string
+  severity: 'error' | 'warning'
+  message: string
+}
+
+interface ContentHealthItem {
+  key?: string
+  titleEn?: string
+  slug?: string
+  issues: ContentHealthIssue[]
+}
+
+interface ContentHealthResponse {
+  generatedAt: string
+  summary: {
+    publishedNews: number
+    newsWithErrors: number
+    newsWithWarnings: number
+    globalsWithErrors: number
+    globalsWithWarnings: number
+  }
+  news: ContentHealthItem[]
+  globals: ContentHealthItem[]
+}
+
 type State = { data: DashboardResponse | null; loading: boolean; error: string }
 type Action =
   | { type: 'START' }
@@ -95,9 +121,100 @@ function ArrowRightIcon() {
   )
 }
 
+function useContentHealth() {
+  const [contentHealth, setContentHealth] = useState<ContentHealthResponse | null>(null)
+  const [contentHealthError, setContentHealthError] = useState('')
+
+  useEffect(() => {
+    fetch('/api/content-health', { credentials: 'include' })
+      .then(r => {
+        if (!r.ok) throw new Error(r.status === 401 ? 'Unauthorized' : `HTTP ${r.status}`)
+        return r.json()
+      })
+      .then((result: ContentHealthResponse) => {
+        setContentHealth(result)
+        setContentHealthError('')
+      })
+      .catch((e) => setContentHealthError(e.message || 'Failed to load content health'))
+  }, [])
+
+  return { contentHealth, contentHealthError }
+}
+
+function ContentHealthPanel({
+  contentHealth,
+  contentHealthError,
+}: {
+  contentHealth: ContentHealthResponse | null;
+  contentHealthError: string;
+}) {
+  const topContentIssues = [
+    ...(contentHealth?.news || []).map((item) => ({
+      label: item.titleEn || item.slug || 'Article',
+      issues: item.issues,
+    })),
+    ...(contentHealth?.globals || []).map((item) => ({
+      label: item.key || 'Global',
+      issues: item.issues,
+    })),
+  ]
+    .filter((item) => item.issues.length > 0)
+    .slice(0, 5)
+
+  if (!contentHealth && !contentHealthError) {
+    return null
+  }
+
+  return (
+    <div className="analytics-widget__events">
+      <div className="analytics-widget__sectionHeader">
+        <div>
+          <h3 className="analytics-widget__title analytics-widget__title--small">Content Health</h3>
+          <p className="analytics-widget__subtitle">CMS readiness for published news and key frontend globals</p>
+        </div>
+      </div>
+
+      {contentHealthError && <p className="analytics-widget__error">{contentHealthError}</p>}
+
+      {contentHealth && (
+        <>
+          <div className="analytics-widget__grid">
+            <MetricCard label="Published News" value={fmt(contentHealth.summary.publishedNews)} />
+            <MetricCard label="News Errors" value={fmt(contentHealth.summary.newsWithErrors)} />
+            <MetricCard label="News Warnings" value={fmt(contentHealth.summary.newsWithWarnings)} />
+            <MetricCard label="Global Errors" value={fmt(contentHealth.summary.globalsWithErrors)} />
+            <MetricCard label="Global Warnings" value={fmt(contentHealth.summary.globalsWithWarnings)} />
+          </div>
+
+          {topContentIssues.length > 0 && (
+            <div className="analytics-widget__issueList">
+              {topContentIssues.map((item) => (
+                <div key={item.label} className="analytics-widget__issueRow">
+                  <div className="analytics-widget__issueTitle">{item.label}</div>
+                  <div className="analytics-widget__issueBadges">
+                    {item.issues.slice(0, 2).map((issue) => (
+                      <span
+                        key={`${item.label}-${issue.code}`}
+                        className={`analytics-widget__issueBadge analytics-widget__issueBadge--${issue.severity}`}
+                      >
+                        {issue.message}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
+
 export default function AnalyticsDashboardWidget() {
   const [{ data, loading, error }, dispatch] = useReducer(reducer, { data: null, loading: true, error: '' })
   const [days, setDays] = useState(30)
+  const { contentHealth, contentHealthError } = useContentHealth()
 
   useEffect(() => {
     dispatch({ type: 'START' })
@@ -167,6 +284,7 @@ export default function AnalyticsDashboardWidget() {
               </div>
             </div>
           )}
+          <ContentHealthPanel contentHealth={contentHealth} contentHealthError={contentHealthError} />
         </>
       )}
     </div>

@@ -1,22 +1,20 @@
 import type { GlobalConfig } from 'payload'
+import { allowPublicRead, isAdminOrEditor } from '@/lib/cms-access'
 
 export const Homepage: GlobalConfig = {
   slug: 'homepage',
   admin: {
-    description: 'Manage homepage sections — Hero, Weapons, Highlights, News',
+    description: 'Manage homepage sections - Hero, Weapons, Highlights, and News',
     group: 'Pages',
   },
   access: {
-    read: () => true,
-    update: ({ req: { user } }) => !!user,
+    read: allowPublicRead,
+    update: isAdminOrEditor,
   },
   fields: [
-    /* ═══════════════════════════════════════════════
-       SECTION 1: HERO
-       ═══════════════════════════════════════════════ */
     {
       type: 'collapsible',
-      label: '1️⃣ Hero Section — Background, Tagline, CTA',
+      label: 'Hero Section',
       admin: { initCollapsed: false },
       fields: [
         {
@@ -29,38 +27,33 @@ export const Homepage: GlobalConfig = {
           name: 'backgroundVideo',
           type: 'upload',
           relationTo: 'media',
-          label: 'Hero Background Video (MP4/WebM)',
-          admin: { description: 'Displays behind hero content. Overrides background image if set.' },
+          label: 'Hero Background Video',
+          admin: { description: 'Displayed behind hero content. Overrides background image if set.' },
         },
         {
           type: 'row',
           fields: [
-            { name: 'taglineEn', type: 'text', defaultValue: 'Adventure together, conquer the tower', label: 'Tagline (English)', admin: { width: '50%' } },
-            { name: 'taglineTh', type: 'text', defaultValue: 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย', label: 'Tagline (Thai)', admin: { width: '50%' } },
+            { name: 'taglineEn', type: 'text', defaultValue: 'Adventure together, climb higher', label: 'Tagline (EN)', admin: { width: '50%' } },
+            { name: 'taglineTh', type: 'text', defaultValue: 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย', label: 'Tagline (TH)', admin: { width: '50%' } },
           ],
         },
         {
           type: 'row',
           fields: [
-            { name: 'taglineImageEn', type: 'upload', relationTo: 'media', label: 'Tagline Image — EN (optional)', admin: { width: '50%', description: 'Replaces text tagline with image' } },
-            { name: 'taglineImageTh', type: 'upload', relationTo: 'media', label: 'Tagline Image — TH (optional)', admin: { width: '50%', description: 'Replaces text tagline with image' } },
+            { name: 'taglineImageEn', type: 'upload', relationTo: 'media', label: 'Tagline Image (EN)', admin: { width: '50%' } },
+            { name: 'taglineImageTh', type: 'upload', relationTo: 'media', label: 'Tagline Image (TH)', admin: { width: '50%' } },
           ],
         },
         {
           type: 'row',
           fields: [
-            { name: 'ctaTextEn', type: 'text', defaultValue: 'Pre-Register Now', label: 'CTA Button (English)', admin: { width: '50%' } },
-            { name: 'ctaTextTh', type: 'text', defaultValue: 'ลงทะเบียนล่วงหน้าเลย', label: 'CTA Button (Thai)', admin: { width: '50%' } },
+            { name: 'ctaTextEn', type: 'text', defaultValue: 'Join the pre-registration', label: 'CTA (EN)', admin: { width: '50%' } },
+            { name: 'ctaTextTh', type: 'text', defaultValue: 'ลงทะเบียนล่วงหน้าเลย', label: 'CTA (TH)', admin: { width: '50%' } },
           ],
         },
-        { name: 'ctaLink', type: 'text', defaultValue: '/event', label: 'CTA Button Link' },
-
+        { name: 'ctaLink', type: 'text', defaultValue: '/event', label: 'CTA Link' },
       ],
     },
-
-    /* ═══════════════════════════════════════════════
-       SECTION 2: CHARACTERS
-       ═══════════════════════════════════════════════ */
     {
       type: 'collapsible',
       label: 'Weapons Showcase Section',
@@ -71,75 +64,71 @@ export const Homepage: GlobalConfig = {
           type: 'upload',
           relationTo: 'media',
           label: 'Section Background Image',
-          admin: { description: 'Background image for Weapons section. If empty, uses default gradient.' },
         },
-        {
-          name: 'weaponsBadgeEn',
-          type: 'text',
-          label: 'Badge Text (English)',
-          defaultValue: 'CHOOSE YOUR WEAPON',
-          admin: { width: '50%' },
-        },
-        {
-          name: 'weaponsBadgeTh',
-          type: 'text',
-          label: 'Badge Text (Thai)',
-          defaultValue: 'เลือกอาวุธของคุณ',
-          admin: { width: '50%' },
-        },
-        {
-          name: 'weaponsTitleEn',
-          type: 'text',
-          label: 'Section Title (English)',
-          defaultValue: 'Weapons of Arcatea',
-          admin: { width: '50%' },
-        },
-        {
-          name: 'weaponsTitleTh',
-          type: 'text',
-          label: 'Section Title (Thai)',
-          defaultValue: 'อาวุธแห่ง Arcatea',
-          admin: { width: '50%' },
-        },
-      ],
-    },
-
-    /* ═══════════════════════════════════════════════
-       SECTION 3: GAME HIGHLIGHTS / FEATURES
-       ═══════════════════════════════════════════════ */
-    {
-      type: 'collapsible',
-      label: '3️⃣ Highlights Section — Badge, Title, Features',
-      admin: { initCollapsed: true },
-      fields: [
         {
           type: 'row',
           fields: [
-            { name: 'highlightsBadgeEn', type: 'text', defaultValue: 'GAME FEATURES', label: 'Badge (English)', admin: { width: '50%' } },
-            { name: 'highlightsBadgeTh', type: 'text', defaultValue: 'ฟีเจอร์เกม', label: 'Badge (Thai)', admin: { width: '50%' } },
+            { name: 'weaponsBadgeEn', type: 'text', defaultValue: 'CHOOSE YOUR WEAPON', admin: { width: '50%' } },
+            { name: 'weaponsBadgeTh', type: 'text', defaultValue: 'เลือกอาวุธของคุณ', admin: { width: '50%' } },
           ],
         },
         {
           type: 'row',
           fields: [
-            { name: 'highlightsTitleEn', type: 'text', defaultValue: 'Game Highlights', label: 'Title (English)', admin: { width: '50%' } },
-            { name: 'highlightsTitleTh', type: 'text', defaultValue: 'ไฮไลท์เกม', label: 'Title (Thai)', admin: { width: '50%' } },
+            { name: 'weaponsTitleEn', type: 'text', defaultValue: 'Weapons of Arcatea', admin: { width: '50%' } },
+            { name: 'weaponsTitleTh', type: 'text', defaultValue: 'อาวุธแห่ง Arcatea', admin: { width: '50%' } },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'weaponsIntroEn', type: 'textarea', label: 'Intro Copy (EN)', admin: { width: '50%' } },
+            { name: 'weaponsIntroTh', type: 'textarea', label: 'Intro Copy (TH)', admin: { width: '50%' } },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'collapsible',
+      label: 'Highlights Section',
+      admin: { initCollapsed: true },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            { name: 'highlightsBadgeEn', type: 'text', defaultValue: 'GAME FEATURES', admin: { width: '50%' } },
+            { name: 'highlightsBadgeTh', type: 'text', defaultValue: 'ฟีเจอร์เกม', admin: { width: '50%' } },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'highlightsTitleEn', type: 'text', defaultValue: 'Game Highlights', admin: { width: '50%' } },
+            { name: 'highlightsTitleTh', type: 'text', defaultValue: 'ไฮไลท์เกม', admin: { width: '50%' } },
           ],
         },
         {
           name: 'highlightsBgImage',
           type: 'upload',
           relationTo: 'media',
-          label: 'Highlights Background Image (optional)',
+          label: 'Highlights Background Image',
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'highlightsIntroEn', type: 'textarea', label: 'Intro Copy (EN)', admin: { width: '50%' } },
+            { name: 'highlightsIntroTh', type: 'textarea', label: 'Intro Copy (TH)', admin: { width: '50%' } },
+          ],
         },
         {
           name: 'features',
           type: 'array',
           label: 'Feature Items',
-          admin: { description: 'Features displayed in the highlights grid' },
+          admin: { description: 'Features displayed in the highlights section' },
           fields: [
             { name: 'icon', type: 'text', required: true, label: 'Icon (emoji or lucide icon name)' },
-            { name: 'iconImage', type: 'upload', relationTo: 'media', label: 'Custom Icon Image (Overrides default icon)' },
+            { name: 'iconImage', type: 'upload', relationTo: 'media', label: 'Custom Icon Image' },
+            { name: 'previewImage', type: 'upload', relationTo: 'media', label: 'Preview Image' },
             {
               type: 'row',
               fields: [
@@ -154,37 +143,48 @@ export const Homepage: GlobalConfig = {
                 { name: 'descriptionTh', type: 'text', required: true, admin: { width: '50%' } },
               ],
             },
+            {
+              type: 'row',
+              fields: [
+                { name: 'href', type: 'text', label: 'CTA Link', admin: { width: '50%' } },
+                { name: 'ctaLabelEn', type: 'text', label: 'CTA Label (EN)', admin: { width: '25%' } },
+                { name: 'ctaLabelTh', type: 'text', label: 'CTA Label (TH)', admin: { width: '25%' } },
+              ],
+            },
           ],
         },
       ],
     },
-
-    /* ═══════════════════════════════════════════════
-       SECTION 4: NEWS
-       ═══════════════════════════════════════════════ */
     {
       type: 'collapsible',
-      label: '4️⃣ News Section — Badge, Title, Background',
+      label: 'News Section',
       admin: { initCollapsed: true },
       fields: [
         {
           name: 'newsBgImage',
           type: 'upload',
           relationTo: 'media',
-          label: 'News Background Image (optional)',
+          label: 'News Background Image',
         },
         {
           type: 'row',
           fields: [
-            { name: 'newsBadgeEn', type: 'text', defaultValue: 'LATEST NEWS', label: 'Badge (English)', admin: { width: '50%' } },
-            { name: 'newsBadgeTh', type: 'text', defaultValue: 'ข่าวล่าสุด', label: 'Badge (Thai)', admin: { width: '50%' } },
+            { name: 'newsBadgeEn', type: 'text', defaultValue: 'LATEST NEWS', admin: { width: '50%' } },
+            { name: 'newsBadgeTh', type: 'text', defaultValue: 'ข่าวล่าสุด', admin: { width: '50%' } },
           ],
         },
         {
           type: 'row',
           fields: [
-            { name: 'newsTitleEn', type: 'text', defaultValue: 'News & Updates', label: 'Title (English)', admin: { width: '50%' } },
-            { name: 'newsTitleTh', type: 'text', defaultValue: 'ข่าวสารและอัพเดท', label: 'Title (Thai)', admin: { width: '50%' } },
+            { name: 'newsTitleEn', type: 'text', defaultValue: 'News & Updates', admin: { width: '50%' } },
+            { name: 'newsTitleTh', type: 'text', defaultValue: 'ข่าวสารและอัปเดต', admin: { width: '50%' } },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'newsIntroEn', type: 'textarea', label: 'Intro Copy (EN)', admin: { width: '50%' } },
+            { name: 'newsIntroTh', type: 'textarea', label: 'Intro Copy (TH)', admin: { width: '50%' } },
           ],
         },
       ],

@@ -1,0 +1,53 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - heading "Terms of Service" [level=1] [ref=e4]
+    - paragraph [ref=e5]: เงื่อนไขการให้บริการ
+    - paragraph [ref=e6]: "Last updated: March 17, 2026"
+    - generic [ref=e7]:
+      - heading "1. Acceptance of Terms / การยอมรับเงื่อนไข" [level=2] [ref=e8]
+      - paragraph [ref=e9]: By accessing and using the Eternal Tower Saga website and game services ("Services"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Services.
+      - paragraph [ref=e10]: เมื่อเข้าใช้งานเว็บไซต์และบริการเกม Eternal Tower Saga ("บริการ") ถือว่าท่านยอมรับเงื่อนไขการให้บริการนี้ หากไม่ยอมรับ กรุณาอย่าใช้บริการ
+    - generic [ref=e11]:
+      - heading "2. Service Provider / ผู้ให้บริการ" [level=2] [ref=e12]
+      - paragraph [ref=e13]: The Services are provided by Ultimate Game Co., Ltd. (บริษัท อัลติเมตเกม จำกัด), a company registered in Thailand.
+    - generic [ref=e14]:
+      - heading "3. User Accounts / บัญชีผู้ใช้" [level=2] [ref=e15]
+      - paragraph [ref=e16]: You may be required to register an account to use certain features. You are responsible for maintaining the confidentiality of your account information. You must be at least 13 years old to create an account.
+      - paragraph [ref=e17]: ท่านอาจต้องลงทะเบียนบัญชีเพื่อใช้บริการบางส่วน ท่านมีหน้าที่ดูแลรักษาข้อมูลบัญชี ของท่านเป็นความลับ ท่านต้องมีอายุไม่ต่ำกว่า 13 ปี จึงจะสร้างบัญชีได้
+    - generic [ref=e18]:
+      - heading "4. Virtual Items / ไอเทมเสมือน" [level=2] [ref=e19]
+      - paragraph [ref=e20]: All in-game items, currency, and virtual goods are the property of the Service Provider. You are granted a limited, non-transferable license to use these items. Virtual items have no real-world monetary value.
+      - paragraph [ref=e21]: ไอเทม สกุลเงิน และสินค้าเสมือนทั้งหมดในเกมเป็นกรรมสิทธิ์ของผู้ให้บริการ ท่านได้รับอนุญาตแบบจำกัดและห้ามโอน ไอเทมเสมือนไม่มีมูลค่าเป็นเงินจริง
+    - generic [ref=e22]:
+      - heading "5. Code of Conduct / จรรยาบรรณ" [level=2] [ref=e23]
+      - paragraph [ref=e24]: "You agree not to:"
+      - list [ref=e25]:
+        - listitem [ref=e26]: Use cheats, hacks, or unauthorized third-party software
+        - listitem [ref=e27]: Harass, abuse, or threaten other users
+        - listitem [ref=e28]: Sell, trade, or transfer accounts or virtual items for real money
+        - listitem [ref=e29]: Reverse engineer or modify the game client
+    - generic [ref=e30]:
+      - heading "6. Limitation of Liability / การจำกัดความรับผิดชอบ" [level=2] [ref=e31]
+      - paragraph [ref=e32]: The Services are provided "as is" without warranties. We are not liable for any indirect, incidental, or consequential damages arising from the use of our Services.
+    - generic [ref=e33]:
+      - heading "7. Governing Law / กฎหมายที่ใช้บังคับ" [level=2] [ref=e34]
+      - paragraph [ref=e35]: These Terms shall be governed by and construed in accordance with the laws of the Kingdom of Thailand.
+      - paragraph [ref=e36]: เงื่อนไขเหล่านี้อยู่ภายใต้กฎหมายของราชอาณาจักรไทย
+    - generic [ref=e37]:
+      - heading "8. Contact / ติดต่อ" [level=2] [ref=e38]
+      - paragraph [ref=e39]:
+        - text: For questions regarding these Terms, please contact us at
+        - link "support@eternaltowersaga.com" [ref=e40] [cursor=pointer]:
+          - /url: mailto:support@eternaltowersaga.com
+    - link "← Back to Home / กลับหน้าหลัก" [ref=e42] [cursor=pointer]:
+      - /url: /
+  - alert [ref=e43]
+  - generic [ref=e45]:
+    - generic [ref=e46]:
+      - generic [ref=e47]: Cookies
+      - paragraph [ref=e48]:
+        - text: เราใช้คุกกี้ที่จำเป็นเพื่อให้เว็บไซต์ทำงานเสถียรและวัดผลการใช้งานพื้นฐานได้อย่างถูกต้อง
+        - generic [ref=e49]: Essential cookies keep the site stable and help measure basic performance.
+    - generic [ref=e50]:
+      - button "ภายหลัง" [ref=e51] [cursor=pointer]
+      - button "ยอมรับ / Accept" [ref=e52] [cursor=pointer]

@@ -1,0 +1,6 @@
+### Result
+"{\n  \"url\": \"http://178.128.127.161/news\",\n  \"viewport\": {\n    \"width\": 1440,\n    \"height\": 1280\n  },\n  \"rail\": null,\n  \"banner\": {\n    \"top\": 1088,\n    \"bottom\": 1264,\n    \"left\": 16,\n    \"right\": 272,\n    \"width\": 256,\n    \"height\": 176\n  },\n  \"railItems\": []\n}"
+### Ran Playwright code
+```js
+await page.evaluate('() => { const pick = (selector) => { const el = document.querySelector(selector); if (!el) return null; const r = el.getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom), left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width), height: Math.round(r.height) }; }; const rail = pick(\'.news-page__rail, .news-page__sidebar, .news-grid__side, .news-sidebar, [data-news-rail]\'); const banner = pick(\'.cookie-banner\'); const railItems = Array.from(document.querySelectorAll(\'.news-page__rail article, .news-page__sidebar article, .news-grid__side article, .news-sidebar article, [data-news-rail] article\')).slice(0,3).map((el) => ({ textLength: (el.textContent || \'\').trim().length, linesEstimate: Math.round(el.getBoundingClientRect().height) })); return JSON.stringify({ url: location.href, viewport: { width: window.innerWidth, height: window.innerHeight }, rail, banner, railItems }, null, 2); }');
+```

@@ -9,13 +9,13 @@
     "support": "Support"
   },
   "hero": {
-    "tagline": "Rise Together. Conquer the Tower.",
-    "cta": "Pre-Register Now"
+    "tagline": "Adventure together, climb higher.",
+    "cta": "Join the pre-registration"
   },
   "mercenary": {
     "title": "Mercenary Companion System",
-    "subtitle": "Battle Partners — Not Pets",
-    "description": "Fight side-by-side with powerful mercenary companions. The Mercenary Companion system pairs you with elite warriors who fight alongside you in every battle."
+    "subtitle": "Battle partners, not pets",
+    "description": "Fight with hired mercenary companions. Each one has their own combat style and joins your party as a second fighter."
   },
   "weapons": {
     "title": "Weapons",
@@ -26,7 +26,7 @@
   },
   "event": {
     "title": "Pre-Registration",
-    "preRegister": "Pre-Register Now",
+    "preRegister": "Join the pre-registration",
     "countdown": "Time Remaining",
     "days": "Days",
     "hours": "Hours",
@@ -39,8 +39,8 @@
     "selectPlatform": "Select your platform",
     "selectRegion": "Select your region",
     "registerButton": "Register",
-    "successTitle": "Registration Successful!",
-    "successMessage": "You have successfully pre-registered!",
+    "successTitle": "Registration complete",
+    "successMessage": "Your registration has been recorded.",
     "referralTitle": "Share with Friends",
     "referralDesc": "Invite friends to register for bonus rewards",
     "copyLink": "Copy Link",
@@ -50,7 +50,7 @@
   "store": {
     "preOrderOn": "Pre-order on the",
     "appStore": "App Store",
-    "preRegisterOn": "PRE-REGISTER ON",
+    "preRegisterOn": "Register on",
     "googlePlay": "Google Play",
     "comingSoon": "Coming soon",
     "windows": "Windows"

@@ -1,0 +1,10 @@
+[GET] http://178.128.127.161/api/settings => [200] OK
+[POST] https://www.google-analytics.com/g/collect?v=2&tid=G-MDFLS7BC8J&gtm=45je63q0h2v9243446904za200zd9243446904&_p=1774858106552&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=584540165.1774858107&ul=en-us&sr=1280x720&are=1&frm=0&pscdl=noapi&_prs=gs&_s=1&tag_exp=0~115616985~115938465~115938468~116133314~117484252&sid=1774858106&sct=1&seg=0&dl=http%3A%2F%2F178.128.127.161%2F&dt=Eternal%20Tower%20Saga%20%7C%20Mobile%20RPG&en=page_view&_fv=2&_nsi=1&_ss=2&_c=1&_ee=1&tfd=895 => [204] 
+[GET] http://178.128.127.161/event?_rsc=1r34m => [200] OK
+[GET] http://178.128.127.161/?_rsc=p37cr => [200] OK
+[POST] https://www.google-analytics.com/g/collect?v=2&tid=G-MDFLS7BC8J&gtm=45je63q0h2v9243446904za200zd9243446904&_p=1774858106552&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=584540165.1774858107&ul=en-us&sr=1280x720&are=1&frm=0&pscdl=noapi&_prs=gs&_s=1&tag_exp=0~115616985~115938465~115938468~116133314~117484252&sid=1774858106&sct=1&seg=0&dl=http%3A%2F%2F178.128.127.161%2F&dt=Eternal%20Tower%20Saga%20%7C%20Mobile%20RPG&en=page_view&_fv=2&_nsi=1&_ss=2&_c=1&_ee=1&tfd=895 => [204] 
+[GET] http://178.128.127.161/event?_rsc=1pn8p => [200] OK
+[GET] http://178.128.127.161/event?_rsc=nn07o => [200] OK
+[GET] http://178.128.127.161/event?_rsc=1gd5q => [200] OK
+[GET] http://178.128.127.161/event?_rsc=uz4es => [200] OK
+[GET] http://178.128.127.161/event?_rsc=1ksid => [200] OK

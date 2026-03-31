@@ -1,0 +1,6 @@
+### Result
+"{\n  \"drawerOpen\": false,\n  \"bodyOverflow\": \"\"\n}"
+### Ran Playwright code
+```js
+await page.evaluate('() => JSON.stringify({ drawerOpen: document.querySelector(\'.site-nav__drawer\') !== null, bodyOverflow: document.body.style.overflow || \'\' }, null, 2)');
+```

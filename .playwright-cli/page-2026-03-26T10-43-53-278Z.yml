@@ -1,0 +1,94 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner:
+      - navigation [ref=e3]:
+        - generic [ref=e4]:
+          - link "Eternal Tower Saga home" [ref=e5] [cursor=pointer]:
+            - /url: /
+            - img "Eternal Tower Saga" [ref=e6]
+            - generic [ref=e7]:
+              - strong [ref=e8]: Eternal Tower Saga
+              - generic [ref=e9]: เกม RPG บนมือถือ
+          - generic [ref=e10]:
+            - link "หน้าหลัก" [ref=e11] [cursor=pointer]:
+              - /url: /#hero
+            - link "อาวุธ" [ref=e12] [cursor=pointer]:
+              - /url: /character
+            - link "ไฮไลท์" [ref=e13] [cursor=pointer]:
+              - /url: /game-guide
+            - link "ข่าวสาร" [ref=e14] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=e15]:
+            - link "ลงทะเบียน" [ref=e16] [cursor=pointer]:
+              - /url: /event
+            - button "Switch to English" [ref=e17] [cursor=pointer]: EN
+    - main [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: อัปเดตล่าสุด
+          - heading "ข่าวสารและประกาศ" [level=1] [ref=e22]
+          - paragraph [ref=e23]: รวมข่าว กิจกรรม อัปเดตระบบ และประกาศสำคัญทั้งหมดในมุมมองที่อ่านง่ายขึ้น จัดลำดับชัดขึ้น และพร้อมใช้งานทั้ง desktop กับ mobile
+        - generic [ref=e24]:
+          - generic [ref=e25]: มุมมองปัจจุบัน
+          - strong [ref=e26]: ข่าวทั้งหมด
+          - paragraph [ref=e27]: จำนวนข่าวที่พร้อมอ่าน
+          - strong [ref=e28]: "0"
+      - generic [ref=e29]:
+        - button "ทั้งหมด" [ref=e30] [cursor=pointer]
+        - button "กิจกรรม" [ref=e31] [cursor=pointer]
+        - button "อัปเดต" [ref=e32] [cursor=pointer]
+        - button "สื่อ" [ref=e33] [cursor=pointer]
+        - button "ประกาศ" [ref=e34] [cursor=pointer]
+        - button "บำรุงรักษา" [ref=e35] [cursor=pointer]
+      - paragraph [ref=e38]: กำลังโหลด...
+    - contentinfo [ref=e39]:
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - img "Eternal Tower Saga" [ref=e42]
+          - paragraph [ref=e43]: Eternal Tower Saga คือโลกแฟนตาซีที่เน้นการผจญภัยเป็นทีม การต่อสู้ที่อ่านง่าย และบรรยากาศที่ชวนอยากกลับมาเล่นทุกวัน.
+          - generic [ref=e44]:
+            - link "discord" [ref=e45] [cursor=pointer]:
+              - /url: https://discord.gg/eternaltowersaga
+              - img [ref=e46]
+            - link "facebook" [ref=e48] [cursor=pointer]:
+              - /url: https://facebook.com/EternalTowerSaga
+              - img [ref=e49]
+            - link "youtube" [ref=e51] [cursor=pointer]:
+              - /url: https://youtube.com/@EternalTowerSaga
+              - img [ref=e52]
+            - link "tiktok" [ref=e55] [cursor=pointer]:
+              - /url: https://tiktok.com/@EternalTowerSaga
+              - img [ref=e56]
+        - generic [ref=e58]:
+          - generic [ref=e59]:
+            - heading "สำรวจ" [level=4] [ref=e60]
+            - generic [ref=e61]:
+              - link "หน้าหลัก" [ref=e62] [cursor=pointer]:
+                - /url: /
+              - link "อาวุธ" [ref=e63] [cursor=pointer]:
+                - /url: /character
+              - link "ไฮไลท์เกม" [ref=e64] [cursor=pointer]:
+                - /url: /game-guide
+              - link "ข่าวสาร" [ref=e65] [cursor=pointer]:
+                - /url: /news
+          - generic [ref=e66]:
+            - heading "ช่วยเหลือ" [level=4] [ref=e67]
+            - generic [ref=e68]:
+              - link "ข้อกำหนดการใช้งาน" [ref=e69] [cursor=pointer]:
+                - /url: /terms
+              - link "นโยบายความเป็นส่วนตัว" [ref=e70] [cursor=pointer]:
+                - /url: /privacy
+              - link "คำถามที่พบบ่อย" [ref=e71] [cursor=pointer]:
+                - /url: /faq
+          - generic [ref=e72]:
+            - heading "ชุมชน" [level=4] [ref=e73]
+            - paragraph [ref=e74]: ติดตามประกาศ กิจกรรม และความเคลื่อนไหวล่าสุดของเกมผ่านช่องทาง community หลักของ Eternal Tower Saga.
+            - generic [ref=e75]:
+              - link "ลงทะเบียนล่วงหน้า" [ref=e76] [cursor=pointer]:
+                - /url: /event
+              - link "ดาวน์โหลด" [ref=e77] [cursor=pointer]:
+                - /url: /download
+      - generic [ref=e78]:
+        - generic [ref=e79]: พร้อมบน iOS • Android • PC
+        - generic [ref=e80]: © 2026 Eternal Tower Saga. All rights reserved.
+  - alert [ref=e81]

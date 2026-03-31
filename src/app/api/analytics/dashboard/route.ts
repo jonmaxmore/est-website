@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayloadClient } from '@/lib/payload'
 import { checkRateLimit } from '@/lib/rate-limit'
+import { requireAdmin } from '@/lib/require-admin'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,11 +12,6 @@ export const dynamic = 'force-dynamic'
  */
 
 // ─── Auth check ───
-function checkAuth(request: NextRequest): boolean {
-  const cookie = request.headers.get('cookie') || ''
-  return cookie.includes('payload-token')
-}
-
 // ─── Fetch rollups for a date range by dimension ───
 async function fetchRollups(
   payload: Awaited<ReturnType<typeof getPayloadClient>>,
@@ -37,6 +33,7 @@ async function fetchRollups(
     where: { and: conditions },
     limit: 5000,
     sort: 'date',
+    overrideAccess: true,
   })
   return result.docs as Record<string, unknown>[]
 }
@@ -129,9 +126,9 @@ async function buildBase(payload: PayloadClient, days: number, startDate: string
   }))
 
   const [totalRegCount, recentRegCount, prevRegCount] = await Promise.all([
-    payload.count({ collection: 'registrations' }),
-    payload.count({ collection: 'registrations', where: { createdAt: { greater_than: new Date(startDate).toISOString() } } }),
-    payload.count({ collection: 'registrations', where: { and: [{ createdAt: { greater_than: new Date(prev.startDate).toISOString() } }, { createdAt: { less_than_equal: new Date(prev.endDate).toISOString() } }] } }),
+    payload.count({ collection: 'registrations', overrideAccess: true }),
+    payload.count({ collection: 'registrations', where: { createdAt: { greater_than: new Date(startDate).toISOString() } }, overrideAccess: true }),
+    payload.count({ collection: 'registrations', where: { and: [{ createdAt: { greater_than: new Date(prev.startDate).toISOString() } }, { createdAt: { less_than_equal: new Date(prev.endDate).toISOString() } }] }, overrideAccess: true }),
   ])
 
   return {
@@ -177,6 +174,7 @@ async function tabBehavior(payload: PayloadClient, base: Record<string, unknown>
     collection: 'analytics-funnel-events',
     where: { createdAt: { greater_than: new Date(s).toISOString() } },
     limit: 10000, select: { step: true, stepOrder: true, sessionId: true },
+    overrideAccess: true,
   })
   const funnelSteps: Record<string, Set<string>> = {}
   for (const doc of funnelResult.docs) {
@@ -203,7 +201,8 @@ export async function GET(request: NextRequest) {
   try {
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
     if (!checkRateLimit(`dashboard:${ip}`, 15, 60000)) return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
-    if (!checkAuth(request)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const auth = await requireAdmin(request)
+    if ('error' in auth) return auth.error
 
     const payload = await getPayloadClient()
     const { searchParams } = new URL(request.url)

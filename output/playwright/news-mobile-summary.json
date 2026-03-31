@@ -1,0 +1,23 @@
+{
+    "before":  {
+                   "hasDialog":  false,
+                   "hasCloseMenu":  false,
+                   "hasCookies":  true
+               },
+    "open":  {
+                 "hasDialog":  true,
+                 "hasCloseMenu":  true
+             },
+    "afterEsc":  {
+                     "hasDialog":  false,
+                     "hasCloseMenu":  false
+                 },
+    "afterToggleClose":  {
+                             "hasDialog":  false,
+                             "hasCloseMenu":  false
+                         },
+    "afterBackdrop":  {
+                          "hasDialog":  true,
+                          "hasCloseMenu":  true
+                      }
+}

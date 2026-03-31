@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { allowPublicRead, isAdmin, isAdminOrEditor } from '@/lib/cms-access'
 
 export const Gallery: CollectionConfig = {
   slug: 'gallery',
@@ -9,10 +10,10 @@ export const Gallery: CollectionConfig = {
     defaultColumns: ['title', 'category', 'image', 'order'],
   },
   access: {
-    read: () => true,
-    create: ({ req: { user } }) => !!user,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
+    read: allowPublicRead,
+    create: isAdminOrEditor,
+    update: isAdminOrEditor,
+    delete: isAdmin,
   },
   fields: [
     {

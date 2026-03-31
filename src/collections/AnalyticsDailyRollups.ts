@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { isAdmin } from '@/lib/cms-access'
 
 export const AnalyticsDailyRollups: CollectionConfig = {
   slug: 'analytics-daily-rollups',
@@ -9,10 +10,10 @@ export const AnalyticsDailyRollups: CollectionConfig = {
     defaultColumns: ['date', 'dimension', 'dimensionValue', 'pageviews', 'sessions'],
   },
   access: {
-    read: ({ req: { user } }) => !!user,
+    read: isAdmin,
     create: () => true,
     update: () => true, // Rollup job upserts
-    delete: ({ req: { user } }) => !!user,
+    delete: isAdmin,
   },
   fields: [
     // ─── Time Key ───

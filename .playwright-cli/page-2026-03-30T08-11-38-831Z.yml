@@ -1,0 +1,163 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner:
+      - navigation [ref=e3]:
+        - generic [ref=e4]:
+          - link "Eternal Tower Saga home" [ref=e5] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e6]:
+              - strong [ref=e7]: Eternal Tower Saga
+              - generic [ref=e8]: เกม RPG บนมือถือ
+          - generic [ref=e9]:
+            - link "หน้าหลัก" [ref=e10] [cursor=pointer]:
+              - /url: /#hero
+            - link "อาวุธ" [ref=e11] [cursor=pointer]:
+              - /url: /character
+            - link "ไฮไลท์" [ref=e12] [cursor=pointer]:
+              - /url: /game-guide
+            - link "ข่าวสาร" [ref=e13] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=e14]:
+            - link "ลงทะเบียน" [ref=e15] [cursor=pointer]:
+              - /url: /event
+            - button "Switch to English" [ref=e16] [cursor=pointer]: EN
+    - main [ref=e17]:
+      - generic [ref=e22]:
+        - paragraph [ref=e24]: สัมผัสประสบการณ์ใหม่กับ Eternal Tower Saga (ETS) "อาวุธเปลี่ยน เกมก็เปลี่ยน จากผู้เล่น สู่...ผู้กุมเกม"
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - generic [ref=e27]: "03"
+            - generic [ref=e28]: วัน
+          - generic [ref=e29]:
+            - generic [ref=e30]: "08"
+            - generic [ref=e31]: ชั่วโมง
+          - generic [ref=e32]:
+            - generic [ref=e33]: "48"
+            - generic [ref=e34]: นาที
+          - generic [ref=e35]:
+            - generic [ref=e36]: "20"
+            - generic [ref=e37]: วินาที
+        - generic [ref=e38]:
+          - generic [ref=e39]: "0"
+          - generic [ref=e40]: ผู้ลงทะเบียนล่วงหน้าแล้ว
+        - button "ลงทะเบียนล่วงหน้าเลย" [ref=e41] [cursor=pointer]:
+          - generic [ref=e43]: ลงทะเบียนล่วงหน้าเลย
+        - generic [ref=e44]:
+          - link "Pre-order on the App Store" [ref=e45] [cursor=pointer]:
+            - /url: https://apps.apple.com/us/app/eternal-tower-saga/id6756611023
+            - img [ref=e46]
+            - generic [ref=e49]:
+              - generic [ref=e50]: Pre-order on the
+              - strong [ref=e51]: App Store
+          - link "PRE-REGISTER ON Google Play" [ref=e52] [cursor=pointer]:
+            - /url: https://play.google.com/store/apps/details?id=com.ultimategame.eternaltowersaga
+            - img [ref=e53]
+            - generic [ref=e55]:
+              - generic [ref=e56]: PRE-REGISTER ON
+              - strong [ref=e57]: Google Play
+          - link "Coming soon Windows" [ref=e58] [cursor=pointer]:
+            - /url: "#"
+            - img [ref=e59]
+            - generic [ref=e61]:
+              - generic [ref=e62]: Coming soon
+              - strong [ref=e63]: Windows
+      - generic [ref=e67]:
+        - heading "ลงทะเบียนล่วงหน้า" [level=2] [ref=e72]
+        - paragraph [ref=e73]:
+          - strong [ref=e74]: "1."
+          - text: กรอกข้อมูล และตรวจสอบความถูกต้องก่อนลงทะเบียน
+        - generic [ref=e75]:
+          - textbox "กรุณากรอก E-MAIL ของคุณ" [ref=e76]
+          - generic [ref=e77]:
+            - generic [ref=e78] [cursor=pointer]:
+              - radio "ไทย" [ref=e79]
+              - text: ไทย
+            - generic [ref=e80] [cursor=pointer]:
+              - radio "มาเลเซีย" [ref=e81]
+              - text: มาเลเซีย
+            - generic [ref=e82] [cursor=pointer]:
+              - radio "อินโดนีเซีย" [ref=e83]
+              - text: อินโดนีเซีย
+            - generic [ref=e84] [cursor=pointer]:
+              - radio "ฟิลิปปินส์" [ref=e85]
+              - text: ฟิลิปปินส์
+            - generic [ref=e86] [cursor=pointer]:
+              - radio "สิงคโปร์" [ref=e87]
+              - text: สิงคโปร์
+          - separator [ref=e88]
+          - paragraph [ref=e89]:
+            - strong [ref=e90]: "2."
+            - text: คลิกเลือกอุปกรณ์เพื่อลงทะเบียน เมื่อคลิกจะไปยังหน้าสโตร์โดยอัตโนมัติ
+          - generic [ref=e91]:
+            - button "App Store" [ref=e92] [cursor=pointer]:
+              - img [ref=e93]
+              - generic [ref=e96]: App Store
+            - button "Google Play" [ref=e97] [cursor=pointer]:
+              - img [ref=e98]
+              - generic [ref=e100]: Google Play
+          - button "กดลงทะเบียน" [disabled] [ref=e101]
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - generic [ref=e108]: รางวัลกิจกรรม
+          - heading "รางวัลกิจกรรม" [level=2] [ref=e109]
+        - generic [ref=e114]:
+          - generic [ref=e115]: "0"
+          - generic [ref=e116]: ผู้ลงทะเบียน
+        - generic [ref=e118]:
+          - generic [ref=e119]: 🚩 จำนวนผู้ลงทะเบียน
+          - generic [ref=e120]: 0 / 200,000
+      - generic [ref=e125]:
+        - generic [ref=e126]:
+          - generic [ref=e127]: อันดับผู้เชิญชวน
+          - heading "กระดานอันดับ" [level=2] [ref=e128]
+        - paragraph [ref=e133]: กำลังโหลด...
+    - contentinfo [ref=e134]:
+      - generic [ref=e135]:
+        - generic [ref=e136]:
+          - paragraph [ref=e137]: Eternal Tower Saga คือโลกแฟนตาซีที่เน้นการผจญภัยเป็นทีม การต่อสู้ที่อ่านง่าย และบรรยากาศที่ชวนอยากกลับมาเล่นทุกวัน.
+          - generic [ref=e138]:
+            - link "discord" [ref=e139] [cursor=pointer]:
+              - /url: https://discord.gg/eternaltowersaga
+              - img [ref=e140]
+            - link "facebook" [ref=e142] [cursor=pointer]:
+              - /url: https://facebook.com/EternalTowerSaga
+              - img [ref=e143]
+            - link "youtube" [ref=e145] [cursor=pointer]:
+              - /url: https://youtube.com/@EternalTowerSaga
+              - img [ref=e146]
+            - link "tiktok" [ref=e149] [cursor=pointer]:
+              - /url: https://tiktok.com/@EternalTowerSaga
+              - img [ref=e150]
+        - generic [ref=e152]:
+          - generic [ref=e153]:
+            - heading "สำรวจ" [level=4] [ref=e154]
+            - generic [ref=e155]:
+              - link "หน้าหลัก" [ref=e156] [cursor=pointer]:
+                - /url: /
+              - link "อาวุธ" [ref=e157] [cursor=pointer]:
+                - /url: /character
+              - link "ไฮไลท์เกม" [ref=e158] [cursor=pointer]:
+                - /url: /game-guide
+              - link "ข่าวสาร" [ref=e159] [cursor=pointer]:
+                - /url: /news
+          - generic [ref=e160]:
+            - heading "ช่วยเหลือ" [level=4] [ref=e161]
+            - generic [ref=e162]:
+              - link "ข้อกำหนดการใช้งาน" [ref=e163] [cursor=pointer]:
+                - /url: /terms
+              - link "นโยบายความเป็นส่วนตัว" [ref=e164] [cursor=pointer]:
+                - /url: /privacy
+              - link "คำถามที่พบบ่อย" [ref=e165] [cursor=pointer]:
+                - /url: /faq
+          - generic [ref=e166]:
+            - heading "ชุมชน" [level=4] [ref=e167]
+            - paragraph [ref=e168]: ติดตามประกาศ กิจกรรม และความเคลื่อนไหวล่าสุดของเกมผ่านช่องทาง community หลักของ Eternal Tower Saga.
+            - generic [ref=e169]:
+              - link "ลงทะเบียนล่วงหน้า" [ref=e170] [cursor=pointer]:
+                - /url: /event
+              - link "ดาวน์โหลด" [ref=e171] [cursor=pointer]:
+                - /url: /download
+      - generic [ref=e172]:
+        - generic [ref=e173]: พร้อมบน iOS • Android • PC
+        - generic [ref=e174]: © 2026 Eternal Tower Saga. All rights reserved.
+  - alert [ref=e175]

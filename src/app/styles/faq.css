@@ -130,7 +130,7 @@
    Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 .fab-back-to-top {
   position: fixed;
-  bottom: 2rem;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
   right: 2rem;
   z-index: 9000;
   width: 48px;
@@ -154,52 +154,169 @@
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 168, 67, 0.25);
 }
 
+body.has-cookie-banner .fab-back-to-top {
+  bottom: calc(var(--cookie-banner-height, 0px) + 1.75rem + env(safe-area-inset-bottom));
+}
+
 /* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
    COOKIE CONSENT Ã¢â‚¬â€ PDPA Banner
    Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 .cookie-banner {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  right: 1rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
   z-index: 9500;
-  background: rgba(4, 14, 33, 0.95);
+  width: min(20rem, calc(100% - 1.5rem));
+  background:
+    linear-gradient(180deg, rgba(6, 16, 35, 0.96), rgba(3, 11, 26, 0.98)),
+    rgba(4, 14, 33, 0.96);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(212, 168, 67, 0.2);
-  padding: 1rem 0;
+  border: 1px solid rgba(212, 168, 67, 0.16);
+  border-radius: 1.1rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.22);
+}
+
+.cookie-banner--compact {
+  left: 0.75rem;
+  right: auto;
+  width: min(14rem, calc(100% - 1.25rem));
+  border-color: rgba(255, 255, 255, 0.06);
+  background:
+    linear-gradient(180deg, rgba(6, 16, 35, 0.86), rgba(3, 11, 26, 0.9)),
+    rgba(4, 14, 33, 0.88);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.14);
+}
+
+.cookie-banner--news {
+  left: auto;
+  right: 1rem;
+}
+
+.cookie-banner--game-guide {
+  left: 1rem;
+  right: auto;
+}
+
+.cookie-banner--retreat {
+  opacity: 0.62;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+}
+
+.cookie-banner--retreat:hover,
+.cookie-banner--retreat:focus-within {
+  opacity: 1;
 }
 
 .cookie-inner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0.8rem 0.9rem;
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.cookie-banner--compact .cookie-inner {
+  padding: 0.72rem 0.78rem;
+  gap: 0.5rem;
+}
+
+.cookie-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cookie-label {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
+  width: fit-content;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(212, 168, 67, 0.12);
+  border: 1px solid rgba(212, 168, 67, 0.16);
+  color: var(--gold-light);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.cookie-banner--compact .cookie-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  padding: 0.32rem 0.62rem;
 }
 
 .cookie-text {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
-  line-height: 1.5;
+  line-height: 1.56;
+  margin: 0;
+}
+
+.cookie-banner--compact .cookie-text {
+  font-size: 0.72rem;
+  line-height: 1.42;
 }
 
 .cookie-text-en {
   color: rgba(255, 255, 255, 0.4);
   display: block;
-  font-size: 0.8rem;
-  margin-top: 0.15rem;
+  font-size: 0.72rem;
+  margin-top: 0.25rem;
+}
+
+.cookie-banner--compact .cookie-text-en {
+  display: none;
+}
+
+.cookie-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.cookie-banner--compact .cookie-actions {
+  gap: 0.45rem;
+}
+
+.cookie-dismiss {
+  min-height: 2.5rem;
+  padding: 0.55rem 0.92rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-soft);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.cookie-banner--compact .cookie-dismiss,
+.cookie-banner--compact .cookie-accept {
+  min-height: 2.1rem;
+  font-size: 0.72rem;
+}
+
+.cookie-dismiss:hover {
+  border-color: rgba(212, 168, 67, 0.22);
+  color: var(--off-white);
 }
 
 .cookie-accept {
   white-space: nowrap;
-  padding: 0.6rem 1.5rem;
+  min-height: 2.5rem;
+  padding: 0.55rem 1.05rem;
   background: linear-gradient(135deg, var(--gold), var(--gold-dark));
   color: var(--midnight);
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   border: none;
   border-radius: 50px;
   cursor: pointer;
@@ -210,5 +327,32 @@
 .cookie-accept:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 16px rgba(212, 168, 67, 0.4);
+}
+
+.cookie-banner--compact .cookie-accept {
+  padding: 0.52rem 0.88rem;
+  box-shadow: 0 1px 10px rgba(212, 168, 67, 0.2);
+}
+
+.cookie-banner--compact .cookie-dismiss {
+  padding: 0.52rem 0.82rem;
+}
+
+@media (max-width: 768px) {
+  body.has-cookie-banner .fab-back-to-top {
+    bottom: calc(var(--cookie-banner-height, 0px) + 1rem + env(safe-area-inset-bottom));
+  }
+
+  .cookie-banner {
+    left: 0.75rem;
+    right: 0.75rem;
+    width: auto;
+  }
+
+  .cookie-banner--compact {
+    left: 0.75rem;
+    right: 0.75rem;
+    width: auto;
+  }
 }
 

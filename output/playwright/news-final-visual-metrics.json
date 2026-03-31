@@ -1,0 +1,6 @@
+### Result
+"{\n  \"url\": \"http://178.128.127.161/news\",\n  \"logo\": {\n    \"complete\": true,\n    \"currentSrc\": \"http://178.128.127.161/_next/image?url=%2Fapi%2Fmedia%2Ffile%2Flogo.webp&w=256&q=75\",\n    \"width\": 90,\n    \"height\": 50\n  },\n  \"heading\": \"????????????????\"\n}"
+### Ran Playwright code
+```js
+await page.evaluate('() => { const logo = document.querySelector(\'.site-nav__brandMark\'); const h1 = document.querySelector(\'h1\'); return JSON.stringify({ url: location.href, logo: logo ? { complete: logo.complete, currentSrc: logo.currentSrc, width: logo.clientWidth, height: logo.clientHeight } : null, heading: h1 ? h1.textContent?.trim() : null }, null, 2); }');
+```

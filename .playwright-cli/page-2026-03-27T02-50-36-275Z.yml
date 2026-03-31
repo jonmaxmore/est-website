@@ -1,0 +1,117 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner:
+      - navigation [ref=e4]:
+        - generic [ref=e5]:
+          - link "Eternal Tower Saga home" [ref=e6] [cursor=pointer]:
+            - /url: /
+            - img "Eternal Tower Saga" [ref=e7]
+            - generic [ref=e8]:
+              - strong [ref=e9]: Eternal Tower Saga
+              - generic [ref=e10]: เกม RPG บนมือถือ
+          - generic [ref=e11]:
+            - link "หน้าหลัก" [ref=e12] [cursor=pointer]:
+              - /url: /#hero
+            - link "อาวุธ" [ref=e13] [cursor=pointer]:
+              - /url: /character
+            - link "ไฮไลท์" [ref=e14] [cursor=pointer]:
+              - /url: /game-guide
+            - link "ข่าวสาร" [ref=e15] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=e16]:
+            - link "ลงทะเบียน" [ref=e17] [cursor=pointer]:
+              - /url: /event
+            - button "Switch to English" [ref=e18] [cursor=pointer]: EN
+    - main [ref=e19]:
+      - navigation [ref=e20]:
+        - link "หน้าหลัก" [ref=e21] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e22]: ›
+        - link "ข่าวสาร" [ref=e23] [cursor=pointer]:
+          - /url: /news
+        - generic [ref=e24]: ›
+        - generic [ref=e25]: อัปเดตสื่อแนะนำโลกของเกม
+      - generic [ref=e26]:
+        - text: สื่อ
+        - heading "อัปเดตสื่อแนะนำโลกของเกม" [level=1] [ref=e27]
+        - time [ref=e28]: วันพฤหัสบดีที่ 26 มีนาคม 2569
+      - generic [ref=e29]:
+        - generic [ref=e30]: สื่อ
+        - strong [ref=e31]: อัปเดตอย่างเป็นทางการ
+        - paragraph [ref=e32]: รวมภาพและสื่อชุดใหม่จาก อัปเดตสื่อแนะนำโลกของเกม เพื่อให้เห็นบรรยากาศโลกของ Eternal Tower Saga ชัดขึ้นก่อนอัปเดตรอบต่อไป
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: รวมภาพและสื่อชุดใหม่จาก อัปเดตสื่อแนะนำโลกของเกม เพื่อให้เห็นบรรยากาศโลกของ Eternal Tower Saga ชัดขึ้นก่อนอัปเดตรอบต่อไป
+        - paragraph [ref=e35]: คอนเทนต์ชุดนี้ถูกรวบรวมมาเพื่อช่วยให้ผู้เล่นเห็นบรรยากาศของเกม การออกแบบโลก และทิศทางงานภาพของ Eternal Tower Saga ได้ชัดขึ้น
+        - paragraph [ref=e36]: ไม่ว่าจะเป็นเบื้องหลังการพัฒนา ภาพโปรโมต หรือสื่อประกอบการสื่อสาร จุดประสงค์คือทำให้ผู้เล่นเข้าใจโลกของเกมและตัวตนของแบรนด์ได้มากขึ้น
+        - paragraph [ref=e37]: ทีมงานจะทยอยปล่อยสื่อใหม่เพิ่มเติมเมื่อมีคอนเทนต์สำคัญหรือ milestone ที่ควรนำเสนอในรอบต่อไป
+        - paragraph [ref=e38]: ติดตามหน้า news ต่อเนื่องเพื่อรับรายละเอียดเพิ่มเติมและอัปเดตฉบับล่าสุดจากทีมงาน
+      - link "← กลับหน้าข่าวสาร" [ref=e39] [cursor=pointer]:
+        - /url: /news
+      - generic [ref=e40]:
+        - heading "ข่าวสารที่เกี่ยวข้อง" [level=2] [ref=e41]
+        - 'link "📖 บันทึกนักพัฒนา: การสร้างอาร์คาเทีย 17 มี.ค. 2569" [ref=e43] [cursor=pointer]':
+          - /url: /news/developer-diary-arcatea
+          - generic [ref=e45]: 📖
+          - generic [ref=e46]:
+            - 'heading "บันทึกนักพัฒนา: การสร้างอาร์คาเทีย" [level=3] [ref=e47]'
+            - time [ref=e48]: 17 มี.ค. 2569
+    - contentinfo [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e51]:
+          - img "Eternal Tower Saga" [ref=e52]
+          - paragraph [ref=e53]: Eternal Tower Saga คือโลกแฟนตาซีที่เน้นการผจญภัยเป็นทีม การต่อสู้ที่อ่านง่าย และบรรยากาศที่ชวนอยากกลับมาเล่นทุกวัน.
+          - generic [ref=e54]:
+            - link "discord" [ref=e55] [cursor=pointer]:
+              - /url: https://discord.gg/eternaltowersaga
+              - img [ref=e56]
+            - link "facebook" [ref=e58] [cursor=pointer]:
+              - /url: https://facebook.com/EternalTowerSaga
+              - img [ref=e59]
+            - link "youtube" [ref=e61] [cursor=pointer]:
+              - /url: https://youtube.com/@EternalTowerSaga
+              - img [ref=e62]
+            - link "tiktok" [ref=e65] [cursor=pointer]:
+              - /url: https://tiktok.com/@EternalTowerSaga
+              - img [ref=e66]
+        - generic [ref=e68]:
+          - generic [ref=e69]:
+            - heading "สำรวจ" [level=4] [ref=e70]
+            - generic [ref=e71]:
+              - link "หน้าหลัก" [ref=e72] [cursor=pointer]:
+                - /url: /
+              - link "อาวุธ" [ref=e73] [cursor=pointer]:
+                - /url: /character
+              - link "ไฮไลท์เกม" [ref=e74] [cursor=pointer]:
+                - /url: /game-guide
+              - link "ข่าวสาร" [ref=e75] [cursor=pointer]:
+                - /url: /news
+          - generic [ref=e76]:
+            - heading "ช่วยเหลือ" [level=4] [ref=e77]
+            - generic [ref=e78]:
+              - link "ข้อกำหนดการใช้งาน" [ref=e79] [cursor=pointer]:
+                - /url: /terms
+              - link "นโยบายความเป็นส่วนตัว" [ref=e80] [cursor=pointer]:
+                - /url: /privacy
+              - link "คำถามที่พบบ่อย" [ref=e81] [cursor=pointer]:
+                - /url: /faq
+          - generic [ref=e82]:
+            - heading "ชุมชน" [level=4] [ref=e83]
+            - paragraph [ref=e84]: ติดตามประกาศ กิจกรรม และความเคลื่อนไหวล่าสุดของเกมผ่านช่องทาง community หลักของ Eternal Tower Saga.
+            - generic [ref=e85]:
+              - link "ลงทะเบียนล่วงหน้า" [ref=e86] [cursor=pointer]:
+                - /url: /event
+              - link "ดาวน์โหลด" [ref=e87] [cursor=pointer]:
+                - /url: /download
+      - generic [ref=e88]:
+        - generic [ref=e89]: พร้อมบน iOS • Android • PC
+        - generic [ref=e90]: © 2026 Eternal Tower Saga. All rights reserved.
+  - alert [ref=e91]
+  - generic [ref=e93]:
+    - generic [ref=e94]:
+      - generic [ref=e95]: Cookies
+      - paragraph [ref=e96]:
+        - text: เราใช้คุกกี้ที่จำเป็นเพื่อให้เว็บไซต์ทำงานเสถียรและวัดผลการใช้งานพื้นฐานได้อย่างถูกต้อง
+        - generic [ref=e97]: Essential cookies keep the site stable and help measure basic performance.
+    - generic [ref=e98]:
+      - button "ภายหลัง" [ref=e99] [cursor=pointer]
+      - button "ยอมรับ / Accept" [ref=e100] [cursor=pointer]

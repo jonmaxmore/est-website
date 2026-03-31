@@ -1,0 +1,6 @@
+### Page
+- Page URL: http://178.128.127.161/news
+- Page Title: News & Updates | Eternal Tower Saga
+### Snapshot
+- [Snapshot](.playwright-cli\page-2026-03-26T12-41-29-247Z.yml)
+

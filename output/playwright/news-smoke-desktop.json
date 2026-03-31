@@ -1,0 +1,6 @@
+### Result
+"{\n  \"activeLinks\": [\n    \"???????\"\n  ],\n  \"cookieVisible\": true,\n  \"toggleVisible\": false\n}"
+### Ran Playwright code
+```js
+await page.evaluate('() => { const active = Array.from(document.querySelectorAll(\'.site-nav__link.is-active\')).map((el) => (el.textContent || \'\').trim()); const cookie = document.querySelector(\'.cookie-banner\'); const toggle = document.querySelector(\'.site-nav__toggle\'); return JSON.stringify({ activeLinks: active, cookieVisible: Boolean(cookie), toggleVisible: toggle ? getComputedStyle(toggle).display !== \'none\' : false }, null, 2); }');
+```

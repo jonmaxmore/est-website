@@ -19,6 +19,9 @@ import { PageEvents } from './collections/PageEvents'
 import { AnalyticsSessions } from './collections/AnalyticsSessions'
 import { AnalyticsDailyRollups } from './collections/AnalyticsDailyRollups'
 import { AnalyticsFunnelEvents } from './collections/AnalyticsFunnelEvents'
+import { addNewsExcerptColumnsMigration } from './migrations/add-news-excerpt-columns'
+import { addNewsEditorialColumnsMigration } from './migrations/add-news-editorial-columns'
+import { addGlobalBaseColumnsMigration } from './migrations/add-global-base-columns'
 
 // Globals
 import { SiteSettings } from './globals/SiteSettings'
@@ -27,6 +30,10 @@ import { Homepage } from './globals/Homepage'
 import { StoryPage } from './globals/StoryPage'
 import { GameGuidePage } from './globals/GameGuidePage'
 import { FaqPage } from './globals/FaqPage'
+import { NewsPage } from './globals/NewsPage'
+import { GalleryPage } from './globals/GalleryPage'
+import { SupportPage } from './globals/SupportPage'
+import { DownloadPage } from './globals/DownloadPage'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -38,7 +45,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     meta: {
-      titleSuffix: ' — EST CMS',
+      titleSuffix: '- EST CMS',
       description: 'Eternal Tower Saga Content Management',
     },
     components: {
@@ -67,7 +74,11 @@ export default buildConfig({
     Homepage,
     StoryPage,
     GameGuidePage,
+    NewsPage,
     FaqPage,
+    GalleryPage,
+    SupportPage,
+    DownloadPage,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET ?? (() => { throw new Error('PAYLOAD_SECRET environment variable is required') })(),
@@ -78,12 +89,17 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI ?? (() => { throw new Error('DATABASE_URI environment variable is required') })(),
     },
+    prodMigrations: [
+      addNewsExcerptColumnsMigration,
+      addNewsEditorialColumnsMigration,
+      addGlobalBaseColumnsMigration,
+    ],
     push: true,
   }),
   sharp,
   upload: {
     limits: {
-      fileSize: 100000000, // 100MB — allows video uploads
+      fileSize: 100000000, // 100MB - allows video uploads
     },
   },
 })

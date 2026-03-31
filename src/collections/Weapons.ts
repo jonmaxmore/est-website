@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { allowPublicRead, isAdmin, isAdminOrEditor } from '@/lib/cms-access'
 
 export const Weapons: CollectionConfig = {
   slug: 'weapons',
@@ -9,8 +10,10 @@ export const Weapons: CollectionConfig = {
     defaultColumns: ['name', 'sortOrder', 'visible', 'updatedAt'],
   },
   access: {
-    read: () => true,
-    delete: ({ req: { user } }) => !!user,
+    read: allowPublicRead,
+    create: isAdminOrEditor,
+    update: isAdminOrEditor,
+    delete: isAdmin,
   },
   fields: [
     // ── Basic Info ──────────────────────────────────

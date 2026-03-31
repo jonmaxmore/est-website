@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { isAdmin, isAdminOrSelf } from '@/lib/cms-access'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -10,10 +11,10 @@ export const Users: CollectionConfig = {
     defaultColumns: ['email', 'role', 'createdAt'],
   },
   access: {
-    read: ({ req: { user } }) => !!user,
-    create: ({ req: { user } }) => !!user,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
+    read: isAdminOrSelf,
+    create: isAdmin,
+    update: isAdminOrSelf,
+    delete: isAdmin,
   },
   fields: [
     {
@@ -26,6 +27,10 @@ export const Users: CollectionConfig = {
       defaultValue: 'editor',
       required: true,
       label: 'Role',
+      access: {
+        create: isAdmin,
+        update: isAdmin,
+      },
       admin: {
         description: 'Admin: full access | Editor: content management only',
       },

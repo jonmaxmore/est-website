@@ -32,6 +32,7 @@ export async function findL1Parent(payload: Payload, referredByCode: string): Pr
     collection: 'registrations',
     where: { referralCode: { equals: referredByCode } },
     limit: 1,
+    overrideAccess: true,
   })
 
   if (referrerRes.docs.length === 0) return null
@@ -48,13 +49,14 @@ export async function findL1Parent(payload: Payload, referredByCode: string): Pr
 // ─── Update L1 parent referral counts ───
 async function updateL1Parent(payload: Payload, parent: L1Parent, config: ReferralConfig) {
   const newL1Count = parent.referralLevel1Count + 1
-  const l1Doc = await payload.findByID({ collection: 'registrations', id: parent.id })
+  const l1Doc = await payload.findByID({ collection: 'registrations', id: parent.id, overrideAccess: true })
   const l1Level2Count = (l1Doc.referralLevel2Count as number) || 0
   const recalcPoints = (newL1Count * config.pointsL1) + (l1Level2Count * config.pointsL2)
 
   await payload.update({
     collection: 'registrations',
     id: parent.id,
+    overrideAccess: true,
     data: {
       referralLevel1Count: newL1Count,
       referralPoints: recalcPoints,
@@ -69,6 +71,7 @@ async function updateL2Grandparent(payload: Payload, referredByCode: string, con
     collection: 'registrations',
     where: { referralCode: { equals: referredByCode } },
     limit: 1,
+    overrideAccess: true,
   })
 
   if (grandparentRes.docs.length === 0) return
@@ -81,6 +84,7 @@ async function updateL2Grandparent(payload: Payload, referredByCode: string, con
   await payload.update({
     collection: 'registrations',
     id: gpDoc.id,
+    overrideAccess: true,
     data: { referralLevel2Count: gpL2Count, referralPoints: recalcPoints },
   })
 }

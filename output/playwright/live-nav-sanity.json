@@ -1,0 +1,19 @@
+{
+    "home":  {
+                 "url":  "http://178.128.127.161/",
+                 "title":  "Eternal Tower Saga | Mobile RPG"
+             },
+    "news":  {
+                 "url":  "http://178.128.127.161/news",
+                 "title":  "News \u0026 Updates | Eternal Tower Saga"
+             },
+    "backHome":  {
+                     "url":  "http://178.128.127.161/",
+                     "title":  "Eternal Tower Saga | Mobile RPG"
+                 },
+    "guide":  {
+                  "url":  "http://178.128.127.161/game-guide",
+                  "title":  "Eternal Tower Saga | Mobile RPG"
+              },
+    "consoleOutput":  "Total messages: 0 (Errors: 0, Warnings: 0)"
+}

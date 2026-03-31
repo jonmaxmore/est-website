@@ -1,11 +1,102 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { type RefObject, useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 
-/* ═══════════════════════════════════════════════════
-   BACK TO TOP — Floating Action Button
-   ═══════════════════════════════════════════════════ */
+const COOKIE_CONSENT_KEY = 'cookie-consent';
+const COOKIE_DISMISSED_AT_KEY = 'cookie-consent-dismissed-at';
+const COOKIE_DISMISS_WINDOW_MS = 1000 * 60 * 60 * 12;
+
+function useCookieBannerHeight(show: boolean, bannerRef: RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    if (!show || !bannerRef.current) {
+      document.body.style.removeProperty('--cookie-banner-height');
+      return;
+    }
+
+    const syncBannerHeight = () => {
+      const nextHeight = Math.ceil(bannerRef.current?.getBoundingClientRect().height || 0);
+
+      if (nextHeight > 0) {
+        document.body.style.setProperty('--cookie-banner-height', `${nextHeight}px`);
+      }
+    };
+
+    syncBannerHeight();
+
+    const resizeObserver = new ResizeObserver(() => syncBannerHeight());
+    resizeObserver.observe(bannerRef.current);
+    window.addEventListener('resize', syncBannerHeight);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', syncBannerHeight);
+      document.body.style.removeProperty('--cookie-banner-height');
+    };
+  }, [bannerRef, show]);
+}
+
+function useFooterProximity(show: boolean) {
+  const [nearFooter, setNearFooter] = useState(false);
+
+  useEffect(() => {
+    if (!show) return;
+
+    const syncFooterProximity = () => {
+      const footer = document.querySelector('.site-footer');
+
+      if (!footer) {
+        setNearFooter(false);
+        return;
+      }
+
+      const footerTop = footer.getBoundingClientRect().top;
+      setNearFooter(footerTop < window.innerHeight - 24);
+    };
+
+    syncFooterProximity();
+    window.addEventListener('scroll', syncFooterProximity, { passive: true });
+    window.addEventListener('resize', syncFooterProximity);
+
+    return () => {
+      window.removeEventListener('scroll', syncFooterProximity);
+      window.removeEventListener('resize', syncFooterProximity);
+    };
+  }, [show]);
+
+  return nearFooter;
+}
+
+function CookieBannerContent({
+  accept,
+  dismiss,
+}: {
+  accept: () => void;
+  dismiss: () => void;
+}) {
+  return (
+    <div className="cookie-inner">
+      <div className="cookie-copy">
+        <span className="cookie-label">Cookies</span>
+        <p className="cookie-text">
+          เราใช้คุกกี้ที่จำเป็นเพื่อให้เว็บไซต์ทำงานเสถียรและวัดผลการใช้งานพื้นฐานได้อย่างถูกต้อง
+          <span className="cookie-text-en"> Essential cookies keep the site stable and help measure basic performance.</span>
+        </p>
+      </div>
+
+      <div className="cookie-actions">
+        <button onClick={dismiss} className="cookie-dismiss" type="button">
+          ภายหลัง
+        </button>
+        <button onClick={accept} className="cookie-accept" type="button">
+          ยอมรับ / Accept
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function BackToTop() {
   const [visible, setVisible] = useState(false);
 
@@ -17,7 +108,7 @@ export function BackToTop() {
 
   return (
     <AnimatePresence>
-      {visible && (
+      {visible ? (
         <motion.button
           className="fab-back-to-top"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -32,52 +123,100 @@ export function BackToTop() {
             <path d="M18 15l-6-6-6 6" />
           </svg>
         </motion.button>
-      )}
+      ) : null}
     </AnimatePresence>
   );
 }
 
-/* ═══════════════════════════════════════════════════
-   COOKIE CONSENT — PDPA Banner
-   ═══════════════════════════════════════════════════ */
 export function CookieConsent() {
   const [show, setShow] = useState(false);
+  const bannerRef = useRef<HTMLDivElement | null>(null);
+  const pathname = usePathname() || '';
+  const isNewsBanner = pathname === '/news';
+  const isGameGuideBanner = pathname === '/game-guide';
+  const isCompactBanner = isNewsBanner || isGameGuideBanner;
+  const nearFooter = useFooterProximity(show);
+  const bannerClassName = [
+    'cookie-banner',
+    isCompactBanner ? 'cookie-banner--compact' : '',
+    isNewsBanner ? 'cookie-banner--news' : '',
+    isGameGuideBanner ? 'cookie-banner--game-guide' : '',
+    nearFooter ? 'cookie-banner--retreat' : '',
+  ].filter(Boolean).join(' ');
 
   useEffect(() => {
-    const accepted = localStorage.getItem('cookie-consent');
-    if (!accepted) {
-      // Small delay to avoid layout shift
-      const timer = setTimeout(() => setShow(true), 1500);
-      return () => clearTimeout(timer);
+    const accepted = localStorage.getItem(COOKIE_CONSENT_KEY);
+    const dismissedAt = Number(localStorage.getItem(COOKIE_DISMISSED_AT_KEY) || '0');
+    const dismissedRecently = dismissedAt > 0 && Date.now() - dismissedAt < COOKIE_DISMISS_WINDOW_MS;
+
+    if (accepted || dismissedRecently || show) return;
+
+    let timer: number | null = null;
+    const startTimer = (delay: number) => {
+      if (timer) return;
+      timer = window.setTimeout(() => setShow(true), delay);
+    };
+
+    if (!isCompactBanner) {
+      startTimer(1800);
+    } else {
+      const scrollThreshold = Math.max(560, Math.round(window.innerHeight * 0.72));
+      const maybeScheduleShow = () => {
+        if (window.scrollY >= scrollThreshold) {
+          startTimer(280);
+        }
+      };
+
+      maybeScheduleShow();
+      window.addEventListener('scroll', maybeScheduleShow, { passive: true });
+
+      return () => {
+        if (timer) window.clearTimeout(timer);
+        window.removeEventListener('scroll', maybeScheduleShow);
+      };
     }
-  }, []);
+
+    return () => {
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [isCompactBanner, show]);
+
+  useEffect(() => {
+    document.body.classList.toggle('has-cookie-banner', show);
+
+    return () => {
+      document.body.classList.remove('has-cookie-banner');
+      document.body.style.removeProperty('--cookie-banner-height');
+    };
+  }, [show]);
+
+  useCookieBannerHeight(show, bannerRef);
 
   const accept = () => {
-    localStorage.setItem('cookie-consent', 'accepted');
+    localStorage.setItem(COOKIE_CONSENT_KEY, 'accepted');
+    localStorage.removeItem(COOKIE_DISMISSED_AT_KEY);
+    setShow(false);
+  };
+
+  const dismiss = () => {
+    localStorage.setItem(COOKIE_DISMISSED_AT_KEY, String(Date.now()));
     setShow(false);
   };
 
   return (
     <AnimatePresence>
-      {show && (
+      {show ? (
         <motion.div
-          className="cookie-banner"
+          ref={bannerRef}
+          className={bannerClassName}
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
-          <div className="cookie-inner">
-            <p className="cookie-text">
-              🍪 เว็บไซต์นี้ใช้คุกกี้เพื่อให้คุณได้รับประสบการณ์การใช้งานที่ดีที่สุด
-              <span className="cookie-text-en"> This website uses cookies for the best experience.</span>
-            </p>
-            <div className="cookie-actions">
-              <button onClick={accept} className="cookie-accept">ยอมรับ / Accept</button>
-            </div>
-          </div>
+          <CookieBannerContent accept={accept} dismiss={dismiss} />
         </motion.div>
-      )}
+      ) : null}
     </AnimatePresence>
   );
 }

@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import path from 'path'
+import { allowPublicRead, isAdmin, isAdminOrEditor } from '@/lib/cms-access'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -19,10 +20,10 @@ export const Media: CollectionConfig = {
     group: 'System',
   },
   access: {
-    read: () => true,
-    create: ({ req: { user } }) => !!user,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
+    read: allowPublicRead,
+    create: isAdminOrEditor,
+    update: isAdminOrEditor,
+    delete: isAdmin,
   },
   fields: [
     {

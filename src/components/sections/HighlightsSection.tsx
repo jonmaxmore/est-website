@@ -1,155 +1,258 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
-  Swords, Map, Castle, Sparkles, Shield, Users,
+  ArrowRight,
+  Castle,
+  Map,
+  Shield,
+  Sparkles,
+  Swords,
+  Users,
   type LucideIcon,
 } from 'lucide-react';
+import Image from 'next/image';
+import CmsLink from '@/components/ui/CmsLink';
+import { isCmsMediaUrl } from '@/lib/cms-media';
 import { useLang } from '@/lib/lang-context';
-import { cn } from '@/lib/utils';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import type { CMSFeature, CMSHighlightsConfig } from '@/types/cms';
 
-/* ─── Lucide icon lookup ─── */
 const LUCIDE_ICONS: Record<string, LucideIcon> = {
-  swords: Swords, map: Map, castle: Castle,
-  sparkles: Sparkles, shield: Shield, users: Users,
+  swords: Swords,
+  map: Map,
+  castle: Castle,
+  sparkles: Sparkles,
+  shield: Shield,
+  users: Users,
 };
+
 const DEFAULT_ICONS = [Swords, Map, Castle, Shield, Sparkles, Users];
 
-/** Render a CMS icon field — supports Lucide icon names and emoji strings */
-function FeatureIcon({ icon, index }: { icon: string; index: number }) {
-  const name = icon.toLowerCase().trim();
-  const LIcon = LUCIDE_ICONS[name];
-  if (LIcon) return <LIcon size={24} className="highlights-icon-svg" />;
-  if (icon) return <span className="highlights-emoji">{icon}</span>;
-  const Default = DEFAULT_ICONS[index % DEFAULT_ICONS.length];
-  return <Default size={24} className="highlights-icon-svg" />;
+type HighlightItem = {
+  key: number;
+  feature: CMSFeature;
+  title: string;
+  desc: string;
+  ctaLabel: string;
+};
+
+type HighlightsCopy = {
+  badgeText: string;
+  titleText: string;
+  introCopy: string;
+  systemLabel: string;
+};
+
+function resolveHighlightPreview(feature: CMSFeature) {
+  return feature.previewImage?.url || feature.iconImage?.url || null;
 }
 
-/* ─── Animation variants ─── */
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.1, delayChildren: 0.15 },
-  },
-};
+function FeatureIcon({
+  feature,
+  index,
+  size = 24,
+}: {
+  feature: CMSFeature;
+  index: number;
+  size?: number;
+}) {
+  if (feature.iconImage?.url) {
+    return (
+      <Image
+        src={feature.iconImage.url}
+        alt=""
+        width={size}
+        height={size}
+        className="home-highlightRow__iconImage"
+        unoptimized={isCmsMediaUrl(feature.iconImage.url)}
+      />
+    );
+  }
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.96 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-  },
-};
+  const normalized = feature.icon.toLowerCase().trim();
+  const Icon = LUCIDE_ICONS[normalized] || DEFAULT_ICONS[index % DEFAULT_ICONS.length];
 
-const headerVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-  },
-};
+  return <Icon size={size} className="home-highlightRow__icon" />;
+}
 
-/* ─── Props ─── */
+function buildHighlightItems(
+  features: CMSFeature[],
+  t: (th: string, en: string) => string,
+): HighlightItem[] {
+  return features.slice(0, 6).map((feature, index) => ({
+    key: index,
+    feature,
+    title: t(feature.titleTh, feature.titleEn || feature.titleTh),
+    desc: t(feature.descriptionTh, feature.descriptionEn || feature.descriptionTh),
+    ctaLabel: feature.ctaLabelEn || feature.ctaLabelTh
+      ? t(feature.ctaLabelTh || 'ดูรายละเอียด', feature.ctaLabelEn || 'Learn more')
+      : t('ดูรายละเอียด', 'Learn more'),
+  }));
+}
+
+function buildHighlightsCopy(
+  sectionConfig: CMSHighlightsConfig | undefined,
+  t: (th: string, en: string) => string,
+): HighlightsCopy {
+  return {
+    badgeText: sectionConfig
+      ? t(sectionConfig.badgeTh, sectionConfig.badgeEn)
+      : t('ไฮไลท์เกม', 'Game highlights'),
+    titleText: sectionConfig
+      ? t(sectionConfig.titleTh, sectionConfig.titleEn)
+      : t('ระบบที่ทำให้โลกนี้น่าเล่นต่อ', 'Systems that keep the world alive'),
+    introCopy: sectionConfig?.introEn || sectionConfig?.introTh
+      ? t(sectionConfig.introTh || '', sectionConfig.introEn || '')
+      : '',
+    systemLabel: t('ระบบหลัก', 'Core system'),
+  };
+}
+
+function HighlightSpotlight({
+  activeHighlight,
+  activeIdx,
+  systemLabel,
+}: {
+  activeHighlight: HighlightItem;
+  activeIdx: number;
+  systemLabel: string;
+}) {
+  return (
+    <AnimatePresence mode="wait">
+      <motion.article
+        key={activeHighlight.key}
+        className="home-highlights__spotlight"
+        initial={{ opacity: 0, y: 26 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -26 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div className="home-highlights__spotlightTopline">
+          <span className="home-highlights__spotlightIndex">
+            {String(activeIdx + 1).padStart(2, '0')}
+          </span>
+          <span className="home-highlights__spotlightLabel">{systemLabel}</span>
+        </div>
+
+        {resolveHighlightPreview(activeHighlight.feature) ? (
+          <div className="home-highlights__spotlightMedia">
+            <Image
+              src={resolveHighlightPreview(activeHighlight.feature) as string}
+              alt={activeHighlight.title}
+              fill
+              sizes="(max-width: 960px) 100vw, 32rem"
+              className="object-cover"
+              unoptimized={isCmsMediaUrl(resolveHighlightPreview(activeHighlight.feature) as string)}
+            />
+          </div>
+        ) : null}
+
+        <div className="home-highlights__spotlightIcon">
+          <FeatureIcon feature={activeHighlight.feature} index={activeIdx} size={34} />
+        </div>
+
+        <h3 className="home-highlights__spotlightTitle">{activeHighlight.title}</h3>
+        <p className="home-highlights__spotlightDesc">{activeHighlight.desc}</p>
+
+        {activeHighlight.feature.href ? (
+          <CmsLink
+            href={activeHighlight.feature.href}
+            className="home-button home-button--ghost home-button--inline"
+          >
+            {activeHighlight.ctaLabel}
+            <ArrowRight size={16} />
+          </CmsLink>
+        ) : null}
+      </motion.article>
+    </AnimatePresence>
+  );
+}
+
+function HighlightsRail({
+  highlights,
+  activeIdx,
+  onSelect,
+}: {
+  highlights: HighlightItem[];
+  activeIdx: number;
+  onSelect: (index: number) => void;
+}) {
+  return (
+    <div className="home-highlights__rail">
+      {highlights.map((item, index) => (
+        <button
+          key={item.key}
+          type="button"
+          className={`home-highlights__item ${index === activeIdx ? 'is-active' : ''}`}
+          onClick={() => onSelect(index)}
+          onMouseEnter={() => onSelect(index)}
+          onFocus={() => onSelect(index)}
+        >
+          <span className="home-highlights__itemIndex">{String(index + 1).padStart(2, '0')}</span>
+          <span className="home-highlights__itemIcon">
+            <FeatureIcon feature={item.feature} index={index} size={22} />
+          </span>
+          <span className="home-highlights__itemCopy">
+            <strong>{item.title}</strong>
+            <span>{item.desc}</span>
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 interface HighlightsSectionProps {
   features: CMSFeature[];
   sectionConfig?: CMSHighlightsConfig;
 }
 
-// eslint-disable-next-line max-lines-per-function -- Section component with grid template
-export default function HighlightsSection({ features, sectionConfig }: HighlightsSectionProps) {
+export default function HighlightsSection({
+  features,
+  sectionConfig,
+}: HighlightsSectionProps) {
   const { t } = useLang();
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
+  const [activeIdx, setActiveIdx] = useState(0);
 
-  const highlights = features.slice(0, 6).map((feat, i) => ({
-    key: i,
-    icon: feat.icon,
-    iconImage: feat.iconImage?.url || null,
-    title: t(feat.titleTh, feat.titleEn || feat.titleTh),
-    desc: t(feat.descriptionTh, feat.descriptionEn || feat.descriptionTh),
-  }));
-
+  const highlights = buildHighlightItems(features, t);
   if (highlights.length === 0) return null;
 
-  const badgeText = sectionConfig
-    ? t(sectionConfig.badgeTh, sectionConfig.badgeEn)
-    : 'GAME FEATURES';
-  const titleText = sectionConfig
-    ? t(sectionConfig.titleTh, sectionConfig.titleEn)
-    : t('ไฮไลท์เกม', 'Game Highlights');
+  const copy = buildHighlightsCopy(sectionConfig, t);
+  const activeHighlight = highlights[activeIdx] || highlights[0];
 
   return (
-    <section id="features" ref={sectionRef}>
-      <div className="container-custom">
-        {/* Section Header */}
-        <motion.div
-          className="highlights-header"
-          variants={headerVariants}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-        >
-          <Badge
-            className="highlights-badge"
-          >
-            {badgeText}
-          </Badge>
-          <h2 className="section-title-gold">{titleText}</h2>
-          <div className="title-ornament"><span /><span /><span /></div>
-        </motion.div>
+    <section
+      id="features"
+      className="home-highlights"
+      style={sectionConfig?.bgImage?.url
+        ? {
+          backgroundImage: `linear-gradient(180deg, rgba(2, 7, 16, 0.52), rgba(2, 7, 16, 0.82)), url(${sectionConfig.bgImage.url})`,
+        }
+        : undefined}
+    >
+      <div className="home-highlights__veil" />
 
-        {/* Feature Cards Grid */}
-        <motion.div
-          className="highlights-grid-v2"
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-        >
-          {highlights.map((item) => (
-            <motion.div key={item.key} variants={cardVariants}>
-              <Card
-                className={cn(
-                  'highlights-card',
-                  item.iconImage && 'highlights-card--has-bg'
-                )}
-              >
-                {/* Background image layer */}
-                {item.iconImage && (
-                  <>
-                    <div
-                      className="highlights-card__bg"
-                      style={{ backgroundImage: `url(${item.iconImage})` }}
-                    />
-                    <div className="highlights-card__overlay" />
-                  </>
-                )}
+      <div className="home-shell home-highlights__shell">
+        <div className="home-highlights__lead">
+          <div className="home-highlights__intro">
+            <span className="home-kicker">{copy.badgeText}</span>
+            <h2 className="home-section-title">{copy.titleText}</h2>
+            {copy.introCopy ? <p className="home-section-copy">{copy.introCopy}</p> : null}
+          </div>
 
-                <CardHeader className="highlights-card__header">
-                  {!item.iconImage && (
-                    <div className="highlights-card__icon">
-                      <FeatureIcon icon={item.icon} index={item.key} />
-                    </div>
-                  )}
-                  <CardTitle className="highlights-card__title">
-                    {item.title}
-                  </CardTitle>
-                </CardHeader>
+          <HighlightSpotlight
+            activeHighlight={activeHighlight}
+            activeIdx={activeIdx}
+            systemLabel={copy.systemLabel}
+          />
+        </div>
 
-                <CardContent className="highlights-card__content">
-                  <CardDescription className="highlights-card__desc">
-                    {item.desc}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
+        <HighlightsRail
+          highlights={highlights}
+          activeIdx={activeIdx}
+          onSelect={setActiveIdx}
+        />
       </div>
     </section>
   );

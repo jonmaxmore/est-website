@@ -48,9 +48,9 @@ export async function POST(request: NextRequest) {
     ]
     let cCount = 0
     for (const c of charsData) {
-      try { await payload.create({ collection: 'characters', data: c as Record<string, unknown> }); cCount++ } catch { /* exists */ }
+      try { await payload.create({ collection: 'weapons', data: c as Record<string, unknown> }); cCount++ } catch { /* exists */ }
     }
-    results.push(`✅ ${cCount} characters seeded`)
+    results.push(`✅ ${cCount} weapons seeded`)
 
     // 4. Seed News
     const newsData = [
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     // 5. Seed Store Buttons
     const storeData = [
       { platform: 'ios' as const, label: 'App Store', sublabel: 'Pre-order on the', url: '#', sortOrder: 1, visible: true },
-      { platform: 'android' as const, label: 'Google Play', sublabel: 'PRE-REGISTER ON', url: '#', sortOrder: 2, visible: true },
+      { platform: 'android' as const, label: 'Google Play', sublabel: 'Register on', url: '#', sortOrder: 2, visible: true },
       { platform: 'pc' as const, label: 'Windows', sublabel: 'Coming soon', url: '#', sortOrder: 3, visible: true },
     ]
     let sCount = 0
@@ -81,18 +81,18 @@ export async function POST(request: NextRequest) {
       await payload.updateGlobal({
         slug: 'homepage',
         data: {
-          taglineEn: 'Adventure together, conquer the tower',
+          taglineEn: 'Adventure together, climb higher',
           taglineTh: 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย',
-          ctaTextEn: 'Pre-Register Now',
+          ctaTextEn: 'Join the pre-registration',
           ctaTextTh: 'ลงทะเบียนล่วงหน้าเลย',
           ctaLink: '/event',
           features: [
-            { icon: '⚔️', titleEn: 'Combat System', titleTh: 'ระบบต่อสู้', descriptionEn: 'Exciting 4-class dungeon combat', descriptionTh: 'ลุยดันเจี้ยนสุดมัน 4 คลาส' },
-            { icon: '🗺️', titleEn: 'Explore the World', titleTh: 'สำรวจโลกกว้าง', descriptionEn: 'Explore the vast lands of Arcatéa', descriptionTh: 'ผจญภัยในดินแดน Arcatéa อันกว้างใหญ่ไพศาล' },
-            { icon: '🏰', titleEn: 'Conquer the Tower', titleTh: 'พิชิตหอคอย', descriptionEn: 'Climb The Boundless Spire', descriptionTh: 'ปีนหอคอยนิรันดร์ The Boundless Spire ท้าทายขั้นเซียนสุดโหด' },
-            { icon: '✨', titleEn: 'Upgrade Characters', titleTh: 'อัพเกรดตัวละคร', descriptionEn: 'Develop skills, gear, and appearances', descriptionTh: 'พัฒนาทักษะ อุปกรณ์ และรูปลักษณ์ให้แข็งแกร่ง' },
-            { icon: '🏟️', titleEn: 'PvP Arena', titleTh: 'PvP Arena', descriptionEn: 'Challenge other players in real-time', descriptionTh: 'ต่อสู้กับผู้เล่นคนอื่นในสนามประลองแบบเรียลไทม์' },
-            { icon: '🤝', titleEn: 'Guilds & Friends', titleTh: 'กิลด์ & เพื่อน', descriptionEn: 'Join guilds and conquer bosses', descriptionTh: 'สร้างกิลด์ ร่วมมือกับเพื่อนเพื่อพิชิตบอสสุดโหด' },
+            { icon: '⚔️', titleEn: 'Combat System', titleTh: 'ระบบต่อสู้', descriptionEn: 'A four-class combat flow that stays quick to read', descriptionTh: 'ระบบต่อสู้ 4 คลาสที่ดูเข้าใจง่าย แต่ยังมีจังหวะให้เล่นสนุก' },
+            { icon: '🗺️', titleEn: 'Explore the World', titleTh: 'สำรวจโลกกว้าง', descriptionEn: 'Travel through Arcatea with routes that stay easy to follow', descriptionTh: 'ออกสำรวจ Arcatea ผ่านเส้นทางที่ตามได้ง่ายและไม่พาหลงทิศ' },
+            { icon: '🏰', titleEn: 'Conquer the Tower', titleTh: 'พิชิตหอคอย', descriptionEn: 'Climb The Boundless Spire floor by floor as the challenge tightens', descriptionTh: 'ไต่ The Boundless Spire ไปทีละชั้น ยิ่งสูงยิ่งเข้มข้น' },
+            { icon: '✨', titleEn: 'Upgrade Characters', titleTh: 'อัพเกรดตัวละคร', descriptionEn: 'Improve skills, gear, and appearance with a clearer upgrade path', descriptionTh: 'พัฒนาสกิล อุปกรณ์ และรูปลักษณ์ในเส้นทางอัปเกรดที่ดูง่ายขึ้น' },
+            { icon: '🏟️', titleEn: 'PvP Arena', titleTh: 'PvP Arena', descriptionEn: 'Step into real-time arena matches against other players', descriptionTh: 'ลงสนาม PvP แบบเรียลไทม์กับผู้เล่นคนอื่น' },
+            { icon: '🤝', titleEn: 'Guilds & Friends', titleTh: 'กิลด์ & เพื่อน', descriptionEn: 'Team up with friends and guildmates for bosses and shared goals', descriptionTh: 'ร่วมทีมกับเพื่อนและสมาชิกกิลด์เพื่อจัดการบอสและเป้าหมายร่วมกัน' },
           ],
           // Story Page
           storyPageBadgeEn: 'LORE',
@@ -112,14 +112,14 @@ export async function POST(request: NextRequest) {
           gameGuideBadgeTh: 'แนะนำเกม',
           gameGuideTitleEn: 'Game Guide',
           gameGuideTitleTh: 'แนะนำเกม',
-          gameGuideSubtitleEn: 'Experience the new era of Eternal Tower Saga — Switch your weapon, shift the battlefield',
+          gameGuideSubtitleEn: 'A clearer guide to Eternal Tower Saga, from weapon choice to the systems that shape each fight',
           gameGuideSubtitleTh: 'สัมผัสประสบการณ์ใหม่ใน Eternal Tower Saga — อาวุธเปลี่ยน เกมเปลี่ยน',
           gameGuideFeatures: [
-            { icon: 'swords', titleEn: 'Combat System', titleTh: 'ระบบต่อสู้', descriptionEn: 'Exciting 4-class dungeon combat with unique weapon switching mechanics', descriptionTh: 'ลุยดันเจี้ยนสุดมัน 4 คลาส พร้อมระบบเปลี่ยนอาวุธสุดเจ๋ง' },
-            { icon: 'map', titleEn: 'Explore Arcatéa', titleTh: 'สำรวจโลก Arcatéa', descriptionEn: 'Explore the vast lands of Arcatéa — discover floating platforms connected in layers', descriptionTh: 'ผจญภัยในดินแดน Arcatéa อันกว้างใหญ่ไพศาล สำรวจแท่นลอยฟ้าที่เชื่อมกันเป็นชั้นๆ' },
-            { icon: 'castle', titleEn: 'The Boundless Spire', titleTh: 'หอคอยนิรันดร์', descriptionEn: 'Climb The Boundless Spire — conquer deadly dungeons on each floor', descriptionTh: 'ปีนหอคอยนิรันดร์ The Boundless Spire — ท้าทายดันเจี้ยนสุดโหดในแต่ละชั้น' },
-            { icon: 'shield', titleEn: 'PvP Arena', titleTh: 'PvP Arena', descriptionEn: 'Challenge other players in real-time arena battles — prove your strength', descriptionTh: 'ต่อสู้กับผู้เล่นคนอื่นในสนามประลองแบบเรียลไทม์ พิสูจน์ความแกร่ง' },
-            { icon: 'sparkles', titleEn: 'Character Upgrades', titleTh: 'อัพเกรดตัวละคร', descriptionEn: 'Develop skills, gear, and appearances — switch weapons, shift the battlefield', descriptionTh: 'พัฒนาทักษะ อุปกรณ์ และรูปลักษณ์ให้แข็งแกร่ง เปลี่ยนอาวุธเปลี่ยนเกม' },
+            { icon: 'swords', titleEn: 'Combat System', titleTh: 'ระบบต่อสู้', descriptionEn: 'A four-class combat loop with weapon choices that noticeably change your role', descriptionTh: 'ระบบต่อสู้ 4 คลาสที่เปลี่ยนอารมณ์การเล่นได้ชัดตามอาวุธที่เลือก' },
+            { icon: 'map', titleEn: 'Explore Arcatéa', titleTh: 'สำรวจโลก Arcatéa', descriptionEn: 'Move through Arcatea in a route structure that stays readable even as the world opens up', descriptionTh: 'ออกสำรวจ Arcatea ในโครงเส้นทางที่ตามได้ง่าย แม้โลกจะค่อย ๆ เปิดกว้างขึ้น' },
+            { icon: 'castle', titleEn: 'The Boundless Spire', titleTh: 'หอคอยนิรันดร์', descriptionEn: 'Climb The Boundless Spire and face tougher floors as the tower pushes back harder', descriptionTh: 'ไต่ The Boundless Spire แล้วรับมือกับชั้นที่เข้มข้นขึ้นเรื่อย ๆ' },
+            { icon: 'shield', titleEn: 'PvP Arena', titleTh: 'PvP Arena', descriptionEn: 'Face other players in real-time arena matches and test how your build holds up', descriptionTh: 'เจอกับผู้เล่นคนอื่นในสนามประลองแบบเรียลไทม์ และดูว่าบิลด์ของคุณรับมือได้แค่ไหน' },
+            { icon: 'sparkles', titleEn: 'Character Upgrades', titleTh: 'อัพเกรดตัวละคร', descriptionEn: 'Build up skills, gear, and appearance through an upgrade path that is easier to read', descriptionTh: 'พัฒนาสกิล อุปกรณ์ และรูปลักษณ์ผ่านเส้นทางอัปเกรดที่ดูง่ายขึ้น' },
             { icon: 'users', titleEn: 'Guilds & Friends', titleTh: 'กิลด์ & เพื่อน', descriptionEn: 'Build guilds and team up with friends to conquer deadly bosses in special dungeons', descriptionTh: 'สร้างกิลด์ ร่วมมือกับเพื่อนเพื่อพิชิตบอสสุดโหดในดันเจี้ยนพิเศษ' },
           ],
         },
@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
         slug: 'site-settings',
         data: {
           siteName: 'Eternal Tower Saga',
-          siteDescription: 'Eternal Tower Saga — เกมมือถือ RPG ผจญภัยพร้อมสหายร่วมรบ',
+          siteDescription: 'Eternal Tower Saga — เว็บไซต์ทางการสำหรับข่าวสาร แนะนำเกม และข้อมูลการลงทะเบียนล่วงหน้า',
           socialLinks: { facebook: 'https://facebook.com/EternalTowerSaga', tiktok: 'https://tiktok.com/@EternalTowerSaga', youtube: 'https://youtube.com/@EternalTowerSaga', discord: 'https://discord.gg/eternaltowersaga' },
           footer: { copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.', termsUrl: '/terms', privacyUrl: '/privacy', supportUrl: '#' },
         },
@@ -145,9 +145,9 @@ export async function POST(request: NextRequest) {
         slug: 'event-config',
         data: {
           enabled: true,
-          titleEn: 'Pre-Register Now',
+          titleEn: 'Join the pre-registration',
           titleTh: 'ลงทะเบียนล่วงหน้า',
-          descriptionEn: 'Register now to receive exclusive rewards at launch!',
+          descriptionEn: 'Register early to receive launch rewards and follow event milestones in one place.',
           descriptionTh: 'ลงทะเบียนเลยเพื่อรับรางวัลสุดพิเศษเมื่อเปิดตัว!',
           countdownTarget: '2026-04-02T23:59:59.000Z',
           registrationOpen: true,

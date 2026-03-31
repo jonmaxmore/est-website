@@ -1,0 +1,46 @@
+[POST] http://178.128.127.161/api/track => [FAILED] net::ERR_ABORTED
+[POST] http://178.128.127.161/api/track => [FAILED] net::ERR_ABORTED
+[POST] https://www.google-analytics.com/g/collect?v=2&tid=G-MDFLS7BC8J&gtm=45je63q0h2v9243446904za200zd9243446904&_p=1774858343005&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=584540165.1774858107&ul=en-us&sr=1280x720&are=1&frm=0&pscdl=noapi&_eu=AAAAAAQ&_s=2&tag_exp=0~115938466~115938469~116133314~117484252&sid=1774858106&sct=1&seg=1&dl=http%3A%2F%2F178.128.127.161%2Fevent&dt=Pre-Register%20%7C%20Eternal%20Tower%20Saga&en=user_engagement&_et=27863&tfd=28040 => [FAILED] net::ERR_ABORTED
+[GET] http://178.128.127.161/api/media/file/BG%20PRE-1.mp4 => [206] Partial Content
+[POST] http://178.128.127.161/api/track => [FAILED] net::ERR_ABORTED
+[POST] https://www.google-analytics.com/g/collect?v=2&tid=G-MDFLS7BC8J&gtm=45je63q0h2v9243446904za200zd9243446904&_p=1774858343005&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=584540165.1774858107&ul=en-us&sr=1280x720&are=1&frm=0&pscdl=noapi&_eu=AAAAAAQ&_s=2&tag_exp=0~115938466~115938469~116133314~117484252&sid=1774858106&sct=1&seg=1&dl=http%3A%2F%2F178.128.127.161%2Fevent&dt=Pre-Register%20%7C%20Eternal%20Tower%20Saga&en=user_engagement&_et=27863&tfd=28040 => [FAILED] net::ERR_ABORTED
+[POST] http://178.128.127.161/api/track => [FAILED] net::ERR_ABORTED
+[GET] http://178.128.127.161/api/settings => [200] OK
+[GET] http://178.128.127.161/api/referral-stats?leaderboard=true => [200] OK
+[GET] http://178.128.127.161/api/stats => [200] OK
+[GET] http://178.128.127.161/api/settings => [200] OK
+[GET] http://178.128.127.161/news?_rsc=17tyz => [200] OK
+[GET] http://178.128.127.161/game-guide?_rsc=17tyz => [200] OK
+[GET] http://178.128.127.161/character?_rsc=17tyz => [200] OK
+[GET] http://178.128.127.161/?_rsc=17tyz => [200] OK
+[POST] https://www.google-analytics.com/g/collect?v=2&tid=G-MDFLS7BC8J&gtm=45je63q0h2v9243446904za200zd9243446904&_p=1774858370989&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=584540165.1774858107&ul=en-us&sr=1280x720&are=1&frm=0&pscdl=noapi&_prs=gs&_eu=AAAAAAQ&_s=1&tag_exp=0~115616985~115938466~115938469~116133312~117266402~117484252&sid=1774858106&sct=1&seg=1&dl=http%3A%2F%2F178.128.127.161%2Fevent&dt=Pre-Register%20%7C%20Eternal%20Tower%20Saga&en=page_view&_c=1&_ee=1&tfd=269 => [204] 
+[GET] http://178.128.127.161/event?_rsc=m3tnt => [200] OK
+[GET] http://178.128.127.161/event?_rsc=47by8 => [200] OK
+[GET] http://178.128.127.161/event?_rsc=1rudl => [200] OK
+[GET] http://178.128.127.161/event?_rsc=1wzzo => [200] OK
+[GET] http://178.128.127.161/event?_rsc=1vmbx => [200] OK
+[GET] http://178.128.127.161/news?_rsc=m3tnt => [200] OK
+[GET] http://178.128.127.161/api/media/file/BG%20PRE-1.mp4 => [206] Partial Content
+[POST] https://www.google-analytics.com/g/collect?v=2&tid=G-MDFLS7BC8J&gtm=45je63q0h2v9243446904za200zd9243446904&_p=1774858370989&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=584540165.1774858107&ul=en-us&sr=1280x720&are=1&frm=0&pscdl=noapi&_prs=gs&_eu=AAAAAAQ&_s=1&tag_exp=0~115616985~115938466~115938469~116133312~117266402~117484252&sid=1774858106&sct=1&seg=1&dl=http%3A%2F%2F178.128.127.161%2Fevent&dt=Pre-Register%20%7C%20Eternal%20Tower%20Saga&en=page_view&_c=1&_ee=1&tfd=269 => [204] 
+[GET] http://178.128.127.161/?_rsc=17tyz => [200] OK
+[GET] http://178.128.127.161/news?_rsc=h49a0 => [200] OK
+[GET] http://178.128.127.161/news?_rsc=1qvuv => [200] OK
+[GET] http://178.128.127.161/game-guide?_rsc=m3tnt => [200] OK
+[GET] http://178.128.127.161/game-guide?_rsc=qb2mb => [200] OK
+[GET] http://178.128.127.161/event?_rsc=1vmbx
+[GET] http://178.128.127.161/news?_rsc=m3tnt
+[GET] http://178.128.127.161/game-guide?_rsc=z46uu => [200] OK
+[GET] http://178.128.127.161/character?_rsc=m3tnt => [200] OK
+[GET] http://178.128.127.161/character?_rsc=1ulg7 => [200] OK
+[GET] http://178.128.127.161/character?_rsc=1a0xb => [200] OK
+[GET] http://178.128.127.161/news?_rsc=h49a0
+[GET] http://178.128.127.161/news?_rsc=1qvuv
+[GET] http://178.128.127.161/game-guide?_rsc=m3tnt
+[GET] http://178.128.127.161/game-guide?_rsc=qb2mb
+[GET] http://178.128.127.161/api/media/file/BG%20PRE-1.mp4 => [206] Partial Content
+[GET] http://178.128.127.161/?_rsc=tjgxe => [200] OK
+[GET] http://178.128.127.161/game-guide?_rsc=z46uu
+[GET] http://178.128.127.161/character?_rsc=m3tnt
+[GET] http://178.128.127.161/character?_rsc=1ulg7
+[GET] http://178.128.127.161/character?_rsc=1a0xb
+[GET] http://178.128.127.161/?_rsc=tjgxe => [200] OK

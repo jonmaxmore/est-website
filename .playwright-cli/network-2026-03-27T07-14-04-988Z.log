@@ -1,0 +1,24 @@
+[GET] http://178.128.127.161/api/settings => [200] OK
+[GET] http://178.128.127.161/event?_rsc=1uw93 => [200] OK
+[GET] http://178.128.127.161/news?_rsc=1uw93 => [200] OK
+[GET] http://178.128.127.161/character?_rsc=1uw93 => [200] OK
+[GET] http://178.128.127.161/?_rsc=1uw93 => [200] OK
+[POST] https://www.google-analytics.com/g/collect?v=2&tid=G-MDFLS7BC8J&gtm=45je63p1v9243446904za200zd9243446904&_p=1774595619132&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=527428232.1774595619&ul=en-us&sr=1280x720&are=1&frm=0&pscdl=noapi&_prs=gs&_s=1&tag_exp=0~115938466~115938469~117384405~117484252&sid=1774595619&sct=1&seg=0&dl=http%3A%2F%2F178.128.127.161%2Fgame-guide&dt=Eternal%20Tower%20Saga%20%7C%20Mobile%20RPG&en=page_view&_fv=2&_nsi=1&_ss=2&_c=1&_ee=1&tfd=619 => [204] 
+[POST] https://www.google-analytics.com/g/collect?v=2&tid=G-MDFLS7BC8J&gtm=45je63p1v9243446904za200zd9243446904&_p=1774595619132&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=527428232.1774595619&ul=en-us&sr=1280x720&are=1&frm=0&pscdl=noapi&_prs=gs&_s=1&tag_exp=0~115938466~115938469~117384405~117484252&sid=1774595619&sct=1&seg=0&dl=http%3A%2F%2F178.128.127.161%2Fgame-guide&dt=Eternal%20Tower%20Saga%20%7C%20Mobile%20RPG&en=page_view&_fv=2&_nsi=1&_ss=2&_c=1&_ee=1&tfd=619 => [204] 
+[GET] http://178.128.127.161/?_rsc=1uw93 => [200] OK
+[GET] http://178.128.127.161/game-guide?_rsc=z7fdt => [200] OK
+[GET] http://178.128.127.161/game-guide?_rsc=135qv => [200] OK
+[GET] http://178.128.127.161/event?_rsc=z7fdt => [200] OK
+[GET] http://178.128.127.161/event?_rsc=1w7n7 => [200] OK
+[GET] http://178.128.127.161/event?_rsc=1qylw => [200] OK
+[GET] http://178.128.127.161/event?_rsc=i2jh5 => [200] OK
+[GET] http://178.128.127.161/news?_rsc=z7fdt => [200] OK
+[GET] http://178.128.127.161/news?_rsc=10onn => [200] OK
+[GET] http://178.128.127.161/news?_rsc=hd2xp => [200] OK
+[GET] http://178.128.127.161/game-guide?_rsc=1uu9t => [200] OK
+[GET] http://178.128.127.161/game-guide?_rsc=1btpl => [200] OK
+[GET] http://178.128.127.161/character?_rsc=z7fdt => [200] OK
+[GET] http://178.128.127.161/character?_rsc=cjbpb => [200] OK
+[GET] http://178.128.127.161/character?_rsc=qnz1h => [200] OK
+[GET] http://178.128.127.161/?_rsc=wxpou => [200] OK
+[GET] http://178.128.127.161/?_rsc=wxpou => [200] OK

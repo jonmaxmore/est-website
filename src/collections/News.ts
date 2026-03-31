@@ -12,11 +12,10 @@ import {
   UnorderedListFeature,
   UploadFeature,
 } from '@payloadcms/richtext-lexical'
+import { allowPublicRead, isAdmin, isAdminOrEditor } from '@/lib/cms-access'
+import { evaluateNewsHealth } from '@/lib/content-health'
+import { sanitizeNewsSlug, summarizeNewsField } from '@/lib/news-content'
 
-/**
- * Shared Lexical editor config for news content fields.
- * Full-featured WordPress-like editor with fixed toolbar.
- */
 const newsEditor = lexicalEditor({
   features: ({ defaultFeatures }) => [
     ...defaultFeatures,
@@ -52,14 +51,69 @@ export const News: CollectionConfig = {
     group: 'Content',
     defaultColumns: ['titleEn', 'category', 'publishedAt', 'status'],
   },
+  hooks: {
+    beforeValidate: [
+      ({ data, originalDoc }) => {
+        if (!data) return data
+
+        const slugSource = typeof data.slug === 'string'
+          ? data.slug
+          : typeof data.titleEn === 'string'
+            ? data.titleEn
+            : typeof data.titleTh === 'string'
+              ? data.titleTh
+              : typeof originalDoc?.slug === 'string'
+                ? originalDoc.slug
+                : typeof originalDoc?.titleEn === 'string'
+                  ? originalDoc.titleEn
+                  : typeof originalDoc?.titleTh === 'string'
+                    ? originalDoc.titleTh
+                    : ''
+
+        const nextSlug = sanitizeNewsSlug(slugSource)
+        const nextData = nextSlug
+          ? {
+              ...data,
+              slug: nextSlug,
+            }
+          : data
+
+        return {
+          ...nextData,
+          excerptEn: summarizeNewsField(nextData.excerptEn, nextData.contentEn, 180) || nextData.excerptEn,
+          excerptTh: summarizeNewsField(nextData.excerptTh, nextData.contentTh, 180) || nextData.excerptTh,
+        }
+      },
+    ],
+    beforeChange: [
+      ({ data, originalDoc }) => {
+        if (!data) return data
+
+        const candidate = {
+          ...(originalDoc || {}),
+          ...data,
+        }
+
+        if (candidate.status !== 'published') {
+          return data
+        }
+
+        const blockingIssues = evaluateNewsHealth(candidate).filter((issue) => issue.severity === 'error')
+        if (blockingIssues.length) {
+          throw new Error(`Cannot publish article: ${blockingIssues.map((issue) => issue.message).join(' ')}`)
+        }
+
+        return data
+      },
+    ],
+  },
   access: {
-    read: () => true,
-    create: ({ req: { user } }) => !!user,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
+    read: allowPublicRead,
+    create: isAdminOrEditor,
+    update: isAdminOrEditor,
+    delete: isAdmin,
   },
   fields: [
-    // ── Sidebar: Publish Settings ──────────────────────
     {
       type: 'row',
       fields: [
@@ -69,8 +123,8 @@ export const News: CollectionConfig = {
           defaultValue: 'draft',
           label: 'Status',
           options: [
-            { label: '📝 Draft', value: 'draft' },
-            { label: '✅ Published', value: 'published' },
+            { label: 'Draft', value: 'draft' },
+            { label: 'Published', value: 'published' },
           ],
           admin: { width: '33%' },
         },
@@ -80,11 +134,11 @@ export const News: CollectionConfig = {
           required: true,
           label: 'Category',
           options: [
-            { label: '🎉 Event', value: 'event' },
-            { label: '🔄 Update', value: 'update' },
-            { label: '📺 Media', value: 'media' },
-            { label: '🔧 Maintenance', value: 'maintenance' },
-            { label: '📢 Announcement', value: 'announcement' },
+            { label: 'Event', value: 'event' },
+            { label: 'Update', value: 'update' },
+            { label: 'Media', value: 'media' },
+            { label: 'Maintenance', value: 'maintenance' },
+            { label: 'Announcement', value: 'announcement' },
           ],
           admin: { width: '33%' },
         },
@@ -99,8 +153,6 @@ export const News: CollectionConfig = {
         },
       ],
     },
-
-    // ── Titles ──────────────────────────────────────────
     {
       type: 'row',
       fields: [
@@ -120,8 +172,6 @@ export const News: CollectionConfig = {
         },
       ],
     },
-
-    // ── Metadata row ────────────────────────────────────
     {
       type: 'row',
       fields: [
@@ -155,13 +205,79 @@ export const News: CollectionConfig = {
         },
       ],
     },
-
-    // ── Content Tabs (Full Width) ───────────────────────
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'excerptEn',
+          type: 'textarea',
+          label: 'Summary (English)',
+          admin: {
+            width: '50%',
+            description: 'Used on cards and listing pages. Auto-generated from content when left blank.',
+          },
+        },
+        {
+          name: 'excerptTh',
+          type: 'textarea',
+          label: 'Summary (Thai)',
+          admin: {
+            width: '50%',
+            description: 'Used on cards and listing pages. Auto-generated from content when left blank.',
+          },
+        },
+      ],
+    },
+    {
+      type: 'collapsible',
+      label: 'Editorial Controls',
+      admin: { initCollapsed: true },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'featureOnHome',
+              type: 'checkbox',
+              label: 'Feature on Home',
+              defaultValue: false,
+              admin: { width: '20%' },
+            },
+            {
+              name: 'homePriority',
+              type: 'number',
+              label: 'Home Priority',
+              defaultValue: 0,
+              admin: {
+                width: '20%',
+                description: 'Lower number appears earlier when featured on home.',
+              },
+            },
+            {
+              name: 'openInNewTab',
+              type: 'checkbox',
+              label: 'Open in New Tab',
+              defaultValue: false,
+              admin: { width: '20%' },
+            },
+            {
+              name: 'externalUrl',
+              type: 'text',
+              label: 'External Destination URL',
+              admin: {
+                width: '40%',
+                description: 'Optional: cards can link to an external news source instead of the internal detail page.',
+              },
+            },
+          ],
+        },
+      ],
+    },
     {
       type: 'tabs',
       tabs: [
         {
-          label: '🇬🇧 Content (English)',
+          label: 'Content (English)',
           fields: [
             {
               name: 'contentEn',
@@ -172,7 +288,7 @@ export const News: CollectionConfig = {
           ],
         },
         {
-          label: '🇹🇭 Content (Thai)',
+          label: 'Content (Thai)',
           fields: [
             {
               name: 'contentTh',

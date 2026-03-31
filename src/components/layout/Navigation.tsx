@@ -1,245 +1,401 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
+import { useEffect, useMemo, useState, type MouseEvent } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import CmsLink from '@/components/ui/CmsLink';
+import { SOCIAL_SVGS } from '@/components/ui/SocialIcons';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { useLang } from '@/lib/lang-context';
+import { DEFAULT_NAVIGATION_LINKS, DEFAULT_REGISTRATION_URL } from '@/lib/site-settings-defaults';
+import type { CMSNavLink } from '@/types/cms';
 
-/* ═══════════════════════════════════════════════
-   Navigation — Section-aware sticky nav
-   On homepage: scrolls to sections + highlights active section
-   On other pages: links normally
-   ═══════════════════════════════════════════════ */
+interface NavigationProps {
+  links?: CMSNavLink[];
+  registrationUrl?: string;
+  logoUrl?: string | null;
+}
 
-/** Section definitions for homepage scroll navigation */
-const SECTIONS = [
-  { id: 'hero', labelTh: 'หน้าหลัก', labelEn: 'Home', href: '/' },
-  { id: 'weapons', labelTh: 'อาวุธ', labelEn: 'Weapons', href: '/character' },
-  { id: 'features', labelTh: 'ไฮไลท์', labelEn: 'Highlights', href: '/game-guide' },
-  { id: 'news', labelTh: 'ข่าวสาร', labelEn: 'News', href: '/news' },
-];
+interface NavigationLinkListProps {
+  links: CMSNavLink[];
+  isHomepage: boolean;
+  isLinkActive: (link: CMSNavLink) => boolean;
+  onNavClick: (link: CMSNavLink, event: MouseEvent<HTMLElement>) => void;
+  t: (th: string, en: string) => string;
+}
 
-// eslint-disable-next-line max-lines-per-function -- Navigation with scroll tracking + mobile menu
-export default function Navigation() {
-  const { lang, toggle, t } = useLang();
-  const pathname = usePathname();
-  const isHomepage = pathname === '/';
+function normalizeNavigationLinks(links?: CMSNavLink[]) {
+  const source = links?.length ? links : DEFAULT_NAVIGATION_LINKS;
+  return source.filter((link) => link.visible !== false);
+}
 
+function buildNavHref(link: CMSNavLink, isHomepage: boolean) {
+  if (link.sectionId) {
+    if (isHomepage) return `/#${link.sectionId}`;
+    if (link.href === '/' || link.href === '/#') return `/#${link.sectionId}`;
+  }
+
+  return link.href || '/';
+}
+
+function normalizeSocialLinks(socialLinks: Record<string, string | null>) {
+  return Object.entries(socialLinks)
+    .filter(([, url]) => typeof url === 'string' && url.trim().length > 0 && url !== '#')
+    .slice(0, 4)
+    .map(([platform, url]) => ({ platform, url: url as string }));
+}
+
+function getDefaultSection(links: CMSNavLink[]) {
+  return links.find((link) => link.sectionId)?.sectionId || 'hero';
+}
+
+function findActiveSection(links: CMSNavLink[], probe: number) {
+  let current = getDefaultSection(links);
+
+  for (const link of links) {
+    if (!link.sectionId) continue;
+
+    const element = document.getElementById(link.sectionId);
+    if (element && element.offsetTop <= probe) {
+      current = link.sectionId;
+    }
+  }
+
+  return current;
+}
+
+function scrollToSection(sectionId: string, setActiveSection: (sectionId: string) => void) {
+  const element = document.getElementById(sectionId);
+  if (!element) return;
+
+  const top = element.getBoundingClientRect().top + window.scrollY - 96;
+  window.scrollTo({ top, behavior: 'smooth' });
+  setActiveSection(sectionId);
+}
+
+function useNavigationScrollState(isHomepage: boolean, links: CMSNavLink[]) {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
-  const isScrollingRef = useRef(false);
-
-  /* ─── Scroll detection ─── */
-  const handleScroll = useCallback(() => {
-    setScrolled(window.scrollY > 20);
-
-    // Only track sections on homepage
-    if (!isHomepage || isScrollingRef.current) return;
-
-    const scrollY = window.scrollY + window.innerHeight * 0.35;
-    let current = 'hero';
-
-    for (const section of SECTIONS) {
-      const el = document.getElementById(section.id);
-      if (el && el.offsetTop <= scrollY) {
-        current = section.id;
-      }
-    }
-
-    if (current !== activeSection) {
-      setActiveSection(current);
-    }
-  }, [isHomepage, activeSection]);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
 
-  /* ─── Handle initial hash on mount ─── */
+      if (!isHomepage) return;
+
+      const probe = window.scrollY + window.innerHeight * 0.35;
+      setActiveSection(findActiveSection(links, probe));
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isHomepage, links]);
+
+  return { scrolled, activeSection, setActiveSection };
+}
+
+function useBodyScrollLock(locked: boolean, onEscape: () => void) {
+  useEffect(() => {
+    if (!locked) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onEscape();
+      }
+    };
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [locked, onEscape]);
+}
+
+function useHomepageHashSync(isHomepage: boolean, setActiveSection: (sectionId: string) => void) {
   useEffect(() => {
     if (!isHomepage) return;
+
     const hash = window.location.hash.replace('#', '');
-    if (hash) {
-      const el = document.getElementById(hash);
-      if (el) {
-        setTimeout(() => {
-          el.scrollIntoView({ behavior: 'smooth' });
-          setActiveSection(hash);
-        }, 500);
-      }
-    }
-  }, [isHomepage]);
+    if (!hash) return;
 
-  /* ─── Smooth scroll to section ─── */
-  const scrollToSection = (sectionId: string) => {
-    const el = document.getElementById(sectionId);
-    if (!el) return;
+    const element = document.getElementById(hash);
+    if (!element) return;
 
-    isScrollingRef.current = true;
-    setActiveSection(sectionId);
+    const timer = window.setTimeout(() => scrollToSection(hash, setActiveSection), 150);
+    return () => window.clearTimeout(timer);
+  }, [isHomepage, setActiveSection]);
+}
 
-    el.scrollIntoView({ behavior: 'smooth' });
+function BrandLink({
+  brandLogoSrc,
+  subtitle,
+}: {
+  brandLogoSrc: string | null;
+  subtitle: string;
+}) {
+  return (
+    <Link href="/" className="site-nav__brand" aria-label="Eternal Tower Saga home">
+      {brandLogoSrc ? (
+        <Image
+          src={brandLogoSrc}
+          alt="Eternal Tower Saga"
+          width={120}
+          height={72}
+          className="site-nav__brandMark"
+        />
+      ) : null}
 
-    // Re-enable scroll tracking after animation
-    setTimeout(() => {
-      isScrollingRef.current = false;
-    }, 1000);
-  };
+      <span className="site-nav__brandCopy">
+        <strong>Eternal Tower Saga</strong>
+        <span>{subtitle}</span>
+      </span>
+    </Link>
+  );
+}
 
-  /* ─── Mobile menu ─── */
-  useEffect(() => {
-    if (!mobileOpen) return;
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMobileOpen(false);
-    };
-    document.addEventListener('keydown', handleEsc);
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', handleEsc);
-      document.body.style.overflow = '';
-    };
-  }, [mobileOpen]);
+function DesktopNavigationLinks({
+  links,
+  isHomepage,
+  isLinkActive,
+  onNavClick,
+  t,
+}: NavigationLinkListProps) {
+  return (
+    <div className="site-nav__links">
+      {links.map((link) => (
+        <CmsLink
+          key={`${link.href}-${link.sectionId || ''}-${link.labelEn}`}
+          href={buildNavHref(link, isHomepage)}
+          openInNewTab={link.openInNewTab}
+          className={`site-nav__link ${isLinkActive(link) ? 'is-active' : ''}`}
+          onClick={(event) => onNavClick(link, event)}
+        >
+          {t(link.labelTh, link.labelEn)}
+        </CmsLink>
+      ))}
+    </div>
+  );
+}
 
+function DesktopSocialLinks({ items }: { items: Array<{ platform: string; url: string }> }) {
+  if (items.length === 0) return null;
+
+  return (
+    <div className="site-nav__socials" aria-label="Community links">
+      {items.map((item) => (
+        <a
+          key={item.platform}
+          href={item.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={item.platform}
+          className="site-nav__socialLink"
+        >
+          {SOCIAL_SVGS[item.platform] || null}
+        </a>
+      ))}
+    </div>
+  );
+}
+
+function MobileNavigationDrawer({
+  mobileOpen,
+  links,
+  ctaHref,
+  closeMobile,
+  isHomepage,
+  isLinkActive,
+  onNavClick,
+  t,
+}: NavigationLinkListProps & {
+  mobileOpen: boolean;
+  ctaHref: string;
+  closeMobile: () => void;
+}) {
+  return (
+    <AnimatePresence>
+      {mobileOpen ? (
+        <>
+          <motion.button
+            type="button"
+            className="site-nav__backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onPointerDown={closeMobile}
+            onClick={closeMobile}
+            aria-label="Close menu"
+          />
+
+          <motion.div
+            className="site-nav__drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation"
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="site-nav__drawerLinks">
+              {links.map((link) => (
+                <CmsLink
+                  key={`drawer-${link.href}-${link.sectionId || ''}-${link.labelEn}`}
+                  href={buildNavHref(link, isHomepage)}
+                  openInNewTab={link.openInNewTab}
+                  className={`site-nav__drawerLink ${isLinkActive(link) ? 'is-active' : ''}`}
+                  onClick={(event) => onNavClick(link, event)}
+                >
+                  <span>{t(link.labelTh, link.labelEn)}</span>
+                  <span>→</span>
+                </CmsLink>
+              ))}
+
+              <Link href={ctaHref} className="site-nav__drawerCta" onClick={closeMobile}>
+                {t('ลงทะเบียนล่วงหน้า', 'Pre-register')}
+              </Link>
+            </div>
+          </motion.div>
+        </>
+      ) : null}
+    </AnimatePresence>
+  );
+}
+
+function NavigationActions({
+  ctaHref,
+  lang,
+  mobileOpen,
+  toggle,
+  onToggleMobile,
+  t,
+}: {
+  ctaHref: string;
+  lang: 'th' | 'en';
+  mobileOpen: boolean;
+  toggle: () => void;
+  onToggleMobile: () => void;
+  t: (th: string, en: string) => string;
+}) {
+  return (
+    <div className="site-nav__actions">
+      <Link href={ctaHref} className="home-button home-button--primary">
+        {t('ลงทะเบียน', 'Register')}
+      </Link>
+
+      <button
+        className="site-nav__lang"
+        onClick={toggle}
+        aria-label={lang === 'th' ? 'Switch to English' : 'Switch to Thai'}
+      >
+        {lang === 'th' ? 'EN' : 'TH'}
+      </button>
+
+      <button
+        className={`site-nav__toggle ${mobileOpen ? 'is-open' : ''}`}
+        onClick={onToggleMobile}
+        aria-label="Toggle navigation"
+        aria-expanded={mobileOpen}
+      >
+        <span className="site-nav__toggleLine" />
+        <span className="site-nav__toggleLine" />
+        <span className="site-nav__toggleLine" />
+      </button>
+    </div>
+  );
+}
+
+export default function Navigation({ links, registrationUrl, logoUrl }: NavigationProps) {
+  const { lang, toggle, t } = useLang();
+  const {
+    logoUrl: cmsLogoUrl,
+    navigationLinks: cmsNavigationLinks,
+    registrationUrl: cmsRegistrationUrl,
+    socialLinks,
+  } = useSiteSettings();
+  const pathname = usePathname();
+  const isHomepage = pathname === '/';
+  const navigationLinks = useMemo(
+    () => normalizeNavigationLinks(links?.length ? links : cmsNavigationLinks),
+    [links, cmsNavigationLinks],
+  );
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const { scrolled, activeSection, setActiveSection } = useNavigationScrollState(isHomepage, navigationLinks);
+  const ctaHref = registrationUrl || cmsRegistrationUrl || DEFAULT_REGISTRATION_URL;
+  const brandLogoSrc = logoUrl ?? cmsLogoUrl ?? null;
+  const socialItems = useMemo(() => normalizeSocialLinks(socialLinks), [socialLinks]);
   const closeMobile = () => setMobileOpen(false);
 
-  const handleNavClick = (section: typeof SECTIONS[number], e: React.MouseEvent) => {
-    if (isHomepage) {
-      e.preventDefault();
-      scrollToSection(section.id);
-      closeMobile();
+  useBodyScrollLock(mobileOpen, closeMobile);
+  useHomepageHashSync(isHomepage, setActiveSection);
+
+  const handleNavClick = (link: CMSNavLink, event: MouseEvent<HTMLElement>) => {
+    if (isHomepage && link.sectionId && !link.openInNewTab) {
+      event.preventDefault();
+      scrollToSection(link.sectionId, setActiveSection);
     }
-    // On other pages, let Link handle navigation normally
+
+    closeMobile();
+  };
+
+  const isLinkActive = (link: CMSNavLink) => {
+    if (isHomepage && link.sectionId) {
+      return activeSection === link.sectionId;
+    }
+
+    if (link.href === '/news') {
+      return pathname === '/news' || pathname.startsWith('/news/');
+    }
+
+    return pathname === link.href;
   };
 
   return (
     <header>
-      <nav className={`main-nav ${scrolled ? 'nav-scrolled' : ''}`}>
-        <div className="nav-inner">
-          {/* Logo */}
-          <Link href="/" className="nav-logo" aria-label="Home">
-            <Image
-              src="/images/logo.webp"
-              alt="Game Logo"
-              width={120}
-              height={40}
-              style={{ height: '40px', width: 'auto' }}
-              priority
-            />
-          </Link>
+      <nav className={`site-nav ${scrolled ? 'site-nav--scrolled' : ''}`}>
+        <div className="site-nav__inner">
+          <BrandLink
+            brandLogoSrc={brandLogoSrc}
+            subtitle={t('เกม RPG บนมือถือ', 'Mobile MMORPG')}
+          />
 
-          {/* Desktop Nav — Section links on homepage, page links elsewhere */}
-          <div className="nav-links">
-            {SECTIONS.map((section) => (
-              <Link
-                key={section.id}
-                href={isHomepage ? `/#${section.id}` : section.href}
-                className={`nav-link ${isHomepage && activeSection === section.id ? 'nav-link-active' : ''}`}
-                onClick={(e) => handleNavClick(section, e)}
-              >
-                {t(section.labelTh, section.labelEn)}
-              </Link>
-            ))}
-          </div>
+          <DesktopNavigationLinks
+            links={navigationLinks}
+            isHomepage={isHomepage}
+            isLinkActive={isLinkActive}
+            onNavClick={handleNavClick}
+            t={t}
+          />
 
-          {/* Section progress indicator (homepage only) */}
-          {isHomepage && scrolled && (
-            <div className="nav-section-indicator">
-              {SECTIONS.map((section) => (
-                <button
-                  key={section.id}
-                  className={`nav-dot ${activeSection === section.id ? 'nav-dot-active' : ''}`}
-                  onClick={() => scrollToSection(section.id)}
-                  aria-label={t(section.labelTh, section.labelEn)}
-                  title={t(section.labelTh, section.labelEn)}
-                />
-              ))}
-            </div>
-          )}
+          <DesktopSocialLinks items={socialItems} />
 
-          <div className="nav-actions">
-            <Link href="/event" className="nav-cta">
-              {t('ลงทะเบียน', 'Register')}
-            </Link>
-            <button
-              className="nav-lang"
-              onClick={toggle}
-              aria-label={lang === 'th' ? 'Switch to English' : 'เปลี่ยนเป็นภาษาไทย'}
-            >
-              {lang === 'th' ? 'EN' : 'TH'}
-            </button>
-
-            {/* Mobile hamburger */}
-            <button
-              className="nav-mobile-toggle"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Menu"
-              aria-expanded={mobileOpen ? 'true' : 'false'}
-            >
-              <span className={`hamburger ${mobileOpen ? 'open' : ''}`}>
-                <span />
-                <span />
-                <span />
-              </span>
-            </button>
-          </div>
+          <NavigationActions
+            ctaHref={ctaHref}
+            lang={lang}
+            mobileOpen={mobileOpen}
+            toggle={toggle}
+            onToggleMobile={() => setMobileOpen((open) => !open)}
+            t={t}
+          />
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay Backdrop */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            className="mobile-menu-backdrop-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            onClick={closeMobile}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            ref={mobileMenuRef}
-            className="mobile-menu"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Navigation menu"
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <nav className="mobile-menu-nav">
-              {SECTIONS.map((section) => (
-                <Link
-                  key={section.id}
-                  href={isHomepage ? `/#${section.id}` : section.href}
-                  className={isHomepage && activeSection === section.id ? 'mobile-link-active' : ''}
-                  onClick={(e) => handleNavClick(section, e)}
-                >
-                  {t(section.labelTh, section.labelEn)}
-                </Link>
-              ))}
-              <Link
-                href="/event"
-                className="mobile-menu-cta"
-                onClick={closeMobile}
-              >
-                {t('ลงทะเบียนล่วงหน้า', 'Pre-Register')}
-              </Link>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <MobileNavigationDrawer
+        mobileOpen={mobileOpen}
+        links={navigationLinks}
+        ctaHref={ctaHref}
+        closeMobile={closeMobile}
+        isHomepage={isHomepage}
+        isLinkActive={isLinkActive}
+        onNavClick={handleNavClick}
+        t={t}
+      />
     </header>
   );
 }

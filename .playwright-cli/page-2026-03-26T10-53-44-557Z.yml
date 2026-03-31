@@ -1,0 +1,203 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner:
+      - navigation [ref=e3]:
+        - generic [ref=e4]:
+          - link "Eternal Tower Saga home" [ref=e5] [cursor=pointer]:
+            - /url: /
+            - img "Eternal Tower Saga" [ref=e6]
+            - generic [ref=e7]:
+              - strong [ref=e8]: Eternal Tower Saga
+              - generic [ref=e9]: เกม RPG บนมือถือ
+          - generic [ref=e10]:
+            - link "หน้าหลัก" [ref=e11] [cursor=pointer]:
+              - /url: /#hero
+            - link "อาวุธ" [ref=e12] [cursor=pointer]:
+              - /url: /character
+            - link "ไฮไลท์" [ref=e13] [cursor=pointer]:
+              - /url: /game-guide
+            - link "ข่าวสาร" [ref=e14] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=e15]:
+            - link "ลงทะเบียน" [ref=e16] [cursor=pointer]:
+              - /url: /event
+            - button "Switch to English" [ref=e17] [cursor=pointer]: EN
+    - main [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: อัปเดตล่าสุด
+          - heading "ข่าวสารและประกาศ" [level=1] [ref=e22]
+          - paragraph [ref=e23]: รวมข่าว กิจกรรม อัปเดตระบบ และประกาศสำคัญทั้งหมดในมุมมองที่อ่านง่ายขึ้น จัดลำดับชัดขึ้น และพร้อมใช้งานทั้ง desktop กับ mobile
+        - generic [ref=e24]:
+          - generic [ref=e25]: มุมมองปัจจุบัน
+          - strong [ref=e26]: ข่าวทั้งหมด
+          - paragraph [ref=e27]: จำนวนข่าวที่พร้อมอ่าน
+          - strong [ref=e28]: "9"
+      - generic [ref=e29]:
+        - button "ทั้งหมด" [ref=e30] [cursor=pointer]
+        - button "กิจกรรม" [ref=e31] [cursor=pointer]
+        - button "อัปเดต" [ref=e32] [cursor=pointer]
+        - button "สื่อ" [ref=e33] [cursor=pointer]
+        - button "ประกาศ" [ref=e34] [cursor=pointer]
+        - button "บำรุงรักษา" [ref=e35] [cursor=pointer]
+      - generic [ref=e36]:
+        - link "สื่อ อัปเดตสื่อแนะนำโลกของเกม รวมภาพและสื่อชุดใหม่จาก อัปเดตสื่อแนะนำโลกของเกม เพื่อให้เห็นบรรยากาศโลกของ Eternal Tower Saga ชัดขึ้นก่อนอัปเดตรอบต่อไป 26 มี.ค. 2569 อ่านรายละเอียด" [ref=e38] [cursor=pointer]:
+          - /url: /news/world-showcase-media-update
+          - img [ref=e41]
+          - generic [ref=e45]:
+            - generic [ref=e46]: สื่อ
+            - heading "อัปเดตสื่อแนะนำโลกของเกม" [level=2] [ref=e47]
+            - paragraph [ref=e48]: รวมภาพและสื่อชุดใหม่จาก อัปเดตสื่อแนะนำโลกของเกม เพื่อให้เห็นบรรยากาศโลกของ Eternal Tower Saga ชัดขึ้นก่อนอัปเดตรอบต่อไป
+            - generic [ref=e49]:
+              - time [ref=e50]: 26 มี.ค. 2569
+              - generic [ref=e51]:
+                - text: อ่านรายละเอียด
+                - img [ref=e52]
+        - complementary [ref=e54]:
+          - generic [ref=e55]:
+            - generic [ref=e56]: ลำดับข่าวล่าสุด
+            - paragraph [ref=e57]: คัดข่าวใหม่ที่ควรอ่านต่อจากหัวข้อเด่นด้านซ้าย
+          - generic [ref=e58]:
+            - link "อัปเดต 25 มี.ค. 2569 สรุปการอัปเดตระบบหลัก สรุปประเด็นที่เปลี่ยนใน สรุปการอัปเดตระบบหลัก พร้อมผลต่อการเล่นและระบบที่ผู้เล่นควรรู้ก่อนเข้าเกมรอบถัดไป" [ref=e59] [cursor=pointer]:
+              - /url: /news/core-system-update-brief
+              - img [ref=e62]
+              - generic [ref=e67]:
+                - generic [ref=e68]:
+                  - generic [ref=e69]: อัปเดต
+                  - time [ref=e70]: 25 มี.ค. 2569
+                - heading "สรุปการอัปเดตระบบหลัก" [level=2] [ref=e71]
+                - paragraph [ref=e72]: สรุปประเด็นที่เปลี่ยนใน สรุปการอัปเดตระบบหลัก พร้อมผลต่อการเล่นและระบบที่ผู้เล่นควรรู้ก่อนเข้าเกมรอบถัดไป
+            - link "กิจกรรม 24 มี.ค. 2569 กิจกรรมรวมพลนักผจญภัยประจำสัปดาห์ สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ กิจกรรมรวมพลนักผจญภัยประจำสัปดาห์ เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน" [ref=e73] [cursor=pointer]:
+              - /url: /news/weekly-adventurer-rally
+              - img [ref=e76]
+              - generic [ref=e78]:
+                - generic [ref=e79]:
+                  - generic [ref=e80]: กิจกรรม
+                  - time [ref=e81]: 24 มี.ค. 2569
+                - heading "กิจกรรมรวมพลนักผจญภัยประจำสัปดาห์" [level=2] [ref=e82]
+                - paragraph [ref=e83]: สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ กิจกรรมรวมพลนักผจญภัยประจำสัปดาห์ เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน
+            - link "กิจกรรม 24 มี.ค. 2569 กิจกรรมสะสมการล็อกอิน 7 วัน สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ กิจกรรมสะสมการล็อกอิน 7 วัน เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน" [ref=e84] [cursor=pointer]:
+              - /url: /news/seven-day-login-campaign
+              - img [ref=e87]
+              - generic [ref=e89]:
+                - generic [ref=e90]:
+                  - generic [ref=e91]: กิจกรรม
+                  - time [ref=e92]: 24 มี.ค. 2569
+                - heading "กิจกรรมสะสมการล็อกอิน 7 วัน" [level=2] [ref=e93]
+                - paragraph [ref=e94]: สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ กิจกรรมสะสมการล็อกอิน 7 วัน เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน
+            - link "ประกาศ 23 มี.ค. 2569 ประกาศแจ้งกำหนดการและคำแนะนำสำหรับผู้เล่น สรุปสาระสำคัญจาก ประกาศแจ้งกำหนดการและคำแนะนำสำหรับผู้เล่น ให้ติดตามประเด็นที่เกี่ยวกับบัญชี การเล่น และประกาศล่าสุดได้ง่ายขึ้น" [ref=e95] [cursor=pointer]:
+              - /url: /news/service-notice-and-player-advisory
+              - img [ref=e98]
+              - generic [ref=e101]:
+                - generic [ref=e102]:
+                  - generic [ref=e103]: ประกาศ
+                  - time [ref=e104]: 23 มี.ค. 2569
+                - heading "ประกาศแจ้งกำหนดการและคำแนะนำสำหรับผู้เล่น" [level=2] [ref=e105]
+                - paragraph [ref=e106]: สรุปสาระสำคัญจาก ประกาศแจ้งกำหนดการและคำแนะนำสำหรับผู้เล่น ให้ติดตามประเด็นที่เกี่ยวกับบัญชี การเล่น และประกาศล่าสุดได้ง่ายขึ้น
+      - generic [ref=e107]:
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - generic [ref=e110]: ข่าวเพิ่มเติม
+            - heading "คลังข่าวที่พร้อมอ่านต่อ" [level=2] [ref=e111]
+          - paragraph [ref=e112]: รายการข่าวที่เหลือถูกจัดเป็นจังหวะการอ่านที่กระชับขึ้น เพื่อให้ไล่ตามประกาศและอัปเดตได้ต่อเนื่องโดยไม่ล้า
+        - generic [ref=e113]:
+          - link "บำรุงรักษา 23 มี.ค. 2569 ประกาศบำรุงรักษาเซิร์ฟเวอร์ประจำสัปดาห์ แจ้งช่วงเวลาบำรุงรักษาและสิ่งที่ผู้เล่นควรเตรียมใน ประกาศบำรุงรักษาเซิร์ฟเวอร์ประจำสัปดาห์ เพื่อลดผลกระทบระหว่างการปิดปรับปรุง อ่านต่อ" [ref=e115] [cursor=pointer]:
+            - /url: /news/weekly-server-maintenance-notice
+            - generic [ref=e116]:
+              - generic [ref=e117]: บำรุงรักษา
+              - time [ref=e118]: 23 มี.ค. 2569
+            - heading "ประกาศบำรุงรักษาเซิร์ฟเวอร์ประจำสัปดาห์" [level=2] [ref=e119]
+            - paragraph [ref=e120]: แจ้งช่วงเวลาบำรุงรักษาและสิ่งที่ผู้เล่นควรเตรียมใน ประกาศบำรุงรักษาเซิร์ฟเวอร์ประจำสัปดาห์ เพื่อลดผลกระทบระหว่างการปิดปรับปรุง
+            - generic [ref=e121]:
+              - text: อ่านต่อ
+              - img [ref=e122]
+          - link "กิจกรรม 19 มี.ค. 2569 เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ! สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ! เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน อ่านต่อ" [ref=e125] [cursor=pointer]:
+            - /url: /news/pre-registration-opens
+            - generic [ref=e126]:
+              - generic [ref=e127]: กิจกรรม
+              - time [ref=e128]: 19 มี.ค. 2569
+            - heading "เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ!" [level=2] [ref=e129]
+            - paragraph [ref=e130]: สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ! เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน
+            - generic [ref=e131]:
+              - text: อ่านต่อ
+              - img [ref=e132]
+          - link "อัปเดต 18 มี.ค. 2569 เศษซากความลี้ลับแห่งหอคอย เศษซากความลี้ลับแห่งหอคอย การออกผจญภัยในโลกของ Eternal Tower Sage นอกจากการต่อสู้กับเหล่ามอนสเตอร์ต่างๆ ที่อยู่ในหอคอยชั้นต่างๆ แล้ว ผู้เล่นยังจะได้พอเจอกับ “เศ... อ่านต่อ" [ref=e135] [cursor=pointer]:
+            - /url: /news/combat-system-reveal
+            - generic [ref=e136]:
+              - generic [ref=e137]: อัปเดต
+              - time [ref=e138]: 18 มี.ค. 2569
+            - heading "เศษซากความลี้ลับแห่งหอคอย" [level=2] [ref=e139]
+            - paragraph [ref=e140]: เศษซากความลี้ลับแห่งหอคอย การออกผจญภัยในโลกของ Eternal Tower Sage นอกจากการต่อสู้กับเหล่ามอนสเตอร์ต่างๆ ที่อยู่ในหอคอยชั้นต่างๆ แล้ว ผู้เล่นยังจะได้พอเจอกับ “เศ...
+            - generic [ref=e141]:
+              - text: อ่านต่อ
+              - img [ref=e142]
+          - 'link "สื่อ 17 มี.ค. 2569 บันทึกนักพัฒนา: การสร้างอาร์คาเทีย รวมภาพและสื่อชุดใหม่จาก บันทึกนักพัฒนา: การสร้างอาร์คาเทีย เพื่อให้เห็นบรรยากาศโลกของ Eternal Tower Saga ชัดขึ้นก่อนอัปเดตรอบต่อไป อ่านต่อ" [ref=e145] [cursor=pointer]':
+            - /url: /news/developer-diary-arcatea
+            - generic [ref=e146]:
+              - generic [ref=e147]: สื่อ
+              - time [ref=e148]: 17 มี.ค. 2569
+            - 'heading "บันทึกนักพัฒนา: การสร้างอาร์คาเทีย" [level=2] [ref=e149]'
+            - paragraph [ref=e150]: "รวมภาพและสื่อชุดใหม่จาก บันทึกนักพัฒนา: การสร้างอาร์คาเทีย เพื่อให้เห็นบรรยากาศโลกของ Eternal Tower Saga ชัดขึ้นก่อนอัปเดตรอบต่อไป"
+            - generic [ref=e151]:
+              - text: อ่านต่อ
+              - img [ref=e152]
+    - contentinfo [ref=e154]:
+      - generic [ref=e155]:
+        - generic [ref=e156]:
+          - img "Eternal Tower Saga" [ref=e157]
+          - paragraph [ref=e158]: Eternal Tower Saga คือโลกแฟนตาซีที่เน้นการผจญภัยเป็นทีม การต่อสู้ที่อ่านง่าย และบรรยากาศที่ชวนอยากกลับมาเล่นทุกวัน.
+          - generic [ref=e159]:
+            - link "discord" [ref=e160] [cursor=pointer]:
+              - /url: https://discord.gg/eternaltowersaga
+              - img [ref=e161]
+            - link "facebook" [ref=e163] [cursor=pointer]:
+              - /url: https://facebook.com/EternalTowerSaga
+              - img [ref=e164]
+            - link "youtube" [ref=e166] [cursor=pointer]:
+              - /url: https://youtube.com/@EternalTowerSaga
+              - img [ref=e167]
+            - link "tiktok" [ref=e170] [cursor=pointer]:
+              - /url: https://tiktok.com/@EternalTowerSaga
+              - img [ref=e171]
+        - generic [ref=e173]:
+          - generic [ref=e174]:
+            - heading "สำรวจ" [level=4] [ref=e175]
+            - generic [ref=e176]:
+              - link "หน้าหลัก" [ref=e177] [cursor=pointer]:
+                - /url: /
+              - link "อาวุธ" [ref=e178] [cursor=pointer]:
+                - /url: /character
+              - link "ไฮไลท์เกม" [ref=e179] [cursor=pointer]:
+                - /url: /game-guide
+              - link "ข่าวสาร" [ref=e180] [cursor=pointer]:
+                - /url: /news
+          - generic [ref=e181]:
+            - heading "ช่วยเหลือ" [level=4] [ref=e182]
+            - generic [ref=e183]:
+              - link "ข้อกำหนดการใช้งาน" [ref=e184] [cursor=pointer]:
+                - /url: /terms
+              - link "นโยบายความเป็นส่วนตัว" [ref=e185] [cursor=pointer]:
+                - /url: /privacy
+              - link "คำถามที่พบบ่อย" [ref=e186] [cursor=pointer]:
+                - /url: /faq
+          - generic [ref=e187]:
+            - heading "ชุมชน" [level=4] [ref=e188]
+            - paragraph [ref=e189]: ติดตามประกาศ กิจกรรม และความเคลื่อนไหวล่าสุดของเกมผ่านช่องทาง community หลักของ Eternal Tower Saga.
+            - generic [ref=e190]:
+              - link "ลงทะเบียนล่วงหน้า" [ref=e191] [cursor=pointer]:
+                - /url: /event
+              - link "ดาวน์โหลด" [ref=e192] [cursor=pointer]:
+                - /url: /download
+      - generic [ref=e193]:
+        - generic [ref=e194]: พร้อมบน iOS • Android • PC
+        - generic [ref=e195]: © 2026 Eternal Tower Saga. All rights reserved.
+  - alert [ref=e196]
+  - generic [ref=e198]:
+    - generic [ref=e199]:
+      - generic [ref=e200]: Cookies
+      - paragraph [ref=e201]:
+        - text: เราใช้คุกกี้ที่จำเป็นเพื่อให้เว็บไซต์ทำงานเสถียรและวัดผลการใช้งานพื้นฐานได้อย่างถูกต้อง
+        - generic [ref=e202]: Essential cookies keep the site stable and help measure basic performance.
+    - generic [ref=e203]:
+      - button "ภายหลัง" [ref=e204] [cursor=pointer]
+      - button "ยอมรับ / Accept" [ref=e205] [cursor=pointer]

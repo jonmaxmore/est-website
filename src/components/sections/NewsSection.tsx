@@ -1,131 +1,310 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, type ComponentType } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  ArrowRight,
+  Calendar,
+  Megaphone,
+  RefreshCw,
+  Video,
+  Wrench,
+} from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
+import CmsLink from '@/components/ui/CmsLink';
+import { isCmsMediaUrl } from '@/lib/cms-media';
+import { formatLocalizedDate } from '@/lib/format-date';
 import { useLang } from '@/lib/lang-context';
-import { cn } from '@/lib/utils';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import RevealSection from '@/components/ui/RevealSection';
-import { Calendar, RefreshCw, Video, Megaphone, ArrowRight } from 'lucide-react';
+import { NEWS_CATEGORY_META, NEWS_FILTERS, type NewsFilterKey } from '@/lib/news-categories';
+import { hasReliableNewsImage, pickNewsSummary } from '@/lib/news-content';
 import type { CMSNewsArticle, CMSNewsSectionConfig } from '@/types/cms';
 
-/* ── Category metadata ── */
+type NewsCardItem = {
+  key: number;
+  slug: string;
+  title: string;
+  summary: string;
+  tag: string;
+  category: string;
+  date: string;
+  leadImage: string | null;
+  thumbImage: string | null;
+  imageAlt: string;
+  hasReliableImage: boolean;
+  href: string;
+  openInNewTab: boolean;
+};
+
+type NewsCopy = {
+  badgeText: string;
+  titleText: string;
+  introCopy: string;
+  moreStoriesLabel: string;
+  readFullLabel: string;
+  viewAllLabel: string;
+  emptyLabel: string;
+  singleStoryLabel: string;
+};
+
 const CATEGORY_META: Record<string, {
-  gradient: string;
   color: string;
-  Icon: React.ComponentType<{ size?: number; className?: string }>;
+  labelEn: string;
+  labelTh: string;
+  Icon: ComponentType<{ size?: number; className?: string }>;
 }> = {
-  event:        { gradient: 'from-amber-500/20 to-amber-700/10', color: '#F5A623', Icon: Calendar },
-  update:       { gradient: 'from-sky-500/20 to-sky-700/10',     color: '#5BC0EB', Icon: RefreshCw },
-  media:        { gradient: 'from-purple-500/20 to-purple-700/10', color: '#9B59B6', Icon: Video },
-  announcement: { gradient: 'from-emerald-500/20 to-emerald-700/10', color: '#2ECC71', Icon: Megaphone },
+  event: { ...NEWS_CATEGORY_META.event, Icon: Calendar },
+  update: { ...NEWS_CATEGORY_META.update, Icon: RefreshCw },
+  media: { ...NEWS_CATEGORY_META.media, Icon: Video },
+  announcement: { ...NEWS_CATEGORY_META.announcement, Icon: Megaphone },
+  maintenance: { ...NEWS_CATEGORY_META.maintenance, Icon: Wrench },
 };
 
-const FILTER_TABS = [
-  { value: 'all',          labelEn: 'All',     labelTh: 'ทั้งหมด' },
-  { value: 'event',        labelEn: 'Events',  labelTh: 'กิจกรรม' },
-  { value: 'update',       labelEn: 'Updates', labelTh: 'อัปเดต' },
-  { value: 'media',        labelEn: 'Media',   labelTh: 'สื่อ' },
-  { value: 'announcement', labelEn: 'News',    labelTh: 'ประกาศ' },
-] as const;
+function buildNewsItem(
+  item: CMSNewsArticle,
+  lang: 'th' | 'en',
+  t: (th: string, en: string) => string,
+): NewsCardItem {
+  const meta = CATEGORY_META[item.category] || CATEGORY_META.event;
+  const alt = item.featuredImage?.alt || t(item.titleTh, item.titleEn) || item.titleEn;
 
-/* ── Animation variants ── */
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.97 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] },
-  },
-  exit: {
-    opacity: 0,
-    y: -20,
-    scale: 0.97,
-    transition: { duration: 0.3 },
-  },
-};
-
-/* ── Removed separate FeaturedNewsCard — all cards now use the same uniform NewsCard for symmetry ──  */
-
-/* ── Regular News Card ── */
-function NewsCard({ item, meta }: {
-  item: { slug: string; title: string; tag: string; date: string; thumb: string | null; category: string };
-  meta: typeof CATEGORY_META[string];
-}) {
-  const inner = (
-    <motion.div variants={cardVariants} layout>
-      <Card className={cn(
-        'group/news-card relative overflow-hidden border-0 rounded-xl h-full',
-        'bg-gradient-to-br from-white/[0.05] to-white/[0.02]',
-        'ring-1 ring-white/[0.08] hover:ring-white/20',
-        'backdrop-blur-sm',
-        'transition-all duration-500 ease-out',
-        'hover:shadow-[0_4px_24px_rgba(0,0,0,0.4)]',
-        'hover:-translate-y-1',
-        'p-0'
-      )}>
-        {/* Thumbnail */}
-        <div className="relative aspect-[16/10] w-full overflow-hidden">
-          {item.thumb ? (
-            <Image
-              src={item.thumb}
-              alt={item.title}
-              fill
-              className="object-cover transition-transform duration-700 ease-out group-hover/news-card:scale-105"
-            />
-          ) : (
-            <div className={cn(
-              'flex h-full w-full items-center justify-center bg-gradient-to-br',
-              meta.gradient,
-              'bg-[rgba(15,15,25,0.8)]'
-            )}>
-              <meta.Icon size={40} className="text-white/25" />
-            </div>
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-        </div>
-
-        {/* Card body */}
-        <CardContent className="flex flex-col gap-3 p-4">
-          <Badge
-            className={cn(
-              'h-5 w-fit rounded-md px-2.5 text-[0.6rem] font-bold uppercase tracking-wider border-0',
-            )}
-            style={{ backgroundColor: meta.color, color: '#0f0f19' }}
-          >
-            {item.tag}
-          </Badge>
-          <h3 className="font-display text-base font-medium text-white leading-snug line-clamp-2 group-hover/news-card:text-amber-200 transition-colors duration-300">
-            {item.title}
-          </h3>
-          <time className="text-xs text-white/40 font-body mt-auto">{item.date}</time>
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-
-  return item.slug ? (
-    <Link href={`/news/${item.slug}`} className="block">
-      {inner}
-    </Link>
-  ) : inner;
+  return {
+    key: item.id,
+    slug: item.slug,
+    title: t(item.titleTh, item.titleEn) || item.titleEn,
+    summary: pickNewsSummary(lang, item.summaryTh, item.summaryEn, meta.labelTh, meta.labelEn),
+    tag: t(meta.labelTh, meta.labelEn),
+    category: item.category,
+    date: item.publishedAt
+      ? formatLocalizedDate(item.publishedAt, lang, {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      })
+      : t('เร็ว ๆ นี้', 'Coming soon'),
+    leadImage: item.featuredImage?.heroUrl || item.featuredImage?.url || null,
+    thumbImage: item.featuredImage?.cardUrl || item.featuredImage?.thumbnailUrl || item.featuredImage?.url || null,
+    imageAlt: alt,
+    hasReliableImage: hasReliableNewsImage(item.featuredImage),
+    href: item.href || `/news/${item.slug}`,
+    openInNewTab: Boolean(item.openInNewTab),
+  };
 }
 
-/* ── Main Section ── */
-// eslint-disable-next-line max-lines-per-function -- Section component with filtering logic
+function buildNewsCopy(
+  sectionConfig: CMSNewsSectionConfig | undefined,
+  t: (th: string, en: string) => string,
+): NewsCopy {
+  return {
+    badgeText: sectionConfig
+      ? t(sectionConfig.badgeTh, sectionConfig.badgeEn)
+      : t('ข่าวล่าสุด', 'Latest news'),
+    titleText: sectionConfig
+      ? t(sectionConfig.titleTh, sectionConfig.titleEn)
+      : t('ข่าวสารและอัปเดต', 'News and updates'),
+    introCopy: sectionConfig?.introEn || sectionConfig?.introTh
+      ? t(sectionConfig.introTh || '', sectionConfig.introEn || '')
+      : t(
+        'สรุปข่าวเด่น กิจกรรม และประกาศสำคัญในจังหวะที่อ่านง่ายขึ้นสำหรับหน้าแรก',
+        'Latest announcements, events, and patch notes.',
+      ),
+    moreStoriesLabel: t('ข่าวรอง', 'More stories'),
+    readFullLabel: t('อ่านรายละเอียด', 'Read full update'),
+    viewAllLabel: t('ดูข่าวทั้งหมด', 'View all news'),
+    emptyLabel: t('ยังไม่มีข่าวในหมวดนี้', 'No news in this category yet'),
+    singleStoryLabel: t(
+      'มุมมองนี้มีข่าวเด่นเพียงรายการเดียวในตอนนี้',
+      'This view currently has one featured story.',
+    ),
+  };
+}
+
+function FeaturedArticle({
+  item,
+  ctaLabel,
+}: {
+  item: NewsCardItem;
+  ctaLabel: string;
+}) {
+  const meta = CATEGORY_META[item.category] || CATEGORY_META.event;
+
+  return (
+    <CmsLink
+      href={item.href}
+      openInNewTab={item.openInNewTab}
+      className={`home-news__featured ${item.hasReliableImage ? '' : 'is-textOnly'}`.trim()}
+    >
+      <div className="home-news__featuredCopy">
+        <div className="home-news__featuredTopline">
+          <span className="home-news__badge" style={{ backgroundColor: meta.color, color: '#08111f' }}>
+            {item.tag}
+          </span>
+          <span className="home-news__itemDate">{item.date}</span>
+        </div>
+
+        <div className="home-news__featuredBody">
+          <h3 className="home-news__featuredTitle">{item.title}</h3>
+          <p className="home-news__featuredSummary">{item.summary}</p>
+        </div>
+
+        <span className="home-news__featuredCta">
+          {ctaLabel}
+          <ArrowRight size={16} />
+        </span>
+      </div>
+
+      {item.hasReliableImage ? (
+        <div className="home-news__featuredMedia">
+          <Image
+            src={item.leadImage as string}
+            alt={item.imageAlt}
+            fill
+            sizes="(max-width: 960px) 100vw, 24rem"
+            unoptimized={isCmsMediaUrl(item.leadImage as string)}
+          />
+        </div>
+      ) : (
+        <div className="home-news__featuredWatermark" aria-hidden="true">
+          <meta.Icon size={76} />
+        </div>
+      )}
+    </CmsLink>
+  );
+}
+
+function DispatchArticle({
+  item,
+  active,
+  onSelect,
+}: {
+  item: NewsCardItem;
+  active: boolean;
+  onSelect: (slug: string) => void;
+}) {
+  const meta = CATEGORY_META[item.category] || CATEGORY_META.event;
+
+  return (
+    <button
+      type="button"
+      className={`home-news__dispatchItem ${active ? 'is-active' : ''}`.trim()}
+      onClick={() => onSelect(item.slug)}
+    >
+      <span className="home-news__dispatchThumb" aria-hidden="true">
+        {item.hasReliableImage && item.thumbImage ? (
+          <Image
+            src={item.thumbImage}
+            alt=""
+            fill
+            sizes="(max-width: 960px) 6rem, 5.5rem"
+            unoptimized={isCmsMediaUrl(item.thumbImage)}
+          />
+        ) : (
+          <meta.Icon size={26} />
+        )}
+      </span>
+
+      <span className="home-news__dispatchBody">
+        <span className="home-news__dispatchMeta">
+          <span className="home-news__badge" style={{ backgroundColor: meta.color, color: '#08111f' }}>
+            {item.tag}
+          </span>
+          <span className="home-news__itemDate">{item.date}</span>
+        </span>
+        <span className="home-news__dispatchTitle">{item.title}</span>
+        <span className="home-news__dispatchSummary">{item.summary}</span>
+      </span>
+    </button>
+  );
+}
+
+function NewsHeader({
+  copy,
+  activeTab,
+  onSelectTab,
+}: {
+  copy: NewsCopy;
+  activeTab: NewsFilterKey;
+  onSelectTab: (tab: NewsFilterKey) => void;
+}) {
+  const { t } = useLang();
+
+  return (
+    <div className="home-news__header">
+      <div className="home-news__headerCopy">
+        <span className="home-kicker">{copy.badgeText}</span>
+        <h2 className="home-section-title">{copy.titleText}</h2>
+        <p className="home-section-copy">{copy.introCopy}</p>
+      </div>
+
+      <div className="home-news__headerMeta">
+        <div className="home-news__filters" role="tablist" aria-label="Filter news">
+          {NEWS_FILTERS.map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              className={`home-news__filter ${activeTab === tab.key ? 'is-active' : ''}`}
+              onClick={() => onSelectTab(tab.key)}
+            >
+              {t(tab.labelTh, tab.labelEn)}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function NewsBody({
+  activeTab,
+  featured,
+  dispatchItems,
+  copy,
+  onSelectStory,
+}: {
+  activeTab: NewsFilterKey;
+  featured?: NewsCardItem;
+  dispatchItems: NewsCardItem[];
+  copy: NewsCopy;
+  onSelectStory: (slug: string) => void;
+}) {
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={activeTab}
+        className="home-news__body"
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -18 }}
+        transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div className="home-news__stage">
+          {featured ? <FeaturedArticle item={featured} ctaLabel={copy.readFullLabel} /> : null}
+
+          <aside className="home-news__dispatch">
+            <div className="home-news__dispatchHeader">
+              <span>{copy.moreStoriesLabel}</span>
+            </div>
+
+            <div className="home-news__dispatchList">
+              {dispatchItems.map((item) => (
+                <DispatchArticle
+                  key={item.key}
+                  item={item}
+                  active={featured?.slug === item.slug}
+                  onSelect={onSelectStory}
+                />
+              ))}
+
+              {dispatchItems.length === 0 ? (
+                <div className="home-news__dispatchEmpty">{copy.singleStoryLabel}</div>
+              ) : null}
+            </div>
+          </aside>
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 export default function NewsSection({
   news,
   sectionConfig,
@@ -133,170 +312,53 @@ export default function NewsSection({
   news: CMSNewsArticle[];
   sectionConfig?: CMSNewsSectionConfig;
 }) {
-  const { t } = useLang();
-  const [activeTab, setActiveTab] = useState<string>('all');
+  const { lang, t } = useLang();
+  const [activeTab, setActiveTab] = useState<NewsFilterKey>('all');
+  const [selectedSlugs, setSelectedSlugs] = useState<Partial<Record<NewsFilterKey, string>>>({});
 
-  const items = useMemo(() =>
-    news.map((item) => ({
-      key: item.id,
-      slug: item.slug,
-      tag: item.category?.toUpperCase() || 'NEWS',
-      title: t(item.titleTh, item.titleEn) || item.titleEn,
-      date: item.publishedAt
-        ? new Date(item.publishedAt).toLocaleDateString('th-TH', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-          })
-        : t('เร็ว ๆ นี้', 'Coming Soon'),
-      thumb: item.featuredImage,
-      category: item.category,
-    })),
-    [news, t]
-  );
-
-  const filteredItems = useMemo(
-    () => activeTab === 'all' ? items : items.filter((i) => i.category === activeTab),
-    [items, activeTab]
-  );
-
+  const items = news.map((item) => buildNewsItem(item, lang, t));
   if (items.length === 0) return null;
 
+  const copy = buildNewsCopy(sectionConfig, t);
+  const filteredItems = activeTab === 'all'
+    ? items
+    : items.filter((item) => item.category === activeTab);
+  const featured = filteredItems.find((item) => item.slug === selectedSlugs[activeTab]) || filteredItems[0];
+  const dispatchItems = filteredItems.slice(0, 5);
+
   return (
-    <section id="news" className="news-section">
-      {/* Background decorations */}
-      <div className="news-section-bg" aria-hidden="true">
-        <div className="news-section-glow news-section-glow--left" />
-        <div className="news-section-glow news-section-glow--right" />
-      </div>
+    <section
+      id="news"
+      className="home-news"
+      style={sectionConfig?.bgImage?.url
+        ? {
+          backgroundImage: `linear-gradient(180deg, rgba(2, 7, 16, 0.54), rgba(2, 7, 16, 0.84)), url(${sectionConfig.bgImage.url})`,
+        }
+        : undefined}
+    >
+      <div className="home-shell">
+        <NewsHeader copy={copy} activeTab={activeTab} onSelectTab={setActiveTab} />
 
-      <div className="container-custom relative z-10">
-        {/* ── Section Header ── */}
-        <RevealSection>
-          <div className="section-header">
-            <span className="section-badge">
-              {sectionConfig
-                ? t(sectionConfig.badgeTh, sectionConfig.badgeEn)
-                : t('ข่าวล่าสุด', 'LATEST NEWS')}
-            </span>
-            <h2 className="section-title-gold">
-              {sectionConfig
-                ? t(sectionConfig.titleTh, sectionConfig.titleEn)
-                : t('ข่าวสาร', 'News')}
-            </h2>
-            <div className="title-ornament">
-              <span />
-              <span />
-              <span />
-            </div>
-          </div>
-        </RevealSection>
-
-        {/* ── Category Filter Tabs ── */}
-        <RevealSection delay={0.15}>
-          <div className="flex justify-center mt-8 mb-10">
-            <Tabs
-              defaultValue="all"
-              onValueChange={(val: string | number | null) => {
-                if (val !== null) setActiveTab(String(val));
-              }}
-              className="w-full max-w-lg"
-            >
-              <TabsList
-                className={cn(
-                  'w-full h-10 rounded-xl',
-                  'bg-white/[0.04] ring-1 ring-white/10',
-                  'backdrop-blur-md',
-                  'p-1'
-                )}
-              >
-                {FILTER_TABS.map((tab) => (
-                  <TabsTrigger
-                    key={tab.value}
-                    value={tab.value}
-                    className={cn(
-                      'rounded-lg text-xs sm:text-sm font-medium px-3 py-1.5',
-                      'text-white/50 hover:text-white/80',
-                      'data-[selected]:bg-amber-500/20 data-[selected]:text-amber-300',
-                      'data-active:bg-amber-500/20 data-active:text-amber-300',
-                      'transition-all duration-300',
-                      'border-0'
-                    )}
-                  >
-                    {t(tab.labelTh, tab.labelEn)}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-              {/* We manage content outside tabs to control layout */}
-              {FILTER_TABS.map((tab) => (
-                <TabsContent key={tab.value} value={tab.value} className="hidden" />
-              ))}
-            </Tabs>
-          </div>
-        </RevealSection>
-
-        {/* ── Uniform News Cards Grid ── */}
-        <div className="news-grid-wrapper">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="news-cards-grid"
-              style={{ justifyItems: filteredItems.length < 3 ? 'center' : undefined }}
-            >
-              {filteredItems.map((item) => (
-                <NewsCard
-                  key={item.key}
-                  item={item}
-                  meta={CATEGORY_META[item.category] || CATEGORY_META.event}
-                />
-              ))}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Empty state */}
-        {filteredItems.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-20 text-white/30"
-          >
-            <Calendar size={48} className="mb-4" />
-            <p className="text-lg font-display">
-              {t('ยังไม่มีข่าวในหมวดนี้', 'No news in this category yet')}
-            </p>
-          </motion.div>
+        {filteredItems.length === 0 ? (
+          <div className="home-news__empty">{copy.emptyLabel}</div>
+        ) : (
+          <NewsBody
+            activeTab={activeTab}
+            featured={featured}
+            dispatchItems={dispatchItems}
+            copy={copy}
+            onSelectStory={(slug) => {
+              setSelectedSlugs((current) => ({ ...current, [activeTab]: slug }));
+            }}
+          />
         )}
 
-        {/* ── View All News Button ── */}
-        <RevealSection delay={0.3}>
-          <div className="flex justify-center mt-12">
-            <Button
-              render={<Link href="/news" />}
-              variant="outline"
-              size="lg"
-              className={cn(
-                'group/btn relative overflow-hidden',
-                'h-11 px-8 rounded-xl',
-                'border-amber-500/30 text-amber-300',
-                'bg-amber-500/[0.06] hover:bg-amber-500/15',
-                'hover:border-amber-400/50 hover:text-amber-200',
-                'transition-all duration-300',
-                'font-medium tracking-wide',
-              )}
-            >
-              {t('ดูข่าวทั้งหมด', 'View All News')}
-              <ArrowRight
-                size={16}
-                className="ml-2 transition-transform duration-300 group-hover/btn:translate-x-1"
-              />
-            </Button>
-          </div>
-        </RevealSection>
+        <div className="home-news__footer">
+          <CmsLink href="/news" className="home-button home-button--ghost">
+            {copy.viewAllLabel}
+            <ArrowRight size={16} />
+          </CmsLink>
+        </div>
       </div>
     </section>
   );

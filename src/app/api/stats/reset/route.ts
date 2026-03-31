@@ -1,27 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getPayloadClient } from '@/lib/payload'
+import { requireAdmin } from '@/lib/require-admin'
 
 export const dynamic = 'force-dynamic'
 
-// POST /api/stats/reset — Reset multiplier/offset to real numbers (admin only)
+/**
+ * @deprecated Admin-only utility. Not called by frontend.
+ * POST /api/stats/reset — Reset multiplier/offset to real numbers
+ */
 export async function POST(request: NextRequest) {
   try {
-    const payload = await getPayloadClient()
+    const auth = await requireAdmin(request)
+    if ('error' in auth) return auth.error
 
-    // ── Auth Guard: require valid Payload CMS token ──
-    const token =
-      request.cookies.get('payload-token')?.value ||
-      request.headers.get('Authorization')?.replace('Bearer ', '')
-
-    if (!token) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
-    }
-
-    // Verify token via Payload's internal user lookup
-    const { user } = await payload.auth({ headers: request.headers })
-    if (!user) {
-      return NextResponse.json({ error: 'Invalid or expired token' }, { status: 403 })
-    }
+    const { payload } = auth
 
     await payload.updateGlobal({
       slug: 'event-config',
@@ -32,7 +23,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    const registrations = await payload.count({ collection: 'registrations' })
+    const registrations = await payload.count({ collection: 'registrations', overrideAccess: true })
 
     return NextResponse.json({
       success: true,
@@ -48,4 +39,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to reset' }, { status: 500 })
   }
 }
-

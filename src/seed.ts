@@ -3,204 +3,252 @@
  * Populates all collections with initial game data
  * Run: npx tsx src/seed.ts
  */
-import { getPayload } from 'payload'
-import config from './payload.config'
+import { getPayload, type Payload } from 'payload';
+import config from './payload.config';
 
-async function seed() {
-  console.log('🌱 Seeding Payload CMS database...\n')
+type SeedRecord = Record<string, unknown>;
 
-  const payload = await getPayload({ config })
+const ADMIN_USER = {
+  email: 'admin@eternaltowersaga.com',
+  password: 'Admin@EST2026!',
+  role: 'admin',
+} as const;
 
-  // ─── 1. Create Admin User ───
-  console.log('👤 Creating admin user...')
+const MILESTONES = [
+  { threshold: 10000, rewardEn: 'Gold ×200,000 + Fatigue Scroll ×10', rewardTh: 'ทอง ×200,000 + ม้วนฟื้นพลัง ×10', icon: '💰', sortOrder: 1 },
+  { threshold: 25000, rewardEn: 'Weapon Stone ×100 + Armor Stone ×100', rewardTh: 'หินอาวุธ ×100 + หินเกราะ ×100', icon: '⚔️', sortOrder: 2 },
+  { threshold: 50000, rewardEn: 'Mana ×12,000 + Accessory Stone ×100', rewardTh: 'มานา ×12,000 + หินเครื่องประดับ ×100', icon: '🔮', sortOrder: 3 },
+  { threshold: 100000, rewardEn: 'Clothing Ticket ×10', rewardTh: 'ตั๋วเสื้อผ้า ×10', icon: '👗', sortOrder: 4 },
+  { threshold: 150000, rewardEn: 'Summon Ticket ×10', rewardTh: 'ตั๋วอัญเชิญ ×10', icon: '✨', sortOrder: 5 },
+  { threshold: 200000, rewardEn: 'Fortune House ×1 + Reset Potions ×4', rewardTh: 'บ้านแห่งโชค ×1 + ยารีเซ็ต ×4', icon: '🏠', sortOrder: 6 },
+] as const;
+
+const WEAPONS = [
+  { name: 'Arthur — Iron Knight', sortOrder: 1, visible: true },
+  { name: 'Elena — Forest Ranger', sortOrder: 2, visible: true },
+  { name: 'Kaelen — Shadow Mage', sortOrder: 3, visible: true },
+  { name: 'Lyra — Holy Priestess', sortOrder: 4, visible: true },
+] as const;
+
+const NEWS_ARTICLES = [
+  {
+    titleEn: 'Pre-Registration Officially Opens!',
+    titleTh: 'เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ!',
+    slug: 'pre-registration-opens',
+    category: 'event',
+    emoji: '🎉',
+    status: 'published',
+    publishedAt: new Date().toISOString(),
+  },
+  {
+    titleEn: 'Discover the Combat System',
+    titleTh: 'พบกับระบบการต่อสู้สุดมัน',
+    slug: 'combat-system-reveal',
+    category: 'update',
+    emoji: '⚔️',
+    status: 'published',
+    publishedAt: new Date(Date.now() - 86400000).toISOString(),
+  },
+  {
+    titleEn: 'Developer Diary: Creating Arcatéa',
+    titleTh: 'บันทึกนักพัฒนา: การสร้างอาร์คาเทีย',
+    slug: 'developer-diary-arcatea',
+    category: 'media',
+    emoji: '📖',
+    status: 'published',
+    publishedAt: new Date(Date.now() - 172800000).toISOString(),
+  },
+] as const;
+
+const STORE_BUTTONS = [
+  { platform: 'ios', label: 'App Store', sublabel: 'Pre-order on the', url: '#', sortOrder: 1, visible: true },
+  { platform: 'android', label: 'Google Play', sublabel: 'Register on', url: '#', sortOrder: 2, visible: true },
+  { platform: 'pc', label: 'Windows', sublabel: 'Coming soon', url: '#', sortOrder: 3, visible: true },
+] as const;
+
+const HOMEPAGE_GLOBAL = {
+  taglineEn: 'Adventure together, climb higher',
+  taglineTh: 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย',
+  ctaTextEn: 'Join the pre-registration',
+  ctaTextTh: 'ลงทะเบียนล่วงหน้าเลย',
+  ctaLink: '/event',
+  features: [
+    { icon: '⚔️', titleEn: 'Combat System', titleTh: 'ระบบต่อสู้', descriptionEn: 'A four-class combat flow that stays quick to read', descriptionTh: 'ระบบต่อสู้ 4 คลาสที่ดูเข้าใจง่าย แต่ยังมีจังหวะให้เล่นสนุก' },
+    { icon: '🗺️', titleEn: 'Explore the World', titleTh: 'สำรวจโลกกว้าง', descriptionEn: 'Travel through Arcatea with routes that stay easy to follow', descriptionTh: 'ออกสำรวจ Arcatea ผ่านเส้นทางที่ตามได้ง่ายและไม่พาหลงทิศ' },
+    { icon: '🏰', titleEn: 'Conquer the Tower', titleTh: 'พิชิตหอคอย', descriptionEn: 'Climb The Boundless Spire floor by floor as the challenge tightens', descriptionTh: 'ไต่ The Boundless Spire ไปทีละชั้น ยิ่งสูงยิ่งเข้มข้น' },
+    { icon: '✨', titleEn: 'Upgrade Characters', titleTh: 'อัพเกรดตัวละคร', descriptionEn: 'Improve skills, gear, and appearance with a clearer upgrade path', descriptionTh: 'พัฒนาสกิล อุปกรณ์ และรูปลักษณ์ในเส้นทางอัปเกรดที่ดูง่ายขึ้น' },
+    { icon: '🏟️', titleEn: 'PvP Arena', titleTh: 'PvP Arena', descriptionEn: 'Step into real-time arena matches against other players', descriptionTh: 'ลงสนาม PvP แบบเรียลไทม์กับผู้เล่นคนอื่น' },
+    { icon: '🤝', titleEn: 'Guilds & Friends', titleTh: 'กิลด์ & เพื่อน', descriptionEn: 'Team up with friends and guildmates for bosses and shared goals', descriptionTh: 'ร่วมทีมกับเพื่อนและสมาชิกกิลด์เพื่อจัดการบอสและเป้าหมายร่วมกัน' },
+  ],
+} as const;
+
+const SITE_SETTINGS_GLOBAL = {
+  siteName: 'Eternal Tower Saga',
+  siteDescription: 'Eternal Tower Saga — เว็บไซต์ทางการสำหรับข่าวสาร แนะนำเกม และข้อมูลการลงทะเบียนล่วงหน้า',
+  socialLinks: {
+    facebook: 'https://facebook.com/EternalTowerSaga',
+    tiktok: 'https://tiktok.com/@EternalTowerSaga',
+    youtube: 'https://youtube.com/@EternalTowerSaga',
+    discord: 'https://discord.gg/eternaltowersaga',
+  },
+  footer: {
+    copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
+    termsUrl: '/terms',
+    privacyUrl: '/privacy',
+    supportUrl: '#',
+  },
+} as const;
+
+const EVENT_CONFIG_GLOBAL = {
+  enabled: true,
+  titleEn: 'Join the pre-registration',
+  titleTh: 'ลงทะเบียนล่วงหน้า',
+  descriptionEn: 'Register early for launch rewards and milestone tracking.',
+  descriptionTh: 'ลงทะเบียนเลยเพื่อรับรางวัลสุดพิเศษเมื่อเปิดตัว!',
+  countdownTarget: '2026-04-02T23:59:59.000Z',
+  registrationOpen: true,
+} as const;
+
+const FAQ_PAGE_GLOBAL = {
+  titleEn: 'Frequently Asked Questions',
+  titleTh: 'คำถามที่พบบ่อย',
+  faqItems: [
+    { questionEn: 'What genre is Eternal Tower Saga?', questionTh: 'Eternal Tower Saga เป็นเกมแนวอะไร?', answerEn: 'A mobile Casual MMORPG and Action RPG. Explore the Eternal Tower and adventure with other players in a fantasy world.', answerTh: 'เกมมือถือแนว Casual MMORPG ผสม Action RPG สำรวจหอคอยนิรันดร์ และร่วมผจญภัยกับผู้เล่นอื่น ๆ ในโลกแฟนตาซี' },
+    { questionEn: 'What devices are supported?', questionTh: 'เกมนี้รองรับมือถือสเปคไหนบ้าง?', answerEn: 'Supports iOS 14+, Android 8.0+, and PC (Windows 10+). Cross-platform play is available using the same account.', answerTh: 'รองรับ iOS 14+, Android 8.0+ และ PC (Windows 10+) สามารถเล่นข้ามแพลตฟอร์มได้โดยใช้บัญชีเดียวกัน' },
+    { questionEn: 'Is there a guild system?', questionTh: 'มีระบบกิลด์หรือเล่นกับเพื่อนได้ไหม?', answerEn: 'Yes. There is a full guild system with Guild War, Guild Raid, Chat, and Party features for up to 4 friends.', answerTh: 'มีครับ รองรับระบบกิลด์เต็มรูปแบบ ทั้ง Guild War, Guild Raid, Chat และ Party ร่วมผจญภัยกับเพื่อนได้สูงสุด 4 คน' },
+    { questionEn: 'What do I get for pre-registering?', questionTh: 'ลงทะเบียนล่วงหน้าจะได้อะไร?', answerEn: 'You receive milestone rewards such as Gold, Summoning Stones, Premium Tickets, and exclusive event items.', answerTh: 'ได้รับรางวัลสะสมตาม milestone เช่น Gold, Summoning Stones, Premium Tickets และไอเทมพิเศษ รวมถึงของรางวัลเฉพาะกิจกรรม' },
+    { questionEn: 'Who developed this game?', questionTh: 'เกมนี้พัฒนาโดยบริษัทอะไร?', answerEn: 'Developed by Ultimate Game Co., Ltd.', answerTh: 'พัฒนาโดย บริษัท อัลติเมตเกม จำกัด (Ultimate Game Co., Ltd.)' },
+  ],
+} as const;
+
+const SUPPORT_PAGE_GLOBAL = {
+  badgeEn: 'SUPPORT',
+  badgeTh: 'ช่วยเหลือ',
+  titleEn: 'Support Center',
+  titleTh: 'ศูนย์ช่วยเหลือ',
+  subtitleEn: 'Need help? Our team is here for you.',
+  subtitleTh: 'มีคำถามหรือต้องการความช่วยเหลือ? ทีมงานพร้อมดูแลคุณ',
+  supportEmail: 'support@eternaltowersaga.com',
+  channels: [
+    { icon: 'mail', titleEn: 'Email Support', titleTh: 'อีเมลซัพพอร์ต', descEn: 'Send questions or report issues via email. Our team responds within 24-48 hours.', descTh: 'ส่งคำถามหรือรายงานปัญหาผ่านอีเมล ทีมงานจะตอบกลับภายใน 24-48 ชั่วโมง', actionLabelEn: 'Send Email', actionLabelTh: 'ส่งอีเมล', actionHref: 'mailto:support@eternaltowersaga.com', external: false },
+    { icon: 'message-circle', titleEn: 'Discord Community', titleTh: 'Discord Community', descEn: 'Join our Discord community. Chat with other players and the dev team.', descTh: 'เข้าร่วมชุมชน Discord ของเรา พูดคุยกับผู้เล่นและทีมงาน', actionLabelEn: 'Join Discord', actionLabelTh: 'เข้าร่วม Discord', actionHref: 'https://discord.gg/eternaltowersaga', external: true },
+    { icon: 'file-question', titleEn: 'FAQ', titleTh: 'คำถามที่พบบ่อย', descEn: 'Find answers to popular questions about the game.', descTh: 'ค้นหาคำตอบสำหรับคำถามยอดนิยมเกี่ยวกับเกม', actionLabelEn: 'View FAQ', actionLabelTh: 'ดู FAQ', actionHref: '/faq', external: false },
+    { icon: 'book-open', titleEn: 'Game Guide', titleTh: 'คู่มือเกม', descEn: 'Learn game systems from basics to advanced content.', descTh: 'เรียนรู้ระบบต่าง ๆ ในเกม ตั้งแต่พื้นฐานไปจนถึงเนื้อหาขั้นสูง', actionLabelEn: 'Read Guide', actionLabelTh: 'อ่านคู่มือ', actionHref: '/game-guide', external: false },
+  ],
+  infoItems: [
+    { icon: 'clock', titleEn: 'Response Time', titleTh: 'เวลาตอบกลับ', descEn: 'Within 24-48 business hours', descTh: 'ภายใน 24-48 ชั่วโมงทำการ' },
+    { icon: 'shield', titleEn: 'Account Security', titleTh: 'ความปลอดภัย', descEn: 'Never share your password', descTh: 'อย่าแชร์รหัสผ่านกับผู้อื่น' },
+    { icon: 'headphones', titleEn: 'Languages', titleTh: 'ภาษาที่รองรับ', descEn: 'Thai / English', descTh: 'ไทย / English' },
+  ],
+} as const;
+
+async function createIfMissing(
+  payload: Payload,
+  collection: string,
+  data: SeedRecord,
+) {
   try {
-    await payload.create({
-      collection: 'users',
-      data: {
-        email: 'admin@eternaltowersaga.com',
-        password: 'Admin@EST2026!',
-        role: 'admin',
-      },
-    })
-    console.log('   ✅ Admin user created')
+    await payload.create({ collection, data });
+    return true;
   } catch {
-    console.log('   ⏭️  Admin user already exists')
+    return false;
   }
-
-  // ─── 2. Seed Milestones ───
-  console.log('🏆 Seeding milestones...')
-  const milestones = [
-    { threshold: 10000, rewardEn: 'Gold ×200,000 + Fatigue Scroll ×10', rewardTh: 'ทอง ×200,000 + ม้วนฟื้นพลัง ×10', icon: '💰', sortOrder: 1 },
-    { threshold: 25000, rewardEn: 'Weapon Stone ×100 + Armor Stone ×100', rewardTh: 'หินอาวุธ ×100 + หินเกราะ ×100', icon: '⚔️', sortOrder: 2 },
-    { threshold: 50000, rewardEn: 'Mana ×12,000 + Accessory Stone ×100', rewardTh: 'มานา ×12,000 + หินเครื่องประดับ ×100', icon: '🔮', sortOrder: 3 },
-    { threshold: 100000, rewardEn: 'Clothing Ticket ×10', rewardTh: 'ตั๋วเสื้อผ้า ×10', icon: '👗', sortOrder: 4 },
-    { threshold: 150000, rewardEn: 'Summon Ticket ×10', rewardTh: 'ตั๋วอัญเชิญ ×10', icon: '✨', sortOrder: 5 },
-    { threshold: 200000, rewardEn: 'Fortune House ×1 + Reset Potions ×4', rewardTh: 'บ้านแห่งโชค ×1 + ยารีเซ็ต ×4', icon: '🏠', sortOrder: 6 },
-  ]
-
-  for (const m of milestones) {
-    try {
-      await payload.create({ collection: 'milestones', data: m })
-    } catch { /* skip if exists */ }
-  }
-  console.log(`   ✅ ${milestones.length} milestones seeded`)
-
-  // ─── 3. Seed Characters ───
-  console.log('🗡️ Seeding characters...')
-  // Only use fields that exist in the Characters collection: name, sortOrder, visible
-  // portrait/infoImage/backgroundImage/icon are upload fields — add via CMS admin later
-  const characters = [
-    { name: 'Arthur — Iron Knight', sortOrder: 1, visible: true },
-    { name: 'Elena — Forest Ranger', sortOrder: 2, visible: true },
-    { name: 'Kaelen — Shadow Mage', sortOrder: 3, visible: true },
-    { name: 'Lyra — Holy Priestess', sortOrder: 4, visible: true },
-  ]
-
-  for (const char of characters) {
-    try {
-      await payload.create({
-        collection: 'characters',
-        data: char as Record<string, unknown>,
-      })
-    } catch { /* skip if exists */ }
-  }
-  console.log(`   ✅ ${characters.length} characters seeded`)
-
-  // ─── 4. Seed News ───
-  console.log('📰 Seeding news...')
-  const newsArticles = [
-    {
-      titleEn: 'Pre-Registration Officially Opens!',
-      titleTh: 'เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ!',
-      slug: 'pre-registration-opens',
-      category: 'event' as const,
-      emoji: '🎉',
-      status: 'published' as const,
-      publishedAt: new Date().toISOString(),
-    },
-    {
-      titleEn: 'Discover the Combat System',
-      titleTh: 'พบกับระบบการต่อสู้สุดมัน',
-      slug: 'combat-system-reveal',
-      category: 'update' as const,
-      emoji: '⚔️',
-      status: 'published' as const,
-      publishedAt: new Date(Date.now() - 86400000).toISOString(),
-    },
-    {
-      titleEn: 'Developer Diary: Creating Arcatéa',
-      titleTh: 'บันทึกนักพัฒนา: การสร้างอาร์คาเทีย',
-      slug: 'developer-diary-arcatea',
-      category: 'media' as const,
-      emoji: '📖',
-      status: 'published' as const,
-      publishedAt: new Date(Date.now() - 172800000).toISOString(),
-    },
-  ]
-
-  for (const article of newsArticles) {
-    try {
-      await payload.create({ collection: 'news', data: article })
-    } catch { /* skip */ }
-  }
-  console.log(`   ✅ ${newsArticles.length} news articles seeded`)
-
-  // ─── 5. Seed Store Buttons ───
-  console.log('🏪 Seeding store buttons...')
-  const storeButtons = [
-    { platform: 'ios' as const, label: 'App Store', sublabel: 'Pre-order on the', url: '#', sortOrder: 1, visible: true },
-    { platform: 'android' as const, label: 'Google Play', sublabel: 'PRE-REGISTER ON', url: '#', sortOrder: 2, visible: true },
-    { platform: 'pc' as const, label: 'Windows', sublabel: 'Coming soon', url: '#', sortOrder: 3, visible: true },
-  ]
-
-  for (const btn of storeButtons) {
-    try {
-      await payload.create({ collection: 'store-buttons', data: btn })
-    } catch { /* skip */ }
-  }
-  console.log(`   ✅ ${storeButtons.length} store buttons seeded`)
-
-  // ─── 6. Set Global: Hero Section ───
-  console.log('🖼️  Setting hero section globals...')
-  try {
-    await payload.updateGlobal({
-      slug: 'homepage',
-      data: {
-        taglineEn: 'Adventure together, conquer the tower',
-        taglineTh: 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย',
-        ctaTextEn: 'Pre-Register Now',
-        ctaTextTh: 'ลงทะเบียนล่วงหน้าเลย',
-        ctaLink: '/event',
-        features: [
-          { icon: '⚔️', titleEn: 'Combat System', titleTh: 'ระบบต่อสู้', descriptionEn: 'Exciting 4-class dungeon combat', descriptionTh: 'ลุยดันเจี้ยนสุดมัน 4 คลาส' },
-          { icon: '🗺️', titleEn: 'Explore the World', titleTh: 'สำรวจโลกกว้าง', descriptionEn: 'Explore the vast lands of Arcatéa', descriptionTh: 'ผจญภัยในดินแดน Arcatéa อันกว้างใหญ่ไพศาล' },
-          { icon: '🏰', titleEn: 'Conquer the Tower', titleTh: 'พิชิตหอคอย', descriptionEn: 'Climb The Boundless Spire to ultimate challenges', descriptionTh: 'ปีนหอคอยนิรันดร์ The Boundless Spire ท้าทายขั้นเซียนสุดโหด' },
-          { icon: '✨', titleEn: 'Upgrade Characters', titleTh: 'อัพเกรดตัวละคร', descriptionEn: 'Develop skills, gear, and appearances', descriptionTh: 'พัฒนาทักษะ อุปกรณ์ และรูปลักษณ์ให้แข็งแกร่ง' },
-          { icon: '🏟️', titleEn: 'PvP Arena', titleTh: 'PvP Arena', descriptionEn: 'Challenge other players in real-time matches', descriptionTh: 'ต่อสู้กับผู้เล่นคนอื่นในสนามประลองแบบเรียลไทม์' },
-          { icon: '🤝', titleEn: 'Guilds & Friends', titleTh: 'กิลด์ & เพื่อน', descriptionEn: 'Join guilds and conquer bosses together', descriptionTh: 'สร้างกิลด์ ร่วมมือกับเพื่อนเพื่อพิชิตบอสสุดโหด' },
-        ],
-      },
-    })
-    console.log('   ✅ Hero section globals set')
-  } catch (e) {
-    console.log('   ⚠️  Hero section update error:', e)
-  }
-
-  // ─── 7. Set Global: Site Settings ───
-  console.log('⚙️  Setting site settings...')
-  try {
-    await payload.updateGlobal({
-      slug: 'site-settings',
-      data: {
-        siteName: 'Eternal Tower Saga',
-        siteDescription: 'Eternal Tower Saga — เกมมือถือ RPG ผจญภัยพร้อมสหายร่วมรบ',
-        socialLinks: {
-          facebook: 'https://facebook.com/EternalTowerSaga',
-          tiktok: 'https://tiktok.com/@EternalTowerSaga',
-          youtube: 'https://youtube.com/@EternalTowerSaga',
-          discord: 'https://discord.gg/eternaltowersaga',
-        },
-        footer: {
-          copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
-          termsUrl: '/terms',
-          privacyUrl: '/privacy',
-          supportUrl: '#',
-        },
-      },
-    })
-    console.log('   ✅ Site settings set')
-  } catch (e) {
-    console.log('   ⚠️  Site settings update error:', e)
-  }
-
-  // ─── 8. Set Global: Event Config ───
-  console.log('🎮 Setting event config...')
-  try {
-    await payload.updateGlobal({
-      slug: 'event-config',
-      data: {
-        enabled: true,
-        titleEn: 'Pre-Register Now',
-        titleTh: 'ลงทะเบียนล่วงหน้า',
-        descriptionEn: 'Register now to receive exclusive rewards at launch!',
-        descriptionTh: 'ลงทะเบียนเลยเพื่อรับรางวัลสุดพิเศษเมื่อเปิดตัว!',
-        countdownTarget: '2026-04-02T23:59:59.000Z',
-        registrationOpen: true,
-      },
-    })
-    console.log('   ✅ Event config set')
-  } catch (e) {
-    console.log('   ⚠️  Event config update error:', e)
-  }
-
-  console.log('\n✅ Seed complete! Login at /admin with:')
-  console.log('   Email: admin@eternaltowersaga.com')
-  console.log('   Password: Admin@EST2026!')
-
-  process.exit(0)
 }
 
-seed().catch((err) => {
-  console.error('❌ Seed failed:', err)
-  process.exit(1)
-})
+async function seedCollectionEntries(
+  payload: Payload,
+  label: string,
+  collection: string,
+  entries: readonly SeedRecord[],
+) {
+  console.log(label);
+
+  for (const entry of entries) {
+    await createIfMissing(payload, collection, entry as SeedRecord);
+  }
+
+  console.log(`   ✅ ${entries.length} ${collection} seeded`);
+}
+
+async function updateGlobalWithLog(
+  payload: Payload,
+  label: string,
+  slug: string,
+  data: SeedRecord,
+) {
+  console.log(label);
+
+  try {
+    await payload.updateGlobal({ slug, data });
+    console.log(`   ✅ ${slug} set`);
+  } catch (error) {
+    console.log(`   ⚠️  ${slug} update error:`, error);
+  }
+}
+
+async function seedAdmin(payload: Payload) {
+  console.log('👤 Creating admin user...');
+
+  const created = await createIfMissing(payload, 'users', ADMIN_USER as unknown as SeedRecord);
+  console.log(created ? '   ✅ Admin user created' : '   ⏭️  Admin user already exists');
+}
+
+async function seedMilestones(payload: Payload) {
+  await seedCollectionEntries(payload, '🏆 Seeding milestones...', 'milestones', MILESTONES as unknown as SeedRecord[]);
+}
+
+async function seedWeapons(payload: Payload) {
+  await seedCollectionEntries(payload, '🗡️ Seeding weapons...', 'weapons', WEAPONS as unknown as SeedRecord[]);
+}
+
+async function seedNews(payload: Payload) {
+  await seedCollectionEntries(payload, '📰 Seeding news...', 'news', NEWS_ARTICLES as unknown as SeedRecord[]);
+}
+
+async function seedStoreButtons(payload: Payload) {
+  await seedCollectionEntries(payload, '🏪 Seeding store buttons...', 'store-buttons', STORE_BUTTONS as unknown as SeedRecord[]);
+}
+
+async function seedHomepage(payload: Payload) {
+  await updateGlobalWithLog(payload, '🖼️  Setting hero section globals...', 'homepage', HOMEPAGE_GLOBAL as unknown as SeedRecord);
+}
+
+async function seedSiteSettings(payload: Payload) {
+  await updateGlobalWithLog(payload, '⚙️  Setting site settings...', 'site-settings', SITE_SETTINGS_GLOBAL as unknown as SeedRecord);
+}
+
+async function seedEventConfig(payload: Payload) {
+  await updateGlobalWithLog(payload, '🎮 Setting event config...', 'event-config', EVENT_CONFIG_GLOBAL as unknown as SeedRecord);
+}
+
+async function runSeedSteps(payload: Payload) {
+  await seedAdmin(payload);
+  await seedMilestones(payload);
+  await seedWeapons(payload);
+  await seedNews(payload);
+  await seedStoreButtons(payload);
+  await seedHomepage(payload);
+  await seedSiteSettings(payload);
+  await seedEventConfig(payload);
+  await updateGlobalWithLog(payload, '❓ Setting FAQ page...', 'faq-page', FAQ_PAGE_GLOBAL as unknown as SeedRecord);
+  await updateGlobalWithLog(payload, '🛠️  Setting support page...', 'support-page', SUPPORT_PAGE_GLOBAL as unknown as SeedRecord);
+}
+
+function printCompletionMessage() {
+  console.log('\n✅ Seed complete! Login at /admin with:');
+  console.log('   Email: admin@eternaltowersaga.com');
+  console.log('   Password: Admin@EST2026!');
+}
+
+async function seed() {
+  console.log('🌱 Seeding Payload CMS database...\n');
+  const payload = await getPayload({ config });
+  await runSeedSteps(payload);
+  printCompletionMessage();
+  process.exit(0);
+}
+
+seed().catch((error) => {
+  console.error('❌ Seed failed:', error);
+  process.exit(1);
+});

@@ -37,22 +37,22 @@ export async function fetchCounts(payload: Payload, since: Date, prevStart: Date
     totalPageViews, prevPageViews,
     totalEvents, prevEvents,
   ] = await Promise.all([
-    payload.count({ collection: 'registrations' }),
-    payload.count({ collection: 'registrations', where: { createdAt: { greater_than: since.toISOString() } } }),
+    payload.count({ collection: 'registrations', overrideAccess: true }),
+    payload.count({ collection: 'registrations', where: { createdAt: { greater_than: since.toISOString() } }, overrideAccess: true }),
     payload.count({ collection: 'registrations', where: { and: [
       { createdAt: { greater_than: prevStart.toISOString() } },
       { createdAt: { less_than_equal: since.toISOString() } },
-    ] } }),
-    payload.count({ collection: 'page-views', where: { createdAt: { greater_than: since.toISOString() } } }),
+    ] }, overrideAccess: true }),
+    payload.count({ collection: 'page-views', where: { createdAt: { greater_than: since.toISOString() } }, overrideAccess: true }),
     payload.count({ collection: 'page-views', where: { and: [
       { createdAt: { greater_than: prevStart.toISOString() } },
       { createdAt: { less_than_equal: since.toISOString() } },
-    ] } }),
-    payload.count({ collection: 'page-events', where: { createdAt: { greater_than: since.toISOString() } } }),
+    ] }, overrideAccess: true }),
+    payload.count({ collection: 'page-events', where: { createdAt: { greater_than: since.toISOString() } }, overrideAccess: true }),
     payload.count({ collection: 'page-events', where: { and: [
       { createdAt: { greater_than: prevStart.toISOString() } },
       { createdAt: { less_than_equal: since.toISOString() } },
-    ] } }),
+    ] }, overrideAccess: true }),
   ])
 
   return {
@@ -76,18 +76,21 @@ export async function fetchRawDocs(payload: Payload, since: Date) {
       where: { createdAt: { greater_than: since.toISOString() } },
       limit: MAX_AGGREGATION_DOCS, sort: '-createdAt',
       select: { path: true, ip: true, sessionId: true, userAgent: true, createdAt: true },
+      overrideAccess: true,
     }),
     payload.find({
       collection: 'page-events',
       where: { createdAt: { greater_than: since.toISOString() } },
       limit: MAX_AGGREGATION_DOCS, sort: '-createdAt',
       select: { eventName: true, path: true, createdAt: true },
+      overrideAccess: true,
     }),
     payload.find({
       collection: 'registrations',
       where: { createdAt: { greater_than: since.toISOString() } },
       limit: MAX_AGGREGATION_DOCS, sort: '-createdAt',
       select: { region: true, platform: true, createdAt: true },
+      overrideAccess: true,
     }),
   ])
 

@@ -1,18 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayloadClient } from '@/lib/payload'
-import { checkRateLimit } from '@/lib/rate-limit'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
-    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
-
-    // Rate limit: 30 requests per minute
-    if (!checkRateLimit(ip, 30, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
-    }
-
     const url = new URL(request.url)
     const code = url.searchParams.get('code')
     const leaderboard = url.searchParams.get('leaderboard')
@@ -26,6 +18,7 @@ export async function GET(request: NextRequest) {
         where: { referralPoints: { greater_than: 0 } },
         sort: '-referralPoints',
         limit: 20,
+        overrideAccess: true,
       })
 
       const entries = topReferrers.docs.map((doc, index) => {
@@ -59,6 +52,7 @@ export async function GET(request: NextRequest) {
       collection: 'registrations',
       where: { referralCode: { equals: code } },
       limit: 1,
+      overrideAccess: true,
     })
 
     if (result.docs.length === 0) {
@@ -73,6 +67,7 @@ export async function GET(request: NextRequest) {
       where: { referredBy: { equals: code } },
       sort: '-createdAt',
       limit: 50,
+      overrideAccess: true,
     })
 
     const l1List = l1Referrals.docs.map((doc) => {

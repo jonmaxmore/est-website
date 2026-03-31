@@ -7,6 +7,67 @@ import { getReferralConfig, findL1Parent, processReferralChain } from '@/service
 
 export const dynamic = 'force-dynamic'
 
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === 'object' ? value as Record<string, unknown> : null
+}
+
+function readString(value: unknown): string | null {
+  return typeof value === 'string' && value.trim().length > 0 ? value : null
+}
+
+function readNumber(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null
+}
+
+function collectPayloadErrorEntries(error: unknown): Record<string, unknown>[] {
+  const records: Record<string, unknown>[] = []
+  const root = asRecord(error)
+  if (!root) return records
+
+  const pushErrors = (value: unknown) => {
+    if (!Array.isArray(value)) return
+
+    for (const entry of value) {
+      const record = asRecord(entry)
+      if (record) records.push(record)
+    }
+  }
+
+  pushErrors(asRecord(root.data)?.errors)
+  pushErrors(asRecord(root.cause)?.errors)
+  pushErrors(asRecord(asRecord(root.cause)?.data)?.errors)
+
+  return records
+}
+
+function isDuplicateRegistrationError(error: unknown) {
+  const root = asRecord(error)
+  const message = String(error).toLowerCase()
+  const status = readNumber(root?.status)
+  const payloadErrors = collectPayloadErrorEntries(error)
+
+  if (message.includes('unique') || message.includes('duplicate') || message.includes('already exists')) {
+    return true
+  }
+
+  if (status !== 400 && status !== 409) {
+    return false
+  }
+
+  return payloadErrors.some((entry) => {
+    const path = readString(entry.path)?.toLowerCase()
+    const field = readString(entry.field)?.toLowerCase()
+    const label = readString(entry.label)?.toLowerCase()
+    const entryMessage = readString(entry.message)?.toLowerCase() || ''
+
+    return path === 'email'
+      || field === 'email'
+      || label === 'email'
+      || entryMessage.includes('field is invalid: email')
+      || entryMessage.includes('email')
+  })
+}
+
 /**
  * POST /api/register — Registration endpoint
  * Thin controller: validates input, creates record, delegates referral logic to service
@@ -14,6 +75,7 @@ export const dynamic = 'force-dynamic'
 export async function POST(request: NextRequest) {
   try {
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+    const rateLimitKey = `register:${ip}`
 
     const contentLength = request.headers.get('content-length')
     if (contentLength && parseInt(contentLength, 10) > 5000) {
@@ -26,7 +88,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid input' }, { status: 400 })
     }
 
-    if (!checkRateLimit(ip, 5, 60000)) {
+    if (!checkRateLimit(rateLimitKey, 5, 60000)) {
       return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
     }
 
@@ -53,8 +115,7 @@ export async function POST(request: NextRequest) {
         },
       })
     } catch (err: unknown) {
-      const errorMsg = err instanceof Error ? err.message : String(err)
-      if (errorMsg.includes('unique') || errorMsg.includes('duplicate') || errorMsg.includes('already exists')) {
+      if (isDuplicateRegistrationError(err)) {
         return NextResponse.json({ error: 'This email is already registered' }, { status: 409 })
       }
       throw err

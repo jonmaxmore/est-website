@@ -39,11 +39,11 @@ export async function GET() {
       })
     }
 
-    return NextResponse.json({ gallery: items }, {
+    return NextResponse.json({ gallery: items, items }, {
       headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120' },
     })
   } catch (error) {
     console.error('[API /public/gallery] Error:', error)
-    return NextResponse.json({ gallery: {} })
+    return NextResponse.json({ gallery: {}, items: {} })
   }
 }

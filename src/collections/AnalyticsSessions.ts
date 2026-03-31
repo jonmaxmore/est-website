@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { isAdmin } from '@/lib/cms-access'
 
 export const AnalyticsSessions: CollectionConfig = {
   slug: 'analytics-sessions',
@@ -9,10 +10,10 @@ export const AnalyticsSessions: CollectionConfig = {
     defaultColumns: ['visitorId', 'landingPage', 'channel', 'device', 'pageCount', 'createdAt'],
   },
   access: {
-    read: ({ req: { user } }) => !!user,
+    read: isAdmin,
     create: () => true,
     update: () => true, // Track endpoint updates session on subsequent pageviews
-    delete: ({ req: { user } }) => !!user,
+    delete: isAdmin,
   },
   fields: [
     // ─── Session Identity ───

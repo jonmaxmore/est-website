@@ -1,0 +1,11 @@
+### Browser `prod-event-stepwise` opened with pid 45236.
+- prod-event-stepwise:
+  - browser-type: chrome
+  - user-data-dir: <in-memory>
+  - headed: false
+---
+### Result
+- [Console](.playwright-cli\console-2026-03-27T04-00-31-556Z.log)
+### Page
+- Page URL: about:blank
+

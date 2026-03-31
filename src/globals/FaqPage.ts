@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { allowPublicRead, isAdminOrEditor } from '@/lib/cms-access'
 
 export const FaqPage: GlobalConfig = {
   slug: 'faq-page',
@@ -7,8 +8,8 @@ export const FaqPage: GlobalConfig = {
     group: 'Pages',
   },
   access: {
-    read: () => true,
-    update: ({ req: { user } }) => !!user,
+    read: allowPublicRead,
+    update: isAdminOrEditor,
   },
   fields: [
     {

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { isAdmin } from '@/lib/cms-access'
 
 export const PageEvents: CollectionConfig = {
   slug: 'page-events',
@@ -9,10 +10,10 @@ export const PageEvents: CollectionConfig = {
     defaultColumns: ['eventName', 'path', 'createdAt'],
   },
   access: {
-    read: ({ req: { user } }) => !!user,
+    read: isAdmin,
     create: () => true, // Allow API to create
     update: () => false,
-    delete: ({ req: { user } }) => !!user,
+    delete: isAdmin,
   },
   fields: [
     {

@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { allowPublicRead, isAdmin } from '@/lib/cms-access'
 
 export const EventConfig: GlobalConfig = {
   slug: 'event-config',
@@ -7,8 +8,8 @@ export const EventConfig: GlobalConfig = {
     group: 'Event',
   },
   access: {
-    read: () => true,
-    update: ({ req: { user } }) => !!user,
+    read: allowPublicRead,
+    update: isAdmin,
   },
   fields: [
     // ═══════════════════════════════════════
@@ -91,7 +92,7 @@ export const EventConfig: GlobalConfig = {
             {
               type: 'row',
               fields: [
-                { name: 'titleEn', type: 'text', defaultValue: 'Pre-Register Now', label: 'Event Title (EN)', admin: { width: '50%' } },
+                { name: 'titleEn', type: 'text', defaultValue: 'Join the pre-registration', label: 'Event Title (EN)', admin: { width: '50%' } },
                 { name: 'titleTh', type: 'text', defaultValue: 'ลงทะเบียนล่วงหน้า', label: 'Event Title (TH)', admin: { width: '50%' } },
               ],
             },
@@ -105,42 +106,42 @@ export const EventConfig: GlobalConfig = {
             {
               type: 'row',
               fields: [
-                { name: 'ctaButtonEn', type: 'text', defaultValue: 'Pre-Register Now', label: 'CTA Button (EN)', admin: { width: '50%' } },
+                { name: 'ctaButtonEn', type: 'text', defaultValue: 'Join the pre-registration', label: 'CTA Button (EN)', admin: { width: '50%' } },
                 { name: 'ctaButtonTh', type: 'text', defaultValue: 'ลงทะเบียนล่วงหน้าเลย', label: 'CTA Button (TH)', admin: { width: '50%' } },
               ],
             },
             {
               type: 'row',
               fields: [
-                { name: 'modalTitleEn', type: 'text', defaultValue: 'Pre-Register', label: 'Modal Title (EN)', admin: { width: '50%' } },
+                { name: 'modalTitleEn', type: 'text', defaultValue: 'Registration form', label: 'Modal Title (EN)', admin: { width: '50%' } },
                 { name: 'modalTitleTh', type: 'text', defaultValue: 'ลงทะเบียนล่วงหน้า', label: 'Modal Title (TH)', admin: { width: '50%' } },
               ],
             },
             {
               type: 'row',
               fields: [
-                { name: 'emailPlaceholderEn', type: 'text', defaultValue: 'Enter your email', label: 'Email Placeholder (EN)', admin: { width: '50%' } },
+                { name: 'emailPlaceholderEn', type: 'text', defaultValue: 'Enter your email address', label: 'Email Placeholder (EN)', admin: { width: '50%' } },
                 { name: 'emailPlaceholderTh', type: 'text', defaultValue: 'กรอก Email ของท่าน', label: 'Email Placeholder (TH)', admin: { width: '50%' } },
               ],
             },
             {
               type: 'row',
               fields: [
-                { name: 'storeLabelEn', type: 'text', defaultValue: 'Choose your store', label: 'Store Label (EN)', admin: { width: '50%' } },
+                { name: 'storeLabelEn', type: 'text', defaultValue: 'Choose your platform', label: 'Store Label (EN)', admin: { width: '50%' } },
                 { name: 'storeLabelTh', type: 'text', defaultValue: 'เลือกสโตร์ที่ต้องการ', label: 'Store Label (TH)', admin: { width: '50%' } },
               ],
             },
             {
               type: 'row',
               fields: [
-                { name: 'submitButtonEn', type: 'text', defaultValue: 'Register & Go to Store', label: 'Submit Button (EN)', admin: { width: '50%' } },
+                { name: 'submitButtonEn', type: 'text', defaultValue: 'Register and continue', label: 'Submit Button (EN)', admin: { width: '50%' } },
                 { name: 'submitButtonTh', type: 'text', defaultValue: 'ลงทะเบียนและไปที่สโตร์', label: 'Submit Button (TH)', admin: { width: '50%' } },
               ],
             },
             {
               type: 'row',
               fields: [
-                { name: 'successTitleEn', type: 'text', defaultValue: 'Registration Successful!', label: 'Success Title (EN)', admin: { width: '50%' } },
+                { name: 'successTitleEn', type: 'text', defaultValue: 'Registration complete', label: 'Success Title (EN)', admin: { width: '50%' } },
                 { name: 'successTitleTh', type: 'text', defaultValue: 'ลงทะเบียนสำเร็จ!', label: 'Success Title (TH)', admin: { width: '50%' } },
               ],
             },

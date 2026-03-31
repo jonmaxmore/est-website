@@ -1,0 +1,115 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner:
+      - navigation [ref=e4]:
+        - generic [ref=e5]:
+          - link "Eternal Tower Saga home" [ref=e6] [cursor=pointer]:
+            - /url: /
+            - img "Eternal Tower Saga" [ref=e7]
+            - generic [ref=e8]:
+              - strong [ref=e9]: Eternal Tower Saga
+              - generic [ref=e10]: เกม RPG บนมือถือ
+          - generic [ref=e11]:
+            - link "หน้าหลัก" [ref=e12] [cursor=pointer]:
+              - /url: /#hero
+            - link "อาวุธ" [ref=e13] [cursor=pointer]:
+              - /url: /character
+            - link "ไฮไลท์" [ref=e14] [cursor=pointer]:
+              - /url: /game-guide
+            - link "ข่าวสาร" [ref=e15] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=e16]:
+            - link "ลงทะเบียน" [ref=e17] [cursor=pointer]:
+              - /url: /event
+            - button "Switch to English" [ref=e18] [cursor=pointer]: EN
+    - main [ref=e19]:
+      - navigation [ref=e20]:
+        - link "หน้าหลัก" [ref=e21] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e22]: ›
+        - link "ข่าวสาร" [ref=e23] [cursor=pointer]:
+          - /url: /news
+        - generic [ref=e24]: ›
+        - generic [ref=e25]: กิจกรรมรวมพลนักผจญภัยประจำสัปดาห์
+      - generic [ref=e26]:
+        - text: กิจกรรม
+        - heading "กิจกรรมรวมพลนักผจญภัยประจำสัปดาห์" [level=1] [ref=e27]
+        - time [ref=e28]: วันอังคารที่ 24 มีนาคม 2569
+      - generic [ref=e29]:
+        - generic [ref=e30]: กิจกรรม
+        - strong [ref=e31]: อัปเดตอย่างเป็นทางการ
+        - paragraph [ref=e32]: สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ กิจกรรมรวมพลนักผจญภัยประจำสัปดาห์ เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ กิจกรรมรวมพลนักผจญภัยประจำสัปดาห์ เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน
+        - paragraph [ref=e35]: กิจกรรมนี้เป็นอีกหนึ่งจังหวะสำคัญสำหรับผู้เล่นที่ต้องการเก็บรางวัลและเข้าร่วมคอนเทนต์ที่ทีมงานกำลังผลักดันอยู่ในช่วงนี้
+        - paragraph [ref=e36]: แนะนำให้ติดตามช่วงเวลาเปิดกิจกรรม เงื่อนไขการเข้าร่วม และของรางวัลที่เกี่ยวข้อง เพื่อไม่พลาดโอกาสสะสมความคืบหน้าในบัญชีของคุณ
+        - paragraph [ref=e37]: หากมีการปรับรายละเอียดเพิ่มเติม ทีมงานจะอัปเดตผ่านหน้า news และช่องทางประกาศอย่างต่อเนื่อง
+        - paragraph [ref=e38]: ติดตามหน้า news ต่อเนื่องเพื่อรับรายละเอียดเพิ่มเติมและอัปเดตฉบับล่าสุดจากทีมงาน
+      - link "← กลับหน้าข่าวสาร" [ref=e39] [cursor=pointer]:
+        - /url: /news
+      - generic [ref=e40]:
+        - heading "ข่าวสารที่เกี่ยวข้อง" [level=2] [ref=e41]
+        - generic [ref=e42]:
+          - link "1 กิจกรรมสะสมการล็อกอิน 7 วัน 24 มี.ค. 2569" [ref=e43] [cursor=pointer]:
+            - /url: /news/seven-day-login-campaign
+            - img "1" [ref=e44]
+            - generic [ref=e45]:
+              - heading "กิจกรรมสะสมการล็อกอิน 7 วัน" [level=3] [ref=e46]
+              - time [ref=e47]: 24 มี.ค. 2569
+          - link "1 เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ! 19 มี.ค. 2569" [ref=e48] [cursor=pointer]:
+            - /url: /news/pre-registration-opens
+            - img "1" [ref=e49]
+            - generic [ref=e50]:
+              - heading "เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ!" [level=3] [ref=e51]
+              - time [ref=e52]: 19 มี.ค. 2569
+    - contentinfo [ref=e53]:
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - img "Eternal Tower Saga" [ref=e56]
+          - paragraph [ref=e57]: Eternal Tower Saga คือโลกแฟนตาซีที่เน้นการผจญภัยเป็นทีม การต่อสู้ที่อ่านง่าย และบรรยากาศที่ชวนอยากกลับมาเล่นทุกวัน.
+          - generic [ref=e58]:
+            - link "discord" [ref=e59] [cursor=pointer]:
+              - /url: https://discord.gg/eternaltowersaga
+              - img [ref=e60]
+            - link "facebook" [ref=e62] [cursor=pointer]:
+              - /url: https://facebook.com/EternalTowerSaga
+              - img [ref=e63]
+            - link "youtube" [ref=e65] [cursor=pointer]:
+              - /url: https://youtube.com/@EternalTowerSaga
+              - img [ref=e66]
+            - link "tiktok" [ref=e69] [cursor=pointer]:
+              - /url: https://tiktok.com/@EternalTowerSaga
+              - img [ref=e70]
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - heading "สำรวจ" [level=4] [ref=e74]
+            - generic [ref=e75]:
+              - link "หน้าหลัก" [ref=e76] [cursor=pointer]:
+                - /url: /
+              - link "อาวุธ" [ref=e77] [cursor=pointer]:
+                - /url: /character
+              - link "ไฮไลท์เกม" [ref=e78] [cursor=pointer]:
+                - /url: /game-guide
+              - link "ข่าวสาร" [ref=e79] [cursor=pointer]:
+                - /url: /news
+          - generic [ref=e80]:
+            - heading "ช่วยเหลือ" [level=4] [ref=e81]
+            - generic [ref=e82]:
+              - link "ข้อกำหนดการใช้งาน" [ref=e83] [cursor=pointer]:
+                - /url: /terms
+              - link "นโยบายความเป็นส่วนตัว" [ref=e84] [cursor=pointer]:
+                - /url: /privacy
+              - link "คำถามที่พบบ่อย" [ref=e85] [cursor=pointer]:
+                - /url: /faq
+          - generic [ref=e86]:
+            - heading "ชุมชน" [level=4] [ref=e87]
+            - paragraph [ref=e88]: ติดตามประกาศ กิจกรรม และความเคลื่อนไหวล่าสุดของเกมผ่านช่องทาง community หลักของ Eternal Tower Saga.
+            - generic [ref=e89]:
+              - link "ลงทะเบียนล่วงหน้า" [ref=e90] [cursor=pointer]:
+                - /url: /event
+              - link "ดาวน์โหลด" [ref=e91] [cursor=pointer]:
+                - /url: /download
+      - generic [ref=e92]:
+        - generic [ref=e93]: พร้อมบน iOS • Android • PC
+        - generic [ref=e94]: © 2026 Eternal Tower Saga. All rights reserved.
+  - alert [ref=e95]

@@ -1,335 +1,352 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
-import Image from 'next/image';
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Play, X } from 'lucide-react';
+import Image from 'next/image';
 import { useLang } from '@/lib/lang-context';
-import type { CMSWeapon } from '@/types/cms';
-
-/* ═══════════════════════════════════════════════
-   WEAPON SHOWCASE — Image-Only Full-Viewport
-   Each weapon = 4 images: portrait, infoImage (text), bg, icon
-   No text — everything is communicated via images
-   ═══════════════════════════════════════════════ */
+import { isCmsMediaUrl } from '@/lib/cms-media';
+import type { CMSWeapon, CMSWeaponSectionConfig } from '@/types/cms';
 
 interface WeaponSectionProps {
   weapons: CMSWeapon[];
+  sectionConfig?: CMSWeaponSectionConfig;
 }
 
-// eslint-disable-next-line max-lines-per-function -- Page component with JSX template
-export default function WeaponSection({ weapons }: WeaponSectionProps) {
-  const { t } = useLang();
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [direction, setDirection] = useState(0);
-  const [videoOpen, setVideoOpen] = useState(false);
+type WeaponCopy = {
+  badgeText: string;
+  titleText: string;
+  introCopy: string;
+  description: string;
+  roleLabel: string;
+  playLabel: string;
+  previousLabel: string;
+  nextLabel: string;
+  selectedLabel: string;
+  switchLabel: string;
+};
 
-  const itemCount = weapons.length;
-  const activeWeapon = weapons[activeIdx];
+function getYoutubeEmbedUrl(url: string) {
+  if (!url) return null;
 
-  /* Navigation helpers — must be before early return (rules of hooks) */
-  const goTo = useCallback((idx: number) => {
-    setDirection(idx > activeIdx ? 1 : -1);
-    setActiveIdx(idx);
-    
-    // Tracking
-    const weapon = weapons[idx];
-    if (weapon) {
-      import('@/lib/tracking').then(m => m.trackWeaponClick(weapon.name || `Weapon_${idx}`));
-    }
-  }, [activeIdx, weapons]);
+  const videoId = url.includes('v=')
+    ? url.split('v=')[1]?.split('&')[0]
+    : url.split('/').pop();
 
-  const goPrev = useCallback(() => {
-    setDirection(-1);
-    setActiveIdx((prev) => (prev - 1 + itemCount) % itemCount);
-  }, [itemCount]);
+  return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : null;
+}
 
-  const goNext = useCallback(() => {
-    setDirection(1);
-    setActiveIdx((prev) => (prev + 1) % itemCount);
-  }, [itemCount]);
+function buildWeaponCopy(
+  sectionConfig: CMSWeaponSectionConfig | undefined,
+  activeWeapon: CMSWeapon,
+  t: (th: string, en: string) => string,
+): WeaponCopy {
+  return {
+    badgeText: sectionConfig
+      ? t(sectionConfig.badgeTh, sectionConfig.badgeEn)
+      : t('เลือกอาวุธของคุณ', 'Choose your weapon'),
+    titleText: sectionConfig
+      ? t(sectionConfig.titleTh, sectionConfig.titleEn)
+      : t('อาวุธแห่ง Arcatea', 'Weapons of Arcatea'),
+    introCopy: sectionConfig?.introEn || sectionConfig?.introTh
+      ? t(sectionConfig.introTh || '', sectionConfig.introEn || '')
+      : '',
+    description: t(
+      activeWeapon.descriptionTh || 'เลือกบทบาทที่เหมาะกับสไตล์การเล่นของคุณ แล้วควบคุมจังหวะการต่อสู้ให้ได้เปรียบตลอดเกม',
+      activeWeapon.descriptionEn || 'Choose the role that fits your style and control the pace of every encounter.',
+    ),
+    roleLabel: t('Combat role', 'Combat role'),
+    playLabel: t('ดูวิดีโอแนะนำ', 'Play showcase'),
+    previousLabel: t('อาวุธก่อนหน้า', 'Previous weapon'),
+    nextLabel: t('อาวุธถัดไป', 'Next weapon'),
+    selectedLabel: t('กำลังแสดง', 'Selected'),
+    switchLabel: t('สลับมุมมอง', 'Switch focus'),
+  };
+}
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        goNext();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        goPrev();
-      } else if (e.key === 'Home') {
-        e.preventDefault();
-        setDirection(-1);
-        setActiveIdx(0);
-      } else if (e.key === 'End') {
-        e.preventDefault();
-        setDirection(1);
-        setActiveIdx(itemCount - 1);
-      }
-    },
-    [itemCount, goNext, goPrev],
+function WeaponHeader({
+  copy,
+  activeIdx,
+  totalWeapons,
+  onPrev,
+  onNext,
+}: {
+  copy: WeaponCopy;
+  activeIdx: number;
+  totalWeapons: number;
+  onPrev: () => void;
+  onNext: () => void;
+}) {
+  return (
+    <div className="home-weapons__header">
+      <div className="home-weapons__intro">
+        <span className="home-kicker">{copy.badgeText}</span>
+        <h2 className="home-section-title">{copy.titleText}</h2>
+        {copy.introCopy ? <p className="home-section-copy">{copy.introCopy}</p> : null}
+      </div>
+
+      <div className="home-weapons__toolbar">
+        <span className="home-weapons__index">
+          {String(activeIdx + 1).padStart(2, '0')} / {String(totalWeapons).padStart(2, '0')}
+        </span>
+
+        <div className="home-weapons__nav">
+          <button onClick={onPrev} aria-label={copy.previousLabel} type="button">
+            <ChevronLeft size={18} />
+          </button>
+          <button onClick={onNext} aria-label={copy.nextLabel} type="button">
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      </div>
+    </div>
   );
+}
 
-  // Don't render section if no weapons uploaded
-  if (itemCount === 0) return null;
-
-  /* Parallax Mouse Tracking */
-  // eslint-disable-next-line react-hooks/rules-of-hooks -- Checked earlier
-  const mouseX = useMotionValue(0);
-  // eslint-disable-next-line react-hooks/rules-of-hooks -- Checked earlier
-  const mouseY = useMotionValue(0);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const { clientX, clientY } = e;
-    const { innerWidth, innerHeight } = window;
-    // Normalize to -1 to 1
-    const x = (clientX / innerWidth - 0.5) * 2;
-    const y = (clientY / innerHeight - 0.5) * 2;
-    mouseX.set(x);
-    mouseY.set(y);
-  };
-
-  const springConfig = { damping: 25, stiffness: 120, mass: 0.5 };
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const smoothX = useSpring(mouseX, springConfig);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const smoothY = useSpring(mouseY, springConfig);
-
-  // Parallax strengths (background opposite, foreground same direction)
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const bgX = useTransform(smoothX, [-1, 1], [30, -30]);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const bgY = useTransform(smoothY, [-1, 1], [15, -15]);
-  
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const portraitX = useTransform(smoothX, [-1, 1], [-50, 50]);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const portraitY = useTransform(smoothY, [-1, 1], [-25, 25]);
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const infoX = useTransform(smoothX, [-1, 1], [-20, 20]);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const infoY = useTransform(smoothY, [-1, 1], [-10, 10]);
-
-  /* Animation variants */
-  const bgVariants = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
-  };
-
-  const portraitVariants = {
-    initial: (dir: number) => ({ opacity: 0, x: dir > 0 ? 80 : -80 }),
-    animate: { opacity: 1, x: 0 },
-    exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -80 : 80 }),
-  };
-
-
+function WeaponPanel({
+  activeWeapon,
+  copy,
+  direction,
+  onOpenVideo,
+}: {
+  activeWeapon: CMSWeapon;
+  copy: WeaponCopy;
+  direction: number;
+  onOpenVideo: () => void;
+}) {
+  const hasVideo = activeWeapon.videoType !== 'none';
 
   return (
-    <section 
-      id="weapons" 
-      className="weapon-showcase" 
-      aria-label="Weapon Showcase"
-      onMouseMove={handleMouseMove}
-    >
-      {/* ── Layer 1: Background ── */}
-      <div className="weapon-bg-layer">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`bg-${activeIdx}`}
-            variants={bgVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.6 }}
-            className="weapon-motion-absolute"
-            style={{ x: bgX, y: bgY, scale: 1.05 }}
-          >
-            {activeWeapon?.backgroundImage ? (
-              <Image
-                src={activeWeapon.backgroundImage}
-                alt=""
-                fill
-                className="weapon-bg-img"
-                priority
-              />
-            ) : (
-              <div className="weapon-bg-img weapon-bg-fallback" />
-            )}
-          </motion.div>
-        </AnimatePresence>
-        <div className="weapon-gradient-top" />
-        <div className="weapon-gradient-bottom" />
-      </div>
-
-      {/* ── Layer 2: Portrait ── */}
-      <div className="weapon-portrait-layer">
-        <AnimatePresence mode="wait" custom={direction}>
-          <motion.div
-            key={`portrait-${activeIdx}`}
-            custom={direction}
-            variants={portraitVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-            style={{ 
-              width: '100%', 
-              height: '100%', 
-              position: 'relative',
-              x: portraitX,
-              y: portraitY 
-            }}
-          >
-            {activeWeapon?.portrait ? (
-              <Image
-                src={activeWeapon.portrait}
-                alt={activeWeapon.name || ''}
-                fill
-                className="weapon-portrait-img"
-                priority
-              />
-            ) : (
-              <div className="weapon-portrait-placeholder" aria-hidden="true" />
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* ── Layer 3: Weapon Info Overlay (Text Image + Video Button) ── */}
-      <div className="weapon-info-overlay">
-        <AnimatePresence mode="popLayout" custom={direction}>
-          <motion.div
-            key={`info-${activeIdx}`}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.5 }}
-            style={{ x: infoX, y: infoY }}
-          >
-            {activeWeapon?.infoImage && (
-              <Image
-                src={activeWeapon.infoImage}
-                alt="Weapon Info"
-                width={800}
-                height={500}
-                className="weapon-weapon-info-img"
-              />
-            )}
-
-            {/* Text description — shown when available */}
-            {(activeWeapon?.descriptionEn || activeWeapon?.descriptionTh) && (
-              <div className="weapon-text-info">
-                <h3 className="weapon-text-name">{activeWeapon.name}</h3>
-                <p className="weapon-text-desc">
-                  {t(activeWeapon.descriptionTh || '', activeWeapon.descriptionEn || '')}
-                </p>
-              </div>
-            )}
-
-            {activeWeapon?.videoType !== 'none' && (
-              <button 
-                className="weapon-video-btn" 
-                onClick={() => setVideoOpen(true)}
-                aria-label="Play Action Video"
-              >
-                <div className="weapon-video-btn-icon"><Play size={20} /></div>
-                <span>Play Showcase</span>
-              </button>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* ── Layer 4: Navigation Arrows ── */}
-      <button
-        className="weapon-nav-arrow prev"
-        onClick={goPrev}
-        aria-label="Previous weapon"
+    <AnimatePresence mode="wait" custom={direction}>
+      <motion.div
+        key={`weapon-${activeWeapon.id}`}
+        className="home-weapons__panel"
+        initial={{ opacity: 0, x: direction > 0 ? 28 : -28 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: direction > 0 ? -28 : 28 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       >
-        <ChevronLeft size={24} />
-      </button>
-      <button
-        className="weapon-nav-arrow next"
-        onClick={goNext}
-        aria-label="Next weapon"
-      >
-        <ChevronRight size={24} />
-      </button>
-
-      {/* ── Layer 5: Glassmorphism Icon Selector Panel ── */}
-      <div
-        className="weapon-icon-selector-panel"
-        onKeyDown={handleKeyDown}
-      >
-        <div className="weapon-selector-header">
-          <h3 className="weapon-selector-title">Select Weapon</h3>
-          <div className="weapon-divider" />
+        <div className="home-weapons__backdrop">
+          {activeWeapon.backgroundImage ? (
+            <Image
+              src={activeWeapon.backgroundImage}
+              alt=""
+              fill
+              unoptimized={isCmsMediaUrl(activeWeapon.backgroundImage)}
+            />
+          ) : null}
         </div>
-        
-        <div className="weapon-icon-grid" role="tablist" aria-label="Select weapon">
-          {weapons.map((weapon, i) => (
-            <motion.button
-              key={weapon.id}
-              role="tab"
-              aria-selected={i === activeIdx}
-              aria-label={weapon.name || `Weapon ${i + 1}`}
-              tabIndex={i === activeIdx ? 0 : -1}
-              className={`weapon-icon-btn ${i === activeIdx ? 'active' : ''}`}
-              onClick={() => goTo(i)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+
+        <div className="home-weapons__shade" />
+
+        <div className="home-weapons__panelBody">
+          <span className="home-weapons__eyebrow">{copy.roleLabel}</span>
+          <h3 className="home-weapons__name">{activeWeapon.name}</h3>
+          <p className="home-weapons__desc">{copy.description}</p>
+
+          {hasVideo ? (
+            <button
+              className="home-button home-button--ghost home-button--inline"
+              onClick={onOpenVideo}
+              type="button"
             >
-              {weapon.icon ? (
-                <Image
-                  src={weapon.icon}
-                  alt={weapon.name || ''}
-                  width={80}
-                  height={80}
-                  className="weapon-icon-img"
-                />
-              ) : (
-                <span className="weapon-icon-placeholder" aria-hidden="true">
-                  {(weapon.name || '?').charAt(0)}
-                </span>
-              )}
-            </motion.button>
-          ))}
+              <Play size={16} />
+              <span>{copy.playLabel}</span>
+            </button>
+          ) : null}
+        </div>
+
+        {activeWeapon.infoImage ? (
+          <div className="home-weapons__infoImage">
+            <Image
+              src={activeWeapon.infoImage}
+              alt={`${activeWeapon.name} info`}
+              width={420}
+              height={280}
+              unoptimized={isCmsMediaUrl(activeWeapon.infoImage)}
+            />
+          </div>
+        ) : null}
+
+        <div className="home-weapons__portrait">
+          {activeWeapon.portrait ? (
+            <Image
+              src={activeWeapon.portrait}
+              alt={activeWeapon.name || ''}
+              fill
+              unoptimized={isCmsMediaUrl(activeWeapon.portrait)}
+            />
+          ) : null}
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+function WeaponSelectorDock({
+  weapons,
+  activeIdx,
+  onSelect,
+  copy,
+}: {
+  weapons: CMSWeapon[];
+  activeIdx: number;
+  onSelect: (index: number) => void;
+  copy: WeaponCopy;
+}) {
+  return (
+    <div className="home-weapons__selectorDock" role="tablist" aria-label="Weapon selector">
+      {weapons.map((weapon, index) => (
+        <button
+          key={weapon.id}
+          type="button"
+          role="tab"
+          aria-selected={index === activeIdx}
+          className={`home-weapons__selectorButton ${index === activeIdx ? 'is-active' : ''}`}
+          onClick={() => onSelect(index)}
+        >
+          <span className="home-weapons__selectorIcon">
+            {weapon.icon ? (
+              <Image
+                src={weapon.icon}
+                alt={weapon.name || ''}
+                width={64}
+                height={64}
+                unoptimized={isCmsMediaUrl(weapon.icon)}
+              />
+            ) : (
+              <span className="home-weapons__selectorIconFallback">
+                {(weapon.name || '?').slice(0, 1)}
+              </span>
+            )}
+          </span>
+
+          <span className="home-weapons__selectorLabel">
+            <strong>{weapon.name}</strong>
+            <span>{index === activeIdx ? copy.selectedLabel : copy.switchLabel}</span>
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function WeaponVideoModal({
+  activeWeapon,
+  videoOpen,
+  onClose,
+}: {
+  activeWeapon: CMSWeapon;
+  videoOpen: boolean;
+  onClose: () => void;
+}) {
+  const videoUrl = activeWeapon.videoType === 'youtube' && activeWeapon.videoUrl
+    ? getYoutubeEmbedUrl(activeWeapon.videoUrl)
+    : null;
+
+  return (
+    <AnimatePresence>
+      {videoOpen ? (
+        <div className="home-weapons__modal">
+          <button
+            type="button"
+            className="home-weapons__modalBackdrop"
+            onClick={onClose}
+            aria-label="Close video"
+          />
+
+          <motion.div
+            className="home-weapons__modalContent"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.24 }}
+          >
+            <button
+              className="home-weapons__modalClose"
+              onClick={onClose}
+              aria-label="Close video"
+              type="button"
+            >
+              <X size={18} />
+            </button>
+
+            {activeWeapon.videoType === 'youtube' && videoUrl ? (
+              <iframe src={videoUrl} allow="autoplay; encrypted-media" allowFullScreen title="Weapon showcase" />
+            ) : null}
+
+            {activeWeapon.videoType === 'upload' && activeWeapon.videoUpload ? (
+              <video src={activeWeapon.videoUpload} controls autoPlay />
+            ) : null}
+          </motion.div>
+        </div>
+      ) : null}
+    </AnimatePresence>
+  );
+}
+
+export default function WeaponSection({ weapons, sectionConfig }: WeaponSectionProps) {
+  const { t } = useLang();
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const [videoOpen, setVideoOpen] = useState(false);
+
+  if (weapons.length === 0) return null;
+
+  const activeWeapon = weapons[activeIdx] || weapons[0];
+  const copy = buildWeaponCopy(sectionConfig, activeWeapon, t);
+
+  const goTo = (index: number) => {
+    setDirection(index > activeIdx ? 1 : -1);
+    setActiveIdx(index);
+
+    const weapon = weapons[index];
+    if (!weapon) return;
+
+    import('@/lib/tracking').then((module) => module.trackWeaponClick(weapon.name || `Weapon_${index}`));
+  };
+
+  return (
+    <section
+      id="weapons"
+      className="home-weapons"
+      style={sectionConfig?.bgImage?.url
+        ? {
+          backgroundImage: `linear-gradient(180deg, rgba(2, 7, 16, 0.56), rgba(2, 7, 16, 0.86)), url(${sectionConfig.bgImage.url})`,
+        }
+        : undefined}
+    >
+      <div className="home-shell">
+        <WeaponHeader
+          copy={copy}
+          activeIdx={activeIdx}
+          totalWeapons={weapons.length}
+          onPrev={() => goTo((activeIdx - 1 + weapons.length) % weapons.length)}
+          onNext={() => goTo((activeIdx + 1) % weapons.length)}
+        />
+
+        <div className="home-weapons__stage">
+          <WeaponPanel
+            activeWeapon={activeWeapon}
+            copy={copy}
+            direction={direction}
+            onOpenVideo={() => setVideoOpen(true)}
+          />
+
+          <WeaponSelectorDock
+            weapons={weapons}
+            activeIdx={activeIdx}
+            onSelect={goTo}
+            copy={copy}
+          />
         </div>
       </div>
 
-      {/* ── Layer 6: Video Modal ── */}
-      <AnimatePresence>
-        {videoOpen && (
-          <motion.div
-            className="weapon-video-modal"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="weapon-video-modal-backdrop" onClick={() => setVideoOpen(false)} />
-            <div className="weapon-video-modal-content">
-              <button className="weapon-video-close" onClick={() => setVideoOpen(false)} title="Close Video">
-                <X size={28} />
-              </button>
-              {activeWeapon.videoType === 'youtube' && activeWeapon.videoUrl ? (
-                <iframe 
-                  src={`https://www.youtube.com/embed/${activeWeapon.videoUrl.split('v=')[1] || activeWeapon.videoUrl.split('/').pop()}?autoplay=1`} 
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                  title="Showcase Video"
-                  className="weapon-video-iframe"
-                />
-              ) : activeWeapon.videoType === 'upload' && activeWeapon.videoUpload ? (
-                <video src={activeWeapon.videoUpload} controls autoPlay className="weapon-video-iframe" />
-              ) : (
-                <div className="weapon-video-error">Video Unavailable</div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <WeaponVideoModal
+        activeWeapon={activeWeapon}
+        videoOpen={videoOpen}
+        onClose={() => setVideoOpen(false)}
+      />
     </section>
   );
 }

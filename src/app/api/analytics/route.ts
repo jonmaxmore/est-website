@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayloadClient } from '@/lib/payload'
 import { checkRateLimit } from '@/lib/rate-limit'
+import { requireAdmin } from '@/lib/require-admin'
 import {
   buildDateRange, fetchCounts, fetchRawDocs,
   aggregatePageViews, aggregateEvents, aggregateRegistrations, calcTrend,
@@ -19,10 +20,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
     }
 
-    const cookieHeader = request.headers.get('cookie') || ''
-    if (!cookieHeader.includes('payload-token')) {
-      return NextResponse.json({ error: 'Unauthorized — admin login required' }, { status: 401 })
-    }
+    const auth = await requireAdmin(request)
+    if ('error' in auth) return auth.error
 
     const { searchParams } = new URL(request.url)
     const days = Math.min(parseInt(searchParams.get('days') || '30', 10), 365)
@@ -57,7 +56,7 @@ export async function GET(request: NextRequest) {
         events: calcTrend(counts.totalEvents, counts.prevEvents),
       },
       devices: Object.entries(pvMetrics.deviceCounts).map(([device, count]) => ({ device, count })),
-      registrations: registrations,
+      registrations,
       pageViews: {
         topPages: pvMetrics.topPages,
         byDate: Object.entries(pvMetrics.pvByDate).sort().map(([date, count]) => ({ date, count })),

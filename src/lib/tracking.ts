@@ -168,7 +168,6 @@ export function trackStoreClick(platform: string, url: string) {
 // ─── Convenience: Weapon/Character Click ───
 export function trackWeaponClick(weaponName: string) {
   trackInternalEvent('weapon_click', { weaponName });
-  trackFunnelStep('weapon_click', { weaponName });
   trackGA4Event('character_click', { character_name: weaponName, page: 'homepage' });
 }
 
@@ -186,6 +185,15 @@ export function trackReferralCopy(referralCode: string) {
 
 // ─── Scroll Depth Tracking ───
 const scrollMilestones = new Set<number>();
+const VALID_FUNNEL_STEPS = new Set([
+  'landing',
+  'engagement',
+  'event_page',
+  'form_interaction',
+  'registration',
+  'store_click',
+  'referral_share',
+]);
 
 export function trackScrollDepth(depth: number) {
   const milestones = [25, 50, 75, 100];
@@ -238,6 +246,8 @@ export function trackTimeOnPage() {
 const recordedFunnelSteps = new Set<string>();
 
 export function trackFunnelStep(step: string, metadata?: Record<string, unknown>) {
+  if (!VALID_FUNNEL_STEPS.has(step)) return;
+
   // Deduplicate per session — each step fires once
   if (recordedFunnelSteps.has(step)) return;
   recordedFunnelSteps.add(step);

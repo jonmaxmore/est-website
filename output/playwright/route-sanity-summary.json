@@ -1,0 +1,26 @@
+{
+    "home":  {
+                 "url":  "http://178.128.127.161/",
+                 "title":  "Eternal Tower Saga | Mobile RPG",
+                 "heading":  "??????????????? ?????????????",
+                 "console":  "Total messages: 0 (Errors: 0, Warnings: 0)"
+             },
+    "privacy":  {
+                    "url":  "http://178.128.127.161/privacy",
+                    "title":  "Privacy Policy | Eternal Tower Saga",
+                    "heading":  "Privacy Policy",
+                    "console":  "Total messages: 0 (Errors: 0, Warnings: 0)"
+                },
+    "terms":  {
+                  "url":  "http://178.128.127.161/terms",
+                  "title":  "Terms of Service | Eternal Tower Saga",
+                  "heading":  "Terms of Service",
+                  "console":  "Total messages: 0 (Errors: 0, Warnings: 0)"
+              },
+    "news":  {
+                 "url":  "http://178.128.127.161/news",
+                 "title":  "News \u0026 Updates | Eternal Tower Saga",
+                 "heading":  "????????????????",
+                 "console":  "Total messages: 0 (Errors: 0, Warnings: 0)"
+             }
+}

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { allowPublicRead, isAdmin, isAdminOrEditor } from '@/lib/cms-access'
 
 export const StoreButtons: CollectionConfig = {
   slug: 'store-buttons',
@@ -9,10 +10,10 @@ export const StoreButtons: CollectionConfig = {
     defaultColumns: ['platform', 'label', 'url', 'visible'],
   },
   access: {
-    read: () => true,
-    create: ({ req: { user } }) => !!user,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
+    read: allowPublicRead,
+    create: isAdminOrEditor,
+    update: isAdminOrEditor,
+    delete: isAdmin,
   },
   fields: [
     {
@@ -66,7 +67,7 @@ export const StoreButtons: CollectionConfig = {
           label: 'Sub Label',
           admin: {
             width: '50%',
-            description: 'e.g. "Pre-order on the", "PRE-REGISTER ON"',
+            description: 'e.g. "Pre-order on the", "Register on"',
           },
         },
       ],

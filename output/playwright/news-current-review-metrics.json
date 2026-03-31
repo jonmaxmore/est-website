@@ -1,0 +1,6 @@
+### Result
+"{\n  \"url\": \"http://178.128.127.161/news\",\n  \"viewport\": {\n    \"width\": 1440,\n    \"height\": 1280\n  },\n  \"banner\": {\n    \"top\": 1111,\n    \"bottom\": 1264,\n    \"left\": 12,\n    \"right\": 236,\n    \"width\": 224,\n    \"height\": 153\n  },\n  \"featured\": {\n    \"top\": 539,\n    \"bottom\": 973,\n    \"left\": 130,\n    \"right\": 921,\n    \"width\": 791,\n    \"height\": 434\n  },\n  \"h1\": {\n    \"top\": 228,\n    \"bottom\": 297,\n    \"left\": 130,\n    \"right\": 962,\n    \"width\": 832,\n    \"height\": 68\n  }\n}"
+### Ran Playwright code
+```js
+await page.evaluate('() => { const pick = (selector) => { const el = document.querySelector(selector); if (!el) return null; const r = el.getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom), left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width), height: Math.round(r.height) }; }; const banner = pick(\'.cookie-banner\'); const featured = pick(\'.news-page__featured, .news-featured, .news-layout__featured\'); const h1 = pick(\'h1\'); return JSON.stringify({ url: location.href, viewport: { width: window.innerWidth, height: window.innerHeight }, banner, featured, h1 }, null, 2); }');
+```

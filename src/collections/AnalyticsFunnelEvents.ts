@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { isAdmin } from '@/lib/cms-access'
 
 export const AnalyticsFunnelEvents: CollectionConfig = {
   slug: 'analytics-funnel-events',
@@ -9,10 +10,10 @@ export const AnalyticsFunnelEvents: CollectionConfig = {
     defaultColumns: ['sessionId', 'step', 'stepOrder', 'createdAt'],
   },
   access: {
-    read: ({ req: { user } }) => !!user,
+    read: isAdmin,
     create: () => true,
     update: () => false,
-    delete: ({ req: { user } }) => !!user,
+    delete: isAdmin,
   },
   fields: [
     {

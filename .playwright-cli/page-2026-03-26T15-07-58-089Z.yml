@@ -1,0 +1,79 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - heading "Privacy Policy" [level=1] [ref=e4]
+    - paragraph [ref=e5]: นโยบายความเป็นส่วนตัว
+    - paragraph [ref=e6]: "Last updated: March 17, 2026"
+    - generic [ref=e7]:
+      - heading "1. Introduction / บทนำ" [level=2] [ref=e8]
+      - paragraph [ref=e9]: Ultimate Game Co., Ltd. (บริษัท อัลติเมตเกม จำกัด) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and protect your personal data when you use the Eternal Tower Saga website and game services.
+      - paragraph [ref=e10]: บริษัท อัลติเมตเกม จำกัด มุ่งมั่นปกป้องความเป็นส่วนตัวของท่าน นโยบายนี้อธิบาย วิธีการเก็บรวบรวม ใช้ และปกป้องข้อมูลส่วนบุคคลของท่าน
+    - generic [ref=e11]:
+      - heading "2. Data We Collect / ข้อมูลที่เราเก็บรวบรวม" [level=2] [ref=e12]
+      - list [ref=e13]:
+        - listitem [ref=e14]:
+          - strong [ref=e15]: "Registration Data:"
+          - text: Email address, preferred platform (iOS/Android/PC), region
+        - listitem [ref=e16]:
+          - strong [ref=e17]: "Usage Data:"
+          - text: Pages visited, time spent, actions taken on the website
+        - listitem [ref=e18]:
+          - strong [ref=e19]: "Technical Data:"
+          - text: IP address, browser type, device information
+        - listitem [ref=e20]:
+          - strong [ref=e21]: "Cookie Data:"
+          - text: Preferences and analytics cookies (with your consent)
+    - generic [ref=e22]:
+      - heading "3. How We Use Your Data / วิธีใช้ข้อมูลของท่าน" [level=2] [ref=e23]
+      - list [ref=e24]:
+        - listitem [ref=e25]: To process your pre-registration and send game launch notifications
+        - listitem [ref=e26]: To improve our website and game services
+        - listitem [ref=e27]: To track registration milestones and award campaign rewards
+        - listitem [ref=e28]: To comply with legal obligations under Thai law (PDPA)
+    - generic [ref=e29]:
+      - heading "4. PDPA Compliance / การปฏิบัติตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล" [level=2] [ref=e30]
+      - paragraph [ref=e31]: "We comply with the Thailand Personal Data Protection Act (PDPA) B.E. 2562 (2019). You have the right to:"
+      - list [ref=e32]:
+        - listitem [ref=e33]: Access your personal data / เข้าถึงข้อมูลส่วนบุคคลของท่าน
+        - listitem [ref=e34]: Request correction of inaccurate data / ขอแก้ไขข้อมูลที่ไม่ถูกต้อง
+        - listitem [ref=e35]: Request deletion of your data / ขอลบข้อมูลของท่าน
+        - listitem [ref=e36]: Withdraw consent / เพิกถอนความยินยอม
+        - listitem [ref=e37]: Data portability / ขอรับข้อมูลในรูปแบบพกพาได้
+    - generic [ref=e38]:
+      - heading "5. Cookies / คุกกี้" [level=2] [ref=e39]
+      - paragraph [ref=e40]: We use cookies to enhance your browsing experience and collect analytics data. You can manage cookie preferences through your browser settings. Essential cookies are necessary for the website to function properly.
+      - paragraph [ref=e41]: เราใช้คุกกี้เพื่อปรับปรุงประสบการณ์การเข้าชมและเก็บข้อมูลวิเคราะห์ ท่านสามารถจัดการคุกกี้ผ่านการตั้งค่าเบราว์เซอร์
+    - generic [ref=e42]:
+      - heading "6. Data Security / ความปลอดภัยของข้อมูล" [level=2] [ref=e43]
+      - paragraph [ref=e44]: We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction.
+    - generic [ref=e45]:
+      - heading "7. Third-Party Services / บริการของบุคคลที่สาม" [level=2] [ref=e46]
+      - paragraph [ref=e47]: "We may use the following third-party services:"
+      - list [ref=e48]:
+        - listitem [ref=e49]:
+          - strong [ref=e50]: "Google Analytics (GA4):"
+          - text: Website traffic analysis
+        - listitem [ref=e51]:
+          - strong [ref=e52]: "Meta Pixel:"
+          - text: Marketing campaign optimization
+        - listitem [ref=e53]:
+          - strong [ref=e54]: "Cloudflare:"
+          - text: Website security and CDN
+    - generic [ref=e55]:
+      - heading "8. Contact / ติดต่อ" [level=2] [ref=e56]
+      - paragraph [ref=e57]:
+        - text: "Data Protection Officer: Ultimate Game Co., Ltd."
+        - text: "Email:"
+        - link "privacy@eternaltowersaga.com" [ref=e58] [cursor=pointer]:
+          - /url: mailto:privacy@eternaltowersaga.com
+    - link "← Back to Home / กลับหน้าหลัก" [ref=e60] [cursor=pointer]:
+      - /url: /
+  - alert [ref=e61]
+  - generic [ref=e63]:
+    - generic [ref=e64]:
+      - generic [ref=e65]: Cookies
+      - paragraph [ref=e66]:
+        - text: เราใช้คุกกี้ที่จำเป็นเพื่อให้เว็บไซต์ทำงานเสถียรและวัดผลการใช้งานพื้นฐานได้อย่างถูกต้อง
+        - generic [ref=e67]: Essential cookies keep the site stable and help measure basic performance.
+    - generic [ref=e68]:
+      - button "ภายหลัง" [ref=e69] [cursor=pointer]
+      - button "ยอมรับ / Accept" [ref=e70] [cursor=pointer]

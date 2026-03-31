@@ -1,0 +1,238 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner:
+      - navigation [ref=e3]:
+        - generic [ref=e4]:
+          - link "Eternal Tower Saga home" [ref=e5] [cursor=pointer]:
+            - /url: /
+            - img "Eternal Tower Saga" [ref=e6]
+            - generic [ref=e7]:
+              - strong [ref=e8]: Eternal Tower Saga
+              - generic [ref=e9]: เกม RPG บนมือถือ
+          - generic [ref=e10]:
+            - link "หน้าหลัก" [ref=e11] [cursor=pointer]:
+              - /url: /#hero
+            - link "อาวุธ" [ref=e12] [cursor=pointer]:
+              - /url: /character
+            - link "ไฮไลท์" [ref=e13] [cursor=pointer]:
+              - /url: /game-guide
+            - link "ข่าวสาร" [ref=e14] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=e15]:
+            - link "ลงทะเบียน" [ref=e16] [cursor=pointer]:
+              - /url: /event
+            - button "Switch to English" [ref=e17] [cursor=pointer]: EN
+    - main [ref=e18]:
+      - generic [ref=e24]:
+        - img "Eternal Tower Saga" [ref=e26]
+        - img "ลงทะเบียนเลยเพื่อรับรางวัลสุดพิเศษเมื่อเปิดตัว!" [ref=e28]
+        - generic [ref=e29]:
+          - generic [ref=e30]:
+            - generic [ref=e31]: "38"
+            - generic [ref=e32]: วัน
+          - generic [ref=e33]:
+            - generic [ref=e34]: "20"
+            - generic [ref=e35]: ชั่วโมง
+          - generic [ref=e36]:
+            - generic [ref=e37]: "00"
+            - generic [ref=e38]: นาที
+          - generic [ref=e39]:
+            - generic [ref=e266]: "20"
+            - generic [ref=e41]: วินาที
+        - generic [ref=e42]:
+          - generic [ref=e43]: 30,277
+          - generic [ref=e44]: ผู้ลงทะเบียนล่วงหน้าแล้ว
+        - button "ลงทะเบียนล่วงหน้าเลย" [ref=e45] [cursor=pointer]:
+          - generic [ref=e47]: ลงทะเบียนล่วงหน้าเลย
+        - generic [ref=e48]:
+          - link "Pre-order on the App Store" [ref=e49] [cursor=pointer]:
+            - /url: https://apps.apple.com/us/app/eternal-tower-saga/id6756611023
+            - img [ref=e50]
+            - generic [ref=e53]:
+              - generic [ref=e54]: Pre-order on the
+              - strong [ref=e55]: App Store
+          - link "PRE-REGISTER ON Google Play" [ref=e56] [cursor=pointer]:
+            - /url: https://play.google.com/store/apps/details?id=com.ultimategame.eternaltowersaga
+            - img [ref=e57]
+            - generic [ref=e59]:
+              - generic [ref=e60]: PRE-REGISTER ON
+              - strong [ref=e61]: Google Play
+          - link "Coming soon Windows" [ref=e62] [cursor=pointer]:
+            - /url: "#"
+            - img [ref=e63]
+            - generic [ref=e65]:
+              - generic [ref=e66]: Coming soon
+              - strong [ref=e67]: Windows
+      - generic [ref=e68]:
+        - img [ref=e70]
+        - generic [ref=e74]:
+          - heading "ลงทะเบียนล่วงหน้า" [level=2] [ref=e79]
+          - paragraph [ref=e80]:
+            - strong [ref=e81]: "1."
+            - text: กรอกข้อมูล และตรวจสอบความถูกต้องก่อนลงทะเบียน
+          - generic [ref=e82]:
+            - textbox "กรอก Email ของท่าน" [ref=e83]
+            - generic [ref=e84]:
+              - generic [ref=e85] [cursor=pointer]:
+                - radio "ไทย" [ref=e86]
+                - text: ไทย
+              - generic [ref=e87] [cursor=pointer]:
+                - radio "มาเลเซีย" [ref=e88]
+                - text: มาเลเซีย
+              - generic [ref=e89] [cursor=pointer]:
+                - radio "อินโดนีเซีย" [ref=e90]
+                - text: อินโดนีเซีย
+              - generic [ref=e91] [cursor=pointer]:
+                - radio "ฟิลิปปินส์" [ref=e92]
+                - text: ฟิลิปปินส์
+              - generic [ref=e93] [cursor=pointer]:
+                - radio "สิงคโปร์" [ref=e94]
+                - text: สิงคโปร์
+            - separator [ref=e95]
+            - paragraph [ref=e96]:
+              - strong [ref=e97]: "2."
+              - text: เลือกสโตร์ที่ต้องการ
+            - generic [ref=e98]:
+              - button "App Store" [ref=e99] [cursor=pointer]:
+                - img [ref=e100]
+                - generic [ref=e103]: App Store
+              - button "Google Play" [ref=e104] [cursor=pointer]:
+                - img [ref=e105]
+                - generic [ref=e107]: Google Play
+            - button "ลงทะเบียนและไปที่สโตร์" [disabled] [ref=e108]
+      - generic [ref=e109]:
+        - img [ref=e111]
+        - generic [ref=e116]:
+          - generic [ref=e117]:
+            - generic [ref=e118]: รางวัลสะสม
+            - heading "รางวัลสะสม Pre-Register" [level=2] [ref=e119]
+          - generic [ref=e124]:
+            - generic [ref=e125]: 30,277
+            - generic [ref=e126]: ผู้ลงทะเบียน
+          - generic [ref=e128]:
+            - generic [ref=e129]: 🚩 จำนวนผู้ลงทะเบียน
+            - generic [ref=e130]: 30,277 / 200,000
+          - generic [ref=e138]:
+            - generic [ref=e139]:
+              - img "ทอง × 200,000 + ม้วนฟื้นพลัง × 10" [ref=e141]
+              - generic [ref=e142]: 10,000
+              - generic [ref=e143]: ทอง × 200,000 + ม้วนฟื้นพลัง × 10
+            - generic [ref=e144]:
+              - img "หินอาวุธ ×100 + หินเกราะ ×100" [ref=e146]
+              - generic [ref=e147]: 25,000
+              - generic [ref=e148]: หินอาวุธ ×100 + หินเกราะ ×100
+            - generic [ref=e149]:
+              - generic [ref=e150]: 🔒
+              - generic [ref=e151]: 50,000
+              - generic [ref=e152]: มานา ×12,000 + หินเครื่องประดับ ×100
+            - generic [ref=e153]:
+              - generic [ref=e154]: 🔒
+              - generic [ref=e155]: 100,000
+              - generic [ref=e156]: ตั๋วเสื้อผ้า ×10
+            - generic [ref=e157]:
+              - generic [ref=e158]: 🔒
+              - generic [ref=e159]: 150,000
+              - generic [ref=e160]: ตั๋วอัญเชิญ ×10
+            - generic [ref=e161]:
+              - generic [ref=e162]: 🔒
+              - generic [ref=e163]: 200,000
+              - generic [ref=e164]: บ้านแห่งโชค ×1 + ยารีเซ็ต ×4
+      - generic [ref=e165]:
+        - img [ref=e167]
+        - generic [ref=e172]:
+          - generic [ref=e173]:
+            - generic [ref=e174]: อันดับผู้เชิญชวน
+            - heading "กระดานอันดับ" [level=2] [ref=e175]
+          - table [ref=e181]:
+            - rowgroup [ref=e182]:
+              - row "อันดับ ผู้เล่น เชิญตรง เชิญทางอ้อม คะแนน" [ref=e183]:
+                - columnheader "อันดับ" [ref=e184]
+                - columnheader "ผู้เล่น" [ref=e185]
+                - columnheader "เชิญตรง" [ref=e186]
+                - columnheader "เชิญทางอ้อม" [ref=e187]
+                - columnheader "คะแนน" [ref=e188]
+            - rowgroup [ref=e189]:
+              - row "🥇 di***@gmail.com 2 1 2.5" [ref=e190]:
+                - cell "🥇" [ref=e191]
+                - cell "di***@gmail.com" [ref=e192]
+                - cell "2" [ref=e193]
+                - cell "1" [ref=e194]
+                - cell "2.5" [ref=e195]
+              - row "🥈 re***@e2e.test 1 1 1.5" [ref=e196]:
+                - cell "🥈" [ref=e197]
+                - cell "re***@e2e.test" [ref=e198]
+                - cell "1" [ref=e199]
+                - cell "1" [ref=e200]
+                - cell "1.5" [ref=e201]
+              - row "🥉 no***@gmail.com 1 0 1" [ref=e202]:
+                - cell "🥉" [ref=e203]
+                - cell "no***@gmail.com" [ref=e204]
+                - cell "1" [ref=e205]
+                - cell "0" [ref=e206]
+                - cell "1" [ref=e207]
+              - row "4 re***@e2e.test 1 0 1" [ref=e208]:
+                - cell "4" [ref=e209]
+                - cell "re***@e2e.test" [ref=e210]
+                - cell "1" [ref=e211]
+                - cell "0" [ref=e212]
+                - cell "1" [ref=e213]
+    - contentinfo [ref=e214]:
+      - generic [ref=e215]:
+        - generic [ref=e216]:
+          - img "Eternal Tower Saga" [ref=e217]
+          - paragraph [ref=e218]: Eternal Tower Saga คือโลกแฟนตาซีที่เน้นการผจญภัยเป็นทีม การต่อสู้ที่อ่านง่าย และบรรยากาศที่ชวนอยากกลับมาเล่นทุกวัน.
+          - generic [ref=e219]:
+            - link "discord" [ref=e220] [cursor=pointer]:
+              - /url: https://discord.gg/eternaltowersaga
+              - img [ref=e221]
+            - link "facebook" [ref=e223] [cursor=pointer]:
+              - /url: https://facebook.com/EternalTowerSaga
+              - img [ref=e224]
+            - link "youtube" [ref=e226] [cursor=pointer]:
+              - /url: https://youtube.com/@EternalTowerSaga
+              - img [ref=e227]
+            - link "tiktok" [ref=e230] [cursor=pointer]:
+              - /url: https://tiktok.com/@EternalTowerSaga
+              - img [ref=e231]
+        - generic [ref=e233]:
+          - generic [ref=e234]:
+            - heading "สำรวจ" [level=4] [ref=e235]
+            - generic [ref=e236]:
+              - link "หน้าหลัก" [ref=e237] [cursor=pointer]:
+                - /url: /
+              - link "อาวุธ" [ref=e238] [cursor=pointer]:
+                - /url: /character
+              - link "ไฮไลท์เกม" [ref=e239] [cursor=pointer]:
+                - /url: /game-guide
+              - link "ข่าวสาร" [ref=e240] [cursor=pointer]:
+                - /url: /news
+          - generic [ref=e241]:
+            - heading "ช่วยเหลือ" [level=4] [ref=e242]
+            - generic [ref=e243]:
+              - link "ข้อกำหนดการใช้งาน" [ref=e244] [cursor=pointer]:
+                - /url: /terms
+              - link "นโยบายความเป็นส่วนตัว" [ref=e245] [cursor=pointer]:
+                - /url: /privacy
+              - link "คำถามที่พบบ่อย" [ref=e246] [cursor=pointer]:
+                - /url: /faq
+          - generic [ref=e247]:
+            - heading "ชุมชน" [level=4] [ref=e248]
+            - paragraph [ref=e249]: ติดตามประกาศ กิจกรรม และความเคลื่อนไหวล่าสุดของเกมผ่านช่องทาง community หลักของ Eternal Tower Saga.
+            - generic [ref=e250]:
+              - link "ลงทะเบียนล่วงหน้า" [ref=e251] [cursor=pointer]:
+                - /url: /event
+              - link "ดาวน์โหลด" [ref=e252] [cursor=pointer]:
+                - /url: /download
+      - generic [ref=e253]:
+        - generic [ref=e254]: พร้อมบน iOS • Android • PC
+        - generic [ref=e255]: © 2026 Eternal Tower Saga. All rights reserved.
+  - alert [ref=e256]
+  - generic [ref=e258]:
+    - generic [ref=e259]:
+      - generic [ref=e260]: Cookies
+      - paragraph [ref=e261]:
+        - text: เราใช้คุกกี้ที่จำเป็นเพื่อให้เว็บไซต์ทำงานเสถียรและวัดผลการใช้งานพื้นฐานได้อย่างถูกต้อง
+        - generic [ref=e262]: Essential cookies keep the site stable and help measure basic performance.
+    - generic [ref=e263]:
+      - button "ภายหลัง" [ref=e264] [cursor=pointer]
+      - button "ยอมรับ / Accept" [ref=e265] [cursor=pointer]

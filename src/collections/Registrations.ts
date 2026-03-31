@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { isAdmin } from '@/lib/cms-access'
 
 export const Registrations: CollectionConfig = {
   slug: 'registrations',
@@ -9,10 +10,10 @@ export const Registrations: CollectionConfig = {
     defaultColumns: ['email', 'platform', 'region', 'referralCode', 'referralLevel1Count', 'referralPoints', 'createdAt'],
   },
   access: {
-    read: ({ req: { user } }) => !!user,
+    read: isAdmin,
     create: () => true,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
+    update: isAdmin,
+    delete: isAdmin,
   },
   fields: [
     // ── User Info ──────────────────────────────────

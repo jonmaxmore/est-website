@@ -1,0 +1,23 @@
+{
+    "before":  {
+                   "hasDialog":  false,
+                   "hasCloseMenu":  false
+               },
+    "open":  {
+                 "hasDialog":  true,
+                 "hasCloseMenu":  true
+             },
+    "afterEsc":  {
+                     "hasDialog":  false,
+                     "hasCloseMenu":  false
+                 },
+    "afterToggleClose":  {
+                             "hasDialog":  false,
+                             "hasCloseMenu":  false
+                         },
+    "afterBackdrop":  {
+                          "hasDialog":  false,
+                          "hasCloseMenu":  false
+                      },
+    "consoleOutput":  "Total messages: 0 (Errors: 0, Warnings: 0)"
+}

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { isAdmin } from '@/lib/cms-access'
 
 export const PageViews: CollectionConfig = {
   slug: 'page-views',
@@ -9,10 +10,10 @@ export const PageViews: CollectionConfig = {
     defaultColumns: ['path', 'ip', 'deviceType', 'createdAt'],
   },
   access: {
-    read: ({ req: { user } }) => !!user,
+    read: isAdmin,
     create: () => true,
     update: () => false,
-    delete: ({ req: { user } }) => !!user,
+    delete: isAdmin,
   },
   fields: [
     // ── Core Info ───────────────────────────────────

@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/require-admin'
 
-// POST /api/cleanup — Clean duplicate data and re-seed properly
+/**
+ * @deprecated Admin-only utility. Not called by frontend.
+ * POST /api/cleanup - Clean duplicate data and re-seed properly
+ */
 export async function POST(request: NextRequest) {
   try {
     const auth = await requireAdmin(request)
@@ -9,77 +12,82 @@ export async function POST(request: NextRequest) {
     const { payload } = auth
     const results: string[] = []
 
-    // 1. Clean duplicate milestones — keep only one per threshold
+    // 1. Clean duplicate milestones - keep only one per threshold
     const milestones = await payload.find({ collection: 'milestones', limit: 100 })
     const seenThresholds = new Set<number>()
     let deletedMilestones = 0
-    for (const m of milestones.docs) {
-      if (seenThresholds.has(m.threshold)) {
-        await payload.delete({ collection: 'milestones', id: m.id })
+    for (const milestone of milestones.docs) {
+      if (seenThresholds.has(milestone.threshold)) {
+        await payload.delete({ collection: 'milestones', id: milestone.id })
         deletedMilestones++
       } else {
-        seenThresholds.add(m.threshold)
+        seenThresholds.add(milestone.threshold)
       }
     }
-    results.push(`🗑️ Deleted ${deletedMilestones} duplicate milestones`)
+    results.push(`Deleted ${deletedMilestones} duplicate milestones`)
 
-    // 2. Clean duplicate store buttons — keep only one per platform
+    // 2. Clean duplicate store buttons - keep only one per platform
     const buttons = await payload.find({ collection: 'store-buttons', limit: 100 })
     const seenPlatforms = new Set<string>()
     let deletedButtons = 0
-    for (const b of buttons.docs) {
-      if (seenPlatforms.has(b.platform)) {
-        await payload.delete({ collection: 'store-buttons', id: b.id })
+    for (const button of buttons.docs) {
+      const platform = String(button.platform || '').trim().toLowerCase()
+      if (!platform) continue
+
+      if (seenPlatforms.has(platform)) {
+        await payload.delete({ collection: 'store-buttons', id: button.id })
         deletedButtons++
       } else {
-        seenPlatforms.add(b.platform)
+        seenPlatforms.add(platform)
       }
     }
-    results.push(`🗑️ Deleted ${deletedButtons} duplicate store buttons`)
+    results.push(`Deleted ${deletedButtons} duplicate store buttons`)
 
-    // 3. Clean duplicate characters — keep only one per nameEn
-    const characters = await payload.find({ collection: 'characters', limit: 100 })
+    // 3. Clean duplicate weapons - keep only one per name
+    const weapons = await payload.find({ collection: 'weapons', limit: 100 })
     const seenNames = new Set<string>()
-    let deletedChars = 0
-    for (const c of characters.docs) {
-      if (seenNames.has(c.nameEn)) {
-        await payload.delete({ collection: 'characters', id: c.id })
-        deletedChars++
+    let deletedWeapons = 0
+    for (const weapon of weapons.docs) {
+      const weaponName = String(weapon.name || '').trim().toLowerCase()
+      if (!weaponName) continue
+
+      if (seenNames.has(weaponName)) {
+        await payload.delete({ collection: 'weapons', id: weapon.id })
+        deletedWeapons++
       } else {
-        seenNames.add(c.nameEn)
+        seenNames.add(weaponName)
       }
     }
-    results.push(`🗑️ Deleted ${deletedChars} duplicate characters`)
+    results.push(`Deleted ${deletedWeapons} duplicate weapons`)
 
-    // 4. Clean duplicate news — keep only one per slug
+    // 4. Clean duplicate news - keep only one per slug
     const news = await payload.find({ collection: 'news', limit: 100 })
     const seenSlugs = new Set<string>()
     let deletedNews = 0
-    for (const n of news.docs) {
-      if (seenSlugs.has(n.slug)) {
-        await payload.delete({ collection: 'news', id: n.id })
+    for (const article of news.docs) {
+      if (seenSlugs.has(article.slug)) {
+        await payload.delete({ collection: 'news', id: article.id })
         deletedNews++
       } else {
-        seenSlugs.add(n.slug)
+        seenSlugs.add(article.slug)
       }
     }
-    results.push(`🗑️ Deleted ${deletedNews} duplicate news`)
+    results.push(`Deleted ${deletedNews} duplicate news`)
 
-    // Summary
     const remaining = {
       milestones: (await payload.find({ collection: 'milestones', limit: 1 })).totalDocs,
-      characters: (await payload.find({ collection: 'characters', limit: 1 })).totalDocs,
+      weapons: (await payload.find({ collection: 'weapons', limit: 1 })).totalDocs,
       news: (await payload.find({ collection: 'news', limit: 1 })).totalDocs,
       storeButtons: (await payload.find({ collection: 'store-buttons', limit: 1 })).totalDocs,
       registrations: (await payload.find({ collection: 'registrations', limit: 1 })).totalDocs,
     }
-    results.push(`📊 Remaining: ${JSON.stringify(remaining)}`)
+    results.push(`Remaining: ${JSON.stringify(remaining)}`)
 
     return NextResponse.json({ success: true, results })
   } catch (error) {
     return NextResponse.json(
       { success: false, error: String(error) },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

@@ -34,6 +34,7 @@ async function fetchSessions(payload: Payload, dateStart: Date, dateEnd: Date) {
       collection: 'analytics-sessions',
       where: { createdAt: { greater_than_equal: dateStart.toISOString(), less_than_equal: dateEnd.toISOString() } },
       limit: PAGE_SIZE, page, sort: 'createdAt',
+      overrideAccess: true,
     })
     all.push(...(result.docs as Record<string, unknown>[]))
     hasMore = result.hasNextPage
@@ -94,11 +95,11 @@ async function upsertRollups(payload: Payload, buckets: Map<string, RollupBucket
       avgScrollDepth: bucket.sessions > 0 ? Math.round(bucket.scrollDepthSum / bucket.sessions) : 0,
     }
     try {
-      const existing = await payload.find({ collection: 'analytics-daily-rollups', where: { rollupKey: { equals: key } }, limit: 1 })
+      const existing = await payload.find({ collection: 'analytics-daily-rollups', where: { rollupKey: { equals: key } }, limit: 1, overrideAccess: true })
       if (existing.docs.length > 0) {
-        await payload.update({ collection: 'analytics-daily-rollups', id: existing.docs[0].id, data })
+        await payload.update({ collection: 'analytics-daily-rollups', id: existing.docs[0].id, data, overrideAccess: true })
       } else {
-        await payload.create({ collection: 'analytics-daily-rollups', data })
+        await payload.create({ collection: 'analytics-daily-rollups', data, overrideAccess: true })
       }
       count++
     } catch (err) { console.error(`[rollup] Error upserting ${key}:`, err) }

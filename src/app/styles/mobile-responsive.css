@@ -101,11 +101,25 @@
   }
 
   /* Cookie Banner */
+  .cookie-banner {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    width: auto;
+    border-radius: 1rem;
+  }
+
   .cookie-inner {
     flex-direction: column;
-    text-align: center;
-    gap: 1rem;
-    padding: 0 1.5rem;
+    text-align: left;
+    gap: 0.9rem;
+    padding: 0.95rem 1rem;
+    align-items: flex-start;
+  }
+
+  .cookie-actions {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   /* FAB */

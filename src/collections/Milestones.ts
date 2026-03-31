@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { allowPublicRead, isAdmin, isAdminOrEditor } from '@/lib/cms-access'
 
 export const Milestones: CollectionConfig = {
   slug: 'milestones',
@@ -10,10 +11,10 @@ export const Milestones: CollectionConfig = {
     defaultColumns: ['threshold', 'rewardEn', 'rewardDescriptionEn', 'sortOrder'],
   },
   access: {
-    read: () => true,
-    create: ({ req: { user } }) => !!user,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
+    read: allowPublicRead,
+    create: isAdminOrEditor,
+    update: isAdminOrEditor,
+    delete: isAdmin,
   },
   fields: [
     // ── Settings Row ───────────────────────────────
