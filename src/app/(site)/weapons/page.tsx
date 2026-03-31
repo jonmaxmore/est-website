@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Play, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
@@ -97,7 +97,7 @@ export default function WeaponsPage() {
   const [videoWeapon, setVideoWeapon] = useState<WeaponData | null>(null);
   const [weapons, setWeapons] = useState<WeaponData[]>([]);
 
-  useState(() => {
+  useEffect(() => {
     fetch('/api/public/weapons')
       .then((res) => res.json())
       .then((data) => {
@@ -118,7 +118,7 @@ export default function WeaponsPage() {
         }
       })
       .catch(() => { /* fallback to empty */ });
-  });
+  }, []);
 
   return (
     <div className="landing-page">
