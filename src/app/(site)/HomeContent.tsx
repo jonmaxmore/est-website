@@ -4,6 +4,7 @@ import type { CMSNewsArticle, CMSSettings, CMSWeapon } from '@/types/cms';
 import ScrollProgress from '@/components/ui/ScrollProgress';
 import HeroSection from '@/components/sections/HeroSection';
 import WeaponSection from '@/components/sections/WeaponSection';
+import GameFeaturesSection from '@/components/sections/GameFeaturesSection';
 import HighlightsSection from '@/components/sections/HighlightsSection';
 import NewsSection from '@/components/sections/NewsSection';
 import Navigation from '@/components/layout/Navigation';
@@ -37,8 +38,13 @@ export default function HomeContent({ settings, weapons, news }: HomeContentProp
 
       <main className="home-main">
         <HeroSection settings={settings} />
+        <div className="home-sectionDivider" aria-hidden="true" />
         <WeaponSection weapons={weapons} sectionConfig={settings?.weapons} />
+        <div className="home-sectionDivider" aria-hidden="true" />
+        <GameFeaturesSection features={features} />
+        <div className="home-sectionDivider" aria-hidden="true" />
         <HighlightsSection features={features} sectionConfig={settings?.highlights} />
+        <div className="home-sectionDivider" aria-hidden="true" />
         <NewsSection news={news} sectionConfig={settings?.news} />
       </main>
 
@@ -46,3 +52,4 @@ export default function HomeContent({ settings, weapons, news }: HomeContentProp
     </div>
   );
 }
+

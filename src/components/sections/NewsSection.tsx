@@ -46,6 +46,12 @@ type NewsCopy = {
   singleStoryLabel: string;
 };
 
+function truncateUiText(value: string, maxLength: number) {
+  const normalized = value.replace(/\s+/g, ' ').trim();
+  if (normalized.length <= maxLength) return normalized;
+  return `${normalized.slice(0, maxLength).trimEnd()}...`;
+}
+
 const CATEGORY_META: Record<string, {
   color: string;
   labelEn: string;
@@ -66,12 +72,17 @@ function buildNewsItem(
 ): NewsCardItem {
   const meta = CATEGORY_META[item.category] || CATEGORY_META.event;
   const alt = item.featuredImage?.alt || t(item.titleTh, item.titleEn) || item.titleEn;
+  const title = truncateUiText(t(item.titleTh, item.titleEn) || item.titleEn, 90);
+  const summary = truncateUiText(
+    pickNewsSummary(lang, item.summaryTh, item.summaryEn, meta.labelTh, meta.labelEn),
+    180,
+  );
 
   return {
     key: item.id,
     slug: item.slug,
-    title: t(item.titleTh, item.titleEn) || item.titleEn,
-    summary: pickNewsSummary(lang, item.summaryTh, item.summaryEn, meta.labelTh, meta.labelEn),
+    title,
+    summary,
     tag: t(meta.labelTh, meta.labelEn),
     category: item.category,
     date: item.publishedAt
@@ -324,19 +335,34 @@ export default function NewsSection({
     ? items
     : items.filter((item) => item.category === activeTab);
   const featured = filteredItems.find((item) => item.slug === selectedSlugs[activeTab]) || filteredItems[0];
-  const dispatchItems = filteredItems.slice(0, 5);
+  const dispatchItems = filteredItems
+    .filter((item) => item.slug !== featured?.slug)
+    .slice(0, 4);
 
   return (
-    <section
-      id="news"
-      className="home-news"
-      style={sectionConfig?.bgImage?.url
-        ? {
-          backgroundImage: `linear-gradient(180deg, rgba(2, 7, 16, 0.54), rgba(2, 7, 16, 0.84)), url(${sectionConfig.bgImage.url})`,
-        }
-        : undefined}
-    >
-      <div className="home-shell">
+    <section id="news" className="home-news">
+      {sectionConfig?.bgImage?.url ? (
+        <div className="home-news__bg" aria-hidden="true">
+          <Image
+            src={sectionConfig.bgImage.url}
+            alt=""
+            fill
+            priority={false}
+            className="object-cover"
+            unoptimized={isCmsMediaUrl(sectionConfig.bgImage.url)}
+          />
+        </div>
+      ) : null}
+
+      <div className="home-news__veil" />
+
+      <motion.div
+        className="home-shell"
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      >
         <NewsHeader copy={copy} activeTab={activeTab} onSelectTab={setActiveTab} />
 
         {filteredItems.length === 0 ? (
@@ -359,7 +385,7 @@ export default function NewsSection({
             <ArrowRight size={16} />
           </CmsLink>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

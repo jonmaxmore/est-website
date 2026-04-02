@@ -307,25 +307,44 @@ export default function WeaponSection({ weapons, sectionConfig }: WeaponSectionP
   };
 
   return (
-    <section
-      id="weapons"
-      className="home-weapons"
-      style={sectionConfig?.bgImage?.url
-        ? {
-          backgroundImage: `linear-gradient(180deg, rgba(2, 7, 16, 0.56), rgba(2, 7, 16, 0.86)), url(${sectionConfig.bgImage.url})`,
-        }
-        : undefined}
-    >
-      <div className="home-shell">
-        <WeaponHeader
-          copy={copy}
-          activeIdx={activeIdx}
-          totalWeapons={weapons.length}
-          onPrev={() => goTo((activeIdx - 1 + weapons.length) % weapons.length)}
-          onNext={() => goTo((activeIdx + 1) % weapons.length)}
-        />
+    <section id="weapons" className="home-weapons">
+      {sectionConfig?.bgImage?.url ? (
+        <div className="home-weapons__bg" aria-hidden="true">
+          <Image
+            src={sectionConfig.bgImage.url}
+            alt=""
+            fill
+            priority={false}
+            unoptimized={isCmsMediaUrl(sectionConfig.bgImage.url)}
+          />
+        </div>
+      ) : null}
 
-        <div className="home-weapons__stage">
+      <div className="home-weapons__veil" />
+
+      <div className="home-shell">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <WeaponHeader
+            copy={copy}
+            activeIdx={activeIdx}
+            totalWeapons={weapons.length}
+            onPrev={() => goTo((activeIdx - 1 + weapons.length) % weapons.length)}
+            onNext={() => goTo((activeIdx + 1) % weapons.length)}
+          />
+        </motion.div>
+
+        <motion.div
+          className="home-weapons__stage"
+          initial={{ opacity: 0, y: 36 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.65, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+        >
           <WeaponPanel
             activeWeapon={activeWeapon}
             copy={copy}
@@ -339,7 +358,7 @@ export default function WeaponSection({ weapons, sectionConfig }: WeaponSectionP
             onSelect={goTo}
             copy={copy}
           />
-        </div>
+        </motion.div>
       </div>
 
       <WeaponVideoModal

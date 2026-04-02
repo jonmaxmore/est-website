@@ -44,6 +44,12 @@ type HighlightsCopy = {
   systemLabel: string;
 };
 
+function truncateUiText(value: string, maxLength: number) {
+  const normalized = value.replace(/\s+/g, ' ').trim();
+  if (normalized.length <= maxLength) return normalized;
+  return `${normalized.slice(0, maxLength).trimEnd()}...`;
+}
+
 function resolveHighlightPreview(feature: CMSFeature) {
   return feature.previewImage?.url || feature.iconImage?.url || null;
 }
@@ -83,8 +89,8 @@ function buildHighlightItems(
   return features.slice(0, 6).map((feature, index) => ({
     key: index,
     feature,
-    title: t(feature.titleTh, feature.titleEn || feature.titleTh),
-    desc: t(feature.descriptionTh, feature.descriptionEn || feature.descriptionTh),
+    title: truncateUiText(t(feature.titleTh, feature.titleEn || feature.titleTh), 84),
+    desc: truncateUiText(t(feature.descriptionTh, feature.descriptionEn || feature.descriptionTh), 180),
     ctaLabel: feature.ctaLabelEn || feature.ctaLabelTh
       ? t(feature.ctaLabelTh || '', feature.ctaLabelEn || '')
       : '',
@@ -128,11 +134,32 @@ function HighlightSpotlight({
         exit={{ opacity: 0, y: -26 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="home-highlights__spotlightTopline">
-          <span className="home-highlights__spotlightIndex">
-            {String(activeIdx + 1).padStart(2, '0')}
-          </span>
-          <span className="home-highlights__spotlightLabel">{systemLabel}</span>
+        <div className="home-highlights__spotlightCopy">
+          <div className="home-highlights__spotlightTopline">
+            <div className="home-highlights__spotlightMeta">
+              <span className="home-highlights__spotlightIndex">
+                {String(activeIdx + 1).padStart(2, '0')}
+              </span>
+              <span className="home-highlights__spotlightLabel">{systemLabel}</span>
+            </div>
+
+            <div className="home-highlights__spotlightIcon">
+              <FeatureIcon feature={activeHighlight.feature} index={activeIdx} size={30} />
+            </div>
+          </div>
+
+          <h3 className="home-highlights__spotlightTitle">{activeHighlight.title}</h3>
+          <p className="home-highlights__spotlightDesc">{activeHighlight.desc}</p>
+
+          {activeHighlight.feature.href ? (
+            <CmsLink
+              href={activeHighlight.feature.href}
+              className="home-highlights__spotlightCta"
+            >
+              {activeHighlight.ctaLabel}
+              <ArrowRight size={16} />
+            </CmsLink>
+          ) : null}
         </div>
 
         {resolveHighlightPreview(activeHighlight.feature) ? (
@@ -146,24 +173,11 @@ function HighlightSpotlight({
               unoptimized={isCmsMediaUrl(resolveHighlightPreview(activeHighlight.feature) as string)}
             />
           </div>
-        ) : null}
-
-        <div className="home-highlights__spotlightIcon">
-          <FeatureIcon feature={activeHighlight.feature} index={activeIdx} size={34} />
-        </div>
-
-        <h3 className="home-highlights__spotlightTitle">{activeHighlight.title}</h3>
-        <p className="home-highlights__spotlightDesc">{activeHighlight.desc}</p>
-
-        {activeHighlight.feature.href ? (
-          <CmsLink
-            href={activeHighlight.feature.href}
-            className="home-button home-button--ghost home-button--inline"
-          >
-            {activeHighlight.ctaLabel}
-            <ArrowRight size={16} />
-          </CmsLink>
-        ) : null}
+        ) : (
+          <div className="home-highlights__spotlightFallback" aria-hidden="true">
+            <FeatureIcon feature={activeHighlight.feature} index={activeIdx} size={48} />
+          </div>
+        )}
       </motion.article>
     </AnimatePresence>
   );
@@ -222,18 +236,29 @@ export default function HighlightsSection({
   const activeHighlight = highlights[activeIdx] || highlights[0];
 
   return (
-    <section
-      id="features"
-      className="home-highlights"
-      style={sectionConfig?.bgImage?.url
-        ? {
-          backgroundImage: `linear-gradient(180deg, rgba(2, 7, 16, 0.52), rgba(2, 7, 16, 0.82)), url(${sectionConfig.bgImage.url})`,
-        }
-        : undefined}
-    >
+    <section id="features" className="home-highlights">
+      {sectionConfig?.bgImage?.url ? (
+        <div className="home-highlights__bg" aria-hidden="true">
+          <Image
+            src={sectionConfig.bgImage.url}
+            alt=""
+            fill
+            priority={false}
+            className="object-cover"
+            unoptimized={isCmsMediaUrl(sectionConfig.bgImage.url)}
+          />
+        </div>
+      ) : null}
+
       <div className="home-highlights__veil" />
 
-      <div className="home-shell home-highlights__shell">
+      <motion.div
+        className="home-shell home-highlights__shell"
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="home-highlights__lead">
           <div className="home-highlights__intro">
             <span className="home-kicker">{copy.badgeText}</span>
@@ -253,7 +278,7 @@ export default function HighlightsSection({
           activeIdx={activeIdx}
           onSelect={setActiveIdx}
         />
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -1,0 +1,309 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner:
+      - navigation [ref=e3]:
+        - generic [ref=e4]:
+          - link "Eternal Tower Saga home" [ref=e5] [cursor=pointer]:
+            - /url: /
+            - img "Eternal Tower Saga" [ref=e6]
+            - generic:
+              - strong: Eternal Tower Saga
+              - generic: เกม RPG บนมือถือ
+          - generic [ref=e7]:
+            - link "หน้าหลัก" [ref=e8] [cursor=pointer]:
+              - /url: /#hero
+            - link "อาวุธ" [ref=e9] [cursor=pointer]:
+              - /url: /#weapons
+            - link "ไฮไลท์" [ref=e10] [cursor=pointer]:
+              - /url: /#features
+            - link "ข่าวสาร" [ref=e11] [cursor=pointer]:
+              - /url: /#news
+            - link "แนะนำเกม" [ref=e12] [cursor=pointer]:
+              - /url: /#features
+            - link "ร้านค้า" [ref=e13] [cursor=pointer]:
+              - /url: /#shop
+            - link "เติมโค้ด" [ref=e14] [cursor=pointer]:
+              - /url: /#redeem
+            - link "กฏและคำถามที่พบบ่อย" [ref=e15] [cursor=pointer]:
+              - /url: /#rule&faq
+            - link "ช่วยเหลือ" [ref=e16] [cursor=pointer]:
+              - /url: /#support
+          - generic "Community links" [ref=e17]:
+            - link "facebook" [ref=e18] [cursor=pointer]:
+              - /url: https://facebook.com/EternalTowerSaga
+              - img [ref=e19]
+            - link "tiktok" [ref=e21] [cursor=pointer]:
+              - /url: https://tiktok.com/@EternalTowerSaga
+              - img [ref=e22]
+            - link "youtube" [ref=e24] [cursor=pointer]:
+              - /url: https://youtube.com/@EternalTowerSaga
+              - img [ref=e25]
+            - link "discord" [ref=e28] [cursor=pointer]:
+              - /url: https://discord.gg/eternaltowersaga
+              - img [ref=e29]
+          - generic [ref=e31]:
+            - link "ลงทะเบียน" [ref=e32] [cursor=pointer]:
+              - /url: /event
+            - button "Switch to English" [ref=e33] [cursor=pointer]: EN
+    - main [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e42]:
+          - generic [ref=e44]: Eternal Tower Saga
+          - generic [ref=e46]: ลงทะเบียนล่วงหน้า
+          - img "Eternal Tower Saga" [ref=e48]
+          - generic [ref=e49]:
+            - heading "ผจญภัยไปด้วยกัน พิชิตยอดหอคอย" [level=1] [ref=e50]
+            - paragraph [ref=e51]: ผจญภัยไปด้วยกัน พิชิตยอดหอคอย
+          - paragraph
+          - link "ลงทะเบียนล่วงหน้าเลย" [ref=e53] [cursor=pointer]:
+            - /url: /event
+          - generic [ref=e54]:
+            - link "Pre-order on the App Store" [ref=e55] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e56]
+              - generic [ref=e59]:
+                - generic [ref=e60]: Pre-order on the
+                - strong [ref=e61]: App Store
+            - link "PRE-REGISTER ON Google Play" [ref=e62] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e63]
+              - generic [ref=e65]:
+                - generic [ref=e66]: PRE-REGISTER ON
+                - strong [ref=e67]: Google Play
+            - link "Coming soon Windows" [ref=e68] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e69]
+              - generic [ref=e71]:
+                - generic [ref=e72]: Coming soon
+                - strong [ref=e73]: Windows
+        - generic [ref=e74]:
+          - generic [ref=e75]: เลื่อนลง
+          - generic [ref=e76]: ↓
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - generic [ref=e81]: อาวุธ
+            - heading "เลือกอาวุธประจำสาย" [level=2] [ref=e82]
+            - paragraph [ref=e83]: แต่ละอาวุธกำหนดจังหวะการต่อสู้ บทบาทในปาร์ตี้ และแนวทางอัปเกรดตั้งแต่ช่วงต้นเกม
+          - generic [ref=e84]:
+            - generic [ref=e85]: 01 / 04
+            - generic [ref=e86]:
+              - button "อาวุธก่อนหน้า" [ref=e87] [cursor=pointer]:
+                - img [ref=e88]
+              - button "อาวุธถัดไป" [ref=e90] [cursor=pointer]:
+                - img [ref=e91]
+        - generic [ref=e93]:
+          - generic [ref=e94]:
+            - generic [ref=e97]:
+              - generic [ref=e98]: Combat role
+              - heading "SWORD" [level=3] [ref=e99]
+              - paragraph [ref=e100]: เป็นอาวุธที่เชี่ยวชาญในการโจมตีกายภาพ ซึ่งสามารถปฏิบัติหน้าที่ในการโจมตีระยะประชิดและการป้องกันได้อย่างสมดุล
+              - button "ดูวิดีโอแนะนำ" [ref=e101] [cursor=pointer]:
+                - img [ref=e102]
+                - generic [ref=e104]: ดูวิดีโอแนะนำ
+            - img "SWORD" [ref=e106]
+          - tablist "Weapon selector" [ref=e107]:
+            - tab "SWORD SWORD กำลังแสดง" [selected] [ref=e108] [cursor=pointer]:
+              - img "SWORD" [ref=e110]
+              - generic [ref=e111]:
+                - strong [ref=e112]: SWORD
+                - generic [ref=e113]: กำลังแสดง
+            - tab "BOW BOW สลับมุมมอง" [ref=e114] [cursor=pointer]:
+              - img "BOW" [ref=e116]
+              - generic [ref=e117]:
+                - strong [ref=e118]: BOW
+                - generic [ref=e119]: สลับมุมมอง
+            - tab "WAND WAND สลับมุมมอง" [ref=e120] [cursor=pointer]:
+              - img "WAND" [ref=e122]
+              - generic [ref=e123]:
+                - strong [ref=e124]: WAND
+                - generic [ref=e125]: สลับมุมมอง
+            - tab "CRYSTAL ORB CRYSTAL ORB สลับมุมมอง" [ref=e126] [cursor=pointer]:
+              - img "CRYSTAL ORB" [ref=e128]
+              - generic [ref=e129]:
+                - strong [ref=e130]: CRYSTAL ORB
+                - generic [ref=e131]: สลับมุมมอง
+      - generic [ref=e134]:
+        - generic [ref=e135]:
+          - generic [ref=e136]:
+            - generic [ref=e137]: ฟีเจอร์เกม
+            - heading "ไฮไลท์เกม" [level=2] [ref=e138]
+            - paragraph [ref=e139]: มุมมองสั้น ๆ ของระบบหลักที่กำหนดการต่อสู้ การสำรวจ การเติบโต และการเล่นร่วมกับเพื่อน
+          - article [ref=e140]:
+            - generic [ref=e141]:
+              - generic [ref=e142]: "01"
+              - generic [ref=e143]: ระบบหลัก
+            - img "ระบบต่อสู้ที่อ่านง่าย" [ref=e145]
+            - img [ref=e147]
+            - heading "ระบบต่อสู้ที่อ่านง่าย" [level=3] [ref=e156]
+            - paragraph [ref=e157]: จังหวะต่อสู้ที่ชัด บทบาทอาชีพที่เด่น และสกิลที่ตอบสนองไว ช่วยให้ช่วงแรกของเกมเข้าใจง่ายขึ้น
+            - link "ดูรายละเอียด" [ref=e158] [cursor=pointer]:
+              - /url: /game-guide
+              - text: ดูรายละเอียด
+              - img [ref=e159]
+        - generic [ref=e161]:
+          - button "01 ระบบต่อสู้ที่อ่านง่าย จังหวะต่อสู้ที่ชัด บทบาทอาชีพที่เด่น และสกิลที่ตอบสนองไว ช่วยให้ช่วงแรกของเกมเข้าใจง่ายขึ้น" [ref=e162] [cursor=pointer]:
+            - generic [ref=e163]: "01"
+            - img [ref=e165]
+            - generic [ref=e174]:
+              - strong [ref=e175]: ระบบต่อสู้ที่อ่านง่าย
+              - generic [ref=e176]: จังหวะต่อสู้ที่ชัด บทบาทอาชีพที่เด่น และสกิลที่ตอบสนองไว ช่วยให้ช่วงแรกของเกมเข้าใจง่ายขึ้น
+          - button "02 สำรวจโลกกว้างอย่างมีเป้าหมาย โครงเส้นทาง ระบบแนะนำ และจังหวะการสำรวจช่วยให้ผู้เล่นใหม่เดินหน้าต่อได้โดยไม่หลงทิศทาง" [ref=e177] [cursor=pointer]:
+            - generic [ref=e178]: "02"
+            - img [ref=e180]
+            - generic [ref=e182]:
+              - strong [ref=e183]: สำรวจโลกกว้างอย่างมีเป้าหมาย
+              - generic [ref=e184]: โครงเส้นทาง ระบบแนะนำ และจังหวะการสำรวจช่วยให้ผู้เล่นใหม่เดินหน้าต่อได้โดยไม่หลงทิศทาง
+          - button "03 พิชิตหอคอยแบบมีเป้าหมาย ทั้งเนื้อเรื่อง ชั้นหอคอย และเป้าหมายเสริมถูกจัดจังหวะให้การเล่นแต่ละรอบรู้สึกว่าก้าวหน้าอย่างมีความหมาย" [ref=e185] [cursor=pointer]:
+            - generic [ref=e186]: "03"
+            - img [ref=e188]
+            - generic [ref=e191]:
+              - strong [ref=e192]: พิชิตหอคอยแบบมีเป้าหมาย
+              - generic [ref=e193]: ทั้งเนื้อเรื่อง ชั้นหอคอย และเป้าหมายเสริมถูกจัดจังหวะให้การเล่นแต่ละรอบรู้สึกว่าก้าวหน้าอย่างมีความหมาย
+          - button "04 อัปเกรดอุปกรณ์แบบเข้าใจง่าย อาวุธ เกราะ และค่าสำคัญถูกอธิบายชัดขึ้น ทำให้ตัดสินใจได้ง่ายว่าควรอัปเกรดอะไรต่อ" [ref=e194] [cursor=pointer]:
+            - generic [ref=e195]: "04"
+            - img [ref=e197]
+            - generic [ref=e199]:
+              - strong [ref=e200]: อัปเกรดอุปกรณ์แบบเข้าใจง่าย
+              - generic [ref=e201]: อาวุธ เกราะ และค่าสำคัญถูกอธิบายชัดขึ้น ทำให้ตัดสินใจได้ง่ายว่าควรอัปเกรดอะไรต่อ
+          - button "05 โหมดแข่งขันและคอนเทนต์ท้าทาย Arena คอนเทนต์ยาก และกิจกรรมที่เล่นซ้ำได้ ช่วยให้ช่วงท้ายเกมมีแรงดึงดูดและความท้าทายชัดขึ้น" [ref=e202] [cursor=pointer]:
+            - generic [ref=e203]: "05"
+            - img [ref=e205]
+            - generic [ref=e208]:
+              - strong [ref=e209]: โหมดแข่งขันและคอนเทนต์ท้าทาย
+              - generic [ref=e210]: Arena คอนเทนต์ยาก และกิจกรรมที่เล่นซ้ำได้ ช่วยให้ช่วงท้ายเกมมีแรงดึงดูดและความท้าทายชัดขึ้น
+          - button "06 เล่นกับเพื่อนและระบบกิลด์ การลงดันร่วมกัน เป้าหมายแบบทีม และระบบกิลด์ ช่วยให้โลกของเกมมีชีวิตขึ้นเมื่อเริ่มเล่นกับเพื่อน" [ref=e211] [cursor=pointer]:
+            - generic [ref=e212]: "06"
+            - img [ref=e214]
+            - generic [ref=e219]:
+              - strong [ref=e220]: เล่นกับเพื่อนและระบบกิลด์
+              - generic [ref=e221]: การลงดันร่วมกัน เป้าหมายแบบทีม และระบบกิลด์ ช่วยให้โลกของเกมมีชีวิตขึ้นเมื่อเริ่มเล่นกับเพื่อน
+      - generic [ref=e223]:
+        - generic [ref=e224]:
+          - generic [ref=e225]:
+            - generic [ref=e226]: ข่าวล่าสุด
+            - heading "ข่าวสารและอัพเดท" [level=2] [ref=e227]
+            - paragraph [ref=e228]: ตามข่าวประกาศ อัปเดต กิจกรรม และช่วงบำรุงรักษาในจังหวะการอ่านที่ชัดและสบายตาขึ้น
+          - tablist "Filter news" [ref=e230]:
+            - button "ทั้งหมด" [ref=e231] [cursor=pointer]
+            - button "กิจกรรม" [ref=e232] [cursor=pointer]
+            - button "อัปเดต" [ref=e233] [cursor=pointer]
+            - button "สื่อ" [ref=e234] [cursor=pointer]
+            - button "ประกาศ" [ref=e235] [cursor=pointer]
+            - button "บำรุงรักษา" [ref=e236] [cursor=pointer]
+        - generic [ref=e238]:
+          - link "กิจกรรม 19 มี.ค. 2569 เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ! สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ! เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน อ่านรายละเอียด N06" [ref=e239] [cursor=pointer]:
+            - /url: /news/pre-registration-opens
+            - generic [ref=e240]:
+              - generic [ref=e241]:
+                - generic [ref=e242]: กิจกรรม
+                - generic [ref=e243]: 19 มี.ค. 2569
+              - generic [ref=e244]:
+                - heading "เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ!" [level=3] [ref=e245]
+                - paragraph [ref=e246]: สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ! เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน
+              - generic [ref=e247]:
+                - text: อ่านรายละเอียด
+                - img [ref=e248]
+            - img "N06" [ref=e251]
+          - complementary [ref=e252]:
+            - generic [ref=e254]: ข่าวรอง
+            - generic [ref=e255]:
+              - button "กิจกรรม 19 มี.ค. 2569 เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ! สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ! เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน" [ref=e256] [cursor=pointer]:
+                - generic [ref=e258]:
+                  - generic [ref=e259]:
+                    - generic [ref=e260]: กิจกรรม
+                    - generic [ref=e261]: 19 มี.ค. 2569
+                  - generic [ref=e262]: เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ!
+                  - generic [ref=e263]: สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ เปิดลงทะเบียนล่วงหน้าอย่างเป็นทางการ! เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน
+              - button "อัปเดต 18 มี.ค. 2569 เศษซากความลี้ลับแห่งหอคอย เศษซากความลี้ลับแห่งหอคอย การออกผจญภัยในโลกของ Eternal Tower Sage นอกจากการต่อสู้กับเหล่ามอนสเตอร์ต่างๆ ที่อยู่ในหอคอยชั้นต่างๆ แล้ว ผู้เล่นยังจะได้พอเจอกับ “เศ..." [ref=e264] [cursor=pointer]:
+                - generic [ref=e266]:
+                  - generic [ref=e267]:
+                    - generic [ref=e268]: อัปเดต
+                    - generic [ref=e269]: 18 มี.ค. 2569
+                  - generic [ref=e270]: เศษซากความลี้ลับแห่งหอคอย
+                  - generic [ref=e271]: เศษซากความลี้ลับแห่งหอคอย การออกผจญภัยในโลกของ Eternal Tower Sage นอกจากการต่อสู้กับเหล่ามอนสเตอร์ต่างๆ ที่อยู่ในหอคอยชั้นต่างๆ แล้ว ผู้เล่นยังจะได้พอเจอกับ “เศ...
+              - 'button "สื่อ 17 มี.ค. 2569 บันทึกนักพัฒนา: การสร้างอาร์คาเทีย รวมภาพและสื่อชุดใหม่จาก บันทึกนักพัฒนา: การสร้างอาร์คาเทีย เพื่อให้เห็นบรรยากาศโลกของ Eternal Tower Saga ชัดขึ้นก่อนอัปเดตรอบต่อไป" [ref=e272] [cursor=pointer]':
+                - generic [ref=e274]:
+                  - generic [ref=e275]:
+                    - generic [ref=e276]: สื่อ
+                    - generic [ref=e277]: 17 มี.ค. 2569
+                  - generic [ref=e278]: "บันทึกนักพัฒนา: การสร้างอาร์คาเทีย"
+                  - generic [ref=e279]: "รวมภาพและสื่อชุดใหม่จาก บันทึกนักพัฒนา: การสร้างอาร์คาเทีย เพื่อให้เห็นบรรยากาศโลกของ Eternal Tower Saga ชัดขึ้นก่อนอัปเดตรอบต่อไป"
+              - button "ประกาศ 1 เม.ย. 2569 เปิดเส้นทางสู่ Eternal Tower Saga ภาพรวมของทิศทาง โทนของโลกเกม และจุดเด่นชุดแรกของ Eternal Tower Saga ก่อนเข้าสู่ช่วงถัดไป" [ref=e280] [cursor=pointer]:
+                - generic [ref=e282]:
+                  - generic [ref=e283]:
+                    - generic [ref=e284]: ประกาศ
+                    - generic [ref=e285]: 1 เม.ย. 2569
+                  - generic [ref=e286]: เปิดเส้นทางสู่ Eternal Tower Saga
+                  - generic [ref=e287]: ภาพรวมของทิศทาง โทนของโลกเกม และจุดเด่นชุดแรกของ Eternal Tower Saga ก่อนเข้าสู่ช่วงถัดไป
+              - button "สื่อ 26 มี.ค. 2569 เศษซากความลี้ลับแห่งหอคอย การออกผจญภัยในโลกของ Eternal Tower Sage นอกจากการต่อสู้กับเหล่ามอนสเตอร์ต่างๆ ที่อยู่ในหอคอยชั้นต่างๆ แล้ว ผู้เล่นยังจะได้พอเจอกับ “เศษซากความลี้ลับแห่งหอคอย” เ..." [ref=e288] [cursor=pointer]:
+                - generic [ref=e290]:
+                  - generic [ref=e291]:
+                    - generic [ref=e292]: สื่อ
+                    - generic [ref=e293]: 26 มี.ค. 2569
+                  - generic [ref=e294]: เศษซากความลี้ลับแห่งหอคอย
+                  - generic [ref=e295]: การออกผจญภัยในโลกของ Eternal Tower Sage นอกจากการต่อสู้กับเหล่ามอนสเตอร์ต่างๆ ที่อยู่ในหอคอยชั้นต่างๆ แล้ว ผู้เล่นยังจะได้พอเจอกับ “เศษซากความลี้ลับแห่งหอคอย” เ...
+        - link "ดูข่าวทั้งหมด" [ref=e297] [cursor=pointer]:
+          - /url: /news
+          - text: ดูข่าวทั้งหมด
+          - img [ref=e298]
+    - contentinfo [ref=e300]:
+      - generic [ref=e301]:
+        - generic [ref=e302]:
+          - img "Eternal Tower Saga" [ref=e303]
+          - paragraph [ref=e304]: Eternal Tower Saga คือโลกแฟนตาซีที่เน้นการผจญภัยเป็นทีม การต่อสู้ที่อ่านง่าย และบรรยากาศที่ชวนอยากกลับมาเล่นทุกวัน.
+          - generic [ref=e305]:
+            - link "discord" [ref=e306] [cursor=pointer]:
+              - /url: https://discord.gg/eternaltowersaga
+              - img [ref=e307]
+            - link "facebook" [ref=e309] [cursor=pointer]:
+              - /url: https://facebook.com/EternalTowerSaga
+              - img [ref=e310]
+            - link "youtube" [ref=e312] [cursor=pointer]:
+              - /url: https://youtube.com/@EternalTowerSaga
+              - img [ref=e313]
+            - link "tiktok" [ref=e316] [cursor=pointer]:
+              - /url: https://tiktok.com/@EternalTowerSaga
+              - img [ref=e317]
+        - generic [ref=e319]:
+          - generic [ref=e320]:
+            - heading "สำรวจ" [level=4] [ref=e321]
+            - generic [ref=e322]:
+              - link "หน้าหลัก" [ref=e323] [cursor=pointer]:
+                - /url: /
+              - link "อาวุธ" [ref=e324] [cursor=pointer]:
+                - /url: /character
+              - link "ไฮไลท์เกม" [ref=e325] [cursor=pointer]:
+                - /url: /game-guide
+              - link "ข่าวสาร" [ref=e326] [cursor=pointer]:
+                - /url: /news
+          - generic [ref=e327]:
+            - heading "ช่วยเหลือ" [level=4] [ref=e328]
+            - generic [ref=e329]:
+              - link "ข้อกำหนดการใช้งาน" [ref=e330] [cursor=pointer]:
+                - /url: /terms
+              - link "นโยบายความเป็นส่วนตัว" [ref=e331] [cursor=pointer]:
+                - /url: /privacy
+              - link "คำถามที่พบบ่อย" [ref=e332] [cursor=pointer]:
+                - /url: /faq
+          - generic [ref=e333]:
+            - heading "ชุมชน" [level=4] [ref=e334]
+            - paragraph [ref=e335]: ติดตามประกาศ กิจกรรม และความเคลื่อนไหวล่าสุดของเกมผ่านช่องทาง community หลักของ Eternal Tower Saga.
+            - generic [ref=e336]:
+              - link "ลงทะเบียนล่วงหน้า" [ref=e337] [cursor=pointer]:
+                - /url: /event
+              - link "ดาวน์โหลด" [ref=e338] [cursor=pointer]:
+                - /url: /download
+      - generic [ref=e339]:
+        - generic [ref=e340]: พร้อมบน iOS • Android • PC
+        - generic [ref=e341]: © 2026 Eternal Tower Saga. All rights reserved.
+  - alert [ref=e342]
+  - generic [ref=e344]:
+    - generic [ref=e345]:
+      - generic [ref=e346]: Cookies
+      - paragraph [ref=e347]:
+        - text: เราใช้คุกกี้ที่จำเป็นเพื่อให้เว็บไซต์ทำงานเสถียรและวัดผลการใช้งานพื้นฐานได้อย่างถูกต้อง
+        - generic [ref=e348]: Essential cookies keep the site stable and help measure basic performance.
+    - generic [ref=e349]:
+      - button "ภายหลัง" [ref=e350] [cursor=pointer]
+      - button "ยอมรับ / Accept" [ref=e351] [cursor=pointer]

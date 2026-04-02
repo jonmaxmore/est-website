@@ -1,0 +1,306 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner:
+      - navigation [ref=e3]:
+        - generic [ref=e4]:
+          - link "Eternal Tower Saga home" [ref=e5] [cursor=pointer]:
+            - /url: /
+            - img "Eternal Tower Saga" [ref=e6]
+            - generic:
+              - strong: Eternal Tower Saga
+              - generic: เกม RPG บนมือถือ
+          - generic [ref=e7]:
+            - link "หน้าหลัก" [ref=e8] [cursor=pointer]:
+              - /url: /#hero
+            - link "อาวุธ" [ref=e9] [cursor=pointer]:
+              - /url: /#weapons
+            - link "ไฮไลท์" [ref=e10] [cursor=pointer]:
+              - /url: /#features
+            - link "ข่าวสาร" [ref=e11] [cursor=pointer]:
+              - /url: /#news
+            - link "แนะนำเกม" [ref=e12] [cursor=pointer]:
+              - /url: /#features
+            - link "ร้านค้า" [ref=e13] [cursor=pointer]:
+              - /url: /#shop
+            - link "เติมโค้ด" [ref=e14] [cursor=pointer]:
+              - /url: /#redeem
+            - link "กฏและคำถามที่พบบ่อย" [ref=e15] [cursor=pointer]:
+              - /url: /#rule&faq
+            - link "ช่วยเหลือ" [ref=e16] [cursor=pointer]:
+              - /url: /#support
+          - generic "Community links" [ref=e17]:
+            - link "facebook" [ref=e18] [cursor=pointer]:
+              - /url: https://facebook.com/EternalTowerSaga
+              - img [ref=e19]
+            - link "tiktok" [ref=e21] [cursor=pointer]:
+              - /url: https://tiktok.com/@EternalTowerSaga
+              - img [ref=e22]
+            - link "youtube" [ref=e24] [cursor=pointer]:
+              - /url: https://youtube.com/@EternalTowerSaga
+              - img [ref=e25]
+            - link "discord" [ref=e28] [cursor=pointer]:
+              - /url: https://discord.gg/eternaltowersaga
+              - img [ref=e29]
+          - generic [ref=e31]:
+            - link "ลงทะเบียน" [ref=e32] [cursor=pointer]:
+              - /url: /event
+            - button "Switch to English" [ref=e33] [cursor=pointer]: EN
+    - main [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e42]:
+          - generic [ref=e44]: Eternal Tower Saga
+          - generic [ref=e46]: ลงทะเบียนล่วงหน้า
+          - img "Eternal Tower Saga" [ref=e48]
+          - generic [ref=e49]:
+            - heading "ผจญภัยไปด้วยกัน พิชิตยอดหอคอย" [level=1] [ref=e50]
+            - paragraph [ref=e51]: ผจญภัยไปด้วยกัน พิชิตยอดหอคอย
+          - paragraph
+          - link "ลงทะเบียนล่วงหน้าเลย" [ref=e53] [cursor=pointer]:
+            - /url: /event
+          - generic [ref=e54]:
+            - link "Pre-order on the App Store" [ref=e55] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e56]
+              - generic [ref=e59]:
+                - generic [ref=e60]: Pre-order on the
+                - strong [ref=e61]: App Store
+            - link "PRE-REGISTER ON Google Play" [ref=e62] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e63]
+              - generic [ref=e65]:
+                - generic [ref=e66]: PRE-REGISTER ON
+                - strong [ref=e67]: Google Play
+            - link "Coming soon Windows" [ref=e68] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e69]
+              - generic [ref=e71]:
+                - generic [ref=e72]: Coming soon
+                - strong [ref=e73]: Windows
+        - generic [ref=e74]:
+          - generic [ref=e75]: เลื่อนลง
+          - generic [ref=e76]: ↓
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - generic [ref=e81]: อาวุธ
+            - heading [level=2]
+          - generic [ref=e82]:
+            - generic [ref=e83]: 01 / 04
+            - generic [ref=e84]:
+              - button "อาวุธก่อนหน้า" [ref=e85] [cursor=pointer]:
+                - img [ref=e86]
+              - button "อาวุธถัดไป" [ref=e88] [cursor=pointer]:
+                - img [ref=e89]
+        - generic [ref=e91]:
+          - generic [ref=e92]:
+            - generic [ref=e95]:
+              - generic [ref=e96]: Combat role
+              - heading "SWORD" [level=3] [ref=e97]
+              - paragraph [ref=e98]: เป็นอาวุธที่เชี่ยวชาญในการโจมตีกายภาพ ซึ่งสามารถปฏิบัติหน้าที่ในการโจมตีระยะประชิดและการป้องกันได้อย่างสมดุล
+              - button "ดูวิดีโอแนะนำ" [ref=e99] [cursor=pointer]:
+                - img [ref=e100]
+                - generic [ref=e102]: ดูวิดีโอแนะนำ
+            - img "SWORD" [ref=e104]
+          - tablist "Weapon selector" [ref=e105]:
+            - tab "SWORD SWORD กำลังแสดง" [selected] [ref=e106] [cursor=pointer]:
+              - img "SWORD" [ref=e108]
+              - generic [ref=e109]:
+                - strong [ref=e110]: SWORD
+                - generic [ref=e111]: กำลังแสดง
+            - tab "BOW BOW สลับมุมมอง" [ref=e112] [cursor=pointer]:
+              - img "BOW" [ref=e114]
+              - generic [ref=e115]:
+                - strong [ref=e116]: BOW
+                - generic [ref=e117]: สลับมุมมอง
+            - tab "WAND WAND สลับมุมมอง" [ref=e118] [cursor=pointer]:
+              - img "WAND" [ref=e120]
+              - generic [ref=e121]:
+                - strong [ref=e122]: WAND
+                - generic [ref=e123]: สลับมุมมอง
+            - tab "CRYSTAL ORB CRYSTAL ORB สลับมุมมอง" [ref=e124] [cursor=pointer]:
+              - img "CRYSTAL ORB" [ref=e126]
+              - generic [ref=e127]:
+                - strong [ref=e128]: CRYSTAL ORB
+                - generic [ref=e129]: สลับมุมมอง
+      - generic [ref=e132]:
+        - generic [ref=e133]:
+          - generic [ref=e134]:
+            - generic [ref=e135]: ฟีเจอร์เกม
+            - heading "ไฮไลท์เกม" [level=2] [ref=e136]
+          - article [ref=e137]:
+            - generic [ref=e138]:
+              - generic [ref=e139]: "01"
+              - generic [ref=e140]: ระบบหลัก
+            - img "เปิดเส้นทางความสำเร็จแห่งการผจญภัย พัฒนาต่อเนื่องสู่ “Eternal Tower Saga (ETS)” ในเวอร์ชั่นที่เหนือกว่าและดีที่สุด!!" [ref=e142]
+            - img [ref=e144]
+            - heading "เปิดเส้นทางความสำเร็จแห่งการผจญภัย พัฒนาต่อเนื่องสู่ “Eternal Tower Saga (ETS)” ในเวอร์ชั่นที่เหนือกว่าและดีที่สุด!!" [level=3] [ref=e153]
+            - paragraph [ref=e154]: Eternal Tower Saga (ETS) อีกหนึ่งเกมออนไลน์ใหม่ ที่น่าจับตามองและกำลังจะเปิดให้บริการในช่วง Close Beta เร็วๆ นี้ โดยตัวเกมพัฒนาต่อยอดมาจากเกมออนไลน์ที่หลายคนอาจจะเคยสัมผัสกันมาแล้วอย่าง TeeTINY Online ซึ่งเป็นเกมแนว Open World MMORPG กราฟิกสไตล์การ์ตูนสดใส พัฒนาโดยค่าย TEENY.studio โดยมีจุดเด่นอยู่ที่ระบบ "Global One Server" ที่ให้ผู้เล่นจากทั่วโลกมาผจญภัยร่วมกันในเซิร์ฟเวอร์เดียว
+            - link [ref=e155] [cursor=pointer]:
+              - /url: /news/announcement01
+              - img [ref=e156]
+        - generic [ref=e158]:
+          - button "01 เปิดเส้นทางความสำเร็จแห่งการผจญภัย พัฒนาต่อเนื่องสู่ “Eternal Tower Saga (ETS)” ในเวอร์ชั่นที่เหนือกว่าและดีที่สุด!! Eternal Tower Saga (ETS) อีกหนึ่งเกมออนไลน์ใหม่ ที่น่าจับตามองและกำลังจะเปิดให้บริการในช่วง Close Beta เร็วๆ นี้ โดยตัวเกมพัฒนาต่อยอดมาจากเกมออนไลน์ที่หลายคนอาจจะเคยสัมผัสกันมาแล้วอย่าง TeeTINY Online ซึ่งเป็นเกมแนว Open World MMORPG กราฟิกสไตล์การ์ตูนสดใส พัฒนาโดยค่าย TEENY.studio โดยมีจุดเด่นอยู่ที่ระบบ \"Global One Server\" ที่ให้ผู้เล่นจากทั่วโลกมาผจญภัยร่วมกันในเซิร์ฟเวอร์เดียว" [ref=e159] [cursor=pointer]:
+            - generic [ref=e160]: "01"
+            - img [ref=e162]
+            - generic [ref=e171]:
+              - strong [ref=e172]: เปิดเส้นทางความสำเร็จแห่งการผจญภัย พัฒนาต่อเนื่องสู่ “Eternal Tower Saga (ETS)” ในเวอร์ชั่นที่เหนือกว่าและดีที่สุด!!
+              - generic [ref=e173]: Eternal Tower Saga (ETS) อีกหนึ่งเกมออนไลน์ใหม่ ที่น่าจับตามองและกำลังจะเปิดให้บริการในช่วง Close Beta เร็วๆ นี้ โดยตัวเกมพัฒนาต่อยอดมาจากเกมออนไลน์ที่หลายคนอาจจะเคยสัมผัสกันมาแล้วอย่าง TeeTINY Online ซึ่งเป็นเกมแนว Open World MMORPG กราฟิกสไตล์การ์ตูนสดใส พัฒนาโดยค่าย TEENY.studio โดยมีจุดเด่นอยู่ที่ระบบ "Global One Server" ที่ให้ผู้เล่นจากทั่วโลกมาผจญภัยร่วมกันในเซิร์ฟเวอร์เดียว
+          - button "02 การแปรรูปวัตถุดิบ “แปรรูปวัตถุดิบ” เป็นการนำวัตถุดิบระดับต่ำไปแปรรูปเป็นวัตถุดิบระดับสูงขึ้น โดยการแปรรูปภายในเกม Eternal Tower Sage สามารถทำได้ที่ NPC “นักเล่นแร่แปรธาตุ สตาร์ค” ที่อยู่ในหมู่บ้านเทอาริน" [ref=e174] [cursor=pointer]:
+            - generic [ref=e175]: "02"
+            - img [ref=e177]
+            - generic [ref=e179]:
+              - strong [ref=e180]: การแปรรูปวัตถุดิบ
+              - generic [ref=e181]: “แปรรูปวัตถุดิบ” เป็นการนำวัตถุดิบระดับต่ำไปแปรรูปเป็นวัตถุดิบระดับสูงขึ้น โดยการแปรรูปภายในเกม Eternal Tower Sage สามารถทำได้ที่ NPC “นักเล่นแร่แปรธาตุ สตาร์ค” ที่อยู่ในหมู่บ้านเทอาริน
+          - button "03 ช่องกระเป๋าและคลังส่วนตัว วัตถุดิบและไอเทมต่างๆ ใน Eternal Tower Sage ถือว่าเป็นอะไรที่เยอะมากๆ แน่นอนว่าปัญหาที่ผู้เล่นหลายคนเจอก็คือ “ช่องเก็บของในกระเป๋า” ไม่เพียงพอต่อการเก็บไอเทม ซึ่งปัญหานี้เราสามารถแก้ไขได้ 2 วิธีด้วยกันคือ" [ref=e182] [cursor=pointer]:
+            - generic [ref=e183]: "03"
+            - img [ref=e185]
+            - generic [ref=e188]:
+              - strong [ref=e189]: ช่องกระเป๋าและคลังส่วนตัว
+              - generic [ref=e190]: วัตถุดิบและไอเทมต่างๆ ใน Eternal Tower Sage ถือว่าเป็นอะไรที่เยอะมากๆ แน่นอนว่าปัญหาที่ผู้เล่นหลายคนเจอก็คือ “ช่องเก็บของในกระเป๋า” ไม่เพียงพอต่อการเก็บไอเทม ซึ่งปัญหานี้เราสามารถแก้ไขได้ 2 วิธีด้วยกันคือ
+          - button "04 กระดานภารกิจ “กระดานภารกิจ” อีกหนึ่งตัวช่วยในเกม Eternal Tower Sage ที่จะทำให้ผู้เล่นสามารถอัพเลเวลได้อย่างรวดเร็ว เพราะเมื่อทำภารกิจต่างๆ สำเร็จ ผู้เล่นจะได้รับค่าตอบแทนเป็นค่าประสบการณ์ EXP แบบมหาศาล นอกจากนั้นยังได้รับไอเทมเพิ่มเติมต่างๆ อีกมากมาย ไม่ว่าจะเป็น เงินโกลด์, คริสตัล และไอเทมประเภทต่างๆ โดยผู้เล่นสามารถเข้าไปรับเควสท์ได้ที่ “กระดานภารกิจ” ที่อยู่ตามจุดเริ่มต้น (Save Point) ของหอชั้นต่างๆ ได้ โดยภารกิจที่สามารถรับได้จะมีอยู่ด้วยกัน 2 แบบคือ" [ref=e191] [cursor=pointer]:
+            - generic [ref=e192]: "04"
+            - img [ref=e194]
+            - generic [ref=e196]:
+              - strong [ref=e197]: กระดานภารกิจ
+              - generic [ref=e198]: “กระดานภารกิจ” อีกหนึ่งตัวช่วยในเกม Eternal Tower Sage ที่จะทำให้ผู้เล่นสามารถอัพเลเวลได้อย่างรวดเร็ว เพราะเมื่อทำภารกิจต่างๆ สำเร็จ ผู้เล่นจะได้รับค่าตอบแทนเป็นค่าประสบการณ์ EXP แบบมหาศาล นอกจากนั้นยังได้รับไอเทมเพิ่มเติมต่างๆ อีกมากมาย ไม่ว่าจะเป็น เงินโกลด์, คริสตัล และไอเทมประเภทต่างๆ โดยผู้เล่นสามารถเข้าไปรับเควสท์ได้ที่ “กระดานภารกิจ” ที่อยู่ตามจุดเริ่มต้น (Save Point) ของหอชั้นต่างๆ ได้ โดยภารกิจที่สามารถรับได้จะมีอยู่ด้วยกัน 2 แบบคือ
+          - button "05 ระบบธาตุ “ระบบธาตุ” เป็นระบบที่สำคัญอีกหนึ่งระบบ ที่จะช่วยเพิ่มประสิทธิภาพในการโจมตีและป้องกันของตัวละครได้ ภายใน Eternal Tower Sage จะมีการโจมตีทั้งหมด 6 รูปแบบด้วยกันคือ" [ref=e199] [cursor=pointer]:
+            - generic [ref=e200]: "05"
+            - img [ref=e202]
+            - generic [ref=e205]:
+              - strong [ref=e206]: ระบบธาตุ
+              - generic [ref=e207]: “ระบบธาตุ” เป็นระบบที่สำคัญอีกหนึ่งระบบ ที่จะช่วยเพิ่มประสิทธิภาพในการโจมตีและป้องกันของตัวละครได้ ภายใน Eternal Tower Sage จะมีการโจมตีทั้งหมด 6 รูปแบบด้วยกันคือ
+          - button "06 ระบบทำอาหาร อีกหนึ่งระบบที่สำคัญมากใน Eternal Tower Sage โดยอาหารภายในเกมจะแบ่งออกเป็น 2 ประเภทหลักๆ ด้วยกัน" [ref=e208] [cursor=pointer]:
+            - generic [ref=e209]: "06"
+            - img [ref=e211]
+            - generic [ref=e216]:
+              - strong [ref=e217]: ระบบทำอาหาร
+              - generic [ref=e218]: อีกหนึ่งระบบที่สำคัญมากใน Eternal Tower Sage โดยอาหารภายในเกมจะแบ่งออกเป็น 2 ประเภทหลักๆ ด้วยกัน
+      - generic [ref=e220]:
+        - generic [ref=e221]:
+          - generic [ref=e222]:
+            - generic [ref=e223]: ข่าวล่าสุด
+            - heading "ข่าวสารและอัพเดท" [level=2] [ref=e224]
+            - paragraph [ref=e225]: สรุปข่าวเด่น กิจกรรม และประกาศสำคัญในจังหวะที่อ่านง่ายขึ้นสำหรับหน้าแรก
+          - tablist "Filter news" [ref=e227]:
+            - button "ทั้งหมด" [ref=e228] [cursor=pointer]
+            - button "กิจกรรม" [ref=e229] [cursor=pointer]
+            - button "อัปเดต" [ref=e230] [cursor=pointer]
+            - button "สื่อ" [ref=e231] [cursor=pointer]
+            - button "ประกาศ" [ref=e232] [cursor=pointer]
+            - button "บำรุงรักษา" [ref=e233] [cursor=pointer]
+        - generic [ref=e235]:
+          - link "ประกาศ 1 เม.ย. 2569 เปิดเส้นทางความสำเร็จแห่งการผจญภัย พัฒนาต่อเนื่องสู่ “Eternal Tower Saga (ETS)” ในเวอร์ชั่นที่เหนือกว่าและดีที่สุด!! Eternal Tower Saga (ETS) อีกหนึ่งเกมออนไลน์ใหม่ ที่น่าจับตามองและกำลังจะเปิดให้บริการในช่วง Close Beta เร็วๆ นี้ โดยตัวเกมพัฒนาต่อยอดมาจากเกมออนไลน์ที่หลายคนอาจ... อ่านรายละเอียด HL01" [ref=e236] [cursor=pointer]:
+            - /url: /news/announcement1
+            - generic [ref=e237]:
+              - generic [ref=e238]:
+                - generic [ref=e239]: ประกาศ
+                - generic [ref=e240]: 1 เม.ย. 2569
+              - generic [ref=e241]:
+                - heading "เปิดเส้นทางความสำเร็จแห่งการผจญภัย พัฒนาต่อเนื่องสู่ “Eternal Tower Saga (ETS)” ในเวอร์ชั่นที่เหนือกว่าและดีที่สุด!!" [level=3] [ref=e242]
+                - paragraph [ref=e243]: Eternal Tower Saga (ETS) อีกหนึ่งเกมออนไลน์ใหม่ ที่น่าจับตามองและกำลังจะเปิดให้บริการในช่วง Close Beta เร็วๆ นี้ โดยตัวเกมพัฒนาต่อยอดมาจากเกมออนไลน์ที่หลายคนอาจ...
+              - generic [ref=e244]:
+                - text: อ่านรายละเอียด
+                - img [ref=e245]
+            - img "HL01" [ref=e248]
+          - complementary [ref=e249]:
+            - generic [ref=e251]: ข่าวรอง
+            - generic [ref=e252]:
+              - button "ประกาศ 1 เม.ย. 2569 เปิดเส้นทางความสำเร็จแห่งการผจญภัย พัฒนาต่อเนื่องสู่ “Eternal Tower Saga (ETS)” ในเวอร์ชั่นที่เหนือกว่าและดีที่สุด!! Eternal Tower Saga (ETS) อีกหนึ่งเกมออนไลน์ใหม่ ที่น่าจับตามองและกำลังจะเปิดให้บริการในช่วง Close Beta เร็วๆ นี้ โดยตัวเกมพัฒนาต่อยอดมาจากเกมออนไลน์ที่หลายคนอาจ..." [ref=e253] [cursor=pointer]:
+                - generic [ref=e255]:
+                  - generic [ref=e256]:
+                    - generic [ref=e257]: ประกาศ
+                    - generic [ref=e258]: 1 เม.ย. 2569
+                  - generic [ref=e259]: เปิดเส้นทางความสำเร็จแห่งการผจญภัย พัฒนาต่อเนื่องสู่ “Eternal Tower Saga (ETS)” ในเวอร์ชั่นที่เหนือกว่าและดีที่สุด!!
+                  - generic [ref=e260]: Eternal Tower Saga (ETS) อีกหนึ่งเกมออนไลน์ใหม่ ที่น่าจับตามองและกำลังจะเปิดให้บริการในช่วง Close Beta เร็วๆ นี้ โดยตัวเกมพัฒนาต่อยอดมาจากเกมออนไลน์ที่หลายคนอาจ...
+              - button "ประกาศ 1 เม.ย. 2569 เปิดเส้นทางความสำเร็จแห่งการผจญภัย พัฒนาต่อเนื่องสู่ “Eternal Tower Saga (ETS)” ในเวอร์ชั่นที่เหนือกว่าและดีที่สุด!! Eternal Tower Saga (ETS) อีกหนึ่งเกมออนไลน์ใหม่ ที่น่าจับตามองและกำลังจะเปิดให้บริการในช่วง Close Beta เร็วๆ นี้ โดยตัวเกมพัฒนาต่อยอดมาจากเกมออนไลน์ที่หลายคนอาจ..." [ref=e261] [cursor=pointer]:
+                - generic [ref=e263]:
+                  - generic [ref=e264]:
+                    - generic [ref=e265]: ประกาศ
+                    - generic [ref=e266]: 1 เม.ย. 2569
+                  - generic [ref=e267]: เปิดเส้นทางความสำเร็จแห่งการผจญภัย พัฒนาต่อเนื่องสู่ “Eternal Tower Saga (ETS)” ในเวอร์ชั่นที่เหนือกว่าและดีที่สุด!!
+                  - generic [ref=e268]: Eternal Tower Saga (ETS) อีกหนึ่งเกมออนไลน์ใหม่ ที่น่าจับตามองและกำลังจะเปิดให้บริการในช่วง Close Beta เร็วๆ นี้ โดยตัวเกมพัฒนาต่อยอดมาจากเกมออนไลน์ที่หลายคนอาจ...
+              - button "สื่อ 26 มี.ค. 2569 เศษซากความลี้ลับแห่งหอคอย การออกผจญภัยในโลกของ Eternal Tower Sage นอกจากการต่อสู้กับเหล่ามอนสเตอร์ต่างๆ ที่อยู่ในหอคอยชั้นต่างๆ แล้ว ผู้เล่นยังจะได้พอเจอกับ “เศษซากความลี้ลับแห่งหอคอย” เ..." [ref=e269] [cursor=pointer]:
+                - generic [ref=e271]:
+                  - generic [ref=e272]:
+                    - generic [ref=e273]: สื่อ
+                    - generic [ref=e274]: 26 มี.ค. 2569
+                  - generic [ref=e275]: เศษซากความลี้ลับแห่งหอคอย
+                  - generic [ref=e276]: การออกผจญภัยในโลกของ Eternal Tower Sage นอกจากการต่อสู้กับเหล่ามอนสเตอร์ต่างๆ ที่อยู่ในหอคอยชั้นต่างๆ แล้ว ผู้เล่นยังจะได้พอเจอกับ “เศษซากความลี้ลับแห่งหอคอย” เ...
+              - button "อัปเดต 25 มี.ค. 2569 สรุปการอัปเดตระบบหลัก สรุปประเด็นที่เปลี่ยนใน สรุปการอัปเดตระบบหลัก พร้อมผลต่อการเล่นและระบบที่ผู้เล่นควรรู้ก่อนเข้าเกมรอบถัดไป" [ref=e277] [cursor=pointer]:
+                - generic [ref=e279]:
+                  - generic [ref=e280]:
+                    - generic [ref=e281]: อัปเดต
+                    - generic [ref=e282]: 25 มี.ค. 2569
+                  - generic [ref=e283]: สรุปการอัปเดตระบบหลัก
+                  - generic [ref=e284]: สรุปประเด็นที่เปลี่ยนใน สรุปการอัปเดตระบบหลัก พร้อมผลต่อการเล่นและระบบที่ผู้เล่นควรรู้ก่อนเข้าเกมรอบถัดไป
+              - button "กิจกรรม 24 มี.ค. 2569 กิจกรรมรวมพลนักผจญภัยประจำสัปดาห์ สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ กิจกรรมรวมพลนักผจญภัยประจำสัปดาห์ เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน" [ref=e285] [cursor=pointer]:
+                - generic [ref=e287]:
+                  - generic [ref=e288]:
+                    - generic [ref=e289]: กิจกรรม
+                    - generic [ref=e290]: 24 มี.ค. 2569
+                  - generic [ref=e291]: กิจกรรมรวมพลนักผจญภัยประจำสัปดาห์
+                  - generic [ref=e292]: สรุปกำหนดการ เงื่อนไข และรางวัลสำคัญของ กิจกรรมรวมพลนักผจญภัยประจำสัปดาห์ เพื่อให้ผู้เล่นเตรียมตัวเข้าร่วมกิจกรรมได้ครบถ้วน
+        - link "ดูข่าวทั้งหมด" [ref=e294] [cursor=pointer]:
+          - /url: /news
+          - text: ดูข่าวทั้งหมด
+          - img [ref=e295]
+    - contentinfo [ref=e297]:
+      - generic [ref=e298]:
+        - generic [ref=e299]:
+          - img "Eternal Tower Saga" [ref=e300]
+          - paragraph [ref=e301]: Eternal Tower Saga คือโลกแฟนตาซีที่เน้นการผจญภัยเป็นทีม การต่อสู้ที่อ่านง่าย และบรรยากาศที่ชวนอยากกลับมาเล่นทุกวัน.
+          - generic [ref=e302]:
+            - link "discord" [ref=e303] [cursor=pointer]:
+              - /url: https://discord.gg/eternaltowersaga
+              - img [ref=e304]
+            - link "facebook" [ref=e306] [cursor=pointer]:
+              - /url: https://facebook.com/EternalTowerSaga
+              - img [ref=e307]
+            - link "youtube" [ref=e309] [cursor=pointer]:
+              - /url: https://youtube.com/@EternalTowerSaga
+              - img [ref=e310]
+            - link "tiktok" [ref=e313] [cursor=pointer]:
+              - /url: https://tiktok.com/@EternalTowerSaga
+              - img [ref=e314]
+        - generic [ref=e316]:
+          - generic [ref=e317]:
+            - heading "สำรวจ" [level=4] [ref=e318]
+            - generic [ref=e319]:
+              - link "หน้าหลัก" [ref=e320] [cursor=pointer]:
+                - /url: /
+              - link "อาวุธ" [ref=e321] [cursor=pointer]:
+                - /url: /character
+              - link "ไฮไลท์เกม" [ref=e322] [cursor=pointer]:
+                - /url: /game-guide
+              - link "ข่าวสาร" [ref=e323] [cursor=pointer]:
+                - /url: /news
+          - generic [ref=e324]:
+            - heading "ช่วยเหลือ" [level=4] [ref=e325]
+            - generic [ref=e326]:
+              - link "ข้อกำหนดการใช้งาน" [ref=e327] [cursor=pointer]:
+                - /url: /terms
+              - link "นโยบายความเป็นส่วนตัว" [ref=e328] [cursor=pointer]:
+                - /url: /privacy
+              - link "คำถามที่พบบ่อย" [ref=e329] [cursor=pointer]:
+                - /url: /faq
+          - generic [ref=e330]:
+            - heading "ชุมชน" [level=4] [ref=e331]
+            - paragraph [ref=e332]: ติดตามประกาศ กิจกรรม และความเคลื่อนไหวล่าสุดของเกมผ่านช่องทาง community หลักของ Eternal Tower Saga.
+            - generic [ref=e333]:
+              - link "ลงทะเบียนล่วงหน้า" [ref=e334] [cursor=pointer]:
+                - /url: /event
+              - link "ดาวน์โหลด" [ref=e335] [cursor=pointer]:
+                - /url: /download
+      - generic [ref=e336]:
+        - generic [ref=e337]: พร้อมบน iOS • Android • PC
+        - generic [ref=e338]: © 2026 Eternal Tower Saga. All rights reserved.
+  - alert [ref=e339]
+  - generic [ref=e341]:
+    - generic [ref=e342]:
+      - generic [ref=e343]: Cookies
+      - paragraph [ref=e344]:
+        - text: เราใช้คุกกี้ที่จำเป็นเพื่อให้เว็บไซต์ทำงานเสถียรและวัดผลการใช้งานพื้นฐานได้อย่างถูกต้อง
+        - generic [ref=e345]: Essential cookies keep the site stable and help measure basic performance.
+    - generic [ref=e346]:
+      - button "ภายหลัง" [ref=e347] [cursor=pointer]
+      - button "ยอมรับ / Accept" [ref=e348] [cursor=pointer]
