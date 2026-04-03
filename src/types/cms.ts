@@ -150,6 +150,26 @@ export interface CMSNewsSectionConfig {
   introTh?: string;
 }
 
+export interface CMSGuideCard {
+  icon: string;
+  image: string | null;
+  titleEn: string;
+  titleTh: string;
+  descriptionEn: string;
+  descriptionTh: string;
+  href: string;
+}
+
+export interface CMSGuideConfig {
+  badgeEn: string;
+  badgeTh: string;
+  titleEn: string;
+  titleTh: string;
+  introEn?: string;
+  introTh?: string;
+  cards: CMSGuideCard[];
+}
+
 export interface CMSGameGuidePageConfig {
   heroImage: CMSMediaRef | null;
   systemsBackgroundImage?: CMSMediaRef | null;
@@ -252,5 +272,6 @@ export interface CMSSettings {
   weapons: CMSWeaponSectionConfig;
   highlights: CMSHighlightsConfig;
   news: CMSNewsSectionConfig;
+  guide?: CMSGuideConfig;
   storeButtons: CMSStoreButton[];
 }

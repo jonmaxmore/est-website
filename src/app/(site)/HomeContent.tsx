@@ -47,7 +47,7 @@ export default function HomeContent({ settings, weapons, news }: HomeContentProp
         <div className="home-sectionDivider" aria-hidden="true" />
         <HighlightsSection features={features} sectionConfig={settings?.highlights} />
         <div className="home-sectionDivider" aria-hidden="true" />
-        <GameGuideSection />
+        <GameGuideSection guideConfig={settings?.guide} />
         <div className="home-sectionDivider" aria-hidden="true" />
         <NewsSection news={news} sectionConfig={settings?.news} />
       </main>

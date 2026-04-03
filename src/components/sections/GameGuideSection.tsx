@@ -2,28 +2,44 @@
 
 import { motion } from 'framer-motion';
 import { ArrowRight, BookOpen, Shield, Swords, Wrench } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import Image from 'next/image';
 import CmsLink from '@/components/ui/CmsLink';
 import { isCmsMediaUrl } from '@/lib/cms-media';
 import { useLang } from '@/lib/lang-context';
+import type { CMSGuideConfig, CMSGuideCard } from '@/types/cms';
 
-interface GuideCard {
+/* ── Icon resolver ── */
+const ICON_MAP: Record<string, LucideIcon> = {
+  BookOpen,
+  Swords,
+  Shield,
+  Wrench,
+};
+
+function resolveIcon(name: string): LucideIcon {
+  return ICON_MAP[name] || BookOpen;
+}
+
+/* ── Render-ready card shape ── */
+interface RenderCard {
   titleEn: string;
   titleTh: string;
   descriptionEn: string;
   descriptionTh: string;
-  icon: typeof BookOpen;
+  Icon: LucideIcon;
   image: string | null;
   href: string;
 }
 
-const DEFAULT_GUIDES: GuideCard[] = [
+/* ── Default cards (fallback when CMS is empty) ── */
+const DEFAULT_CARDS: RenderCard[] = [
   {
     titleEn: "Beginner's Guide",
     titleTh: 'ไกด์เริ่มต้น',
     descriptionEn: 'Everything you need to know to start your journey up the Eternal Tower.',
     descriptionTh: 'ทุกสิ่งที่คุณต้องรู้เพื่อเริ่มต้นการเดินทางสู่หอคอยนิรันดร์',
-    icon: BookOpen,
+    Icon: BookOpen,
     image: null,
     href: '/guide#beginner',
   },
@@ -32,7 +48,7 @@ const DEFAULT_GUIDES: GuideCard[] = [
     titleTh: 'กลยุทธ์บอส',
     descriptionEn: 'Master the tactics to defeat the most dangerous bosses on every floor.',
     descriptionTh: 'เรียนรู้กลยุทธ์เพื่อเอาชนะบอสที่อันตรายที่สุดในทุกชั้น',
-    icon: Swords,
+    Icon: Swords,
     image: null,
     href: '/guide#boss',
   },
@@ -41,7 +57,7 @@ const DEFAULT_GUIDES: GuideCard[] = [
     titleTh: 'ความเชี่ยวชาญอาชีพ',
     descriptionEn: 'Deep dives into each combat class, builds, and skill rotations.',
     descriptionTh: 'เจาะลึกอาชีพแต่ละสาย การ Build และการหมุนสกิล',
-    icon: Shield,
+    Icon: Shield,
     image: null,
     href: '/guide#class',
   },
@@ -50,12 +66,25 @@ const DEFAULT_GUIDES: GuideCard[] = [
     titleTh: 'การคราฟต์อุปกรณ์',
     descriptionEn: 'Learn the crafting system to forge legendary gear and enhance your power.',
     descriptionTh: 'เรียนรู้ระบบคราฟต์เพื่อสร้างอุปกรณ์ในตำนานและเพิ่มพลังของคุณ',
-    icon: Wrench,
+    Icon: Wrench,
     image: null,
     href: '/guide#crafting',
   },
 ];
 
+function cmsCardToRender(card: CMSGuideCard): RenderCard {
+  return {
+    titleEn: card.titleEn,
+    titleTh: card.titleTh,
+    descriptionEn: card.descriptionEn,
+    descriptionTh: card.descriptionTh,
+    Icon: resolveIcon(card.icon),
+    image: card.image,
+    href: card.href || '#',
+  };
+}
+
+/* ── Animation ── */
 const containerVariants = {
   hidden: {},
   visible: {
@@ -73,32 +102,33 @@ const cardVariants = {
   },
 };
 
+/* ── Card component ── */
 function GuideCardItem({
-  guide,
+  card,
   index,
   t,
 }: {
-  guide: GuideCard;
+  card: RenderCard;
   index: number;
   t: (th: string, en: string) => string;
 }) {
-  const title = t(guide.titleTh, guide.titleEn);
-  const description = t(guide.descriptionTh, guide.descriptionEn);
-  const Icon = guide.icon;
+  const title = t(card.titleTh, card.titleEn);
+  const description = t(card.descriptionTh, card.descriptionEn);
+  const Icon = card.Icon;
   const ctaLabel = t('อ่านเพิ่มเติม', 'Read More');
 
   return (
     <motion.article className="home-guide__card" variants={cardVariants}>
       <div className="home-guide__cardMedia">
-        {guide.image ? (
+        {card.image ? (
           <>
             <Image
-              src={guide.image}
+              src={card.image}
               alt={title}
               fill
               sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 25vw"
               className="home-guide__cardImage"
-              unoptimized={isCmsMediaUrl(guide.image)}
+              unoptimized={isCmsMediaUrl(card.image)}
             />
             <div className="home-guide__cardMediaVeil" />
           </>
@@ -124,7 +154,7 @@ function GuideCardItem({
           <p className="home-guide__cardDesc">{description}</p>
         </div>
 
-        <CmsLink href={guide.href} className="home-guide__cardCta">
+        <CmsLink href={card.href} className="home-guide__cardCta">
           {ctaLabel}
           <ArrowRight size={14} />
         </CmsLink>
@@ -133,15 +163,33 @@ function GuideCardItem({
   );
 }
 
-export default function GameGuideSection() {
+/* ── Section ── */
+export default function GameGuideSection({
+  guideConfig,
+}: {
+  guideConfig?: CMSGuideConfig;
+}) {
   const { t } = useLang();
 
-  const badgeText = t('คู่มือเกม', 'Game Guide');
-  const titleText = t('เรียนรู้ เอาชนะ พิชิต', 'Learn. Conquer. Triumph.');
-  const introCopy = t(
-    'ค้นพบกลยุทธ์และเทคนิคที่จะช่วยให้คุณก้าวขึ้นสู่จุดสูงสุดของหอคอย',
-    'Discover the strategies and techniques that will help you reach the top of the tower.',
+  // Use CMS values if available, fallback to defaults
+  const badgeText = t(
+    guideConfig?.badgeTh || 'คู่มือเกม',
+    guideConfig?.badgeEn || 'Game Guide',
   );
+  const titleText = t(
+    guideConfig?.titleTh || 'เรียนรู้ เอาชนะ พิชิต',
+    guideConfig?.titleEn || 'Learn. Conquer. Triumph.',
+  );
+  const introCopy = t(
+    guideConfig?.introTh || 'ค้นพบกลยุทธ์และเทคนิคที่จะช่วยให้คุณก้าวขึ้นสู่จุดสูงสุดของหอคอย',
+    guideConfig?.introEn || 'Discover the strategies and techniques that will help you reach the top of the tower.',
+  );
+
+  // Use CMS cards if available, otherwise defaults
+  const cards: RenderCard[] =
+    guideConfig?.cards && guideConfig.cards.length > 0
+      ? guideConfig.cards.map(cmsCardToRender)
+      : DEFAULT_CARDS;
 
   return (
     <section id="guide" className="home-guide">
@@ -168,8 +216,8 @@ export default function GameGuideSection() {
           whileInView="visible"
           viewport={{ once: true, margin: '-60px' }}
         >
-          {DEFAULT_GUIDES.map((guide, index) => (
-            <GuideCardItem key={index} guide={guide} index={index} t={t} />
+          {cards.map((card, index) => (
+            <GuideCardItem key={index} card={card} index={index} t={t} />
           ))}
         </motion.div>
       </div>

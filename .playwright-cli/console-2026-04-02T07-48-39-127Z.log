@@ -4,3 +4,4 @@
 [    1565ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://178.128.127.161/character?_rsc=10eai:0
 [77969725ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://178.128.127.161/api/track:0
 [78809714ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://178.128.127.161/api/track:0
+[84029652ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://178.128.127.161/api/track:0

@@ -189,5 +189,59 @@ export const Homepage: GlobalConfig = {
         },
       ],
     },
+    {
+      type: 'collapsible',
+      label: 'Game Guide Section',
+      admin: { initCollapsed: true },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            { name: 'guideBadgeEn', type: 'text', defaultValue: 'GAME GUIDE', admin: { width: '50%' } },
+            { name: 'guideBadgeTh', type: 'text', defaultValue: 'คู่มือเกม', admin: { width: '50%' } },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'guideTitleEn', type: 'text', defaultValue: 'Learn. Conquer. Triumph.', admin: { width: '50%' } },
+            { name: 'guideTitleTh', type: 'text', defaultValue: 'เรียนรู้ เอาชนะ พิชิต', admin: { width: '50%' } },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'guideIntroEn', type: 'textarea', label: 'Intro Copy (EN)', admin: { width: '50%' } },
+            { name: 'guideIntroTh', type: 'textarea', label: 'Intro Copy (TH)', admin: { width: '50%' } },
+          ],
+        },
+        {
+          name: 'guideCards',
+          type: 'array',
+          label: 'Guide Cards',
+          maxRows: 8,
+          admin: { description: 'Cards displayed in the Game Guide grid (max 8)' },
+          fields: [
+            { name: 'icon', type: 'text', required: true, label: 'Icon Name (lucide: BookOpen, Swords, Shield, Wrench)' },
+            { name: 'image', type: 'upload', relationTo: 'media', label: 'Card Image' },
+            {
+              type: 'row',
+              fields: [
+                { name: 'titleEn', type: 'text', required: true, admin: { width: '50%' } },
+                { name: 'titleTh', type: 'text', required: true, admin: { width: '50%' } },
+              ],
+            },
+            {
+              type: 'row',
+              fields: [
+                { name: 'descriptionEn', type: 'text', required: true, admin: { width: '50%' } },
+                { name: 'descriptionTh', type: 'text', required: true, admin: { width: '50%' } },
+              ],
+            },
+            { name: 'href', type: 'text', label: 'Link URL', defaultValue: '#' },
+          ],
+        },
+      ],
+    },
   ],
 }

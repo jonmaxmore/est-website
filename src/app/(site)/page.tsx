@@ -208,6 +208,30 @@ function buildNewsConfig(homepage: CmsRecord) {
   };
 }
 
+function buildGuideConfig(homepage: CmsRecord) {
+  const cards = Array.isArray(homepage.guideCards)
+    ? (homepage.guideCards as CmsRecord[]).map((card) => ({
+        icon: (card.icon as string) || 'BookOpen',
+        image: extractMediaUrl(card.image),
+        titleEn: (card.titleEn as string) || '',
+        titleTh: (card.titleTh as string) || '',
+        descriptionEn: (card.descriptionEn as string) || '',
+        descriptionTh: (card.descriptionTh as string) || '',
+        href: (card.href as string) || '#',
+      }))
+    : [];
+
+  return {
+    badgeEn: (homepage.guideBadgeEn as string) || '',
+    badgeTh: (homepage.guideBadgeTh as string) || '',
+    titleEn: (homepage.guideTitleEn as string) || '',
+    titleTh: (homepage.guideTitleTh as string) || '',
+    introEn: (homepage.guideIntroEn as string) || '',
+    introTh: (homepage.guideIntroTh as string) || '',
+    cards,
+  };
+}
+
 function buildLandingSettings(
   siteSettingsValue: unknown,
   eventConfigValue: unknown,
@@ -229,6 +253,7 @@ function buildLandingSettings(
     weapons: buildWeaponSectionConfig(homepage),
     highlights: buildHighlightsConfig(homepage),
     news: buildNewsConfig(homepage),
+    guide: buildGuideConfig(homepage),
     storeButtons: mapStoreButtons(storeButtonsRes.docs),
   };
 }
