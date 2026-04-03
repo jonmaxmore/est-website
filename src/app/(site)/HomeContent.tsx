@@ -6,8 +6,10 @@ import HeroSection from '@/components/sections/HeroSection';
 import WeaponSection from '@/components/sections/WeaponSection';
 import GameFeaturesSection from '@/components/sections/GameFeaturesSection';
 import HighlightsSection from '@/components/sections/HighlightsSection';
+import GameGuideSection from '@/components/sections/GameGuideSection';
 import NewsSection from '@/components/sections/NewsSection';
 import Navigation from '@/components/layout/Navigation';
+import MobileBottomNav from '@/components/layout/MobileBottomNav';
 import Footer from '@/components/layout/Footer';
 
 interface HomeContentProps {
@@ -45,11 +47,15 @@ export default function HomeContent({ settings, weapons, news }: HomeContentProp
         <div className="home-sectionDivider" aria-hidden="true" />
         <HighlightsSection features={features} sectionConfig={settings?.highlights} />
         <div className="home-sectionDivider" aria-hidden="true" />
+        <GameGuideSection />
+        <div className="home-sectionDivider" aria-hidden="true" />
         <NewsSection news={news} sectionConfig={settings?.news} />
       </main>
 
       <Footer socialLinks={socialLinks} footer={footer} logoUrl={settings?.site?.logo} />
+      <MobileBottomNav registrationUrl={settings?.site?.registrationUrl} />
     </div>
   );
 }
+
 
