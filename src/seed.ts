@@ -24,10 +24,10 @@ const MILESTONES = [
 ] as const;
 
 const WEAPONS = [
-  { name: 'Arthur — Iron Knight', sortOrder: 1, visible: true },
-  { name: 'Elena — Forest Ranger', sortOrder: 2, visible: true },
-  { name: 'Kaelen — Shadow Mage', sortOrder: 3, visible: true },
-  { name: 'Lyra — Holy Priestess', sortOrder: 4, visible: true },
+  { name: 'SWORD', sortOrder: 1, visible: true },
+  { name: 'BOW', sortOrder: 2, visible: true },
+  { name: 'CRYSTAL_ORB', sortOrder: 3, visible: true },
+  { name: 'WAND', sortOrder: 4, visible: true },
 ] as const;
 
 const NEWS_ARTICLES = [

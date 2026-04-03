@@ -57,9 +57,9 @@ export const DEFAULT_HOMEPAGE_FEATURE_MEDIA: HomepageFeatureMediaDefault[] = [
   },
   {
     previewImage: {
-      alt: 'Character progression preview',
-      filePath: imagePath('characters', 'arthur.webp'),
-      filenameHint: 'arthur',
+      alt: 'Weapon progression preview',
+      filePath: imagePath('characters', 'weapon-info-sword.png'),
+      filenameHint: 'weapon-info-sword',
     },
   },
   {
