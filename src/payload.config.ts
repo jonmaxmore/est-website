@@ -22,6 +22,7 @@ import { AnalyticsFunnelEvents } from './collections/AnalyticsFunnelEvents'
 import { addNewsExcerptColumnsMigration } from './migrations/add-news-excerpt-columns'
 import { addNewsEditorialColumnsMigration } from './migrations/add-news-editorial-columns'
 import { addGlobalBaseColumnsMigration } from './migrations/add-global-base-columns'
+import { addHomepageGuideColumnsMigration } from './migrations/add-homepage-guide-columns'
 
 // Globals
 import { SiteSettings } from './globals/SiteSettings'
@@ -93,6 +94,7 @@ export default buildConfig({
       addNewsExcerptColumnsMigration,
       addNewsEditorialColumnsMigration,
       addGlobalBaseColumnsMigration,
+      addHomepageGuideColumnsMigration,
     ],
     push: true,
   }),
