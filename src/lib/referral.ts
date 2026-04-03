@@ -5,6 +5,6 @@ export function generateReferralCode(): string {
 }
 
 export function getReferralLink(code: string): string {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || '';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
   return `${baseUrl}/event?ref=${code}`;
 }

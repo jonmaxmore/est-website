@@ -16,7 +16,6 @@ import '../styles/highlights.css';
 /* Modular CSS - Shared */
 import '../styles/page-hero.css';
 import '../styles/responsive.css';
-import '../styles/mobile-responsive.css';
 import '../styles/faq.css';
 
 /* Modular CSS - Page-Specific */
