@@ -141,8 +141,7 @@ test.describe('API Endpoints', () => {
     expect(body).toHaveProperty('faqItems')
   })
 
-  // KNOWN ISSUE: support-page returns 500 on production — needs schema migration
-  test.skip('GET /api/globals/support-page → accessible', async ({ request }) => {
+  test('GET /api/globals/support-page → accessible', async ({ request }) => {
     const res = await request.get('/api/globals/support-page')
     expect(res.status()).toBeLessThan(500)
   })

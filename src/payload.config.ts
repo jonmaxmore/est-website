@@ -23,6 +23,7 @@ import { addNewsExcerptColumnsMigration } from './migrations/add-news-excerpt-co
 import { addNewsEditorialColumnsMigration } from './migrations/add-news-editorial-columns'
 import { addGlobalBaseColumnsMigration } from './migrations/add-global-base-columns'
 import { addHomepageGuideColumnsMigration } from './migrations/add-homepage-guide-columns'
+import { addSupportPageMigration } from './migrations/add-support-page-tables'
 
 // Globals
 import { SiteSettings } from './globals/SiteSettings'
@@ -95,6 +96,7 @@ export default buildConfig({
       addNewsEditorialColumnsMigration,
       addGlobalBaseColumnsMigration,
       addHomepageGuideColumnsMigration,
+      addSupportPageMigration,
     ],
     push: true,
   }),
