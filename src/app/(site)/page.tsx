@@ -21,7 +21,7 @@ import {
 } from '@/types/cms';
 import { normalizeFeatureLinkFields } from '@/lib/feature-links';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 type CmsRecord = Record<string, unknown>;
 type CmsDocsResponse = { docs: CmsRecord[] };
