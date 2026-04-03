@@ -6,26 +6,32 @@ description: Deploy latest changes to the production server (178.128.127.161)
 
 // turbo-all
 
-## Prerequisites
-- SSH access to `root@178.128.127.161`
-- Docker and Docker Compose installed on server
-- Changes committed and pushed to `main` branch on GitHub
+## One Best Way — Single Command Deploy
 
-## Steps
+1. SSH into server and run the deploy script:
+```bash
+ssh root@178.128.127.161 "bash /var/www/est-website/deploy.sh"
+```
+
+> This single script handles everything: Docker cleanup → Git pull → Build → Health check → Verify
+
+## Manual Deploy (step-by-step)
+
+If the script fails, run each step manually:
 
 1. SSH into the production server:
 ```bash
 ssh root@178.128.127.161
 ```
 
-2. Navigate to the project directory:
+2. Clean Docker to free disk space:
 ```bash
-cd /var/www/est-website
+docker system prune -af
 ```
 
-3. Pull latest changes:
+3. Pull latest code:
 ```bash
-git pull origin main
+cd /var/www/est-website && git pull origin main
 ```
 
 4. Build and restart containers:
@@ -36,30 +42,39 @@ docker compose up -d --build
 5. Verify the deployment:
 ```bash
 docker compose ps
-curl -s http://localhost | head -20
+curl -s http://localhost/api/health | python3 -m json.tool
 ```
 
-6. Seed database (first time only):
-```bash
-curl -s -X POST http://localhost/api/seed
-```
+## First-Time Setup
 
-## Quick One-Liner (after SSH)
 ```bash
-cd /var/www/est-website && git pull origin main && docker compose up -d --build && docker compose ps
+# Clone the repo
+git clone https://github.com/jonmaxmore/est-website.git /var/www/est-website
+cd /var/www/est-website
+
+# Copy and edit environment variables
+cp .env.example .env
+nano .env  # Fill in PAYLOAD_SECRET, DATABASE_URI, NEXT_PUBLIC_SITE_URL
+
+# Deploy
+bash deploy.sh
 ```
 
 ## Useful Commands
+
 ```bash
-# View logs
+# View app logs
 docker compose logs app --tail 50 -f
 
-# Restart a service
+# Restart app only
 docker compose restart app
 
 # Full rebuild (no cache)
 docker compose build --no-cache && docker compose up -d
 
-# Access PostgreSQL
+# Access database
 docker compose exec db psql -U est -d est_db
+
+# Check disk usage (common bottleneck on small droplets)
+df -h && docker system df
 ```
