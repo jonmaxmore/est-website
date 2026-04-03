@@ -1,4 +1,4 @@
-import { runStackVerification } from '../lib/stack-verification'
+import { runStackVerification } from './stack-verification'
 import { loadScriptEnv } from './load-script-env'
 
 loadScriptEnv()
