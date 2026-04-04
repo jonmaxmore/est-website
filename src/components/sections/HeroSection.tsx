@@ -1,230 +1,61 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import Image from 'next/image';
-import Link from 'next/link';
 import { useLang } from '@/lib/lang-context';
-import { isCmsMediaUrl } from '@/lib/cms-media';
-import { STORE_ICONS } from '@/components/ui/StoreIcons';
-import type { CMSSettings } from '@/types/cms';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 
-interface HeroProps {
-  settings: CMSSettings | null;
-}
+export default function HeroSection({ data }: { data: any }) {
+  const { currentLang } = useLang();
+  
+  if (!data) return null;
 
-// eslint-disable-next-line max-lines-per-function -- Hero keeps media, CTA, and store badge rendering together for clarity
-export default function HeroSection({ settings }: HeroProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const { t } = useLang();
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end start'],
-  });
-
-  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '-10%']);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0.35]);
-
-  const eyebrow = settings?.event?.enabled
-    ? t(settings?.event?.titleTh || '', settings?.event?.titleEn || '')
-    : '';
-
-  const tagline = t(
-    settings?.hero?.taglineTh || '',
-    settings?.hero?.taglineEn || '',
-  );
-
-  const description = t(
-    settings?.site?.description || '',
-    settings?.site?.description || '',
-  );
-
-  const ctaText = t(
-    settings?.hero?.ctaTextTh || '',
-    settings?.hero?.ctaTextEn || '',
-  );
-
-  const taglineImageUrl = t(
-    settings?.hero?.taglineImageTh?.url || '',
-    settings?.hero?.taglineImageEn?.url || '',
-  ) || null;
-
-  const mastheadCopy = t(
-    settings?.site?.description || '',
-    settings?.site?.description || '',
-  );
-  const ctaLink = settings?.hero?.ctaLink || '/event';
-  const brandLogoUrl = settings?.site?.logo || null;
-  const backgroundImage = settings?.hero?.backgroundImage?.url || null;
-  const videoUrl = settings?.hero?.backgroundVideo?.url || null;
-  const storeButtons = Array.from(
-    new Map((settings?.storeButtons || []).map((button) => [button.platform, button])).values(),
-  );
+  const tagline = currentLang === 'en' ? data.taglineEn : data.taglineTh;
+  const ctaText = currentLang === 'en' ? data.ctaTextEn : data.ctaTextTh;
+  const bgImageUrl = typeof data.backgroundImage === 'object' ? data.backgroundImage.url : data.backgroundImage;
 
   return (
-    <section id="hero" ref={sectionRef} className="home-hero">
-      <div className="home-hero__media" aria-hidden="true">
-        {videoUrl ? (
-          <div className="home-hero__video">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              onLoadedData={() => setVideoLoaded(true)}
-              className={videoLoaded ? 'is-ready' : ''}
-            >
-              <source src={videoUrl} type={videoUrl.endsWith('.webm') ? 'video/webm' : 'video/mp4'} />
-            </video>
-          </div>
-        ) : null}
-
-        {backgroundImage ? (
-          <div className="home-hero__image">
-            <Image src={backgroundImage} alt="" fill priority unoptimized={isCmsMediaUrl(backgroundImage)} />
-          </div>
-        ) : null}
+    <section className="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+      {/* Background Media */}
+      <div className="absolute inset-0 z-0">
+        {bgImageUrl && (
+          <Image 
+            src={bgImageUrl} 
+            alt="Hero Background" 
+            fill 
+            className="object-cover object-top opacity-70"
+            priority
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80" />
       </div>
 
-      <div className="home-hero__veil" />
-      <div className="home-hero__orb home-hero__orb--one" />
-      <div className="home-hero__orb home-hero__orb--two" />
-
-      <motion.div
-        className="home-hero__content"
-        style={{ y: contentY, opacity: contentOpacity }}
-      >
-        <div className="home-shell home-hero__shell">
-          <div className="home-hero__copy">
-            <div className="home-hero__masthead">
-              <span className="home-hero__mastheadTitle">{settings?.site?.name || ''}</span>
-              <span className="home-hero__mastheadDivider" aria-hidden="true" />
-              <span className="home-hero__mastheadCopy">{mastheadCopy}</span>
-            </div>
-
-            <span className="home-kicker">{eyebrow}</span>
-
-            {brandLogoUrl ? (
-              <motion.div
-                className="home-hero__brand"
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <Image
-                  src={brandLogoUrl}
-                  alt={settings?.site?.name || ''}
-                  width={520}
-                  height={320}
-                  priority
-                  unoptimized={isCmsMediaUrl(brandLogoUrl)}
-                />
-              </motion.div>
-            ) : null}
-
-            <motion.div
-              className="home-hero__taglineWrap"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <h1 className="sr-only">{tagline}</h1>
-              {taglineImageUrl ? (
-                <Image
-                  src={taglineImageUrl}
-                  alt={tagline}
-                  width={720}
-                  height={160}
-                  className="home-hero__taglineImage"
-                  unoptimized={isCmsMediaUrl(taglineImageUrl)}
-                />
-              ) : (
-                <p className="home-hero__tagline">{tagline}</p>
-              )}
-            </motion.div>
-
-            <motion.p
-              className="home-hero__lede"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {description}
-            </motion.p>
-
-            <motion.div
-              className="home-hero__actions"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <Link href={ctaLink} className="home-button home-button--primary">
-                {ctaText}
-              </Link>
-            </motion.div>
-
-            {storeButtons.length > 0 ? (
-              <motion.div
-                className="home-hero__stores"
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.36, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {storeButtons.map((button) => {
-                  const badgeSrc = button.icon?.url || null;
-                  const hasBadgeImage = Boolean(badgeSrc);
-
-                  return (
-                    <a
-                      key={button.platform}
-                      href={button.url}
-                      className={`home-store-button ${hasBadgeImage ? 'home-store-button--market' : ''}`.trim()}
-                      title={`${button.sublabel} ${button.label}`.trim()}
-                      onClick={() => {
-                        import('@/lib/tracking').then((module) => module.trackStoreClick(button.platform, button.url));
-                      }}
-                    >
-                      {hasBadgeImage ? (
-                        <span className="home-store-button__visual">
-                          <Image
-                            src={badgeSrc as string}
-                            alt={`${button.sublabel} ${button.label}`.trim()}
-                            width={188}
-                            height={56}
-                            className="home-store-button__badgeImage"
-                            unoptimized={isCmsMediaUrl(badgeSrc as string)}
-                          />
-                        </span>
-                      ) : (
-                        <>
-                          {STORE_ICONS[button.platform] || null}
-                          <span className="home-store-button__copy">
-                            <small>{button.sublabel}</small>
-                            <strong>{button.label}</strong>
-                          </span>
-                        </>
-                      )}
-                    </a>
-                  );
-                })}
-              </motion.div>
-            ) : null}
-          </div>
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="home-hero__scroll"
-        aria-hidden="true"
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        <span>{t('เลื่อนลง', 'Scroll')}</span>
-        <span className="home-hero__scrollDot">↓</span>
-      </motion.div>
+      {/* Content */}
+      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto flex flex-col items-center">
+        <motion.h1 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white drop-shadow-[0_0_20px_rgba(0,0,0,0.8)]"
+        >
+          {tagline}
+        </motion.h1>
+        
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          className="mt-10"
+        >
+          <a 
+            href={data.ctaLink || '#'}
+            className="group relative inline-flex items-center justify-center px-8 py-4 bg-white text-black font-bold text-lg uppercase tracking-widest overflow-hidden transition-transform hover:scale-105 active:scale-95"
+          >
+            <span className="relative z-10">{ctaText}</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-200 to-white opacity-0 group-hover:opacity-100 transition-opacity" />
+          </a>
+        </motion.div>
+      </div>
     </section>
   );
 }
