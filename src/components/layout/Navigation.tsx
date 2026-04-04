@@ -1,401 +1,157 @@
 'use client';
 
-import { useEffect, useMemo, useState, type MouseEvent } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState, MouseEvent } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import CmsLink from '@/components/ui/CmsLink';
-import { SOCIAL_SVGS } from '@/components/ui/SocialIcons';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { useLang } from '@/lib/lang-context';
-import { DEFAULT_NAVIGATION_LINKS, DEFAULT_REGISTRATION_URL } from '@/lib/site-settings-defaults';
 import type { CMSNavLink } from '@/types/cms';
+import { Menu, X } from 'lucide-react';
 
-interface NavigationProps {
-  links?: CMSNavLink[];
-  registrationUrl?: string;
-  logoUrl?: string | null;
-}
-
-interface NavigationLinkListProps {
-  links: CMSNavLink[];
-  isHomepage: boolean;
-  isLinkActive: (link: CMSNavLink) => boolean;
-  onNavClick: (link: CMSNavLink, event: MouseEvent<HTMLElement>) => void;
-  t: (th: string, en: string) => string;
-}
-
-function normalizeNavigationLinks(links?: CMSNavLink[]) {
-  const source = links?.length ? links : DEFAULT_NAVIGATION_LINKS;
-  return source.filter((link) => link.visible !== false);
-}
-
-function buildNavHref(link: CMSNavLink, isHomepage: boolean) {
-  if (link.sectionId) {
-    if (isHomepage) return `/#${link.sectionId}`;
-    if (link.href === '/' || link.href === '/#') return `/#${link.sectionId}`;
-  }
-
-  return link.href || '/';
-}
-
-function normalizeSocialLinks(socialLinks: Record<string, string | null>) {
-  return Object.entries(socialLinks)
-    .filter(([, url]) => typeof url === 'string' && url.trim().length > 0 && url !== '#')
-    .slice(0, 4)
-    .map(([platform, url]) => ({ platform, url: url as string }));
-}
-
-function getDefaultSection(links: CMSNavLink[]) {
-  return links.find((link) => link.sectionId)?.sectionId || 'hero';
-}
-
-function findActiveSection(links: CMSNavLink[], probe: number) {
-  let current = getDefaultSection(links);
-
-  for (const link of links) {
-    if (!link.sectionId) continue;
-
-    const element = document.getElementById(link.sectionId);
-    if (element && element.offsetTop <= probe) {
-      current = link.sectionId;
-    }
-  }
-
-  return current;
-}
-
-function scrollToSection(sectionId: string, setActiveSection: (sectionId: string) => void) {
-  const element = document.getElementById(sectionId);
-  if (!element) return;
-
-  const top = element.getBoundingClientRect().top + window.scrollY - 96;
-  window.scrollTo({ top, behavior: 'smooth' });
-  setActiveSection(sectionId);
-}
-
-function useNavigationScrollState(isHomepage: boolean, links: CMSNavLink[]) {
+export default function Navigation({ links, registrationUrl, logoUrl }: any) {
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('hero');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const { t, currentLang, switchLang } = useLang();
+  
+  const navLinks = links?.filter((l: any) => l.visible !== false) || [];
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 20);
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-      if (!isHomepage) return;
-
-      const probe = window.scrollY + window.innerHeight * 0.35;
-      setActiveSection(findActiveSection(links, probe));
-    };
-
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [isHomepage, links]);
-
-  return { scrolled, activeSection, setActiveSection };
-}
-
-function useBodyScrollLock(locked: boolean, onEscape: () => void) {
-  useEffect(() => {
-    if (!locked) return;
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onEscape();
-      }
-    };
-
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', onKeyDown);
-
-    return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', onKeyDown);
-    };
-  }, [locked, onEscape]);
-}
-
-function useHomepageHashSync(isHomepage: boolean, setActiveSection: (sectionId: string) => void) {
-  useEffect(() => {
-    if (!isHomepage) return;
-
-    const hash = window.location.hash.replace('#', '');
-    if (!hash) return;
-
-    const element = document.getElementById(hash);
-    if (!element) return;
-
-    const timer = window.setTimeout(() => scrollToSection(hash, setActiveSection), 150);
-    return () => window.clearTimeout(timer);
-  }, [isHomepage, setActiveSection]);
-}
-
-function BrandLink({
-  brandLogoSrc,
-  subtitle,
-}: {
-  brandLogoSrc: string | null;
-  subtitle: string;
-}) {
-  return (
-    <Link href="/" className="site-nav__brand" aria-label="Eternal Tower Saga home">
-      {brandLogoSrc ? (
-        <Image
-          src={brandLogoSrc}
-          alt="Eternal Tower Saga"
-          width={120}
-          height={72}
-          className="site-nav__brandMark"
-        />
-      ) : null}
-
-      <span className="site-nav__brandCopy">
-        <strong>Eternal Tower Saga</strong>
-        <span>{subtitle}</span>
-      </span>
-    </Link>
-  );
-}
-
-function DesktopNavigationLinks({
-  links,
-  isHomepage,
-  isLinkActive,
-  onNavClick,
-  t,
-}: NavigationLinkListProps) {
-  return (
-    <div className="site-nav__links">
-      {links.map((link) => (
-        <CmsLink
-          key={`${link.href}-${link.sectionId || ''}-${link.labelEn}`}
-          href={buildNavHref(link, isHomepage)}
-          openInNewTab={link.openInNewTab}
-          className={`site-nav__link ${isLinkActive(link) ? 'is-active' : ''}`}
-          onClick={(event) => onNavClick(link, event)}
-        >
-          {t(link.labelTh, link.labelEn)}
-        </CmsLink>
-      ))}
-    </div>
-  );
-}
-
-function DesktopSocialLinks({ items }: { items: Array<{ platform: string; url: string }> }) {
-  if (items.length === 0) return null;
+  const handleNavClick = (e: MouseEvent<HTMLAnchorElement>, sectionId?: string | null) => {
+    if (sectionId && pathname === '/') {
+      e.preventDefault();
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+    setMobileMenuOpen(false);
+  };
 
   return (
-    <div className="site-nav__socials" aria-label="Community links">
-      {items.map((item) => (
-        <a
-          key={item.platform}
-          href={item.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={item.platform}
-          className="site-nav__socialLink"
-        >
-          {SOCIAL_SVGS[item.platform] || null}
-        </a>
-      ))}
-    </div>
-  );
-}
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
+        scrolled 
+          ? 'bg-black/60 backdrop-blur-xl border-white/10 py-3' 
+          : 'bg-transparent border-transparent py-6'
+      }`}
+    >
+      <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
+        
+        {/* Logo */}
+        <Link href="/" className="relative z-50 flex items-center gap-3 group">
+          <div className="w-10 h-10 relative overflow-hidden rounded-md border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.1)] group-hover:border-primary/50 transition-colors">
+            {logoUrl ? (
+              <Image src={logoUrl} alt="Logo" fill className="object-cover" />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-gray-800 to-black" />
+            )}
+          </div>
+          <span className="text-white font-bold tracking-widest uppercase text-sm sm:text-base drop-shadow-md">
+            Eternal <span className="text-gray-400">Tower</span>
+          </span>
+        </Link>
 
-function MobileNavigationDrawer({
-  mobileOpen,
-  links,
-  ctaHref,
-  closeMobile,
-  isHomepage,
-  isLinkActive,
-  onNavClick,
-  t,
-}: NavigationLinkListProps & {
-  mobileOpen: boolean;
-  ctaHref: string;
-  closeMobile: () => void;
-}) {
-  return (
-    <AnimatePresence>
-      {mobileOpen ? (
-        <>
-          <motion.button
-            type="button"
-            className="site-nav__backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onPointerDown={closeMobile}
-            onClick={closeMobile}
-            aria-label="Close menu"
-          />
+        {/* Desktop Nav */}
+        <nav className="hidden lg:flex items-center gap-8">
+          {navLinks.map((link: CMSNavLink) => {
+            const label = currentLang === 'en' ? (link.labelEn || link.label) : (link.labelTh || link.label);
+            const isExternal = link.href?.startsWith('http');
+            const target = isExternal ? '_blank' : undefined;
+            const href = link.sectionId && pathname === '/' ? `#${link.sectionId}` : link.href || '/';
+            
+            return (
+              <a
+                key={link.id}
+                href={href}
+                target={target}
+                onClick={(e) => handleNavClick(e, link.sectionId)}
+                className="text-gray-300 hover:text-white text-sm font-medium uppercase tracking-wider transition-colors relative group"
+              >
+                {label}
+                <span className="absolute -bottom-2 left-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full" />
+              </a>
+            );
+          })}
+        </nav>
 
-          <motion.div
-            className="site-nav__drawer"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Navigation"
-            initial={{ x: '100%', opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '100%', opacity: 0 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+        {/* Desktop Actions */}
+        <div className="hidden lg:flex items-center gap-6">
+          <button 
+            onClick={() => switchLang(currentLang === 'en' ? 'th' : 'en')}
+            className="text-xs font-bold text-gray-400 hover:text-white uppercase tracking-widest border border-gray-600/50 rounded-full px-3 py-1 hover:border-white transition-colors"
           >
-            <div className="site-nav__drawerLinks">
-              {links.map((link) => (
-                <CmsLink
-                  key={`drawer-${link.href}-${link.sectionId || ''}-${link.labelEn}`}
-                  href={buildNavHref(link, isHomepage)}
-                  openInNewTab={link.openInNewTab}
-                  className={`site-nav__drawerLink ${isLinkActive(link) ? 'is-active' : ''}`}
-                  onClick={(event) => onNavClick(link, event)}
-                >
-                  <span>{t(link.labelTh, link.labelEn)}</span>
-                  <span>→</span>
-                </CmsLink>
-              ))}
+            {currentLang === 'en' ? 'TH' : 'EN'}
+          </button>
+          
+          <a 
+            href={registrationUrl || '#'}
+            className="relative px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white text-sm font-bold uppercase tracking-wider rounded-sm backdrop-blur-md border border-white/20 transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] overflow-hidden group"
+          >
+            <span className="relative z-10">{t('Pre-Register', 'ลงทะเบียนล่วงหน้า')}</span>
+            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
+          </a>
+        </div>
 
-              <Link href={ctaHref} className="site-nav__drawerCta" onClick={closeMobile}>
-                {t('ลงทะเบียนล่วงหน้า', 'Pre-register')}
-              </Link>
+        {/* Mobile Hamburger */}
+        <button 
+          className="lg:hidden relative z-50 p-2 text-white"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
+
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-full left-0 w-full h-screen bg-black/95 backdrop-blur-3xl border-t border-white/10 flex flex-col pt-10 px-6 lg:hidden"
+          >
+            <nav className="flex flex-col gap-6 items-center text-center">
+              {navLinks.map((link: CMSNavLink) => {
+                const label = currentLang === 'en' ? (link.labelEn || link.label) : (link.labelTh || link.label);
+                const href = link.sectionId && pathname === '/' ? `#${link.sectionId}` : link.href || '/';
+                return (
+                  <a
+                    key={link.id}
+                    href={href}
+                    onClick={(e) => handleNavClick(e, link.sectionId)}
+                    className="text-2xl text-gray-300 hover:text-white font-light tracking-widest uppercase"
+                  >
+                    {label}
+                  </a>
+                );
+              })}
+            </nav>
+            
+            <div className="mt-12 flex flex-col gap-6 items-center">
+              <a 
+                href={registrationUrl || '#'}
+                className="w-full max-w-sm py-4 bg-white text-black text-center text-lg font-bold uppercase tracking-wider rounded-sm"
+              >
+                {t('Pre-Register', 'ลงทะเบียนล่วงหน้า')}
+              </a>
+              <button 
+                onClick={() => switchLang(currentLang === 'en' ? 'th' : 'en')}
+                className="text-sm font-bold text-gray-400 uppercase tracking-widest"
+              >
+                Switch to {currentLang === 'en' ? 'Thai' : 'English'}
+              </button>
             </div>
           </motion.div>
-        </>
-      ) : null}
-    </AnimatePresence>
-  );
-}
-
-function NavigationActions({
-  ctaHref,
-  lang,
-  mobileOpen,
-  toggle,
-  onToggleMobile,
-  t,
-}: {
-  ctaHref: string;
-  lang: 'th' | 'en';
-  mobileOpen: boolean;
-  toggle: () => void;
-  onToggleMobile: () => void;
-  t: (th: string, en: string) => string;
-}) {
-  return (
-    <div className="site-nav__actions">
-      <Link href={ctaHref} className="home-button home-button--primary">
-        {t('ลงทะเบียน', 'Register')}
-      </Link>
-
-      <button
-        className="site-nav__lang"
-        onClick={toggle}
-        aria-label={lang === 'th' ? 'Switch to English' : 'Switch to Thai'}
-      >
-        {lang === 'th' ? 'EN' : 'TH'}
-      </button>
-
-      <button
-        className={`site-nav__toggle ${mobileOpen ? 'is-open' : ''}`}
-        onClick={onToggleMobile}
-        aria-label="Toggle navigation"
-        aria-expanded={mobileOpen}
-      >
-        <span className="site-nav__toggleLine" />
-        <span className="site-nav__toggleLine" />
-        <span className="site-nav__toggleLine" />
-      </button>
-    </div>
-  );
-}
-
-export default function Navigation({ links, registrationUrl, logoUrl }: NavigationProps) {
-  const { lang, toggle, t } = useLang();
-  const {
-    logoUrl: cmsLogoUrl,
-    navigationLinks: cmsNavigationLinks,
-    registrationUrl: cmsRegistrationUrl,
-    socialLinks,
-  } = useSiteSettings();
-  const pathname = usePathname();
-  const isHomepage = pathname === '/';
-  const navigationLinks = useMemo(
-    () => normalizeNavigationLinks(links?.length ? links : cmsNavigationLinks),
-    [links, cmsNavigationLinks],
-  );
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const { scrolled, activeSection, setActiveSection } = useNavigationScrollState(isHomepage, navigationLinks);
-  const ctaHref = registrationUrl || cmsRegistrationUrl || DEFAULT_REGISTRATION_URL;
-  const brandLogoSrc = logoUrl ?? cmsLogoUrl ?? null;
-  const socialItems = useMemo(() => normalizeSocialLinks(socialLinks), [socialLinks]);
-  const closeMobile = () => setMobileOpen(false);
-
-  useBodyScrollLock(mobileOpen, closeMobile);
-  useHomepageHashSync(isHomepage, setActiveSection);
-
-  const handleNavClick = (link: CMSNavLink, event: MouseEvent<HTMLElement>) => {
-    if (isHomepage && link.sectionId && !link.openInNewTab) {
-      event.preventDefault();
-      scrollToSection(link.sectionId, setActiveSection);
-    }
-
-    closeMobile();
-  };
-
-  const isLinkActive = (link: CMSNavLink) => {
-    if (isHomepage && link.sectionId) {
-      return activeSection === link.sectionId;
-    }
-
-    if (link.href === '/news') {
-      return pathname === '/news' || pathname.startsWith('/news/');
-    }
-
-    return pathname === link.href;
-  };
-
-  return (
-    <header>
-      <nav className={`site-nav ${scrolled ? 'site-nav--scrolled' : ''}`}>
-        <div className="site-nav__inner">
-          <BrandLink
-            brandLogoSrc={brandLogoSrc}
-            subtitle={t('เกม RPG บนมือถือ', 'Mobile MMORPG')}
-          />
-
-          <DesktopNavigationLinks
-            links={navigationLinks}
-            isHomepage={isHomepage}
-            isLinkActive={isLinkActive}
-            onNavClick={handleNavClick}
-            t={t}
-          />
-
-          <DesktopSocialLinks items={socialItems} />
-
-          <NavigationActions
-            ctaHref={ctaHref}
-            lang={lang}
-            mobileOpen={mobileOpen}
-            toggle={toggle}
-            onToggleMobile={() => setMobileOpen((open) => !open)}
-            t={t}
-          />
-        </div>
-      </nav>
-
-      <MobileNavigationDrawer
-        mobileOpen={mobileOpen}
-        links={navigationLinks}
-        ctaHref={ctaHref}
-        closeMobile={closeMobile}
-        isHomepage={isHomepage}
-        isLinkActive={isLinkActive}
-        onNavClick={handleNavClick}
-        t={t}
-      />
+        )}
+      </AnimatePresence>
     </header>
   );
 }
