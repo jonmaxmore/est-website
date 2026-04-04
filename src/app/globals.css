@@ -35,7 +35,43 @@
   }
 }
 
-/* Clean up legacy and conflicting CSS */
-.home-hero__scroll, .scroll-indicator, .site-nav {
+/* === ENTERPRISE PURGE: FORCE REMOVE ALL LEGACY VIBE CODE UI ARTIFACTS === */
+
+/* Remove the specific "scroll down" arrow artifact */
+.home-hero__scroll, .scroll-indicator {
+  display: none !important;
+}
+
+/* Remove ALL hardcoded horizontal lines/borders between sections that make it look unpolished */
+section,
+.home-hero,
+.home-weapons,
+.home-highlights,
+.home-news,
+.home-main > section,
+.site-footer,
+.site-nav,
+.home-page-shell {
+  border-top: none !important;
+  border-bottom: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Fix News section overflow and sizing as requested */
+.home-news__featured,
+.home-news__dispatchItem {
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 12px !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.home-news {
+  padding-top: 5rem !important;
+  padding-bottom: 5rem !important;
+}
+
+/* Force hide old legacy header to ensure new Navigation component is the only one visible */
+header > .site-nav {
   display: none !important;
 }
