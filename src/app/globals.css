@@ -35,7 +35,7 @@
   }
 }
 
-/* Force hide old legacy elements to ensure clean UI */
-.home-hero__scroll, .scroll-indicator {
+/* Clean up legacy and conflicting CSS */
+.home-hero__scroll, .scroll-indicator, .site-nav {
   display: none !important;
 }

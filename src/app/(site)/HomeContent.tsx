@@ -46,7 +46,7 @@ export default function HomeContent({ homepageData, settings, weapons, news }: H
   return (
     <div className="home-page-shell bg-black text-white w-full overflow-hidden">
       <ScrollProgress />
-      <Navigation
+      /* <Navigation
         links={settings?.site?.navigationLinks}
         registrationUrl={settings?.site?.registrationUrl}
         logoUrl={settings?.site?.logo}
