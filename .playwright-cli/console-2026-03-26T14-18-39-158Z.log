@@ -1,6 +1,0 @@
-[43500232ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://178.128.127.161/api/track:0
-[44220230ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://178.128.127.161/api/track:0
-[45000219ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://178.128.127.161/api/track:0
-[45840219ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://178.128.127.161/api/track:0
-[47910212ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://178.128.127.161/api/track:0
-[48270208ms] [ERROR] Failed to load resource: the server responded with a status of 429 (Too Many Requests) @ http://178.128.127.161/api/track:0

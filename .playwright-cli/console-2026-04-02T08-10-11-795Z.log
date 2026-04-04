@@ -1,7 +1,0 @@
-[     145ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3001/api/media/file/HL02-1.png:0
-[     398ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3001/api/media/file/BG4.png:0
-[     399ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3001/api/media/file/HL01-1-1920x1080.png:0
-[     421ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3001/api/media/file/HL01-768x432.png:0
-[     461ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3001/api/media/file/N06-3-768x432.jpg:0
-[     495ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3001/api/media/file/N06-2-768x432.jpg:0
-[     575ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3001/api/media/file/N05-2-768x432.jpg:0

@@ -1,0 +1,1 @@
+import configPromise from '@payload-config'; import '@payloadcms/next/css'; import { RootLayout } from '@payloadcms/next/layouts'; export default function Layout({ children }: { children: React.ReactNode }) { return <RootLayout config={configPromise}>{children}</RootLayout>; }
