@@ -34,3 +34,8 @@
     transform: translateX(100%);
   }
 }
+
+/* Force hide old legacy elements to ensure clean UI */
+.home-hero__scroll, .scroll-indicator {
+  display: none !important;
+}
