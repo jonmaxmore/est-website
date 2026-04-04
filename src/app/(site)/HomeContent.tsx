@@ -12,14 +12,13 @@ import GameFeaturesSection from '@/components/sections/GameFeaturesSection';
 import NewsSection from '@/components/sections/NewsSection';
 
 interface HomeContentProps {
-  homepageData: any; // ข้อมูลที่มาจาก Page Builder (Blocks)
+  homepageData: any;
   settings: CMSSettings | null;
   weapons: CMSWeapon[];
   news: CMSNewsArticle[];
 }
 
 export default function HomeContent({ homepageData, settings, weapons, news }: HomeContentProps) {
-  // Fallback data in case CMS is empty
   const blocks = homepageData?.layout || [];
 
   const footerSettings = settings?.site?.footer || {
@@ -29,7 +28,6 @@ export default function HomeContent({ homepageData, settings, weapons, news }: H
     supportUrl: '#',
   };
 
-  // Block Renderer
   const renderBlock = (block: any, index: number) => {
     switch (block.blockType) {
       case 'hero':
@@ -46,7 +44,7 @@ export default function HomeContent({ homepageData, settings, weapons, news }: H
   };
 
   return (
-    <div className="home-page-shell bg-black min-h-screen text-white">
+    <div className="home-page-shell bg-black text-white w-full overflow-hidden">
       <ScrollProgress />
       <Navigation
         links={settings?.site?.navigationLinks}
@@ -55,20 +53,23 @@ export default function HomeContent({ homepageData, settings, weapons, news }: H
       />
       
       {/* 
-        Dynamic Page Builder Rendering 
-        แทนที่จะ Hardcode ว่าอะไรขึ้นก่อน-หลัง ตอนนี้ให้ Map ตามก้อน JSON ที่ได้จาก CMS
+        Snap Container: 
+        ให้ทุก Section เลื่อนทีละ 1 หน้าจอเป๊ะๆ (Full-screen Snap Scrolling)
       */}
-      <main className="relative w-full z-10 pt-[88px]">
+      <main className="relative w-full h-screen overflow-y-auto overflow-x-hidden snap-y snap-mandatory scroll-smooth">
         {blocks.length > 0 ? (
           blocks.map((block: any, index: number) => renderBlock(block, index))
         ) : (
-          <div className="flex items-center justify-center min-h-[50vh] text-gray-500">
+          <div className="h-screen flex items-center justify-center text-gray-500 snap-start">
             [No Content Blocks Configured in CMS]
           </div>
         )}
+        
+        {/* ให้ Footer เป็น Section สุดท้ายที่โดน Snap ด้วย */}
+        <div className="snap-start shrink-0">
+          <Footer settings={footerSettings} />
+        </div>
       </main>
-
-      <Footer settings={footerSettings} />
     </div>
   );
 }
