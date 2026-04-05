@@ -34,7 +34,7 @@ log "Containers started ✓"
 log "STEP 4/5: Waiting for app healthcheck..."
 MAX_WAIT=60
 for i in $(seq 1 $MAX_WAIT); do
-  HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost/api/health 2>/dev/null || echo "000")
+  HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost/api/internal/health 2>/dev/null || echo "000")
   if [ "$HTTP_CODE" = "200" ]; then
     log "App healthy after ${i}s ✓"
     break
@@ -48,7 +48,7 @@ done
 
 # Step 5: Verify
 log "STEP 5/5: Verifying deployment..."
-HEALTH=$(curl -s http://localhost/api/health)
+HEALTH=$(curl -s http://localhost/api/internal/health)
 log "Health: $HEALTH"
 
 docker compose ps 2>&1 | tee -a "$LOG_FILE"

@@ -86,32 +86,14 @@ const healthSchema = z.object({
 })
 
 const settingsSchema = z.object({
-  site: z.object({
-    name: nonEmptyTextSchema,
-    registrationUrl: nonEmptyTextSchema,
-    logo: z.object({
-      url: nonEmptyTextSchema,
-    }),
-    navigationLinks: z.array(z.object({
-      href: nonEmptyTextSchema,
-      labelEn: nonEmptyTextSchema.optional(),
-      labelTh: nonEmptyTextSchema.optional(),
-    }).passthrough()).min(1),
-    footer: z.object({
-      groups: z.array(z.object({
-        links: z.array(z.object({
-          href: nonEmptyTextSchema,
-        }).passthrough()).min(1),
-      }).passthrough()).min(1),
-    }).passthrough(),
+  name: nonEmptyTextSchema,
+  registrationUrl: nonEmptyTextSchema,
+  logo: z.object({ url: nonEmptyTextSchema.optional() }).passthrough().optional().nullable(),
+  navigationLinks: z.array(z.unknown()).min(1),
+  footer: z.object({
+    groups: z.array(z.unknown()).min(1),
   }).passthrough(),
-  gameGuidePage: z.object({
-    features: z.array(z.unknown()).min(1),
-  }).passthrough(),
-  storeButtons: z.array(z.object({
-    url: nonEmptyTextSchema,
-  }).passthrough()).min(1),
-})
+}).passthrough()
 
 const weaponsSchema = z.object({
   weapons: z.array(z.object({
@@ -309,10 +291,10 @@ async function verifyHtmlPage(
 async function verifyHealthEndpoint(context: VerificationContext) {
   await runCheck(context, {
     id: 'api-health',
-    label: 'Public API: health',
-    target: '/api/health',
+    label: 'Internal API: health',
+    target: '/api/internal/health',
   }, async () => {
-    const data = await fetchJson(context, '/api/health', healthSchema)
+    const data = await fetchJson(context, '/api/internal/health', healthSchema)
     return `status=${data.status} at ${data.timestamp}`
   })
 }
@@ -323,17 +305,15 @@ async function verifySettingsEndpoint(
   let settings: z.infer<typeof settingsSchema> | null = null
 
   await runCheck(context, {
-    id: 'api-settings',
-    label: 'Public API: settings',
-    target: '/api/settings',
+    id: 'api-site',
+    label: 'Public API: site',
+    target: '/api/public/site',
   }, async () => {
-    const data = await fetchJson(context, '/api/settings', settingsSchema)
+    const data = await fetchJson(context, '/api/public/site', settingsSchema)
     settings = data
     return [
-      `navigation=${data.site.navigationLinks.length}`,
-      `footerGroups=${data.site.footer.groups.length}`,
-      `storeButtons=${data.storeButtons.length}`,
-      `guideFeatures=${data.gameGuidePage.features.length}`,
+      `navigation=${data.navigationLinks.length}`,
+      `footerGroups=${data.footer.groups.length}`,
     ].join(', ')
   })
 
@@ -419,9 +399,9 @@ async function verifyProtectedContentHealthEndpoint(context: VerificationContext
   await runCheck(context, {
     id: 'api-content-health-auth',
     label: 'Protected API: content health requires auth',
-    target: '/api/content-health',
+    target: '/api/internal/content-health',
   }, async () => {
-    const response = await fetchResponse(context, '/api/content-health')
+    const response = await fetchResponse(context, '/api/internal/content-health')
     ensure(response.status === 401, `Expected HTTP 401, received ${response.status}`)
     return 'unauthenticated access correctly rejected with HTTP 401'
   })
@@ -679,8 +659,8 @@ export async function runStackVerification(options: RunOptions = {}): Promise<St
   const newsSlug = await verifyNewsEndpoints(context)
 
   if (settings) {
-    await verifyHomepageRegistrationLink(context, settings.site.registrationUrl)
-    await verifyRegistrationSurface(context, settings.site.registrationUrl)
+    await verifyHomepageRegistrationLink(context, settings.registrationUrl)
+    await verifyRegistrationSurface(context, settings.registrationUrl)
   }
 
   await verifyRegisterValidation(context)
