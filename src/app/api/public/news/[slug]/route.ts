@@ -14,9 +14,8 @@ export const dynamic = 'force-dynamic'
 type NewsDoc = Record<string, unknown>
 type NewsQueryResult = { docs: NewsDoc[] }
 
-function getSlug(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
-  return searchParams.get('slug')
+async function getSlug(params: Promise<{ slug: string }>) {
+  return (await params).slug;
 }
 
 function buildSummaryPair(article: NewsDoc) {
@@ -107,9 +106,9 @@ async function fetchNewsDetail(slug: string) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    const slug = getSlug(request)
+    const slug = await getSlug(params)
     if (!slug) {
       return NextResponse.json({ error: 'Slug parameter is required' }, { status: 400 })
     }

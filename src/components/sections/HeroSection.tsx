@@ -15,7 +15,7 @@ export default function HeroSection({ data }: { data: any }) {
 
   return (
     <section 
-      className="relative w-full h-[100svh] flex flex-col justify-center items-center overflow-hidden snap-start shrink-0 bg-black"
+      className="relative w-full min-h-[100svh] py-24 flex flex-col justify-center items-center overflow-hidden bg-black"
     >
       <div className="absolute inset-0 z-0">
         {videoUrl ? (

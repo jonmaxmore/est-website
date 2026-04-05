@@ -19,7 +19,7 @@ export default function NewsSection({ data, news }: { data: any, news: CMSNewsAr
 
   return (
     <section 
-      className="relative w-full h-screen flex flex-col justify-center items-center overflow-hidden snap-start shrink-0 bg-zinc-950" 
+      className="relative w-full min-h-[100svh] py-24 flex flex-col justify-center items-center overflow-hidden bg-zinc-950" 
       id="news"
     >
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-indigo-900/10 to-transparent pointer-events-none z-0" />
@@ -45,7 +45,7 @@ export default function NewsSection({ data, news }: { data: any, news: CMSNewsAr
               className="inline-flex items-center gap-2 text-indigo-400 hover:text-white font-bold uppercase tracking-wider text-sm transition-colors group"
             >
               View All News 
-              <span className="group-hover:translate-x-2 transition-transform">Ã¢â€ â€™</span>
+              <span className="group-hover:translate-x-2 transition-transform">ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢</span>
             </Link>
           </motion.div>
         </div>

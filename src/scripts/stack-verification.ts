@@ -391,10 +391,10 @@ async function verifyNewsEndpoints(context: VerificationContext) {
 
   await runCheck(context, {
     id: 'api-news-detail',
-    label: 'Public API: news detail',
-    target: `/api/public/news-detail?slug=${internalSlug}`,
+    label: 'Public API: News Detail',
+    target: `/api/public/news/${internalSlug}`,
   }, async () => {
-    const data = await fetchJson(context, `/api/public/news-detail?slug=${internalSlug}`, newsDetailSchema)
+    const data = await fetchJson(context, `/api/public/news/${internalSlug}`, newsDetailSchema)
     ensure(data.article.slug === internalSlug, `Detail route returned slug "${data.article.slug}" instead of "${internalSlug}"`)
     ensure(
       hasLocalizedCopy([data.article.titleEn, data.article.titleTh]),

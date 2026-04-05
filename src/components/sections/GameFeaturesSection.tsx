@@ -13,7 +13,7 @@ export default function GameFeaturesSection({ data }: { data: any }) {
 
   return (
     <section 
-      className="relative w-full h-screen flex flex-col justify-center items-center overflow-hidden snap-start shrink-0 bg-black"
+      className="relative w-full min-h-[100svh] py-24 flex flex-col justify-center items-center overflow-hidden bg-black"
       id="features"
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900/20 via-black to-black z-0 pointer-events-none" />
