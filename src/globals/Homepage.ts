@@ -21,7 +21,7 @@ export const Homepage: GlobalConfig = {
           imageURL: '/payload/blocks/hero.jpg',
           imageAltText: 'Hero Section',
           fields: [
-            { name: 'backgroundImage', type: 'upload', relationTo: 'media', required: true },
+            { name: 'backgroundImage', type: 'upload', relationTo: 'media' },
             { name: 'backgroundVideo', type: 'upload', relationTo: 'media' },
             { name: 'taglineEn', type: 'text', required: true },
             { name: 'taglineTh', type: 'text', required: true },

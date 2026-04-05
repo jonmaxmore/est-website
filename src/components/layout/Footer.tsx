@@ -21,17 +21,10 @@ interface FooterGroupLink {
   openInNewTab?: boolean | null;
 }
 
-const DEFAULT_SOCIAL: Record<string, string> = {
-  discord: 'https://discord.gg/eternaltowersaga',
-  facebook: 'https://facebook.com/EternalTowerSaga',
-  youtube: 'https://youtube.com/@EternalTowerSaga',
-  tiktok: 'https://tiktok.com/@EternalTowerSaga',
-};
-
 function getSocialUrl(socialLinks: Record<string, string | null>, key: string) {
   const url = socialLinks[key];
   if (url && url !== '#') return url;
-  return DEFAULT_SOCIAL[key];
+  return null;
 }
 
 function buildFooterConfig(footer: CMSFooterSettings) {
@@ -137,10 +130,10 @@ export default function Footer({ socialLinks, footer, logoUrl }: FooterProps) {
     footerConfig.brandCopyEn || DEFAULT_FOOTER.brandCopyEn || '',
   );
 
-  const communityLinks = Object.keys(DEFAULT_SOCIAL).map((platform) => ({
+  const communityLinks = Object.keys(socialLinks || {}).map((platform) => ({
     platform,
     url: getSocialUrl(socialLinks, platform),
-  }));
+  })).filter(item => item.url !== null) as { platform: string; url: string }[];
 
   return (
     <footer className="site-footer">

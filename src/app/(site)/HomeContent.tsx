@@ -46,12 +46,7 @@ export default function HomeContent({ homepageData, settings, weapons, news }: H
   return (
     <div className="home-page-shell bg-black text-white w-full overflow-hidden">
       <ScrollProgress />
-      /* <Navigation
-        links={settings?.site?.navigationLinks}
-        registrationUrl={settings?.site?.registrationUrl}
-        logoUrl={settings?.site?.logo}
-      />
-      
+
       {/* 
         Snap Container: 
         ให้ทุก Section เลื่อนทีละ 1 หน้าจอเป๊ะๆ (Full-screen Snap Scrolling)

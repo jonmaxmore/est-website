@@ -7,18 +7,22 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 
-export default function Navigation() {
+interface NavigationProps {
+  links?: {
+    id: string;
+    labelEn?: string;
+    labelTh?: string;
+    href: string;
+    sectionId?: string | null;
+  }[];
+  logoUrl?: string | null;
+  registrationUrl?: string;
+}
+
+export default function Navigation({ links = [], logoUrl, registrationUrl = '/event' }: NavigationProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  
-  // Hardcoded for clean AAA demo (can be linked to CMS later)
-  const navLinks = [
-    { id: '1', href: '/', sectionId: 'hero', label: 'หน้าหลัก' },
-    { id: '2', href: '/character', sectionId: 'weapons', label: 'อาวุธ' },
-    { id: '3', href: '/game-guide', sectionId: 'features', label: 'ไฮไลท์' },
-    { id: '4', href: '/news', sectionId: 'news', label: 'ข่าวสาร' },
-  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -26,7 +30,7 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (e: MouseEvent<HTMLAnchorElement>, sectionId?: string) => {
+  const handleNavClick = (e: MouseEvent<HTMLAnchorElement>, sectionId?: string | null) => {
     if (sectionId && pathname === '/') {
       e.preventDefault();
       const el = document.getElementById(sectionId);
@@ -48,7 +52,7 @@ export default function Navigation() {
         {/* Logo */}
         <Link href="/" className="relative z-50 flex items-center gap-4 group">
           <div className="w-10 h-10 relative">
-            <Image src="/api/media/file/logo.webp" alt="Eternal Tower Saga" fill className="object-contain" />
+            <Image src={logoUrl || "/api/media/file/logo.webp"} alt="Eternal Tower Saga" fill className="object-contain" />
           </div>
           <div className="flex flex-col">
             <span className="text-white font-serif font-bold tracking-widest uppercase text-sm drop-shadow-md">
@@ -62,7 +66,7 @@ export default function Navigation() {
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-8 ml-8 mr-auto">
-          {navLinks.map((link) => {
+          {links.map((link) => {
             const href = link.sectionId && pathname === '/' ? `#${link.sectionId}` : link.href;
             return (
               <a
@@ -71,7 +75,7 @@ export default function Navigation() {
                 onClick={(e) => handleNavClick(e, link.sectionId)}
                 className="text-gray-300 hover:text-white text-sm font-medium tracking-wide transition-colors relative group"
               >
-                {link.label}
+                {link.labelEn || link.labelTh}
                 <span className="absolute -bottom-2 left-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full" />
               </a>
             );
@@ -88,7 +92,7 @@ export default function Navigation() {
           </div>
           
           <a 
-            href="/event"
+            href={registrationUrl || "/event"}
             className="px-6 py-2.5 bg-[#D4A843] hover:bg-[#E5B954] text-black text-sm font-bold tracking-wider rounded-full transition-all shadow-[0_0_15px_rgba(212,168,67,0.3)] hover:shadow-[0_0_25px_rgba(212,168,67,0.5)]"
           >
             ลงทะเบียน
@@ -120,7 +124,7 @@ export default function Navigation() {
             className="fixed inset-0 top-[72px] bg-black/95 backdrop-blur-xl border-t border-white/10 flex flex-col p-6 lg:hidden"
           >
             <nav className="flex flex-col gap-6 items-center text-center mt-10">
-              {navLinks.map((link) => {
+              {links.map((link) => {
                 const href = link.sectionId && pathname === '/' ? `#${link.sectionId}` : link.href;
                 return (
                   <a
@@ -129,7 +133,7 @@ export default function Navigation() {
                     onClick={(e) => handleNavClick(e, link.sectionId)}
                     className="text-2xl text-gray-300 hover:text-white font-medium tracking-wide"
                   >
-                    {link.label}
+                    {link.labelEn || link.labelTh}
                   </a>
                 );
               })}
@@ -137,7 +141,7 @@ export default function Navigation() {
             
             <div className="mt-auto mb-10 flex flex-col gap-4 items-center">
               <a 
-                href="/event"
+                href={registrationUrl || "/event"}
                 className="w-full max-w-sm py-4 bg-[#D4A843] text-black text-center text-lg font-bold tracking-wider rounded-full"
               >
                 ลงทะเบียนล่วงหน้า
