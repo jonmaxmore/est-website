@@ -1,4 +1,4 @@
-﻿@layer components {
+@layer components {
   /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ FOOTER Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
   .main-footer {
     padding: 0;
@@ -382,45 +382,7 @@
     box-shadow: 0 0 10px rgba(212, 168, 67, 0.5);
   }
 
-  /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ ORNAMENTAL DIVIDER Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
-  .ornament-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: 2rem 0;
-    position: relative;
-    z-index: 10;
-  }
-
-  .ornament-line {
-    width: 120px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    opacity: 0.5;
-  }
-
-  .ornament-diamond {
-    width: 6px;
-    height: 6px;
-    background: var(--gold);
-    transform: rotate(45deg);
-    opacity: 0.6;
-  }
-
-  .ornament-center {
-    font-size: 0.9rem;
-    color: var(--gold);
-    opacity: 0.7;
-    animation: pulseGold 3s ease-in-out infinite;
-  }
-
-  @keyframes pulseGold {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; text-shadow: 0 0 10px rgba(212,168,67,0.5); }
-  }
-
-  /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ HERO TAGLINE EN Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+  /* Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬ HERO TAGLINE EN Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬ */
   .hero-tagline-en {
     font-size: clamp(0.8rem, 1.5vw, 1rem);
     color: rgba(255,255,255,0.5);

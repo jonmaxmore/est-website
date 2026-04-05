@@ -19,6 +19,7 @@ import { PageEvents } from './collections/PageEvents'
 import { AnalyticsSessions } from './collections/AnalyticsSessions'
 import { AnalyticsDailyRollups } from './collections/AnalyticsDailyRollups'
 import { AnalyticsFunnelEvents } from './collections/AnalyticsFunnelEvents'
+import { Campaigns } from './collections/Campaigns'
 import { addNewsExcerptColumnsMigration } from './migrations/add-news-excerpt-columns'
 import { addNewsEditorialColumnsMigration } from './migrations/add-news-editorial-columns'
 import { addGlobalBaseColumnsMigration } from './migrations/add-global-base-columns'
@@ -27,6 +28,7 @@ import { addSupportPageMigration } from './migrations/add-support-page-tables'
 
 // Globals
 import { SiteSettings } from './globals/SiteSettings'
+import { Maintenance } from './globals/Maintenance'
 import { EventConfig } from './globals/EventConfig'
 import { Homepage } from './globals/Homepage'
 import { StoryPage } from './globals/StoryPage'
@@ -69,9 +71,11 @@ export default buildConfig({
     AnalyticsSessions,
     AnalyticsDailyRollups,
     AnalyticsFunnelEvents,
+    Campaigns,
   ],
   globals: [
     SiteSettings,
+    Maintenance,
     EventConfig,
     Homepage,
     StoryPage,

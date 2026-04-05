@@ -8,8 +8,6 @@ import ScrollProgress from '@/components/ui/ScrollProgress';
 import ParallaxSection from '@/components/ui/ParallaxSection';
 
 /* Shared layout */
-import Navigation from '@/components/site/Navigation';
-import Footer from '@/components/site/Footer';
 
 /* Event sub-components */
 import EventHero from './components/EventHero';
@@ -134,8 +132,7 @@ export default function EventPage() {
   return (
     <div className="landing-page">
       <ScrollProgress />
-      <Navigation logoUrl={siteLogoUrl} />
-
+      
       <main>
         <FloatingParticles count={25} />
         <LightRays />
@@ -197,7 +194,7 @@ export default function EventPage() {
         </ParallaxSection>
       </main>
 
-      <Footer socialLinks={socialLinks} footer={footer} logoUrl={siteLogoUrl} />
+      
 
       {/* â•â•â• SUCCESS MODAL â•â•â• */}
       <SuccessModal

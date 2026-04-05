@@ -1,4 +1,4 @@
-﻿@layer components {
+@layer components {
   /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ SECTION STYLING Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
   .section-bg-overlay {
     position: absolute;
@@ -46,9 +46,7 @@
     margin-bottom: 0.75rem;
   }
 
-  .char-info-overlay .title-ornament {
-    justify-content: flex-start;
-  }
+
 
   .section-subtitle {
     font-size: 1.1rem;
@@ -56,25 +54,7 @@
     margin-top: 0.5rem;
   }
 
-  .title-ornament {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
 
-  .title-ornament span:nth-child(1),
-  .title-ornament span:nth-child(3) {
-    width: 6px; height: 6px;
-    background: var(--gold);
-    transform: rotate(45deg);
-  }
-
-  .title-ornament span:nth-child(2) {
-    width: 80px; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  }
 
 
 

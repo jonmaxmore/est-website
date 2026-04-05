@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, Megaphone, Newspaper, RefreshCw, Video, Wrench } from 'lucide-react';
 import Image from 'next/image';
-import Footer from '@/components/site/Footer';
-import Navigation from '@/components/site/Navigation';
 import CmsLink from '@/components/ui/CmsLink';
 import ScrollProgress from '@/components/ui/ScrollProgress';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
@@ -491,8 +489,7 @@ export default function NewsPage() {
   return (
     <div className="landing-page news-page">
       <ScrollProgress />
-      <Navigation links={navigationLinks} registrationUrl={registrationUrl} />
-
+      
       <main className="news-main" style={{ paddingTop: '5rem' }}>
         <NewsHero
           config={newsPage}
@@ -531,7 +528,7 @@ export default function NewsPage() {
         )}
       </main>
 
-      <Footer socialLinks={socialLinks} footer={footer} />
+      
     </div>
   );
 }

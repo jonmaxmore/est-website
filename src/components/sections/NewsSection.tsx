@@ -3,34 +3,59 @@
 import { useLang } from '@/lib/lang-context';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import type { CMSNewsArticle } from '@/types/cms';
 
-export default function NewsSection({ data, news }: { data: any, news: CMSNewsArticle[] }) {
+export interface NewsArticleData {
+  id: string | number;
+  slug: string;
+  title?: string | null;
+  titleEn?: string | null;
+  titleTh?: string | null;
+  category?: string | null;
+  publishedAt?: string | null;
+}
+
+export interface NewsSectionData {
+  blockType?: 'newsTicker';
+  titleEn?: string;
+  titleTh?: string;
+  featuredArticles?: NewsArticleData[];
+}
+
+interface NewsSectionProps {
+  data: NewsSectionData;
+  news: NewsArticleData[];
+}
+
+export default function NewsSection({ data, news }: NewsSectionProps) {
   const { lang: currentLang } = useLang();
   
   if (!data) return null;
 
   const title = currentLang === 'en' ? data.titleEn : data.titleTh;
-  const displayNews = news?.length ? news : [
-    { id: '1', slug: 'patch-1', titleEn: 'Patch 1.0.4 Update', category: 'Update', publishedAt: '2026-04-01' },
-    { id: '2', slug: 'event-1', titleEn: 'Spring Festival Event', category: 'Event', publishedAt: '2026-03-28' },
-    { id: '3', slug: 'notice-1', titleEn: 'Server Maintenance', category: 'Notice', publishedAt: '2026-03-25' },
-  ] as any[];
+  
+  const featured = data.featuredArticles && Array.isArray(data.featuredArticles) && data.featuredArticles.length > 0
+    ? data.featuredArticles
+    : news;
+
+  // Clean Engineering: Removed Mock Array Hardcode
+  const displayNews = featured?.length ? featured : [];
+
+  if (displayNews.length === 0) return null; // Graceful empty state
 
   return (
     <section 
-      className="relative w-full min-h-[100svh] py-24 flex flex-col justify-center items-center overflow-hidden bg-zinc-950" 
+      className="k-news-section" 
       id="news"
     >
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-indigo-900/10 to-transparent pointer-events-none z-0" />
+      <div className="k-news-bg-glow" />
 
-      <div className="container mx-auto px-6 max-w-7xl flex flex-col md:flex-row gap-8 lg:gap-16 items-center relative z-10 py-20 h-full">
-        <div className="md:w-1/3 flex flex-col justify-center">
+      <div className="k-news-container">
+        <div className="k-news-header">
           <motion.h2 
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-widest mb-6 drop-shadow-lg"
+            className="k-news-title"
           >
             {title}
           </motion.h2>
@@ -42,20 +67,20 @@ export default function NewsSection({ data, news }: { data: any, news: CMSNewsAr
           >
             <Link 
               href="/news" 
-              className="inline-flex items-center gap-2 text-indigo-400 hover:text-white font-bold uppercase tracking-wider text-sm transition-colors group"
+              className="k-news-view-all group"
             >
               View All News 
-              <span className="group-hover:translate-x-2 transition-transform">ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢</span>
+              <span className="k-news-arrow">→</span>
             </Link>
           </motion.div>
         </div>
 
-        <div className="md:w-2/3 flex flex-col gap-3 md:gap-4 w-full max-w-2xl">
+        <div className="k-news-list">
           {displayNews.slice(0, 3).map((item, idx) => {
-            const itemTitle = currentLang === 'en' ? (item.titleEn || item.title) : (item.titleTh || item.title);
-            const date = new Date(item.publishedAt).toLocaleDateString(currentLang === 'en' ? 'en-US' : 'th-TH', {
+            const itemTitle = currentLang === 'en' ? (item.titleEn || item.titleTh) : (item.titleTh || item.titleEn);
+            const date = item.publishedAt ? new Date(item.publishedAt).toLocaleDateString(currentLang === 'en' ? 'en-US' : 'th-TH', {
               year: 'numeric', month: 'short', day: 'numeric'
-            });
+            }) : '';
 
             return (
               <motion.div
@@ -67,17 +92,17 @@ export default function NewsSection({ data, news }: { data: any, news: CMSNewsAr
               >
                 <Link 
                   href={`/news/${item.slug}`}
-                  className="group flex flex-col sm:flex-row sm:items-center justify-between p-5 md:p-6 bg-black/60 backdrop-blur-sm border border-white/10 hover:border-indigo-500/50 rounded-xl transition-all hover:bg-zinc-900/80"
+                  className="k-news-card group"
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 md:gap-4">
-                    <span className="px-3 py-1 bg-white/5 text-gray-300 group-hover:text-white group-hover:bg-indigo-500/20 text-xs font-bold uppercase tracking-wider rounded-sm w-fit transition-colors">
+                  <div className="k-news-card-inner">
+                    <span className="k-news-category">
                       {item.category || 'News'}
                     </span>
-                    <h3 className="text-base md:text-lg font-bold text-gray-300 group-hover:text-white transition-colors line-clamp-1">
+                    <h3 className="k-news-card-title">
                       {itemTitle}
                     </h3>
                   </div>
-                  <span className="text-gray-500 text-xs md:text-sm mt-3 sm:mt-0 whitespace-nowrap font-mono">
+                  <span className="k-news-date">
                     {date}
                   </span>
                 </Link>

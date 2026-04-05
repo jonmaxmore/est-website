@@ -724,47 +724,7 @@
 /* Store buttons in hero */
 .event-hero .hero-stores { position: relative; z-index: 10; }
 
-/* Ornament Divider */
-.ornament-divider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 1.5rem;
-}
-.ornament-line {
-  flex: 1;
-  max-width: 120px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(212, 168, 67, 0.3), transparent);
-}
-.ornament-diamond {
-  width: 6px; height: 6px;
-  background: var(--gold);
-  transform: rotate(45deg);
-  opacity: 0.4;
-}
-.ornament-center {
-  color: var(--gold);
-  font-size: 1rem;
-  opacity: 0.5;
-}
-.title-ornament {
-  display: flex;
-  justify-content: center;
-  gap: 0.4rem;
-  margin-top: 0.75rem;
-}
-.title-ornament span {
-  width: 4px; height: 4px;
-  background: var(--gold);
-  border-radius: 50%;
-  opacity: 0.5;
-}
-.title-ornament span:nth-child(2) {
-  width: 20px;
-  border-radius: 100px;
-}
+
 
 /* Store cards in modal */
 .event-store-cards {

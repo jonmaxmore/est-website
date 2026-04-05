@@ -1,5 +1,7 @@
 import type { GlobalConfig } from 'payload'
 import { allowPublicRead, isAdminOrEditor } from '@/lib/cms-access'
+import { SEOGroup } from '../fields/SEOGroup'
+
 
 export const SupportPage: GlobalConfig = {
   slug: 'support-page',
@@ -12,6 +14,7 @@ export const SupportPage: GlobalConfig = {
     update: isAdminOrEditor,
   },
   fields: [
+    SEOGroup,
     {
       type: 'row',
       fields: [

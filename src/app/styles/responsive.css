@@ -40,9 +40,7 @@
     max-width: 880px;
   }
 
-  .ornament-line {
-    width: 160px;
-  }
+
 }
 
 /* ─── Desktop (max-width 1280px) — slight reductions ─── */
@@ -108,9 +106,7 @@
     font-size: 1rem;
   }
 
-  .ornament-line {
-    width: 80px;
-  }
+
 
   /* Page hero for sub-pages */
   .page-hero {
@@ -299,14 +295,7 @@
     display: none;
   }
 
-  /* Ornament divider */
-  .ornament-divider {
-    padding: 1.5rem 0;
-  }
 
-  .ornament-line {
-    width: 60px;
-  }
 
   /* Video modal */
   .weapon-video-modal {
@@ -428,12 +417,5 @@
     padding: 1rem;
   }
 
-  /* Ornament */
-  .ornament-line {
-    width: 40px;
-  }
 
-  .ornament-center {
-    font-size: 0.75rem;
-  }
 }

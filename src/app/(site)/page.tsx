@@ -12,6 +12,12 @@ import {
   type CMSNewsArticle,
   type CMSWeapon,
 } from '@/types/cms';
+import { resolveGlobalSEO } from '@/lib/seo';
+import type { Metadata } from 'next';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return resolveGlobalSEO('homepage', 'Eternal Tower Saga');
+}
 
 export const revalidate = 60;
 

@@ -1,0 +1,191 @@
+.news-article-page {
+  padding-top: var(--header-height, 80px);
+  padding-bottom: 8rem;
+  background-color: var(--color-background, #030712);
+  color: var(--color-text-primary, #f3f4f6);
+  min-height: 100vh;
+}
+
+.news-article-hero {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 3rem;
+  text-align: center;
+}
+
+.news-article-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-secondary, #9ca3af);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  margin-bottom: 2rem;
+}
+
+.news-article-back:hover {
+  color: var(--color-accent, #ebb305);
+}
+
+.news-article-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.news-article-category {
+  background-color: rgba(235, 179, 5, 0.1);
+  color: var(--color-accent, #ebb305);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.8rem;
+}
+
+.news-article-date {
+  color: var(--color-text-tertiary, #6b7280);
+}
+
+.news-article-title {
+  font-family: var(--font-heading, "Cinzel", serif);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-light, #ffffff);
+  text-wrap: balance;
+}
+
+.news-article-summary {
+  font-size: 1.25rem;
+  color: var(--color-text-secondary, #9ca3af);
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+  text-wrap: balance;
+}
+
+.news-article-featured-image {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  border-radius: 16px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background-color: var(--color-surface, #111827);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.news-article-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: var(--color-text-primary, #d1d5db);
+}
+
+/* Rich Text Overrides */
+.news-article-content p {
+  margin-bottom: 1.5em;
+}
+
+.news-article-content h2 {
+  font-family: var(--font-heading, "Cinzel", serif);
+  font-size: 2rem;
+  color: var(--color-text-light, #ffffff);
+  margin: 2.5em 0 1em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5em;
+}
+
+.news-article-content h3 {
+  font-size: 1.5rem;
+  color: var(--color-text-light, #ffffff);
+  margin: 2em 0 1em;
+}
+
+.news-article-content img {
+  border-radius: 8px;
+  max-width: 100%;
+  height: auto;
+  margin: 2rem 0;
+}
+
+.news-article-content blockquote {
+  border-left: 4px solid var(--color-accent, #ebb305);
+  background-color: rgba(235, 179, 5, 0.05);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  font-style: italic;
+  border-radius: 0 8px 8px 0;
+  color: var(--color-text-secondary, #9ca3af);
+}
+
+.news-article-content ul,
+.news-article-content ol {
+  margin-bottom: 1.5em;
+  padding-left: 1.5rem;
+}
+
+.news-article-content li {
+  margin-bottom: 0.5em;
+}
+
+.news-article-content a {
+  color: var(--color-accent, #ebb305);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.news-article-content a:hover {
+  text-decoration-color: var(--color-accent, #ebb305);
+}
+
+/* Related News */
+.news-related-section {
+  max-width: 1200px;
+  margin: 6rem auto 0;
+  padding: 4rem 1.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.news-related-title {
+  font-family: var(--font-heading, "Cinzel", serif);
+  font-size: 2rem;
+  color: var(--color-text-light, #ffffff);
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.news-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .news-article-hero {
+    padding: 3rem 1.5rem 2rem;
+  }
+  .news-article-featured-image {
+    aspect-ratio: 4 / 3;
+    border-radius: 0;
+    margin-bottom: 3rem;
+  }
+  .news-article-content {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+}

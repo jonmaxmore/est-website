@@ -105,45 +105,7 @@
   transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
-/* ─── Section transition divider ─── */
 
-.section-divider {
-  position: relative;
-  height: 80px;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.section-divider::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(4, 14, 33, 0.4) 40%,
-    rgba(4, 14, 33, 0.4) 60%,
-    transparent 100%
-  );
-}
-
-.section-divider-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 200px;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(212, 175, 55, 0.4) 30%,
-    rgba(212, 175, 55, 0.8) 50%,
-    rgba(212, 175, 55, 0.4) 70%,
-    transparent 100%
-  );
-  border-radius: 1px;
-}
 
 /* ─── Respect reduced motion ─── */
 

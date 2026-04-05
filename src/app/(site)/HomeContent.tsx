@@ -2,14 +2,14 @@
 
 import type { CMSNewsArticle, CMSSettings, CMSWeapon } from '@/types/cms';
 import ScrollProgress from '@/components/ui/ScrollProgress';
-import Navigation from '@/components/site/Navigation';
-import Footer from '@/components/site/Footer';
 
 // Sections (Dynamic Blocks)
 import HeroSection from '@/components/sections/HeroSection';
 import WeaponSection from '@/components/sections/WeaponSection';
 import GameFeaturesSection from '@/components/sections/GameFeaturesSection';
 import NewsSection from '@/components/sections/NewsSection';
+import GameGuideSection from '@/components/sections/GameGuideSection';
+import HighlightsSection from '@/components/sections/HighlightsSection';
 
 interface HomeContentProps {
   homepageData: any;
@@ -38,10 +38,21 @@ export default function HomeContent({ homepageData, settings, weapons, news }: H
         return <GameFeaturesSection key={index} data={block} />;
       case 'newsTicker':
         return <NewsSection key={index} data={block} news={news} />;
+      case 'gameGuide':
+        return <GameGuideSection key={index} data={block} />;
+      case 'highlightsShowcase':
+        return <HighlightsSection key={index} features={block.features || []} sectionConfig={block} />;
       default:
+        // Handle unmapped highlights if old data persists
+        if (block.blockType === 'highlights') {
+          return <HighlightsSection key={index} features={block.features || []} sectionConfig={block} />;
+        }
         return null;
     }
   };
+
+  // If Highlights is globally set in settings but not in the blocks, we can append it:
+  const hasHighlights = blocks.some((b: any) => b.blockType === 'highlights' || b.blockType === 'highlightsShowcase');
 
   return (
     <div className="home-page-shell bg-black text-white w-full overflow-hidden">
@@ -56,9 +67,13 @@ export default function HomeContent({ homepageData, settings, weapons, news }: H
           </div>
         )}
         
-        <div>
-          <Footer socialLinks={settings?.site?.socialLinks || {}} footer={footerSettings} />
-        </div>
+        {!hasHighlights && settings?.highlights && (
+          <HighlightsSection
+            features={settings?.hero?.features || []}
+            sectionConfig={settings.highlights}
+          />
+        )}
+        
       </main>
     </div>
   );

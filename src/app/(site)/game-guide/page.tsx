@@ -3,8 +3,6 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import { Castle, Map, Shield, Sparkles, Swords, Users, type LucideIcon } from 'lucide-react';
-import Footer from '@/components/site/Footer';
-import Navigation from '@/components/site/Navigation';
 import CmsLink from '@/components/ui/CmsLink';
 import RevealSection from '@/components/ui/RevealSection';
 import ScrollProgress from '@/components/ui/ScrollProgress';
@@ -374,8 +372,7 @@ export default function GameGuidePage() {
   return (
     <div className="landing-page guide-page">
       <ScrollProgress />
-      <Navigation links={navigationLinks} registrationUrl={registrationUrl} />
-
+      
       <main>
         <GuideHero config={config} copy={copy} />
         <GuideSystems
@@ -389,7 +386,7 @@ export default function GameGuidePage() {
         />
       </main>
 
-      <Footer socialLinks={socialLinks} footer={footer} />
+      
     </div>
   );
 }

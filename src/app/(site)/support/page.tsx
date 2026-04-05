@@ -14,8 +14,6 @@ import {
   Send,
   Shield,
 } from 'lucide-react';
-import Navigation from '@/components/site/Navigation';
-import Footer from '@/components/site/Footer';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import RevealSection from '@/components/ui/RevealSection';
 import ScrollProgress from '@/components/ui/ScrollProgress';
@@ -140,8 +138,7 @@ export default function SupportPage() {
   return (
     <div className="landing-page">
       <ScrollProgress />
-      <Navigation />
-
+      
       <main>
         <section className="page-hero">
           <div className="page-hero-bg">
@@ -294,7 +291,7 @@ export default function SupportPage() {
         </section>
       </main>
 
-      <Footer socialLinks={socialLinks} footer={footer} />
+      
     </div>
   );
 }

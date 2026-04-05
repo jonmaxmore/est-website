@@ -4,8 +4,6 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Cpu, HardDrive, Layers, MemoryStick, Monitor, Smartphone, Tablet } from 'lucide-react';
-import Navigation from '@/components/site/Navigation';
-import Footer from '@/components/site/Footer';
 import FloatingParticles from '@/components/ui/FloatingParticles';
 import ScrollProgress from '@/components/ui/ScrollProgress';
 import { STORE_ICONS } from '@/components/ui/StoreIcons';
@@ -81,8 +79,7 @@ export default function DownloadPage() {
   return (
     <div className="landing-page">
       <ScrollProgress />
-      <Navigation logoUrl={logoUrl} />
-
+      
       <main className="download-main download-main-padded">
         <section className="download-hero">
           <FloatingParticles count={10} />
@@ -188,7 +185,7 @@ export default function DownloadPage() {
         </section>
       </main>
 
-      <Footer socialLinks={socialLinks} footer={footer} logoUrl={logoUrl} />
+      
     </div>
   );
 }

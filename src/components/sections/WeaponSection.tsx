@@ -3,9 +3,34 @@
 import { useLang } from '@/lib/lang-context';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import type { CMSWeapon } from '@/types/cms';
 
-export default function WeaponSection({ data, weapons }: { data: any, weapons: CMSWeapon[] }) {
+export interface WeaponData {
+  id: string | number;
+  name?: string | null;
+  nameEn?: string | null;
+  nameTh?: string | null;
+  descriptionEn?: string | null;
+  descriptionTh?: string | null;
+  rarity?: string | null;
+  image?: { url?: string } | string | null;
+  imageUrl?: string | null;
+}
+
+export interface WeaponSectionData {
+  blockType?: 'weaponsShowcase';
+  titleEn?: string;
+  titleTh?: string;
+  introEn?: string;
+  introTh?: string;
+  weaponsBgImage?: { url?: string } | string | null;
+}
+
+interface WeaponSectionProps {
+  data: WeaponSectionData;
+  weapons: WeaponData[];
+}
+
+export default function WeaponSection({ data, weapons }: WeaponSectionProps) {
   const { lang: currentLang } = useLang();
   
   if (!data) return null;
@@ -14,28 +39,27 @@ export default function WeaponSection({ data, weapons }: { data: any, weapons: C
   const intro = currentLang === 'en' ? data.introEn : data.introTh;
   const bgImageUrl = typeof data.weaponsBgImage === 'object' ? data.weaponsBgImage?.url : data.weaponsBgImage;
   
-  const displayWeapons = weapons?.length ? weapons : [
-    { id: '1', nameEn: 'Frostbite Greatsword', nameTh: 'ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â²ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¹Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â«ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¹Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¹ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â«ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¹Ãƒâ€¦Ã¢â‚¬â„¢', rarity: 'Legendary', imageUrl: null },
-    { id: '2', nameEn: 'Void Bow', nameTh: 'ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€¹Ã…â€œÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â¹ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¹Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â«ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¹Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â²ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¹Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â²ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¹ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂºÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â¥ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¹Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â²', rarity: 'Epic', imageUrl: null },
-    { id: '3', nameEn: 'Solar Aegis', nameTh: 'ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¹ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â¥ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¹Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â´ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬ÂÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â©ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¹Ãƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â£ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â´ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â°', rarity: 'Mythic', imageUrl: null },
-  ] as any[];
+  // Clean Engineering: No Hardcoded Array fallback!
+  const displayWeapons = weapons?.length ? weapons : [];
+
+  if (displayWeapons.length === 0) return null; // Graceful Empty State mapping
 
   return (
     <section 
-      className="relative w-full min-h-[100svh] py-24 flex flex-col justify-center items-center overflow-hidden bg-zinc-950 bg-fixed bg-cover bg-center"
+      className="k-weapon-section"
       style={bgImageUrl ? { backgroundImage: `url(${bgImageUrl})` } : {}}
       id="weapons"
     >
-      <div className="absolute inset-0 bg-black/80 z-0" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-screen-xl h-[500px] bg-indigo-900/20 blur-[120px] rounded-full pointer-events-none z-0" />
+      <div className="k-weapon-bg-mask" />
+      <div className="k-weapon-glow-sphere" />
 
-      <div className="container mx-auto px-6 max-w-7xl relative z-10 flex flex-col justify-center h-full py-20">
-        <div className="text-center mb-10">
+      <div className="k-weapon-container">
+        <div className="k-weapon-header">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-5xl font-black text-white uppercase tracking-widest mb-4 drop-shadow-lg"
+            className="k-weapon-title"
           >
             {title}
           </motion.h2>
@@ -45,14 +69,14 @@ export default function WeaponSection({ data, weapons }: { data: any, weapons: C
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-gray-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed"
+              className="k-weapon-intro"
             >
               {intro}
             </motion.p>
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="k-weapon-grid">
           {displayWeapons.slice(0,3).map((weapon, idx) => {
             const wName = currentLang === 'en' ? (weapon.nameEn || weapon.name) : (weapon.nameTh || weapon.name);
             const wImage = typeof weapon.image === 'object' ? weapon.image?.url : weapon.imageUrl;
@@ -64,27 +88,25 @@ export default function WeaponSection({ data, weapons }: { data: any, weapons: C
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="group relative bg-black/40 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden hover:border-indigo-500/50 transition-colors duration-500"
+                className="k-weapon-card group"
               >
-                <div className="relative h-48 md:h-56 w-full bg-zinc-900/50 overflow-hidden">
+                <div className="k-weapon-card-media">
                   {wImage ? (
-                    <Image src={wImage} alt={wName} fill className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
+                    <Image src={wImage} alt={wName || 'Weapon Image'} fill className="k-weapon-card-image" />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-zinc-600 font-mono text-xs">
-                      [Weapon Image]
-                    </div>
+                    <div className="k-weapon-card-placeholder" />
                   )}
                   {weapon.rarity && (
-                    <div className="absolute top-4 right-4 bg-black/80 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-xs font-bold uppercase text-white">
+                    <div className="k-weapon-card-badge">
                       {weapon.rarity}
                     </div>
                   )}
                 </div>
-                <div className="p-5 relative">
-                  <div className="absolute top-0 left-5 w-8 h-[1px] bg-indigo-500 group-hover:w-16 transition-all duration-300" />
-                  <h3 className="text-lg font-bold text-white uppercase tracking-wider mb-1">{wName}</h3>
-                  <p className="text-gray-400 text-xs line-clamp-2">
-                    {weapon.descriptionEn || 'Ancient artifact of immense power.'}
+                <div className="k-weapon-card-body">
+                  <div className="k-weapon-card-accent" />
+                  <h3 className="k-weapon-card-name">{wName}</h3>
+                  <p className="k-weapon-card-desc">
+                    {currentLang === 'en' ? weapon.descriptionEn : weapon.descriptionTh}
                   </p>
                 </div>
               </motion.div>

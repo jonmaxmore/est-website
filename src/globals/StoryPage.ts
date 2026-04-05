@@ -1,5 +1,7 @@
 import type { GlobalConfig } from 'payload'
 import { allowPublicRead, isAdminOrEditor } from '@/lib/cms-access'
+import { SEOGroup } from '../fields/SEOGroup'
+
 
 export const StoryPage: GlobalConfig = {
   slug: 'story-page',
@@ -12,6 +14,7 @@ export const StoryPage: GlobalConfig = {
     update: isAdminOrEditor,
   },
   fields: [
+    SEOGroup,
     {
       name: 'heroImage',
       type: 'upload',

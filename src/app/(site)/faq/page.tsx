@@ -1,8 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Navigation from '@/components/site/Navigation';
-import Footer from '@/components/site/Footer';
 import RevealSection from '@/components/ui/RevealSection';
 import ScrollProgress from '@/components/ui/ScrollProgress';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
@@ -47,8 +45,7 @@ export default function FAQPage() {
     return (
       <div className="landing-page">
         <ScrollProgress />
-        <Navigation />
-        <main>
+                <main>
           <section className="page-hero">
             <div className="page-hero-bg"><div className="page-hero-overlay" /></div>
             <div className="container-custom">
@@ -62,7 +59,7 @@ export default function FAQPage() {
             </div>
           </section>
         </main>
-        <Footer socialLinks={socialLinks} footer={footer} />
+        
       </div>
     );
   }
@@ -70,8 +67,7 @@ export default function FAQPage() {
   return (
     <div className="landing-page">
       <ScrollProgress />
-      <Navigation />
-
+      
       <main>
         <section className="page-hero">
           <div className="page-hero-bg">
@@ -127,7 +123,7 @@ export default function FAQPage() {
         </section>
       </main>
 
-      <Footer socialLinks={socialLinks} footer={footer} />
+      
 
       <style jsx global>{`
         .faq-detail-card {

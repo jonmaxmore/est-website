@@ -2,84 +2,130 @@
 
 import { useLang } from '@/lib/lang-context';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
-export default function HeroSection({ data }: { data: any }) {
+export interface HeroSectionData {
+  blockType?: 'hero';
+  taglineEn?: string;
+  taglineTh?: string;
+  ctaTextEn?: string;
+  ctaTextTh?: string;
+  ctaLink?: string;
+  backgroundImage?: { url?: string } | string | null;
+  mobileCrop?: { url?: string } | string | null;
+  backgroundVideo?: { url?: string } | string | null;
+  characterOverlay?: { url?: string } | string | null;
+  kvLogo?: { url?: string } | string | null;
+  particlesEnabled?: boolean;
+}
+
+interface HeroSectionProps {
+  data: HeroSectionData;
+}
+
+export default function HeroSection({ data }: HeroSectionProps) {
   const { lang: currentLang } = useLang();
   
   if (!data) return null;
 
   const tagline = currentLang === 'en' ? data.taglineEn : data.taglineTh;
   const ctaText = currentLang === 'en' ? data.ctaTextEn : data.ctaTextTh;
+  
   const bgImageUrl = typeof data.backgroundImage === 'object' ? data.backgroundImage?.url : data.backgroundImage;
+  const mobileCropUrl = typeof data.mobileCrop === 'object' ? data.mobileCrop?.url : data.mobileCrop;
   const videoUrl = typeof data.backgroundVideo === 'object' ? data.backgroundVideo?.url : null;
+  const charOverlayUrl = typeof data.characterOverlay === 'object' ? data.characterOverlay?.url : data.characterOverlay;
+  const logoUrl = typeof data.kvLogo === 'object' ? data.kvLogo?.url : data.kvLogo;
+  const enableParticles = data.particlesEnabled !== false;
 
   return (
-    <section 
-      className="relative w-full min-h-[100svh] py-24 flex flex-col justify-center items-center overflow-hidden bg-black"
-    >
-      <div className="absolute inset-0 z-0">
-        {videoUrl ? (
+    <section className="k-hero-section">
+      {/* Background Environment Layer */}
+      <div className="k-hero-bg-container">
+        <picture>
+          {mobileCropUrl && <source media="(max-width: 768px)" srcSet={mobileCropUrl} />}
+          <img 
+            src={bgImageUrl || ''} 
+            alt="Cinematic Background" 
+            className="k-hero-bg-image"
+          />
+        </picture>
+        
+        {videoUrl && (
           <video 
             autoPlay 
             muted 
             loop 
             playsInline 
-            className="w-full h-full object-cover opacity-80"
+            className="k-hero-bg-video"
           >
             <source src={videoUrl} type="video/mp4" />
           </video>
-        ) : bgImageUrl ? (
-          <div 
-            className="w-full h-full bg-cover bg-center bg-fixed opacity-80"
-            style={{ backgroundImage: `url(${bgImageUrl})` }}
-          />
-        ) : null}
+        )}
         
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_40%,_rgba(0,0,0,0.8)_100%)]" />
+        {/* Seamless Fade Masks */}
+        <div className="k-hero-mask-top" />
+        <div className="k-hero-mask-bottom" />
       </div>
 
-      <div className="relative z-10 text-center px-4 md:px-6 w-full max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-16">
-        <motion.h1 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-white drop-shadow-[0_0_30px_rgba(0,0,0,0.8)] w-full"
-        >
-          {tagline}
-        </motion.h1>
+      {/* VFX Particles */}
+      {enableParticles && (
+        <div className="k-hero-vfx-particles" />
+      )}
+
+      {/* Cinematic Character Focus */}
+      {charOverlayUrl && (
+        <div className="k-hero-character-overlay">
+          <Image 
+            src={charOverlayUrl} 
+            alt="Featured Hero Character" 
+            fill 
+            className="k-hero-character-image"
+            priority
+          />
+        </div>
+      )}
+
+      {/* Direct Content Layer */}
+      <div className="k-hero-content-layer">
+        {logoUrl && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="k-hero-logo"
+          >
+            <Image src={logoUrl} alt="Game Title Logo" fill className="k-hero-logo-image" priority />
+          </motion.div>
+        )}
+
+        {tagline && (
+          <motion.h1 
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: "easeOut", delay: logoUrl ? 0.4 : 0 }}
+            className="k-hero-tagline"
+          >
+            {tagline}
+          </motion.h1>
+        )}
         
         <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 1 }}
-          className="mt-8 md:mt-12"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.8, duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+          className="k-hero-actions"
         >
           <a 
             href={data.ctaLink || '#'}
-            className="group relative inline-flex items-center justify-center px-8 py-4 md:px-10 md:py-5 bg-white text-black font-bold text-base md:text-xl uppercase tracking-widest overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
+            className="k-hero-cta group"
           >
-            <span className="relative z-10">{ctaText}</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-200 to-white opacity-0 group-hover:opacity-100 transition-opacity" />
+            <span className="k-hero-cta-text">{ctaText}</span>
+            <div className="k-hero-cta-glow-sweep" />
+            <div className="k-hero-cta-accent-line" />
           </a>
         </motion.div>
       </div>
-
-      {/* New subtle scroll indicator replacing the old hardcoded text */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.5 }}
-        transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10 pointer-events-none"
-      >
-        <div className="w-[1px] h-12 md:h-16 bg-gradient-to-b from-transparent via-white to-transparent opacity-50 overflow-hidden relative">
-          <motion.div 
-            animate={{ y: ['-100%', '200%'] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-            className="w-full h-1/2 bg-white"
-          />
-        </div>
-      </motion.div>
     </section>
   );
 }

@@ -1,8 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Navigation from '@/components/site/Navigation';
-import Footer from '@/components/site/Footer';
 import RevealSection from '@/components/ui/RevealSection';
 import ScrollProgress from '@/components/ui/ScrollProgress';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
@@ -42,8 +40,7 @@ export default function StoryPage() {
   return (
     <div className="landing-page">
       <ScrollProgress />
-      <Navigation />
-
+      
       <main>
         <section className="page-hero page-hero-story">
           <div className="page-hero-bg">
@@ -95,7 +92,7 @@ export default function StoryPage() {
         </section>
       </main>
 
-      <Footer socialLinks={socialLinks} footer={footer} />
+      
     </div>
   );
 }
