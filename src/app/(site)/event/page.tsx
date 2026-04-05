@@ -34,7 +34,7 @@ export default function EventPage() {
   const [registrationCount, setRegistrationCount] = useState(0);
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [storeButtons, setStoreButtons] = useState<StoreButton[]>([]);
-  const [socialLinks, setSocialLinks] = useState<Record<string, string | null>>({});
+
   const [siteLogoUrl, setSiteLogoUrl] = useState<string | null>(null);
   const [eventSettings, setEventSettings] = useState<EventSettings>({});
   const [countdownTarget, setCountdownTarget] = useState(DEFAULT_COUNTDOWN_TARGET);
@@ -43,12 +43,7 @@ export default function EventPage() {
     android: 'https://play.google.com/store/apps/details?id=com.ultimategame.eternaltowersaga',
     pc: '#',
   });
-  const [footer, setFooter] = useState({
-    copyrightText: 'Â© 2026 Eternal Tower Saga. All rights reserved.',
-    termsUrl: '/terms',
-    privacyUrl: '/privacy',
-    supportUrl: '#',
-  });
+
 
   /* â”€â”€â”€ Fetch CMS data â”€â”€â”€ */
   useEffect(() => {
@@ -78,9 +73,7 @@ export default function EventPage() {
       .then(data => {
         // Legacy store buttons from settings (lower priority)
         if (data.storeButtons && !storeButtons.length) setStoreButtons(data.storeButtons);
-        if (data.site?.socialLinks) setSocialLinks(data.site.socialLinks);
         if (data.site?.logo?.url) setSiteLogoUrl(data.site.logo.url);
-        if (data.site?.footer) setFooter(data.site.footer);
         if (data.event) {
           setEventSettings(prev => ({ ...prev, ...data.event }));
           if (data.event.countdownTarget) {

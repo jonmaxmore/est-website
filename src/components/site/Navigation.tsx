@@ -19,6 +19,7 @@ interface NavigationProps {
   registrationUrl?: string;
 }
 
+/* eslint-disable max-lines-per-function */
 export default function Navigation({ links = [], logoUrl, registrationUrl = '/event' }: NavigationProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

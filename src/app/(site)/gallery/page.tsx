@@ -32,7 +32,7 @@ const PLACEHOLDER_ITEMS: Record<string, GalleryItem[]> = {
 // eslint-disable-next-line max-lines-per-function -- Page keeps gallery tabs, fetch, and lightbox interaction together
 export default function GalleryPage() {
   const { t } = useLang();
-  const { socialLinks, footer, settings } = useSiteSettings();
+  const { settings } = useSiteSettings();
   const galleryConfig = (settings?.galleryPage as Record<string, string> | undefined) || null;
   const [activeTab, setActiveTab] = useState('screenshots');
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);

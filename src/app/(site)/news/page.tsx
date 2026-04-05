@@ -477,7 +477,7 @@ function NewsArchive({
 
 export default function NewsPage() {
   const { lang, t } = useLang();
-  const { settings, socialLinks, footer, navigationLinks, registrationUrl } = useSiteSettings();
+  const { settings } = useSiteSettings();
   const [activeCategory, setActiveCategory] = useState<NewsFilterKey>('all');
   const { articles, loading, totalDocs } = useNewsFeed(activeCategory);
   const newsPage = (settings?.newsPage as CMSNewsPageConfig | undefined) || null;

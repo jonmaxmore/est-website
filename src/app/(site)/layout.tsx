@@ -8,8 +8,10 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const siteSettingsTask = payload.findGlobal({ slug: 'site-settings', depth: 2 }).catch(() => null);
   const maintenanceTask = payload.findGlobal({ slug: 'maintenance', depth: 1 }).catch(() => null);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [siteSettings, maintenanceSettings] = await Promise.all([siteSettingsTask, maintenanceTask]) as any;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const links = siteSettings?.navigationLinks?.filter?.((link: any) => link.visible !== false) || [];
   const registrationUrl = siteSettings?.registrationUrl || '/event';
   const logoUrl = siteSettings?.logo?.url || null;

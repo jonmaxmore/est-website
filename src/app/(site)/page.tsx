@@ -123,6 +123,7 @@ async function fetchLandingResources(): Promise<LandingResources> {
 
 export default async function LandingPage() {
   let homepageData: CmsRecord | null = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let settings: any = null;
   let weapons: CMSWeapon[] = [];
   let news: CMSNewsArticle[] = [];

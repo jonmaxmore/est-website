@@ -99,7 +99,7 @@ const INFO_ITEMS = [
 // eslint-disable-next-line max-lines-per-function -- Page keeps support channels and shared shell layout together
 export default function SupportPage() {
   const { t } = useLang();
-  const { settings, socialLinks, footer } = useSiteSettings();
+  const { settings } = useSiteSettings();
   const spConfig = (settings?.supportPage as Record<string, unknown> | undefined) || null;
 
   const heroBadge = spConfig ? t((spConfig.badgeTh as string) || '', (spConfig.badgeEn as string) || '') : '';

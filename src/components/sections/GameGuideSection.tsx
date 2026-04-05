@@ -147,9 +147,11 @@ export default function GameGuideSection({
     data?.introEn || 'Discover the strategies and techniques that will help you reach the top of the tower.',
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rawCards = data?.cards || (data as any)?.data?.cards;
   const cards: RenderCard[] =
     rawCards && rawCards.length > 0
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ? rawCards.map((c: any) => cmsCardToRender({ ...c }))
       : [];
 

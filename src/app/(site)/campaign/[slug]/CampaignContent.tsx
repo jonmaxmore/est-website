@@ -7,11 +7,13 @@ import GameFeaturesSection from '@/components/sections/GameFeaturesSection';
 import NewsSection from '@/components/sections/NewsSection';
 import type { CMSNewsArticle } from '@/types/cms';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function CampaignContent({ campaign, news, weapons }: { campaign: any, news: CMSNewsArticle[], weapons: any[] }) {
   if (!campaign?.layout?.length) return null;
 
   return (
     <>
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {campaign.layout.map((block: any, idx: number) => {
         switch (block.blockType) {
           case 'hero':

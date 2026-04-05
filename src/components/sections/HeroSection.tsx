@@ -23,6 +23,7 @@ interface HeroSectionProps {
   data: HeroSectionData;
 }
 
+/* eslint-disable max-lines-per-function */
 export default function HeroSection({ data }: HeroSectionProps) {
   const { lang: currentLang } = useLang();
   

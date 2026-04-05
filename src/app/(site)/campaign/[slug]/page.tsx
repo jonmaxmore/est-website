@@ -46,7 +46,7 @@ function mapNewsRecord(article: CmsRecord): CMSNewsArticle {
     homePriority: typeof article.homePriority === 'number' ? article.homePriority : 0,
     href: resolveNewsHref({ externalUrl, slug }),
     isExternal: isExternalNewsLink({ externalUrl }),
-    featuredImage: buildNewsImage(article.featuredImage as any),
+    featuredImage: buildNewsImage(article.featuredImage as CmsRecord),
   };
 }
 
@@ -58,6 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     depth: 1,
   }).catch(() => null);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const campaign = campaigns?.docs?.[0] as any;
 
   if (!campaign) {
@@ -74,6 +75,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       images: campaign.seo?.ogImage ? [
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         { url: typeof campaign.seo.ogImage === 'string' ? campaign.seo.ogImage : (campaign.seo.ogImage as any).url }
       ] : [],
     },
@@ -90,6 +92,7 @@ export default async function CampaignPage({ params }: Props) {
     depth: 2, 
   }).catch(() => null);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const campaign = campaigns?.docs?.[0] as any;
 
   if (!campaign) {
@@ -114,8 +117,8 @@ export default async function CampaignPage({ params }: Props) {
     }).catch(() => ({ docs: [] }))
   ]);
 
-  const weapons = weaponsRes.docs.map(w => mapWeaponRecord(w as any));
-  const news = newsRes.docs.map(n => mapNewsRecord(n as any));
+  const weapons = weaponsRes.docs.map(w => mapWeaponRecord(w as CmsRecord));
+  const news = newsRes.docs.map(n => mapNewsRecord(n as CmsRecord));
 
   return (
     <main className="w-full flex-auto relative">

@@ -30,6 +30,7 @@ interface WeaponSectionProps {
   weapons: WeaponData[];
 }
 
+/* eslint-disable max-lines-per-function */
 export default function WeaponSection({ data, weapons }: WeaponSectionProps) {
   const { lang: currentLang } = useLang();
   

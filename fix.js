@@ -1,12 +1,33 @@
 const fs = require('fs');
 const path = require('path');
 
-const file = path.join(__dirname, 'src', 'components', 'sections', 'GameGuideSection.tsx');
-let content = fs.readFileSync(file, 'utf8');
+const files = [
+  'download/page.tsx',
+  'event/page.tsx',
+  'faq/page.tsx',
+  'gallery/page.tsx',
+  'game-guide/page.tsx',
+  'news/page.tsx',
+  'story/page.tsx',
+  'support/page.tsx',
+  'weapons/page.tsx',
+];
 
-// Replace guideConfig with data inside the function body
-content = content.replace(/guideConfig\?/g, 'data?');
-content = content.replace(/guideConfig\./g, 'data.');
+for (const file of files) {
+  const fullPath = path.join(__dirname, 'src/app/(site)', file);
+  if (fs.existsSync(fullPath)) {
+    let content = fs.readFileSync(fullPath, 'utf8');
+    content = content.replace(/const { settings, socialLinks, footer } = useSiteSettings\(\);/g, 'const { settings } = useSiteSettings();');
+    content = content.replace(/const { settings, socialLinks, footer, navigationLinks, registrationUrl } = useSiteSettings\(\);/g, 'const { settings } = useSiteSettings();');
+    content = content.replace(/const { settings, socialLinks, footer, navigationLinks, registrationUrl, defaultHeroImageUrl } = useSiteSettings\(\);/g, 'const { settings, defaultHeroImageUrl } = useSiteSettings();');
+    
+    // Fallback regex to just remove the unused ones safely where they exist
+    content = content.replace(/socialLinks,\s*/g, '');
+    content = content.replace(/footer,\s*/g, '');
+    content = content.replace(/navigationLinks,\s*/g, '');
+    content = content.replace(/registrationUrl,\s*/g, '');
 
-fs.writeFileSync(file, content);
-console.log('Fixed GameGuideSection parameters');
+    fs.writeFileSync(fullPath, content);
+  }
+}
+console.log('Fixed subpages');

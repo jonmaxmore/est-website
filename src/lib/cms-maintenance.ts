@@ -133,20 +133,7 @@ const DEFAULT_FEATURE_CTA = {
   th: 'à¸”à¸¹à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”',
 }
 
-const DEFAULT_EVENT_CONFIG_CONTENT = {
-  titleEn: 'Join the pre-registration',
-  titleTh: 'ลงทะเบียนล่วงหน้า',
-  descriptionEn: 'Register early to receive launch rewards and follow event milestones in one place.',
-  descriptionTh: 'ลงทะเบียนล่วงหน้าเพื่อติดตาม milestone และรางวัลช่วงเปิดตัวได้ในที่เดียว',
-  ctaButtonEn: 'Join the pre-registration',
-  ctaButtonTh: 'ลงทะเบียนล่วงหน้าเลย',
-  modalTitleEn: 'Registration form',
-  modalTitleTh: 'แบบฟอร์มลงทะเบียน',
-  emailPlaceholderEn: 'Enter your email address',
-  storeLabelEn: 'Choose your platform',
-  submitButtonEn: 'Register and continue',
-  successTitleEn: 'Registration complete',
-}
+
 
 const LEGACY_SITE_DESCRIPTION_VALUES = [
   'Eternal Tower Saga — เกมมือถือ RPG ผจญภัยพร้อมสหายร่วมรบ',
@@ -169,59 +156,7 @@ const LEGACY_COMMUNITY_TH_VALUES = [
   'ติดตามประกาศ กิจกรรม และความเคลื่อนไหวล่าสุดของเกมผ่านช่องทาง community หลักของ Eternal Tower Saga.',
 ]
 
-const LEGACY_HOMEPAGE_TAGLINE_EN_VALUES = [
-  'Adventure together, conquer the tower',
-  'Rise Together, Conquer the Tower',
-]
 
-const LEGACY_HOMEPAGE_CTA_EN_VALUES = [
-  'Pre-Register Now',
-  'Pre-register Now',
-]
-
-const LEGACY_GAME_GUIDE_SUBTITLE_EN_VALUES = [
-  'Experience the new era of Eternal Tower Saga — Switch your weapon, shift the battlefield',
-  'Experience the new era of Eternal Tower Saga - switch your weapon, shift the battlefield',
-]
-
-const LEGACY_NEWS_PAGE_SUBTITLE_EN_VALUES = [
-  'Follow every major announcement, event, update, and maintenance notice in a cleaner editorial view built for desktop and mobile.',
-]
-
-const LEGACY_EVENT_TITLE_EN_VALUES = [
-  'Pre-Register Now',
-  'Pre-Registration',
-]
-
-const LEGACY_EVENT_DESCRIPTION_EN_VALUES = [
-  'Register now to receive exclusive rewards!',
-  'Register now to receive exclusive rewards at launch!',
-]
-
-const LEGACY_EVENT_CTA_EN_VALUES = [
-  'Pre-Register Now',
-  'Pre-register Now',
-]
-
-const LEGACY_EVENT_MODAL_TITLE_EN_VALUES = [
-  'Pre-Register',
-]
-
-const LEGACY_EVENT_EMAIL_PLACEHOLDER_EN_VALUES = [
-  'Enter your email',
-]
-
-const LEGACY_EVENT_STORE_LABEL_EN_VALUES = [
-  'Choose your store',
-]
-
-const LEGACY_EVENT_SUBMIT_BUTTON_EN_VALUES = [
-  'Register & Go to Store',
-]
-
-const LEGACY_EVENT_SUCCESS_TITLE_EN_VALUES = [
-  'Registration Successful!',
-]
 
 const LEGACY_STORE_SUBLABELS: Partial<Record<'ios' | 'android' | 'pc' | 'steam', string[]>> = {
   android: ['PRE-REGISTER ON'],
@@ -471,6 +406,7 @@ async function ensureStoreButtonDefaults(
   }
 }
 
+/* eslint-disable max-lines-per-function */
 async function ensureSiteSettingsDefaults(payload: Payload, updatedGlobals: string[]) {
   const settings = asRecord(await payload.findGlobal({ slug: 'site-settings' }).catch(() => null))
   const footer = asRecord(settings.footer as GenericGlobal)
@@ -630,7 +566,7 @@ async function ensureHomepageDefaults(
   updatedGlobals.push('homepage')
 }
 
-// eslint-disable-next-line max-lines-per-function -- Game Guide default seeding also repairs media-backed feature content.
+ 
 async function ensureGameGuideDefaults(
   payload: Payload,
   updatedGlobals: string[],
@@ -803,7 +739,7 @@ export async function dropNewsEditorialColumns(payload: Payload) {
   await executeRaw(payload, DROP_NEWS_EDITORIAL_COLUMNS_SQL)
 }
 
-// eslint-disable-next-line max-lines-per-function -- Production content repair keeps schema, globals, and legacy news cleanup together
+ 
 export async function refreshCmsContent(payload: Payload): Promise<CmsRefreshSummary> {
   const ensuredColumns = [
     ...(await ensureNewsExcerptColumns(payload)),

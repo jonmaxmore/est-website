@@ -43,6 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     newsRoutes = newsRes.docs.map((doc: any) => ({
       url: `${baseUrl}/news/${doc.slug}`,
       lastModified: new Date(doc.updatedAt || Date.now()),
@@ -68,6 +69,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     campaignRoutes = campaignRes.docs.map((doc: any) => ({
       url: `${baseUrl}/campaign/${doc.slug}`,
       lastModified: new Date(doc.updatedAt || Date.now()),

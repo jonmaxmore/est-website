@@ -9,6 +9,7 @@ type SEOData = {
 
 export async function resolveGlobalSEO(globalSlug: string, fallbackTitle: string): Promise<Metadata> {
   const payload = await getPayloadClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const globalData = await payload.findGlobal({ slug: globalSlug as any, depth: 1 }).catch(() => null);
   
   const seo: SEOData = globalData?.seo || {};

@@ -26,7 +26,7 @@ interface StoryPageConfig {
 
 export default function StoryPage() {
   const { t } = useLang();
-  const { settings, loaded, socialLinks, footer } = useSiteSettings();
+  const { settings, loaded } = useSiteSettings();
   const config = (settings?.storyPage as StoryPageConfig | undefined) || null;
 
   const badge = config ? t(config.badgeTh, config.badgeEn) : 'LORE';

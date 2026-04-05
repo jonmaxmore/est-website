@@ -1,0 +1,123 @@
+
+> eternal-tower-saga-website@0.1.0 lint
+> eslint
+
+
+C:\Users\charo\est-website-1\src\app\(payload)\layout.tsx
+  9:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\charo\est-website-1\src\app\(site)\HomeContent.tsx
+  14:17  error    Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  23:9   warning  'footerSettings' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  30:31  error    Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  54:41  error    Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+
+C:\Users\charo\est-website-1\src\app\(site)\campaign\[slug]\CampaignContent.tsx
+  10:82   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  10:120  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  15:36   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\charo\est-website-1\src\app\(site)\campaign\[slug]\page.tsx
+   49:60   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   61:44   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   77:107  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   93:44   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  117:65   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  118:57   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\charo\est-website-1\src\app\(site)\download\page.tsx
+  58:21  warning  'socialLinks' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  58:34  warning  'footer' is assigned a value but never used       @typescript-eslint/no-unused-vars
+
+C:\Users\charo\est-website-1\src\app\(site)\event\page.tsx
+  37:10  warning  'socialLinks' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  46:10  warning  'footer' is assigned a value but never used       @typescript-eslint/no-unused-vars
+
+C:\Users\charo\est-website-1\src\app\(site)\faq\page.tsx
+  27:21  warning  'socialLinks' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  27:34  warning  'footer' is assigned a value but never used       @typescript-eslint/no-unused-vars
+
+C:\Users\charo\est-website-1\src\app\(site)\gallery\page.tsx
+  35:11  warning  'socialLinks' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  35:24  warning  'footer' is assigned a value but never used       @typescript-eslint/no-unused-vars
+
+C:\Users\charo\est-website-1\src\app\(site)\game-guide\page.tsx
+  353:21  warning  'socialLinks' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  353:34  warning  'footer' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  353:42  warning  'navigationLinks' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  353:59  warning  'registrationUrl' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\charo\est-website-1\src\app\(site)\layout.tsx
+  11:105  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  13:64   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\charo\est-website-1\src\app\(site)\news\[slug]\page.tsx
+   61:52  error    Unexpected any. Specify a different type                                         @typescript-eslint/no-explicit-any
+   82:16  warning  Async function 'NewsArticlePage' has too many lines (87). Maximum allowed is 80  max-lines-per-function
+   97:52  error    Unexpected any. Specify a different type                                         @typescript-eslint/no-explicit-any
+  154:21  warning  'itemImage' is assigned a value but never used                                   @typescript-eslint/no-unused-vars
+  154:64  error    Unexpected any. Specify a different type                                         @typescript-eslint/no-explicit-any
+
+C:\Users\charo\est-website-1\src\app\(site)\news\page.tsx
+  480:21  warning  'socialLinks' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  480:34  warning  'footer' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  480:42  warning  'navigationLinks' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  480:59  warning  'registrationUrl' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\charo\est-website-1\src\app\(site)\page.tsx
+  126:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\charo\est-website-1\src\app\(site)\story\page.tsx
+  29:29  warning  'socialLinks' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  29:42  warning  'footer' is assigned a value but never used       @typescript-eslint/no-unused-vars
+
+C:\Users\charo\est-website-1\src\app\(site)\support\page.tsx
+  102:21  warning  'socialLinks' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  102:34  warning  'footer' is assigned a value but never used       @typescript-eslint/no-unused-vars
+
+C:\Users\charo\est-website-1\src\app\(site)\weapons\page.tsx
+  93:11  warning  'socialLinks' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  93:24  warning  'footer' is assigned a value but never used       @typescript-eslint/no-unused-vars
+
+C:\Users\charo\est-website-1\src\app\api\public\homepage\route.ts
+  13:10  warning  'processMedia' is defined but never used  @typescript-eslint/no-unused-vars
+  42:34  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\charo\est-website-1\src\app\sitemap.ts
+  46:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  71:49  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\charo\est-website-1\src\components\sections\GameGuideSection.tsx
+  150:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  153:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\charo\est-website-1\src\components\sections\HeroSection.tsx
+  26:16  warning  Function 'HeroSection' has too many lines (95). Maximum allowed is 80  max-lines-per-function
+
+C:\Users\charo\est-website-1\src\components\sections\WeaponSection.tsx
+  33:16  warning  Function 'WeaponSection' has too many lines (89). Maximum allowed is 80  max-lines-per-function
+
+C:\Users\charo\est-website-1\src\components\site\Navigation.tsx
+  22:16  warning  Function 'Navigation' has too many lines (122). Maximum allowed is 80  max-lines-per-function
+
+C:\Users\charo\est-website-1\src\lib\cms-maintenance.ts
+  136:7  warning  'DEFAULT_EVENT_CONFIG_CONTENT' is assigned a value but never used                           @typescript-eslint/no-unused-vars
+  172:7  warning  'LEGACY_HOMEPAGE_TAGLINE_EN_VALUES' is assigned a value but never used                      @typescript-eslint/no-unused-vars
+  177:7  warning  'LEGACY_HOMEPAGE_CTA_EN_VALUES' is assigned a value but never used                          @typescript-eslint/no-unused-vars
+  182:7  warning  'LEGACY_GAME_GUIDE_SUBTITLE_EN_VALUES' is assigned a value but never used                   @typescript-eslint/no-unused-vars
+  187:7  warning  'LEGACY_NEWS_PAGE_SUBTITLE_EN_VALUES' is assigned a value but never used                    @typescript-eslint/no-unused-vars
+  191:7  warning  'LEGACY_EVENT_TITLE_EN_VALUES' is assigned a value but never used                           @typescript-eslint/no-unused-vars
+  196:7  warning  'LEGACY_EVENT_DESCRIPTION_EN_VALUES' is assigned a value but never used                     @typescript-eslint/no-unused-vars
+  201:7  warning  'LEGACY_EVENT_CTA_EN_VALUES' is assigned a value but never used                             @typescript-eslint/no-unused-vars
+  206:7  warning  'LEGACY_EVENT_MODAL_TITLE_EN_VALUES' is assigned a value but never used                     @typescript-eslint/no-unused-vars
+  210:7  warning  'LEGACY_EVENT_EMAIL_PLACEHOLDER_EN_VALUES' is assigned a value but never used               @typescript-eslint/no-unused-vars
+  214:7  warning  'LEGACY_EVENT_STORE_LABEL_EN_VALUES' is assigned a value but never used                     @typescript-eslint/no-unused-vars
+  218:7  warning  'LEGACY_EVENT_SUBMIT_BUTTON_EN_VALUES' is assigned a value but never used                   @typescript-eslint/no-unused-vars
+  222:7  warning  'LEGACY_EVENT_SUCCESS_TITLE_EN_VALUES' is assigned a value but never used                   @typescript-eslint/no-unused-vars
+  474:1  warning  Async function 'ensureSiteSettingsDefaults' has too many lines (92). Maximum allowed is 80  max-lines-per-function
+
+C:\Users\charo\est-website-1\src\lib\seo.ts
+  12:69  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 68 problems (25 errors, 43 warnings)
+

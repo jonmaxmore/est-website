@@ -350,7 +350,7 @@ function GuideSystems({
 
 export default function GameGuidePage() {
   const { lang, t } = useLang();
-  const { settings, socialLinks, footer, navigationLinks, registrationUrl } = useSiteSettings();
+  const { settings } = useSiteSettings();
   const config = (settings?.gameGuidePage as GameGuidePageConfig | undefined) || null;
   const copy = buildGuideCopy(config, t);
   const homepageFeatures = useMemo(

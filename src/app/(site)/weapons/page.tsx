@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import RevealSection from '@/components/ui/RevealSection';
 import FloatingParticles from '@/components/ui/FloatingParticles';
-import { useSiteSettings } from '@/hooks/useSiteSettings';
+
 import { useLang } from '@/lib/lang-context';
 import { isCmsMediaUrl } from '@/lib/cms-media';
 
@@ -90,7 +90,7 @@ function VideoModal({ weapon, open, onClose }: { weapon: WeaponData; open: boole
 // eslint-disable-next-line max-lines-per-function -- Single page component with weapon cards
 export default function WeaponsPage() {
   const { t } = useLang();
-  const { socialLinks, footer } = useSiteSettings();
+
   const [videoWeapon, setVideoWeapon] = useState<WeaponData | null>(null);
   const [weapons, setWeapons] = useState<WeaponData[]>([]);
 

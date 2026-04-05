@@ -55,7 +55,7 @@ const SYSTEM_REQUIREMENTS = {
 // eslint-disable-next-line max-lines-per-function -- Page keeps platform download and system requirement logic together
 export default function DownloadPage() {
   const { t } = useLang();
-  const { settings, socialLinks, footer } = useSiteSettings();
+  const { settings } = useSiteSettings();
   const dlConfig = (settings?.downloadPage as Record<string, string> | undefined) || null;
   const [activePlatform, setActivePlatform] = useState('android');
   const logoUrl = settings?.site?.logo?.url || null;

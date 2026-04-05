@@ -24,7 +24,7 @@ interface FAQPageSettings {
 // eslint-disable-next-line max-lines-per-function -- Page keeps hero, accordion, and CMS fallback logic together
 export default function FAQPage() {
   const { t } = useLang();
-  const { settings, socialLinks, footer } = useSiteSettings();
+  const { settings } = useSiteSettings();
   const faqPage = (settings?.faqPage as FAQPageSettings | undefined) || null;
 
   const faqPageConfig = (settings?.faqPage as { titleEn?: string; titleTh?: string } | undefined) || null;

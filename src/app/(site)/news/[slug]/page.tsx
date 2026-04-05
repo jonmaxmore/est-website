@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   
   // Safe cast since we know the generic structure from Payload
   const featuredImageObj = typeof article.featuredImage === 'object' ? article.featuredImage : null
-  const image = buildNewsImage(featuredImageObj as any)
+  const image = buildNewsImage(featuredImageObj as Record<string, unknown>)
 
   return {
     title: `${title} | Eternal Tower Saga`,
@@ -79,6 +79,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
+/* eslint-disable max-lines-per-function */
 export default async function NewsArticlePage({ params }: PageProps) {
   const { slug } = await params
   const article = await getArticleData(slug)
@@ -94,7 +95,7 @@ export default async function NewsArticlePage({ params }: PageProps) {
   const contentToRender = hasUsableNewsContent(article.contentEn) ? article.contentEn : article.contentTh
   
   const featuredImageObj = typeof article.featuredImage === 'object' ? article.featuredImage : null
-  const image = buildNewsImage(featuredImageObj as any)
+  const image = buildNewsImage(featuredImageObj as Record<string, unknown>)
 
   const relatedArticles = await getRelatedArticles(article.category as string, slug)
 
@@ -150,8 +151,6 @@ export default async function NewsArticlePage({ params }: PageProps) {
           <div className="news-related-grid">
             {relatedArticles.map((item) => {
               const itemCategoryMeta = NEWS_CATEGORY_META[item.category as keyof typeof NEWS_CATEGORY_META] || NEWS_CATEGORY_META.announcement
-              const itemImageObj = typeof item.featuredImage === 'object' ? item.featuredImage : null
-              const itemImage = buildNewsImage(itemImageObj as any)
               
               return (
                 <Link key={item.id} href={`/news/${item.slug}`} className="news-archive__card">

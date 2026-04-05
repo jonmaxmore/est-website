@@ -11,6 +11,7 @@ import GameGuideSection from '@/components/sections/GameGuideSection';
 import HighlightsSection from '@/components/sections/HighlightsSection';
 
 interface HomeContentProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   homepageData: any;
   settings: CMSSettings | null;
   weapons: CMSWeapon[];
@@ -20,13 +21,7 @@ interface HomeContentProps {
 export default function HomeContent({ homepageData, settings, weapons, news }: HomeContentProps) {
   const blocks = homepageData?.layout || [];
 
-  const footerSettings = settings?.site?.footer || {
-    copyrightText: 'Â© 2026 Eternal Tower Saga. All rights reserved.',
-    termsUrl: '/terms',
-    privacyUrl: '/privacy',
-    supportUrl: '#',
-  };
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderBlock = (block: any, index: number) => {
     switch (block.blockType) {
       case 'hero':
@@ -51,6 +46,7 @@ export default function HomeContent({ homepageData, settings, weapons, news }: H
   };
 
   // If Highlights is globally set in settings but not in the blocks, we can append it:
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const hasHighlights = blocks.some((b: any) => b.blockType === 'highlights' || b.blockType === 'highlightsShowcase');
 
   return (
@@ -58,7 +54,8 @@ export default function HomeContent({ homepageData, settings, weapons, news }: H
 
       <main className="relative w-full overflow-x-hidden">
         {blocks.length > 0 ? (
-          blocks.map((block: Record<string, unknown>, index: number) => (
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          blocks.map((block: any, index: number) => (
             <div key={index} className="home-section-container relative w-full mb-20 lg:mb-32 flex flex-col">
               {renderBlock(block, index)}
             </div>
