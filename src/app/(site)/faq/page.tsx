@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import RevealSection from '@/components/ui/RevealSection';
-import ScrollProgress from '@/components/ui/ScrollProgress';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { useLang } from '@/lib/lang-context';
 
@@ -44,7 +43,6 @@ export default function FAQPage() {
   if (!faqItems.length) {
     return (
       <div className="landing-page">
-        <ScrollProgress />
                 <main>
           <section className="page-hero">
             <div className="page-hero-bg"><div className="page-hero-overlay" /></div>
@@ -66,7 +64,6 @@ export default function FAQPage() {
 
   return (
     <div className="landing-page">
-      <ScrollProgress />
       
       <main>
         <section className="page-hero">

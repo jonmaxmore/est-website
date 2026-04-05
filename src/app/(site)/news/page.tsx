@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, Megaphone, Newspaper, RefreshCw, Video, Wrench } from 'lucide-react';
 import Image from 'next/image';
 import CmsLink from '@/components/ui/CmsLink';
-import ScrollProgress from '@/components/ui/ScrollProgress';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { isCmsMediaUrl } from '@/lib/cms-media';
 import { formatLocalizedDate } from '@/lib/format-date';
@@ -488,7 +487,6 @@ export default function NewsPage() {
 
   return (
     <div className="landing-page news-page">
-      <ScrollProgress />
       
       <main className="news-main" style={{ paddingTop: '5rem' }}>
         <NewsHero

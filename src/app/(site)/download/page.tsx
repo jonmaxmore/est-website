@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Cpu, HardDrive, Layers, MemoryStick, Monitor, Smartphone, Tablet } from 'lucide-react';
 import FloatingParticles from '@/components/ui/FloatingParticles';
-import ScrollProgress from '@/components/ui/ScrollProgress';
 import { STORE_ICONS } from '@/components/ui/StoreIcons';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { useLang } from '@/lib/lang-context';
@@ -78,7 +77,6 @@ export default function DownloadPage() {
 
   return (
     <div className="landing-page">
-      <ScrollProgress />
       
       <main className="download-main download-main-padded">
         <section className="download-hero">

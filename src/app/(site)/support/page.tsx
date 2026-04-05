@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import RevealSection from '@/components/ui/RevealSection';
-import ScrollProgress from '@/components/ui/ScrollProgress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -137,7 +136,6 @@ export default function SupportPage() {
 
   return (
     <div className="landing-page">
-      <ScrollProgress />
       
       <main>
         <section className="page-hero">

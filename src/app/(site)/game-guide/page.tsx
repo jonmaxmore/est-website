@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { Castle, Map, Shield, Sparkles, Swords, Users, type LucideIcon } from 'lucide-react';
 import CmsLink from '@/components/ui/CmsLink';
 import RevealSection from '@/components/ui/RevealSection';
-import ScrollProgress from '@/components/ui/ScrollProgress';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { isCmsMediaUrl } from '@/lib/cms-media';
 import { DEFAULT_GAME_GUIDE_FEATURES, GAME_GUIDE_PILLARS } from '@/lib/game-guide-content';
@@ -371,7 +370,6 @@ export default function GameGuidePage() {
 
   return (
     <div className="landing-page guide-page">
-      <ScrollProgress />
       
       <main>
         <GuideHero config={config} copy={copy} />

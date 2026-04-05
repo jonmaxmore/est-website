@@ -445,13 +445,6 @@
   .store-btn small { display: block; font-size: 0.6rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; }
   .store-btn strong { display: block; font-size: 0.95rem; }
 
-  .scroll-indicator {
-    position: absolute;
-    bottom: 2rem;
-    z-index: 10;
-    opacity: 0.6;
-  }
-
   /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ FLOATING PARTICLES Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
   .particle-field {
     position: absolute;

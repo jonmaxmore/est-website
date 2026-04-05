@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useLang } from '@/lib/lang-context';
 import FloatingParticles from '@/components/ui/FloatingParticles';
 import LightRays from '@/components/ui/LightRays';
-import ScrollProgress from '@/components/ui/ScrollProgress';
 import ParallaxSection from '@/components/ui/ParallaxSection';
 
 /* Shared layout */
@@ -131,7 +130,6 @@ export default function EventPage() {
 
   return (
     <div className="landing-page">
-      <ScrollProgress />
       
       <main>
         <FloatingParticles count={25} />

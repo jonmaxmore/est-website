@@ -1,7 +1,6 @@
 'use client';
 
 import type { CMSNewsArticle, CMSSettings, CMSWeapon } from '@/types/cms';
-import ScrollProgress from '@/components/ui/ScrollProgress';
 
 // Sections (Dynamic Blocks)
 import HeroSection from '@/components/sections/HeroSection';
@@ -56,11 +55,14 @@ export default function HomeContent({ homepageData, settings, weapons, news }: H
 
   return (
     <div className="home-page-shell bg-black text-white w-full overflow-hidden">
-      <ScrollProgress />
 
       <main className="relative w-full overflow-x-hidden">
         {blocks.length > 0 ? (
-          blocks.map((block: Record<string, unknown>, index: number) => renderBlock(block, index))
+          blocks.map((block: Record<string, unknown>, index: number) => (
+            <div key={index} className="home-section-container relative w-full mb-20 lg:mb-32 flex flex-col">
+              {renderBlock(block, index)}
+            </div>
+          ))
         ) : (
           <div className="min-h-[50vh] flex items-center justify-center text-gray-500">
             [No Content Blocks Configured in CMS]

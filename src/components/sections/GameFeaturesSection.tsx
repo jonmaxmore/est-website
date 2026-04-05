@@ -81,6 +81,18 @@ export default function GameFeaturesSection({ data }: GameFeaturesSectionProps) 
             );
           })}
         </div>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-16 flex justify-center w-full"
+        >
+          <a href="/game-guide" className="inline-flex items-center gap-2 px-8 py-3 rounded-full border border-[rgba(255,255,255,0.15)] bg-black/40 backdrop-blur-md text-gray-200 text-sm font-bold tracking-widest uppercase hover:bg-white/10 hover:border-[#6366f1] hover:text-white transition-all shadow-lg shadow-black/50">
+            {currentLang === 'en' ? 'Explore Game Guide' : 'อ่านคู่มือเกม'}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </motion.div>
       </div>
     </section>
   );

@@ -5,7 +5,6 @@ import { Play, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import RevealSection from '@/components/ui/RevealSection';
-import ScrollProgress from '@/components/ui/ScrollProgress';
 import FloatingParticles from '@/components/ui/FloatingParticles';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { useLang } from '@/lib/lang-context';
@@ -121,7 +120,6 @@ export default function WeaponsPage() {
 
   return (
     <div className="landing-page">
-      <ScrollProgress />
       
       <main>
         <section className="page-hero">

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import RevealSection from '@/components/ui/RevealSection';
-import ScrollProgress from '@/components/ui/ScrollProgress';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { isCmsMediaUrl } from '@/lib/cms-media';
 import { useLang } from '@/lib/lang-context';
@@ -66,7 +65,6 @@ export default function GalleryPage() {
 
   return (
     <div className="landing-page">
-      <ScrollProgress />
       
       <main>
         <section className="page-hero">
