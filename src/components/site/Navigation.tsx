@@ -31,6 +31,17 @@ export default function Navigation({ links = [], logoUrl, registrationUrl = '/ev
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
   const handleNavClick = (e: MouseEvent<HTMLAnchorElement>, sectionId?: string | null) => {
     if (sectionId && pathname === '/') {
       e.preventDefault();

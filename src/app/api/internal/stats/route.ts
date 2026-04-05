@@ -1,10 +1,18 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import { getPayloadClient } from '@/lib/payload'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+    const rateLimitKey = `stats:${ip}`
+
+    if (!checkRateLimit(rateLimitKey, 30, 10000)) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+    }
+
     const payload = await getPayloadClient()
 
     // Count registrations + get event config + milestones + store buttons in parallel

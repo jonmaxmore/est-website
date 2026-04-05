@@ -88,28 +88,28 @@ async function fetchLandingResources(): Promise<LandingResources> {
   const payload = await getPayloadClient();
 
   const [siteSettings, homepage, storeButtonsRes, weaponsRes, newsRes] = await Promise.all([
-    payload.findGlobal({ slug: 'site-settings', depth: 2 }).catch(() => null),
-    payload.findGlobal({ slug: 'homepage', depth: 2 }).catch(() => null),
+    payload.findGlobal({ slug: 'site-settings', depth: 2 }),
+    payload.findGlobal({ slug: 'homepage', depth: 2 }),
     payload.find({
       collection: 'store-buttons',
       where: { visible: { equals: true } },
       sort: 'sortOrder',
       depth: 1,
-    }).catch(() => ({ docs: [] })),
+    }),
     payload.find({
       collection: 'weapons',
       where: { visible: { equals: true } },
       sort: 'sortOrder',
       limit: 20,
       depth: 2,
-    }).catch(() => ({ docs: [] })),
+    }),
     payload.find({
       collection: 'news',
       where: { status: { equals: 'published' }, publishedAt: { exists: true } },
       sort: '-publishedAt',
       limit: 24,
       depth: 2,
-    }).catch(() => ({ docs: [] })),
+    }),
   ]);
 
   return {
@@ -140,7 +140,8 @@ export default async function LandingPage() {
     weapons = resources.weaponsRes.docs.map(mapWeaponRecord);
     news = sortNewsForEditorial(resources.newsRes.docs.map(mapNewsRecord));
   } catch (error) {
-    console.error('SSR data fetch error:', error);
+    console.error('CRITICAL SSR data fetch error: Database connection or configuration failed.', error);
+    throw new Error('DatabaseConnectionError: Failed to fetch critical resources.');
   }
 
   return <HomeContent homepageData={homepageData} settings={settings} weapons={weapons} news={news} />;

@@ -49,41 +49,42 @@ function WeaponVideoButton({ weapon, onOpen }: { weapon: WeaponData; onOpen: () 
   );
 }
 
-function VideoModal({ weapon, open, onClose }: { weapon: WeaponData; open: boolean; onClose: () => void }) {
+function VideoModal({ weapon, onClose }: { weapon: WeaponData; onClose: () => void }) {
   const embedUrl = weapon.videoType === 'youtube' && weapon.videoUrl
     ? getYoutubeEmbedUrl(weapon.videoUrl)
     : null;
 
+  if (!embedUrl) return null;
+
   return (
-    <AnimatePresence>
-      {open && embedUrl ? (
-        <div className="weapons-detail__modal">
-          <button
-            type="button"
-            className="weapons-detail__modalBackdrop"
-            onClick={onClose}
-            aria-label="Close video overlay"
-          />
-          <motion.div
-            className="weapons-detail__modalContent"
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.25 }}
-          >
-            <button type="button" className="weapons-detail__modalClose" onClick={onClose} aria-label="Close video">
-              <X size={20} />
-            </button>
-            <iframe
-              src={embedUrl}
-              title={weapon.name}
-              allowFullScreen
-              className="weapons-detail__iframe"
-            />
-          </motion.div>
-        </div>
-      ) : null}
-    </AnimatePresence>
+    <div className="weapons-detail__modal">
+      <motion.button
+        type="button"
+        className="weapons-detail__modalBackdrop"
+        onClick={onClose}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        aria-label="Close video overlay"
+      />
+      <motion.div
+        className="weapons-detail__modalContent"
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.96 }}
+        transition={{ duration: 0.25 }}
+      >
+        <button type="button" className="weapons-detail__modalClose" onClick={onClose} aria-label="Close video">
+          <X size={20} />
+        </button>
+        <iframe
+          src={embedUrl}
+          title={weapon.name}
+          allowFullScreen
+          className="weapons-detail__iframe"
+        />
+      </motion.div>
+    </div>
   );
 }
 
@@ -199,13 +200,15 @@ export default function WeaponsPage() {
 
       
 
-      {videoWeapon ? (
-        <VideoModal
-          weapon={videoWeapon}
-          open={Boolean(videoWeapon)}
-          onClose={() => setVideoWeapon(null)}
-        />
-      ) : null}
+      <AnimatePresence>
+        {videoWeapon && (
+          <VideoModal
+            key="video-modal"
+            weapon={videoWeapon}
+            onClose={() => setVideoWeapon(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
