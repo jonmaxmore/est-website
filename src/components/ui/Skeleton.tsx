@@ -2,9 +2,9 @@
 
 import React from 'react';
 
-/* ═══════════════════════════════════════════════════
-   SKELETON UI — Loading placeholder components
-   ═══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SKELETON UI â€” Loading placeholder components
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 /** Generic skeleton block with pulse animation */
 export function Skeleton({
@@ -54,7 +54,7 @@ export function SkeletonCharacter() {
   );
 }
 
-/** News grid skeleton — 3 cards */
+/** News grid skeleton â€” 3 cards */
 export function SkeletonNewsGrid({ count = 3 }: { count?: number }) {
   return (
     <div className="news-articles-grid">
@@ -65,7 +65,7 @@ export function SkeletonNewsGrid({ count = 3 }: { count?: number }) {
   );
 }
 
-/** Highlights/features skeleton — 6 items */
+/** Highlights/features skeleton â€” 6 items */
 export function SkeletonHighlights({ count = 6 }: { count?: number }) {
   return (
     <div className="highlights-grid">

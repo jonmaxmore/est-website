@@ -6,7 +6,7 @@ import '@/app/styles/admin-widget.css'
 /**
  * Analytics Dashboard Widget for Payload CMS Admin
  * Rendered via afterDashboard in payload.config.ts
- * Professional, clean design — no emojis
+ * Professional, clean design â€” no emojis
  */
 
 interface KpiData {

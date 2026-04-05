@@ -17,14 +17,14 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <div className={styles.icon}>⚔️</div>
-        <h1 className={styles.title}>เกิดข้อผิดพลาด</h1>
+        <div className={styles.icon}>âš”ï¸</div>
+        <h1 className={styles.title}>à¹€à¸à¸´à¸”à¸‚à¹‰à¸­à¸œà¸´à¸”à¸žà¸¥à¸²à¸”</h1>
         <p className={styles.description}>
-          ขออภัย เกิดข้อผิดพลาดขึ้นระหว่างโหลดหน้านี้<br />กรุณาลองใหม่อีกครั้ง หรือกลับไปหน้าหลัก
+          à¸‚à¸­à¸­à¸ à¸±à¸¢ à¹€à¸à¸´à¸”à¸‚à¹‰à¸­à¸œà¸´à¸”à¸žà¸¥à¸²à¸”à¸‚à¸¶à¹‰à¸™à¸£à¸°à¸«à¸§à¹ˆà¸²à¸‡à¹‚à¸«à¸¥à¸”à¸«à¸™à¹‰à¸²à¸™à¸µà¹‰<br />à¸à¸£à¸¸à¸“à¸²à¸¥à¸­à¸‡à¹ƒà¸«à¸¡à¹ˆà¸­à¸µà¸à¸„à¸£à¸±à¹‰à¸‡ à¸«à¸£à¸·à¸­à¸à¸¥à¸±à¸šà¹„à¸›à¸«à¸™à¹‰à¸²à¸«à¸¥à¸±à¸
         </p>
         <div className={styles.actions}>
-          <button onClick={reset} className={styles.retryBtn}>ลองใหม่อีกครั้ง</button>
-          <Link href="/" className={styles.homeLink}>กลับหน้าหลัก</Link>
+          <button onClick={reset} className={styles.retryBtn}>à¸¥à¸­à¸‡à¹ƒà¸«à¸¡à¹ˆà¸­à¸µà¸à¸„à¸£à¸±à¹‰à¸‡</button>
+          <Link href="/" className={styles.homeLink}>à¸à¸¥à¸±à¸šà¸«à¸™à¹‰à¸²à¸«à¸¥à¸±à¸</Link>
         </div>
       </div>
     </div>

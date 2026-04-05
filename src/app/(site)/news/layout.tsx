@@ -2,10 +2,10 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'News & Updates',
-  description: 'ติดตามข่าวสาร กิจกรรม และอัพเดตล่าสุดจาก Eternal Tower Saga — Stay updated with the latest news and events.',
+  description: 'à¸•à¸´à¸”à¸•à¸²à¸¡à¸‚à¹ˆà¸²à¸§à¸ªà¸²à¸£ à¸à¸´à¸ˆà¸à¸£à¸£à¸¡ à¹à¸¥à¸°à¸­à¸±à¸žà¹€à¸”à¸•à¸¥à¹ˆà¸²à¸ªà¸¸à¸”à¸ˆà¸²à¸ Eternal Tower Saga â€” Stay updated with the latest news and events.',
   openGraph: {
-    title: 'News & Updates — Eternal Tower Saga',
-    description: 'ข่าวสารและอัพเดตล่าสุดจาก Eternal Tower Saga',
+    title: 'News & Updates â€” Eternal Tower Saga',
+    description: 'à¸‚à¹ˆà¸²à¸§à¸ªà¸²à¸£à¹à¸¥à¸°à¸­à¸±à¸žà¹€à¸”à¸•à¸¥à¹ˆà¸²à¸ªà¸¸à¸”à¸ˆà¸²à¸ Eternal Tower Saga',
   },
 }
 

@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import type { CMSWeapon } from '@/types/cms';
 
 export default function WeaponSection({ data, weapons }: { data: any, weapons: CMSWeapon[] }) {
-  const { currentLang } = useLang();
+  const { lang: currentLang } = useLang();
   
   if (!data) return null;
 
@@ -15,9 +15,9 @@ export default function WeaponSection({ data, weapons }: { data: any, weapons: C
   const bgImageUrl = typeof data.weaponsBgImage === 'object' ? data.weaponsBgImage?.url : data.weaponsBgImage;
   
   const displayWeapons = weapons?.length ? weapons : [
-    { id: '1', nameEn: 'Frostbite Greatsword', nameTh: 'ดาบใหญ่เหมันต์', rarity: 'Legendary', imageUrl: null },
-    { id: '2', nameEn: 'Void Bow', nameTh: 'ธนูแห่งความว่างเปล่า', rarity: 'Epic', imageUrl: null },
-    { id: '3', nameEn: 'Solar Aegis', nameTh: 'โล่พิทักษ์สุริยะ', rarity: 'Mythic', imageUrl: null },
+    { id: '1', nameEn: 'Frostbite Greatsword', nameTh: 'Ã Â¸â€Ã Â¸Â²Ã Â¸Å¡Ã Â¹Æ’Ã Â¸Â«Ã Â¸ÂÃ Â¹Ë†Ã Â¹â‚¬Ã Â¸Â«Ã Â¸Â¡Ã Â¸Â±Ã Â¸â„¢Ã Â¸â€¢Ã Â¹Å’', rarity: 'Legendary', imageUrl: null },
+    { id: '2', nameEn: 'Void Bow', nameTh: 'Ã Â¸ËœÃ Â¸â„¢Ã Â¸Â¹Ã Â¹ÂÃ Â¸Â«Ã Â¹Ë†Ã Â¸â€¡Ã Â¸â€žÃ Â¸Â§Ã Â¸Â²Ã Â¸Â¡Ã Â¸Â§Ã Â¹Ë†Ã Â¸Â²Ã Â¸â€¡Ã Â¹â‚¬Ã Â¸â€ºÃ Â¸Â¥Ã Â¹Ë†Ã Â¸Â²', rarity: 'Epic', imageUrl: null },
+    { id: '3', nameEn: 'Solar Aegis', nameTh: 'Ã Â¹â€šÃ Â¸Â¥Ã Â¹Ë†Ã Â¸Å¾Ã Â¸Â´Ã Â¸â€”Ã Â¸Â±Ã Â¸ÂÃ Â¸Â©Ã Â¹Å’Ã Â¸ÂªÃ Â¸Â¸Ã Â¸Â£Ã Â¸Â´Ã Â¸Â¢Ã Â¸Â°', rarity: 'Mythic', imageUrl: null },
   ] as any[];
 
   return (

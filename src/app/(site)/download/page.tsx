@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Cpu, HardDrive, Layers, MemoryStick, Monitor, Smartphone, Tablet } from 'lucide-react';
-import Navigation from '@/components/layout/Navigation';
-import Footer from '@/components/layout/Footer';
+import Navigation from '@/components/site/Navigation';
+import Footer from '@/components/site/Footer';
 import FloatingParticles from '@/components/ui/FloatingParticles';
 import ScrollProgress from '@/components/ui/ScrollProgress';
 import { STORE_ICONS } from '@/components/ui/StoreIcons';
@@ -28,29 +28,29 @@ const SYSTEM_REQUIREMENTS = {
   ios: {
     platform: 'iOS',
     specs: [
-      { labelTh: 'ระบบปฏิบัติการ', labelEn: 'OS', value: 'iOS 14.0+', icon: <Layers size={16} /> },
-      { labelTh: 'เครื่อง', labelEn: 'Device', value: 'iPhone 8+', icon: <Smartphone size={16} /> },
-      { labelTh: 'พื้นที่', labelEn: 'Storage', value: '2.5 GB', icon: <HardDrive size={16} /> },
-      { labelTh: 'แรม', labelEn: 'RAM', value: '3 GB', icon: <MemoryStick size={16} /> },
+      { labelTh: 'à¸£à¸°à¸šà¸šà¸›à¸à¸´à¸šà¸±à¸•à¸´à¸à¸²à¸£', labelEn: 'OS', value: 'iOS 14.0+', icon: <Layers size={16} /> },
+      { labelTh: 'à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡', labelEn: 'Device', value: 'iPhone 8+', icon: <Smartphone size={16} /> },
+      { labelTh: 'à¸žà¸·à¹‰à¸™à¸—à¸µà¹ˆ', labelEn: 'Storage', value: '2.5 GB', icon: <HardDrive size={16} /> },
+      { labelTh: 'à¹à¸£à¸¡', labelEn: 'RAM', value: '3 GB', icon: <MemoryStick size={16} /> },
     ],
   },
   android: {
     platform: 'Android',
     specs: [
-      { labelTh: 'ระบบปฏิบัติการ', labelEn: 'OS', value: 'Android 8.0+', icon: <Layers size={16} /> },
-      { labelTh: 'โปรเซสเซอร์', labelEn: 'CPU', value: 'Snapdragon 660+', icon: <Cpu size={16} /> },
-      { labelTh: 'พื้นที่', labelEn: 'Storage', value: '2.5 GB', icon: <HardDrive size={16} /> },
-      { labelTh: 'แรม', labelEn: 'RAM', value: '3 GB', icon: <MemoryStick size={16} /> },
+      { labelTh: 'à¸£à¸°à¸šà¸šà¸›à¸à¸´à¸šà¸±à¸•à¸´à¸à¸²à¸£', labelEn: 'OS', value: 'Android 8.0+', icon: <Layers size={16} /> },
+      { labelTh: 'à¹‚à¸›à¸£à¹€à¸‹à¸ªà¹€à¸‹à¸­à¸£à¹Œ', labelEn: 'CPU', value: 'Snapdragon 660+', icon: <Cpu size={16} /> },
+      { labelTh: 'à¸žà¸·à¹‰à¸™à¸—à¸µà¹ˆ', labelEn: 'Storage', value: '2.5 GB', icon: <HardDrive size={16} /> },
+      { labelTh: 'à¹à¸£à¸¡', labelEn: 'RAM', value: '3 GB', icon: <MemoryStick size={16} /> },
     ],
   },
   pc: {
     platform: 'PC',
     specs: [
-      { labelTh: 'ระบบปฏิบัติการ', labelEn: 'OS', value: 'Windows 10 64-bit', icon: <Layers size={16} /> },
-      { labelTh: 'โปรเซสเซอร์', labelEn: 'CPU', value: 'Intel i5 / AMD Ryzen 5', icon: <Cpu size={16} /> },
-      { labelTh: 'การ์ดจอ', labelEn: 'GPU', value: 'GTX 1050 / RX 560', icon: <Monitor size={16} /> },
-      { labelTh: 'แรม', labelEn: 'RAM', value: '8 GB', icon: <MemoryStick size={16} /> },
-      { labelTh: 'พื้นที่', labelEn: 'Storage', value: '5 GB', icon: <HardDrive size={16} /> },
+      { labelTh: 'à¸£à¸°à¸šà¸šà¸›à¸à¸´à¸šà¸±à¸•à¸´à¸à¸²à¸£', labelEn: 'OS', value: 'Windows 10 64-bit', icon: <Layers size={16} /> },
+      { labelTh: 'à¹‚à¸›à¸£à¹€à¸‹à¸ªà¹€à¸‹à¸­à¸£à¹Œ', labelEn: 'CPU', value: 'Intel i5 / AMD Ryzen 5', icon: <Cpu size={16} /> },
+      { labelTh: 'à¸à¸²à¸£à¹Œà¸”à¸ˆà¸­', labelEn: 'GPU', value: 'GTX 1050 / RX 560', icon: <Monitor size={16} /> },
+      { labelTh: 'à¹à¸£à¸¡', labelEn: 'RAM', value: '8 GB', icon: <MemoryStick size={16} /> },
+      { labelTh: 'à¸žà¸·à¹‰à¸™à¸—à¸µà¹ˆ', labelEn: 'Storage', value: '5 GB', icon: <HardDrive size={16} /> },
     ],
   },
 };
@@ -109,7 +109,7 @@ export default function DownloadPage() {
         </section>
 
         <section className="download-platforms">
-          <h2 className="download-section-title">{t('เลือกแพลตฟอร์ม', 'Choose Platform')}</h2>
+          <h2 className="download-section-title">{t('à¹€à¸¥à¸·à¸­à¸à¹à¸žà¸¥à¸•à¸Ÿà¸­à¸£à¹Œà¸¡', 'Choose Platform')}</h2>
           <div className="download-buttons">
             {storeButtons.length > 0 ? (
               storeButtons.map((button) => (
@@ -124,7 +124,7 @@ export default function DownloadPage() {
                     {STORE_ICONS[button.platform] || <Smartphone size={32} />}
                   </span>
                   <span className="download-platform-name">{button.label}</span>
-                  <span className="download-platform-action">{t('ดาวน์โหลด', 'Download')}</span>
+                  <span className="download-platform-action">{t('à¸”à¸²à¸§à¸™à¹Œà¹‚à¸«à¸¥à¸”', 'Download')}</span>
                 </a>
               ))
             ) : (
@@ -137,12 +137,12 @@ export default function DownloadPage() {
                 <a href={realStoreUrls.android} className="download-platform-card" target="_blank" rel="noopener noreferrer">
                   <span className="download-platform-icon">{STORE_ICONS.android}</span>
                   <span className="download-platform-name">Google Play</span>
-                  <span className="download-platform-action">{t('ลงทะเบียนล่วงหน้า', 'Pre-register')}</span>
+                  <span className="download-platform-action">{t('à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™à¸¥à¹ˆà¸§à¸‡à¸«à¸™à¹‰à¸²', 'Pre-register')}</span>
                 </a>
                 <div className="download-platform-card coming-soon">
                   <span className="download-platform-icon">{STORE_ICONS.pc}</span>
                   <span className="download-platform-name">PC Client</span>
-                  <span className="download-platform-action">{t('เร็ว ๆ นี้', 'Coming soon')}</span>
+                  <span className="download-platform-action">{t('à¹€à¸£à¹‡à¸§ à¹† à¸™à¸µà¹‰', 'Coming soon')}</span>
                 </div>
               </>
             )}
@@ -150,7 +150,7 @@ export default function DownloadPage() {
         </section>
 
         <section className="download-requirements">
-          <h2 className="download-section-title">{t('สเปคขั้นต่ำ', 'Minimum Requirements')}</h2>
+          <h2 className="download-section-title">{t('à¸ªà¹€à¸›à¸„à¸‚à¸±à¹‰à¸™à¸•à¹ˆà¸³', 'Minimum Requirements')}</h2>
 
           <div className="download-req-tabs">
             {Object.entries(SYSTEM_REQUIREMENTS).map(([key, requirement]) => (
@@ -183,7 +183,7 @@ export default function DownloadPage() {
             )}
           </p>
           <Link href="/event" className="download-cta-btn">
-            {t('ลงทะเบียนล่วงหน้า', 'Join the pre-registration')} →
+            {t('à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™à¸¥à¹ˆà¸§à¸‡à¸«à¸™à¹‰à¸²', 'Join the pre-registration')} â†’
           </Link>
         </section>
       </main>

@@ -34,7 +34,7 @@ export default function LegalDocumentPage({
         ))}
 
         <div className="legal-back">
-          <Link href="/">← Back to Home / กลับหน้าหลัก</Link>
+          <Link href="/">â† Back to Home / à¸à¸¥à¸±à¸šà¸«à¸™à¹‰à¸²à¸«à¸¥à¸±à¸</Link>
         </div>
       </div>
     </div>

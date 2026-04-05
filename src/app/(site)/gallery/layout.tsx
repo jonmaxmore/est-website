@@ -2,10 +2,10 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Gallery',
-  description: 'แกลเลอรี่ภาพและวอลเปเปอร์จากโลกของ Arcatéa — Screenshots, wallpapers, and concept art from Eternal Tower Saga.',
+  description: 'à¹à¸à¸¥à¹€à¸¥à¸­à¸£à¸µà¹ˆà¸ à¸²à¸žà¹à¸¥à¸°à¸§à¸­à¸¥à¹€à¸›à¹€à¸›à¸­à¸£à¹Œà¸ˆà¸²à¸à¹‚à¸¥à¸à¸‚à¸­à¸‡ ArcatÃ©a â€” Screenshots, wallpapers, and concept art from Eternal Tower Saga.',
   openGraph: {
-    title: 'Gallery — Eternal Tower Saga',
-    description: 'ภาพและวอลเปเปอร์จากโลกของ Arcatéa',
+    title: 'Gallery â€” Eternal Tower Saga',
+    description: 'à¸ à¸²à¸žà¹à¸¥à¸°à¸§à¸­à¸¥à¹€à¸›à¹€à¸›à¸­à¸£à¹Œà¸ˆà¸²à¸à¹‚à¸¥à¸à¸‚à¸­à¸‡ ArcatÃ©a',
   },
 }
 

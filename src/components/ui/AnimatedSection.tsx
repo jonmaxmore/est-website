@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import type { ReactNode } from 'react';
 
-/* ─── Animation Variant Definitions ─── */
+/* â”€â”€â”€ Animation Variant Definitions â”€â”€â”€ */
 const VARIANTS = {
   fadeUp: {
     hidden: { opacity: 0, y: 40 },

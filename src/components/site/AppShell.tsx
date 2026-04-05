@@ -6,8 +6,8 @@ import { BackToTop, CookieConsent } from '@/components/ui-overlays';
 import SmoothScroll from '@/components/ui/SmoothScroll';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import PageViewTracker from '@/components/PageViewTracker';
-import PublicMarketingScripts from '@/components/layout/PublicMarketingScripts';
-import PublicStructuredData from '@/components/layout/PublicStructuredData';
+import PublicMarketingScripts from '@/components/site/PublicMarketingScripts';
+import PublicStructuredData from '@/components/site/PublicStructuredData';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || '';

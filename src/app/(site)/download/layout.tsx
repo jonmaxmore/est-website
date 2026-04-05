@@ -2,10 +2,10 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Download',
-  description: 'ดาวน์โหลด Eternal Tower Saga บน iOS, Android และ PC — Download the game on your preferred platform.',
+  description: 'à¸”à¸²à¸§à¸™à¹Œà¹‚à¸«à¸¥à¸” Eternal Tower Saga à¸šà¸™ iOS, Android à¹à¸¥à¸° PC â€” Download the game on your preferred platform.',
   openGraph: {
-    title: 'Download — Eternal Tower Saga',
-    description: 'ดาวน์โหลดเกม Eternal Tower Saga ได้แล้ววันนี้!',
+    title: 'Download â€” Eternal Tower Saga',
+    description: 'à¸”à¸²à¸§à¸™à¹Œà¹‚à¸«à¸¥à¸”à¹€à¸à¸¡ Eternal Tower Saga à¹„à¸”à¹‰à¹à¸¥à¹‰à¸§à¸§à¸±à¸™à¸™à¸µà¹‰!',
   },
 }
 

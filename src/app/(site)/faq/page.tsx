@@ -1,8 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Navigation from '@/components/layout/Navigation';
-import Footer from '@/components/layout/Footer';
+import Navigation from '@/components/site/Navigation';
+import Footer from '@/components/site/Footer';
 import RevealSection from '@/components/ui/RevealSection';
 import ScrollProgress from '@/components/ui/ScrollProgress';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
@@ -56,7 +56,7 @@ export default function FAQPage() {
                 <div className="page-hero-content">
                   <span className="section-badge">FAQ</span>
                   <h1 className="page-hero-title">{heroTitle}</h1>
-                  <p className="page-hero-subtitle">{t('ยังไม่มีคำถามที่พบบ่อยในตอนนี้', 'No FAQ items available yet.')}</p>
+                  <p className="page-hero-subtitle">{t('à¸¢à¸±à¸‡à¹„à¸¡à¹ˆà¸¡à¸µà¸„à¸³à¸–à¸²à¸¡à¸—à¸µà¹ˆà¸žà¸šà¸šà¹ˆà¸­à¸¢à¹ƒà¸™à¸•à¸­à¸™à¸™à¸µà¹‰', 'No FAQ items available yet.')}</p>
                 </div>
               </RevealSection>
             </div>
@@ -84,7 +84,7 @@ export default function FAQPage() {
                 <span className="section-badge">FAQ</span>
                 <h1 className="page-hero-title">{heroTitle}</h1>
                 <p className="page-hero-subtitle">
-                  {t('รวมคำตอบสำหรับทุกข้อสงสัยเกี่ยวกับ Eternal Tower Saga', 'Everything you need to know about Eternal Tower Saga')}
+                  {t('à¸£à¸§à¸¡à¸„à¸³à¸•à¸­à¸šà¸ªà¸³à¸«à¸£à¸±à¸šà¸—à¸¸à¸à¸‚à¹‰à¸­à¸ªà¸‡à¸ªà¸±à¸¢à¹€à¸à¸µà¹ˆà¸¢à¸§à¸à¸±à¸š Eternal Tower Saga', 'Everything you need to know about Eternal Tower Saga')}
                 </p>
               </div>
             </RevealSection>

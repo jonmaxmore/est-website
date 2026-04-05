@@ -104,14 +104,14 @@ function buildHighlightsCopy(
   return {
     badgeText: sectionConfig
       ? t(sectionConfig.badgeTh, sectionConfig.badgeEn)
-      : t('ไฮไลท์เกม', 'Game highlights'),
+      : t('Ã Â¹â€žÃ Â¸Â®Ã Â¹â€žÃ Â¸Â¥Ã Â¸â€”Ã Â¹Å’Ã Â¹â‚¬Ã Â¸ÂÃ Â¸Â¡', 'Game highlights'),
     titleText: sectionConfig
       ? t(sectionConfig.titleTh, sectionConfig.titleEn)
-      : t('ระบบที่ทำให้โลกนี้น่าเล่นต่อ', 'Systems that keep the world alive'),
+      : t('Ã Â¸Â£Ã Â¸Â°Ã Â¸Å¡Ã Â¸Å¡Ã Â¸â€”Ã Â¸ÂµÃ Â¹Ë†Ã Â¸â€”Ã Â¸Â³Ã Â¹Æ’Ã Â¸Â«Ã Â¹â€°Ã Â¹â€šÃ Â¸Â¥Ã Â¸ÂÃ Â¸â„¢Ã Â¸ÂµÃ Â¹â€°Ã Â¸â„¢Ã Â¹Ë†Ã Â¸Â²Ã Â¹â‚¬Ã Â¸Â¥Ã Â¹Ë†Ã Â¸â„¢Ã Â¸â€¢Ã Â¹Ë†Ã Â¸Â­', 'Systems that keep the world alive'),
     introCopy: sectionConfig?.introEn || sectionConfig?.introTh
       ? t(sectionConfig.introTh || '', sectionConfig.introEn || '')
       : '',
-    systemLabel: t('ระบบหลัก', 'Core system'),
+    systemLabel: t('Ã Â¸Â£Ã Â¸Â°Ã Â¸Å¡Ã Â¸Å¡Ã Â¸Â«Ã Â¸Â¥Ã Â¸Â±Ã Â¸Â', 'Core system'),
   };
 }
 

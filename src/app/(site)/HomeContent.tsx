@@ -2,8 +2,8 @@
 
 import type { CMSNewsArticle, CMSSettings, CMSWeapon } from '@/types/cms';
 import ScrollProgress from '@/components/ui/ScrollProgress';
-import Navigation from '@/components/layout/Navigation';
-import Footer from '@/components/layout/Footer';
+import Navigation from '@/components/site/Navigation';
+import Footer from '@/components/site/Footer';
 
 // Sections (Dynamic Blocks)
 import HeroSection from '@/components/sections/HeroSection';
@@ -22,7 +22,7 @@ export default function HomeContent({ homepageData, settings, weapons, news }: H
   const blocks = homepageData?.layout || [];
 
   const footerSettings = settings?.site?.footer || {
-    copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
+    copyrightText: 'Â© 2026 Eternal Tower Saga. All rights reserved.',
     termsUrl: '/terms',
     privacyUrl: '/privacy',
     supportUrl: '#',

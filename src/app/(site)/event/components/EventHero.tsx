@@ -47,7 +47,7 @@ export default function EventHero({
 
   return (
     <section className="event-hero" ref={heroRef}>
-      {/* Background — video (priority) or image with parallax */}
+      {/* Background â€” video (priority) or image with parallax */}
       <motion.div className="event-hero-bg" style={{ y: eventSettings.backgroundVideo ? undefined : bgY }}>
         {eventSettings.backgroundVideo?.url ? (
           <video
@@ -86,7 +86,7 @@ export default function EventHero({
           ) : null}
         </motion.div>
 
-        {/* Tagline — CMS: Event Config → Media → Tagline Image, or Copy & Text → Description */}
+        {/* Tagline â€” CMS: Event Config â†’ Media â†’ Tagline Image, or Copy & Text â†’ Description */}
         <motion.div
           className="event-tagline"
           initial={{ opacity: 0, y: 20 }}
@@ -118,10 +118,10 @@ export default function EventHero({
           transition={{ delay: 0.5 }}
         >
           {[
-            { value: countdown.days, label: t('วัน', 'Days') },
-            { value: countdown.hours, label: t('ชั่วโมง', 'Hours') },
-            { value: countdown.minutes, label: t('นาที', 'Minutes') },
-            { value: countdown.seconds, label: t('วินาที', 'Seconds') },
+            { value: countdown.days, label: t('à¸§à¸±à¸™', 'Days') },
+            { value: countdown.hours, label: t('à¸Šà¸±à¹ˆà¸§à¹‚à¸¡à¸‡', 'Hours') },
+            { value: countdown.minutes, label: t('à¸™à¸²à¸—à¸µ', 'Minutes') },
+            { value: countdown.seconds, label: t('à¸§à¸´à¸™à¸²à¸—à¸µ', 'Seconds') },
           ].map((item) => (
             <div key={item.label} className="countdown-unit">
               <motion.div
@@ -146,10 +146,10 @@ export default function EventHero({
           transition={{ delay: 0.6 }}
         >
           <span className="event-reg-count-number">{registrationCount.toLocaleString()}</span>
-          <span className="event-reg-count-label">{t('ผู้ลงทะเบียนล่วงหน้าแล้ว', 'Pre-Registered')}</span>
+          <span className="event-reg-count-label">{t('à¸œà¸¹à¹‰à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™à¸¥à¹ˆà¸§à¸‡à¸«à¸™à¹‰à¸²à¹à¸¥à¹‰à¸§', 'Pre-Registered')}</span>
         </motion.div>
 
-        {/* CTA Button — scrolls to form */}
+        {/* CTA Button â€” scrolls to form */}
         <motion.button
           onClick={scrollToForm}
           className="event-cta"

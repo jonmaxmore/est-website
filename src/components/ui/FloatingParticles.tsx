@@ -21,7 +21,7 @@ function generateParticles(count: number) {
 }
 
 export default function FloatingParticles({ count = 30 }: { count?: number }) {
-  // useState initializer runs once — safe, pure, and deterministic
+  // useState initializer runs once â€” safe, pure, and deterministic
   const [particles] = useState(() => generateParticles(count));
 
   return (

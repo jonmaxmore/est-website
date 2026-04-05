@@ -5,7 +5,7 @@ import React from 'react'
 /**
  * Analytics nav link for Payload CMS admin sidebar
  * Rendered via afterNavLinks in payload.config.ts
- * Uses SVG icon — no emojis
+ * Uses SVG icon â€” no emojis
  */
 export default function AnalyticsNavLink() {
   return (

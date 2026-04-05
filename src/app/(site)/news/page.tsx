@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, Megaphone, Newspaper, RefreshCw, Video, Wrench } from 'lucide-react';
 import Image from 'next/image';
-import Footer from '@/components/layout/Footer';
-import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/site/Footer';
+import Navigation from '@/components/site/Navigation';
 import CmsLink from '@/components/ui/CmsLink';
 import ScrollProgress from '@/components/ui/ScrollProgress';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
@@ -95,7 +95,7 @@ function TimelineArticle({
                 month: lang === 'th' ? 'short' : 'long',
                 year: 'numeric',
               })
-              : t('เร็ว ๆ นี้', 'Coming soon')}
+              : t('à¹€à¸£à¹‡à¸§ à¹† à¸™à¸µà¹‰', 'Coming soon')}
           </time>
         </div>
         <h2 className="news-rail__itemTitle">{title}</h2>
@@ -138,14 +138,14 @@ function ArchiveArticle({
                 month: lang === 'th' ? 'short' : 'long',
                 year: 'numeric',
               })
-              : t('เร็ว ๆ นี้', 'Coming soon')}
+              : t('à¹€à¸£à¹‡à¸§ à¹† à¸™à¸µà¹‰', 'Coming soon')}
           </time>
         </div>
 
         <h2 className="news-archive__title">{title}</h2>
         <p className="news-archive__summary">{summary}</p>
         <span className="news-archive__cta">
-          {t('อ่านต่อ', 'Read more')}
+          {t('à¸­à¹ˆà¸²à¸™à¸•à¹ˆà¸­', 'Read more')}
           <ArrowRight size={16} />
         </span>
       </CmsLink>
@@ -216,7 +216,7 @@ function NewsHero({
   const subtitle = config?.subtitleEn || config?.subtitleTh
     ? t(config.subtitleTh || '', config.subtitleEn || '')
     : t(
-      'รวมข่าว กิจกรรม อัปเดตระบบ และประกาศสำคัญทั้งหมดในมุมมองที่อ่านง่ายขึ้น จัดลำดับชัดขึ้น และพร้อมใช้งานทั้ง desktop กับ mobile',
+      'à¸£à¸§à¸¡à¸‚à¹ˆà¸²à¸§ à¸à¸´à¸ˆà¸à¸£à¸£à¸¡ à¸­à¸±à¸›à¹€à¸”à¸•à¸£à¸°à¸šà¸š à¹à¸¥à¸°à¸›à¸£à¸°à¸à¸²à¸¨à¸ªà¸³à¸„à¸±à¸à¸—à¸±à¹‰à¸‡à¸«à¸¡à¸”à¹ƒà¸™à¸¡à¸¸à¸¡à¸¡à¸­à¸‡à¸—à¸µà¹ˆà¸­à¹ˆà¸²à¸™à¸‡à¹ˆà¸²à¸¢à¸‚à¸¶à¹‰à¸™ à¸ˆà¸±à¸”à¸¥à¸³à¸”à¸±à¸šà¸Šà¸±à¸”à¸‚à¸¶à¹‰à¸™ à¹à¸¥à¸°à¸žà¸£à¹‰à¸­à¸¡à¹ƒà¸Šà¹‰à¸‡à¸²à¸™à¸—à¸±à¹‰à¸‡ desktop à¸à¸±à¸š mobile',
       'All major announcements, events, updates, and maintenance notices in one place, arranged to read comfortably on both desktop and mobile.',
     );
 
@@ -245,19 +245,19 @@ function NewsHero({
         </h1>
         <p className="news-hero-sub">{subtitle}</p>
 
-        <div className="news-hero__meta" aria-label={t('สรุปมุมมองข่าว', 'News view summary')}>
+        <div className="news-hero__meta" aria-label={t('à¸ªà¸£à¸¸à¸›à¸¡à¸¸à¸¡à¸¡à¸­à¸‡à¸‚à¹ˆà¸²à¸§', 'News view summary')}>
           <div className="news-hero__metaItem">
-            <span className="news-hero__metaLabel">{t('ข่าวที่พร้อมอ่าน', 'Stories live')}</span>
+            <span className="news-hero__metaLabel">{t('à¸‚à¹ˆà¸²à¸§à¸—à¸µà¹ˆà¸žà¸£à¹‰à¸­à¸¡à¸­à¹ˆà¸²à¸™', 'Stories live')}</span>
             <strong className="news-hero__metaValue">{displayedTotalDocs}</strong>
           </div>
 
           <span className="news-hero__metaDivider" aria-hidden="true" />
 
           <div className="news-hero__metaItem">
-            <span className="news-hero__metaLabel">{t('มุมมองปัจจุบัน', 'Current view')}</span>
+            <span className="news-hero__metaLabel">{t('à¸¡à¸¸à¸¡à¸¡à¸­à¸‡à¸›à¸±à¸ˆà¸ˆà¸¸à¸šà¸±à¸™', 'Current view')}</span>
             <strong className="news-hero__metaValue">
               {activeCategory === 'all'
-                ? t('ข่าวทั้งหมด', 'All stories')
+                ? t('à¸‚à¹ˆà¸²à¸§à¸—à¸±à¹‰à¸‡à¸«à¸¡à¸”', 'All stories')
                 : t(activeFilter.labelTh, activeFilter.labelEn)}
             </strong>
           </div>
@@ -350,11 +350,11 @@ function FeaturedStory({
                   month: lang === 'th' ? 'short' : 'long',
                   year: 'numeric',
                 })
-                : t('เร็ว ๆ นี้', 'Coming soon')}
+                : t('à¹€à¸£à¹‡à¸§ à¹† à¸™à¸µà¹‰', 'Coming soon')}
             </time>
 
             <span className="news-featured__cta">
-              {t('อ่านรายละเอียด', 'Read full update')}
+              {t('à¸­à¹ˆà¸²à¸™à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”', 'Read full update')}
               <ArrowRight size={16} />
             </span>
           </div>
@@ -380,11 +380,11 @@ function NewsRail({
   return (
     <aside className="news-rail">
       <div className="news-rail__header">
-        <span>{t('ลำดับข่าวล่าสุด', 'Latest stream')}</span>
+        <span>{t('à¸¥à¸³à¸”à¸±à¸šà¸‚à¹ˆà¸²à¸§à¸¥à¹ˆà¸²à¸ªà¸¸à¸”', 'Latest stream')}</span>
         <p>
           {activeCategory === 'all'
-            ? t('เรื่องถัดจากข่าวเด่นที่ควรอ่านต่อ', 'The next stories to read after the featured update.')
-            : t(`ข่าว${activeFilter.labelTh}ที่คัดมาในมุมมองนี้`, `Selected ${activeFilter.labelEn.toLowerCase()} stories in this view.`)}
+            ? t('à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸–à¸±à¸”à¸ˆà¸²à¸à¸‚à¹ˆà¸²à¸§à¹€à¸”à¹ˆà¸™à¸—à¸µà¹ˆà¸„à¸§à¸£à¸­à¹ˆà¸²à¸™à¸•à¹ˆà¸­', 'The next stories to read after the featured update.')
+            : t(`à¸‚à¹ˆà¸²à¸§${activeFilter.labelTh}à¸—à¸µà¹ˆà¸„à¸±à¸”à¸¡à¸²à¹ƒà¸™à¸¡à¸¸à¸¡à¸¡à¸­à¸‡à¸™à¸µà¹‰`, `Selected ${activeFilter.labelEn.toLowerCase()} stories in this view.`)}
         </p>
       </div>
 
@@ -396,7 +396,7 @@ function NewsRail({
         {articles.length === 0 ? (
           <div className="news-rail__empty">
             {t(
-              'ตอนนี้มีข่าวในมุมมองนี้เพียงชิ้นเด่นเดียว กดอ่านรายละเอียดด้านซ้ายได้ทันที',
+              'à¸•à¸­à¸™à¸™à¸µà¹‰à¸¡à¸µà¸‚à¹ˆà¸²à¸§à¹ƒà¸™à¸¡à¸¸à¸¡à¸¡à¸­à¸‡à¸™à¸µà¹‰à¹€à¸žà¸µà¸¢à¸‡à¸Šà¸´à¹‰à¸™à¹€à¸”à¹ˆà¸™à¹€à¸”à¸µà¸¢à¸§ à¸à¸”à¸­à¹ˆà¸²à¸™à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸”à¹‰à¸²à¸™à¸‹à¹‰à¸²à¸¢à¹„à¸”à¹‰à¸—à¸±à¸™à¸—à¸µ',
               'This view currently has one featured story. Open the feature to read the full update.',
             )}
           </div>
@@ -511,11 +511,11 @@ export default function NewsPage() {
         {loading ? (
           <div className="news-loading">
             <div className="news-loading-spinner" />
-            <p>{t('กำลังโหลด...', 'Loading...')}</p>
+            <p>{t('à¸à¸³à¸¥à¸±à¸‡à¹‚à¸«à¸¥à¸”...', 'Loading...')}</p>
           </div>
         ) : articles.length === 0 ? (
           <div className="news-empty">
-            <p>{t('ยังไม่มีข่าวสารในหมวดนี้', 'No articles in this category yet')}</p>
+            <p>{t('à¸¢à¸±à¸‡à¹„à¸¡à¹ˆà¸¡à¸µà¸‚à¹ˆà¸²à¸§à¸ªà¸²à¸£à¹ƒà¸™à¸«à¸¡à¸§à¸”à¸™à¸µà¹‰', 'No articles in this category yet')}</p>
           </div>
         ) : (
           <>

@@ -8,8 +8,8 @@ import ScrollProgress from '@/components/ui/ScrollProgress';
 import ParallaxSection from '@/components/ui/ParallaxSection';
 
 /* Shared layout */
-import Navigation from '@/components/layout/Navigation';
-import Footer from '@/components/layout/Footer';
+import Navigation from '@/components/site/Navigation';
+import Footer from '@/components/site/Footer';
 
 /* Event sub-components */
 import EventHero from './components/EventHero';
@@ -25,15 +25,15 @@ import { useEventForm } from '@/hooks/useEventForm';
 import type { Milestone, StoreButton, EventSettings, StoreUrls } from '@/types/event';
 import { DEFAULT_COUNTDOWN_TARGET } from '@/types/event';
 
-/* ═══════════════════════════════════════════════
-   EVENT PAGE — Orchestrator
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   EVENT PAGE â€” Orchestrator
    2 Independent Systems: Milestone + Referral
-   ═══════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 // eslint-disable-next-line max-lines-per-function -- Page component with JSX template
 export default function EventPage() {
   useLang(); // ensure lang context is active
 
-  /* ─── CMS Data State ─── */
+  /* â”€â”€â”€ CMS Data State â”€â”€â”€ */
   const [registrationCount, setRegistrationCount] = useState(0);
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [storeButtons, setStoreButtons] = useState<StoreButton[]>([]);
@@ -47,13 +47,13 @@ export default function EventPage() {
     pc: '#',
   });
   const [footer, setFooter] = useState({
-    copyrightText: '© 2026 Eternal Tower Saga. All rights reserved.',
+    copyrightText: 'Â© 2026 Eternal Tower Saga. All rights reserved.',
     termsUrl: '/terms',
     privacyUrl: '/privacy',
     supportUrl: '#',
   });
 
-  /* ─── Fetch CMS data ─── */
+  /* â”€â”€â”€ Fetch CMS data â”€â”€â”€ */
   useEffect(() => {
     fetch('/api/stats')
       .then(r => r.json())
@@ -99,7 +99,7 @@ export default function EventPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* ─── Display Store Buttons (with fallback + dedup by platform) ─── */
+  /* â”€â”€â”€ Display Store Buttons (with fallback + dedup by platform) â”€â”€â”€ */
   const rawStoreButtons = (storeButtons.length ? storeButtons : [
     { platform: 'ios', label: 'App Store', sublabel: 'Pre-order on the', url: storeUrls.ios },
     { platform: 'android', label: 'Google Play', sublabel: 'Register on', url: storeUrls.android },
@@ -116,7 +116,7 @@ export default function EventPage() {
     return true;
   });
 
-  /* ─── Registration Form Hook ─── */
+  /* â”€â”€â”€ Registration Form Hook â”€â”€â”€ */
   const form = useEventForm(
     displayStoreButtons,
     // Re-fetch real count from backend after registration (API-first: frontend must not calculate)
@@ -140,7 +140,7 @@ export default function EventPage() {
         <FloatingParticles count={25} />
         <LightRays />
 
-        {/* ═══ SCREEN 1: HERO ═══ */}
+        {/* â•â•â• SCREEN 1: HERO â•â•â• */}
         <EventHero
           eventSettings={eventSettings}
           countdownTarget={countdownTarget}
@@ -149,7 +149,7 @@ export default function EventPage() {
           logoUrl={siteLogoUrl}
         />
 
-        {/* ═══ SCREEN 2: REGISTRATION FORM ═══ */}
+        {/* â•â•â• SCREEN 2: REGISTRATION FORM â•â•â• */}
         <ParallaxSection
           backgroundUrl={eventSettings.formBackgroundImage?.url}
           speed={0.25}
@@ -174,7 +174,7 @@ export default function EventPage() {
           />
         </ParallaxSection>
 
-        {/* ═══ SCREEN 3: MILESTONES ═══ */}
+        {/* â•â•â• SCREEN 3: MILESTONES â•â•â• */}
         <ParallaxSection
           backgroundUrl={eventSettings.milestonesBackgroundImage?.url}
           speed={0.3}
@@ -187,7 +187,7 @@ export default function EventPage() {
           />
         </ParallaxSection>
 
-        {/* ═══ SCREEN 4: REFERRAL LEADERBOARD ═══ */}
+        {/* â•â•â• SCREEN 4: REFERRAL LEADERBOARD â•â•â• */}
         <ParallaxSection
           backgroundUrl={eventSettings.leaderboardBackgroundImage?.url}
           speed={0.2}
@@ -199,7 +199,7 @@ export default function EventPage() {
 
       <Footer socialLinks={socialLinks} footer={footer} logoUrl={siteLogoUrl} />
 
-      {/* ═══ SUCCESS MODAL ═══ */}
+      {/* â•â•â• SUCCESS MODAL â•â•â• */}
       <SuccessModal
         show={form.showSuccessModal}
         onClose={() => form.setShowSuccessModal(false)}

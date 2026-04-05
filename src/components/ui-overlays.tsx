@@ -80,17 +80,17 @@ function CookieBannerContent({
       <div className="cookie-copy">
         <span className="cookie-label">Cookies</span>
         <p className="cookie-text">
-          เราใช้คุกกี้ที่จำเป็นเพื่อให้เว็บไซต์ทำงานเสถียรและวัดผลการใช้งานพื้นฐานได้อย่างถูกต้อง
+          à¹€à¸£à¸²à¹ƒà¸Šà¹‰à¸„à¸¸à¸à¸à¸µà¹‰à¸—à¸µà¹ˆà¸ˆà¸³à¹€à¸›à¹‡à¸™à¹€à¸žà¸·à¹ˆà¸­à¹ƒà¸«à¹‰à¹€à¸§à¹‡à¸šà¹„à¸‹à¸•à¹Œà¸—à¸³à¸‡à¸²à¸™à¹€à¸ªà¸–à¸µà¸¢à¸£à¹à¸¥à¸°à¸§à¸±à¸”à¸œà¸¥à¸à¸²à¸£à¹ƒà¸Šà¹‰à¸‡à¸²à¸™à¸žà¸·à¹‰à¸™à¸à¸²à¸™à¹„à¸”à¹‰à¸­à¸¢à¹ˆà¸²à¸‡à¸–à¸¹à¸à¸•à¹‰à¸­à¸‡
           <span className="cookie-text-en"> Essential cookies keep the site stable and help measure basic performance.</span>
         </p>
       </div>
 
       <div className="cookie-actions">
         <button onClick={dismiss} className="cookie-dismiss" type="button">
-          ภายหลัง
+          à¸ à¸²à¸¢à¸«à¸¥à¸±à¸‡
         </button>
         <button onClick={accept} className="cookie-accept" type="button">
-          ยอมรับ / Accept
+          à¸¢à¸­à¸¡à¸£à¸±à¸š / Accept
         </button>
       </div>
     </div>

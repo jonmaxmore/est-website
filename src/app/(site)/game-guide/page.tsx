@@ -3,8 +3,8 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import { Castle, Map, Shield, Sparkles, Swords, Users, type LucideIcon } from 'lucide-react';
-import Footer from '@/components/layout/Footer';
-import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/site/Footer';
+import Navigation from '@/components/site/Navigation';
 import CmsLink from '@/components/ui/CmsLink';
 import RevealSection from '@/components/ui/RevealSection';
 import ScrollProgress from '@/components/ui/ScrollProgress';
@@ -98,36 +98,36 @@ function FeatureIcon({ feature }: { feature: GameGuideFeature }) {
 
 function buildGuideCopy(config: GameGuidePageConfig | null, t: TranslateFn): GuideCopy {
   return {
-    badge: config ? t(config.badgeTh, config.badgeEn) : t('แนะนำเกม', 'GAME GUIDE'),
-    title: config ? t(config.titleTh, config.titleEn) : t('แนะนำเกม', 'Game Guide'),
+    badge: config ? t(config.badgeTh, config.badgeEn) : t('à¹à¸™à¸°à¸™à¸³à¹€à¸à¸¡', 'GAME GUIDE'),
+    title: config ? t(config.titleTh, config.titleEn) : t('à¹à¸™à¸°à¸™à¸³à¹€à¸à¸¡', 'Game Guide'),
     subtitle: config
       ? t(config.subtitleTh, config.subtitleEn)
       : t(
-        'เข้าใจระบบหลักของ Eternal Tower Saga แบบเร็วขึ้น พร้อมเห็นภาพตัวอย่างของแต่ละหัวข้อชัดเจนขึ้น',
+        'à¹€à¸‚à¹‰à¸²à¹ƒà¸ˆà¸£à¸°à¸šà¸šà¸«à¸¥à¸±à¸à¸‚à¸­à¸‡ Eternal Tower Saga à¹à¸šà¸šà¹€à¸£à¹‡à¸§à¸‚à¸¶à¹‰à¸™ à¸žà¸£à¹‰à¸­à¸¡à¹€à¸«à¹‡à¸™à¸ à¸²à¸žà¸•à¸±à¸§à¸­à¸¢à¹ˆà¸²à¸‡à¸‚à¸­à¸‡à¹à¸•à¹ˆà¸¥à¸°à¸«à¸±à¸§à¸‚à¹‰à¸­à¸Šà¸±à¸”à¹€à¸ˆà¸™à¸‚à¸¶à¹‰à¸™',
         'Learn the core flow of Eternal Tower Saga through a cleaner guide with clearer visual examples for each system.',
       ),
     heroPanelLabel: config?.heroPanelLabelEn || config?.heroPanelLabelTh
       ? t(config.heroPanelLabelTh || '', config.heroPanelLabelEn || '')
-      : t('ภาพรวมสำหรับผู้เล่นใหม่', 'Starter overview'),
+      : t('à¸ à¸²à¸žà¸£à¸§à¸¡à¸ªà¸³à¸«à¸£à¸±à¸šà¸œà¸¹à¹‰à¹€à¸¥à¹ˆà¸™à¹ƒà¸«à¸¡à¹ˆ', 'Starter overview'),
     heroPanelCopy: config?.heroPanelCopyEn || config?.heroPanelCopyTh
       ? t(config.heroPanelCopyTh || '', config.heroPanelCopyEn || '')
       : t(
-        'เรียงเส้นทางการเล่นตั้งแต่เริ่มต้น สะสมทรัพยากร อัปเกรดอุปกรณ์ จนต่อยอดสู่คอนเทนต์ร่วมทีมในมุมที่อ่านง่ายขึ้น',
+        'à¹€à¸£à¸µà¸¢à¸‡à¹€à¸ªà¹‰à¸™à¸—à¸²à¸‡à¸à¸²à¸£à¹€à¸¥à¹ˆà¸™à¸•à¸±à¹‰à¸‡à¹à¸•à¹ˆà¹€à¸£à¸´à¹ˆà¸¡à¸•à¹‰à¸™ à¸ªà¸°à¸ªà¸¡à¸—à¸£à¸±à¸žà¸¢à¸²à¸à¸£ à¸­à¸±à¸›à¹€à¸à¸£à¸”à¸­à¸¸à¸›à¸à¸£à¸“à¹Œ à¸ˆà¸™à¸•à¹ˆà¸­à¸¢à¸­à¸”à¸ªà¸¹à¹ˆà¸„à¸­à¸™à¹€à¸—à¸™à¸•à¹Œà¸£à¹ˆà¸§à¸¡à¸—à¸µà¸¡à¹ƒà¸™à¸¡à¸¸à¸¡à¸—à¸µà¹ˆà¸­à¹ˆà¸²à¸™à¸‡à¹ˆà¸²à¸¢à¸‚à¸¶à¹‰à¸™',
         'A clearer progression path from onboarding and upgrades to party-focused content, framed in an easier reading flow.',
       ),
     systemsBadge: config?.systemsBadgeEn || config?.systemsBadgeTh
       ? t(config.systemsBadgeTh || '', config.systemsBadgeEn || '')
-      : t('ฟีเจอร์เกม', 'Core systems'),
+      : t('à¸Ÿà¸µà¹€à¸ˆà¸­à¸£à¹Œà¹€à¸à¸¡', 'Core systems'),
     systemsTitle: config?.systemsTitleEn || config?.systemsTitleTh
       ? t(config.systemsTitleTh || '', config.systemsTitleEn || '')
-      : t('ไฮไลท์เกม', 'Game systems to explore'),
+      : t('à¹„à¸®à¹„à¸¥à¸—à¹Œà¹€à¸à¸¡', 'Game systems to explore'),
     systemsCopy: config?.systemsCopyEn || config?.systemsCopyTh
       ? t(config.systemsCopyTh || '', config.systemsCopyEn || '')
       : t(
-        'เลือกหัวข้อด้านขวาเพื่อดูตัวอย่างและคำอธิบายแบบละเอียดขึ้นในฝั่งซ้าย',
+        'à¹€à¸¥à¸·à¸­à¸à¸«à¸±à¸§à¸‚à¹‰à¸­à¸”à¹‰à¸²à¸™à¸‚à¸§à¸²à¹€à¸žà¸·à¹ˆà¸­à¸”à¸¹à¸•à¸±à¸§à¸­à¸¢à¹ˆà¸²à¸‡à¹à¸¥à¸°à¸„à¸³à¸­à¸˜à¸´à¸šà¸²à¸¢à¹à¸šà¸šà¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸‚à¸¶à¹‰à¸™à¹ƒà¸™à¸à¸±à¹ˆà¸‡à¸‹à¹‰à¸²à¸¢',
         'Select a topic from the right rail to preview its visual and read a more focused explanation.',
       ),
-    selectLabel: t('ดูรายละเอียดหัวข้อนี้', 'Focus this system'),
+    selectLabel: t('à¸”à¸¹à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸«à¸±à¸§à¸‚à¹‰à¸­à¸™à¸µà¹‰', 'Focus this system'),
   };
 }
 

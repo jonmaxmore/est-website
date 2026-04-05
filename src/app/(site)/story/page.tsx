@@ -1,8 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import Navigation from '@/components/layout/Navigation';
-import Footer from '@/components/layout/Footer';
+import Navigation from '@/components/site/Navigation';
+import Footer from '@/components/site/Footer';
 import RevealSection from '@/components/ui/RevealSection';
 import ScrollProgress from '@/components/ui/ScrollProgress';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
@@ -33,10 +33,10 @@ export default function StoryPage() {
   const config = (settings?.storyPage as StoryPageConfig | undefined) || null;
 
   const badge = config ? t(config.badgeTh, config.badgeEn) : 'LORE';
-  const title = config ? t(config.titleTh, config.titleEn) : t('เนื้อเรื่อง', 'Story');
+  const title = config ? t(config.titleTh, config.titleEn) : t('à¹€à¸™à¸·à¹‰à¸­à¹€à¸£à¸·à¹ˆà¸­à¸‡', 'Story');
   const subtitle = config
     ? t(config.subtitleTh, config.subtitleEn)
-    : t('เรื่องราวแห่งดินแดน Arcatea และหอคอยไร้ขอบเขต', 'The tale of Arcatea and The Boundless Spire');
+    : t('à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸£à¸²à¸§à¹à¸«à¹ˆà¸‡à¸”à¸´à¸™à¹à¸”à¸™ Arcatea à¹à¸¥à¸°à¸«à¸­à¸„à¸­à¸¢à¹„à¸£à¹‰à¸‚à¸­à¸šà¹€à¸‚à¸•', 'The tale of Arcatea and The Boundless Spire');
   const sections = config?.sections || [];
 
   return (
@@ -86,8 +86,8 @@ export default function StoryPage() {
               <div className="story-block story-empty-state">
                 <p>
                   {loaded
-                    ? t('เนื้อเรื่องกำลังจะมาเร็ว ๆ นี้...', 'Story coming soon...')
-                    : t('กำลังโหลดเนื้อเรื่อง...', 'Loading story...')}
+                    ? t('à¹€à¸™à¸·à¹‰à¸­à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸à¸³à¸¥à¸±à¸‡à¸ˆà¸°à¸¡à¸²à¹€à¸£à¹‡à¸§ à¹† à¸™à¸µà¹‰...', 'Story coming soon...')
+                    : t('à¸à¸³à¸¥à¸±à¸‡à¹‚à¸«à¸¥à¸”à¹€à¸™à¸·à¹‰à¸­à¹€à¸£à¸·à¹ˆà¸­à¸‡...', 'Loading story...')}
                 </p>
               </div>
             ) : null}

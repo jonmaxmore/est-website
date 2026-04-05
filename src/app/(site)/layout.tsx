@@ -1,5 +1,5 @@
 import { getPayloadClient } from '@/lib/payload';
-import Navigation from '@/components/layout/Navigation';
+import Navigation from '@/components/site/Navigation';
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const payload = await getPayloadClient();

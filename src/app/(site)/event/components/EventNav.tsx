@@ -33,7 +33,7 @@ export default function EventNav({ socialLinks }: EventNavProps) {
           )}
         </div>
         <div className="event-nav-right">
-          <Link href="/" className="event-back-link">← {t('หน้าแรก', 'Home')}</Link>
+          <Link href="/" className="event-back-link">â† {t('à¸«à¸™à¹‰à¸²à¹à¸£à¸', 'Home')}</Link>
           <button className="nav-lang" onClick={toggle}>{lang === 'th' ? 'EN' : 'TH'}</button>
         </div>
       </div>

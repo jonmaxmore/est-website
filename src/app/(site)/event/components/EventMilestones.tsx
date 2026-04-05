@@ -34,10 +34,10 @@ export default function EventMilestones({
         >
           <div className="section-header">
             <span className="section-badge">
-              {t(eventSettings.milestoneBadgeTh || 'รางวัลกิจกรรม', eventSettings.milestoneBadgeEn || 'MILESTONE REWARDS')}
+              {t(eventSettings.milestoneBadgeTh || 'à¸£à¸²à¸‡à¸§à¸±à¸¥à¸à¸´à¸ˆà¸à¸£à¸£à¸¡', eventSettings.milestoneBadgeEn || 'MILESTONE REWARDS')}
             </span>
             <h2 className="section-title-gold">
-              {t(eventSettings.milestoneTitleTh || 'รางวัลกิจกรรม', eventSettings.milestoneTitleEn || 'Milestone Rewards')}
+              {t(eventSettings.milestoneTitleTh || 'à¸£à¸²à¸‡à¸§à¸±à¸¥à¸à¸´à¸ˆà¸à¸£à¸£à¸¡', eventSettings.milestoneTitleEn || 'Milestone Rewards')}
             </h2>
             <div className="title-ornament"><span /><span /><span /></div>
           </div>
@@ -45,13 +45,13 @@ export default function EventMilestones({
           {/* Large Registration Count */}
           <div className="event-milestone-count">
             <div className="event-milestone-count-number">{registrationCount.toLocaleString()}</div>
-            <div className="event-milestone-count-label">{t('ผู้ลงทะเบียน', 'Users')}</div>
+            <div className="event-milestone-count-label">{t('à¸œà¸¹à¹‰à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™', 'Users')}</div>
           </div>
 
           {/* Progress Bar */}
           <div className="milestone-progress-wrap">
             <div className="milestone-progress-header">
-              <span>{t('จำนวนผู้ลงทะเบียน', 'Total registrations')}</span>
+              <span>{t('à¸ˆà¸³à¸™à¸§à¸™à¸œà¸¹à¹‰à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™', 'Total registrations')}</span>
               <span className="milestone-count">{registrationCount.toLocaleString()} / {maxThreshold.toLocaleString()}</span>
             </div>
             <div className="milestone-bar-dark">
@@ -89,13 +89,13 @@ export default function EventMilestones({
                     m.rewardImage ? (
                       <Image src={m.rewardImage.url} alt={t(m.rewardTh, m.rewardEn)} width={64} height={64} className="milestone-reward-img" />
                     ) : (
-                      m.icon || '🎁'
+                      m.icon || 'ðŸŽ'
                     )
                   ) : (
                     m.lockedImage ? (
                       <Image src={m.lockedImage.url} alt="Locked" width={64} height={64} className="milestone-reward-img milestone-locked-img" />
                     ) : (
-                      '🔒'
+                      'ðŸ”’'
                     )
                   )}
                 </div>

@@ -36,7 +36,7 @@ export default function FAQSection() {
         <RevealSection>
           <div className="section-header">
             <span className="section-badge">FAQ</span>
-            <h2 className="section-title-gold">{t('คำถามที่พบบ่อย', 'Frequently Asked Questions')}</h2>
+            <h2 className="section-title-gold">{t('Ã Â¸â€žÃ Â¸Â³Ã Â¸â€“Ã Â¸Â²Ã Â¸Â¡Ã Â¸â€”Ã Â¸ÂµÃ Â¹Ë†Ã Â¸Å¾Ã Â¸Å¡Ã Â¸Å¡Ã Â¹Ë†Ã Â¸Â­Ã Â¸Â¢', 'Frequently Asked Questions')}</h2>
             <div className="title-ornament"><span /><span /><span /></div>
           </div>
         </RevealSection>
@@ -47,7 +47,7 @@ export default function FAQSection() {
               <details className="faq-item">
                 <summary className="faq-question">
                   <span>{item.q}</span>
-                  <span className="faq-icon">▾</span>
+                  <span className="faq-icon">Ã¢â€“Â¾</span>
                 </summary>
                 <p className="faq-answer">{item.a}</p>
               </details>

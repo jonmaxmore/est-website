@@ -4,7 +4,7 @@ import React, { useEffect, useReducer, useCallback, useState } from 'react'
 import Link from 'next/link'
 import '@/app/styles/pages/admin-analytics.css'
 
-// ─── Extracted components ───
+// â”€â”€â”€ Extracted components â”€â”€â”€
 import BarChart from '@/components/admin/charts/BarChart'
 import DimTable from '@/components/admin/charts/DimTable'
 import FunnelChart from '@/components/admin/charts/FunnelChart'
@@ -19,7 +19,7 @@ import type { DimensionRow } from '@/components/admin/charts/DimTable'
 import type { FunnelStep } from '@/components/admin/charts/FunnelChart'
 import type { Trend } from '@/components/admin/charts/KPICard'
 
-// ─── Types ───
+// â”€â”€â”€ Types â”€â”€â”€
 interface KPI {
   pageviews: number; sessions: number; uniqueVisitors: number
   bounceRate: number; avgDuration: number; pagesPerSession: number
@@ -72,7 +72,7 @@ const TABS: { id: Tab; label: string; Icon: React.FC }[] = [
   { id: 'behavior', label: 'Behavior', Icon: IconTarget },
 ]
 
-// ─── Helpers ───
+// â”€â”€â”€ Helpers â”€â”€â”€
 function fmt(n: number): string {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M'
   if (n >= 1_000) return (n / 1_000).toFixed(1) + 'K'
@@ -114,7 +114,7 @@ function exportCSV(d: DashboardData) {
   URL.revokeObjectURL(url)
 }
 
-// ─── Main Dashboard ───
+// â”€â”€â”€ Main Dashboard â”€â”€â”€
 // eslint-disable-next-line max-lines-per-function -- Page-level orchestrator: state, fetch, layout with 4 tabs. Components already extracted.
 export default function AnalyticsDashboardPage() {
   const [state, dispatch] = useReducer(reducer, {
@@ -253,7 +253,7 @@ export default function AnalyticsDashboardPage() {
 
         <footer className="da-footer">
           <p>Last updated: {new Date(d.generatedAt).toLocaleString()}</p>
-          {useLegacy && <p className="da-footer-note">Rollup data pending — run POST /api/analytics/rollup to populate</p>}
+          {useLegacy && <p className="da-footer-note">Rollup data pending â€” run POST /api/analytics/rollup to populate</p>}
         </footer>
       </div>
     </div>

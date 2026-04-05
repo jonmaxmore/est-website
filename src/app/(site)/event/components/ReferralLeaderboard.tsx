@@ -26,11 +26,11 @@ export default function ReferralLeaderboard() {
       <section className="event-leaderboard">
         <div className="container-custom">
           <div className="section-header">
-            <span className="section-badge">{t('อันดับผู้เชิญชวน', 'REFERRAL BOARD')}</span>
-            <h2 className="section-title-gold">{t('กระดานอันดับ', 'Leaderboard')}</h2>
+            <span className="section-badge">{t('à¸­à¸±à¸™à¸”à¸±à¸šà¸œà¸¹à¹‰à¹€à¸Šà¸´à¸à¸Šà¸§à¸™', 'REFERRAL BOARD')}</span>
+            <h2 className="section-title-gold">{t('à¸à¸£à¸°à¸”à¸²à¸™à¸­à¸±à¸™à¸”à¸±à¸š', 'Leaderboard')}</h2>
             <div className="title-ornament"><span /><span /><span /></div>
           </div>
-          <p className="loading-text">{t('กำลังโหลด...', 'Loading...')}</p>
+          <p className="loading-text">{t('à¸à¸³à¸¥à¸±à¸‡à¹‚à¸«à¸¥à¸”...', 'Loading...')}</p>
         </div>
       </section>
     );
@@ -50,8 +50,8 @@ export default function ReferralLeaderboard() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="section-header">
-            <span className="section-badge">{t('อันดับผู้เชิญชวน', 'REFERRAL BOARD')}</span>
-            <h2 className="section-title-gold">{t('กระดานอันดับ', 'Leaderboard')}</h2>
+            <span className="section-badge">{t('à¸­à¸±à¸™à¸”à¸±à¸šà¸œà¸¹à¹‰à¹€à¸Šà¸´à¸à¸Šà¸§à¸™', 'REFERRAL BOARD')}</span>
+            <h2 className="section-title-gold">{t('à¸à¸£à¸°à¸”à¸²à¸™à¸­à¸±à¸™à¸”à¸±à¸š', 'Leaderboard')}</h2>
             <div className="title-ornament"><span /><span /><span /></div>
           </div>
 
@@ -59,11 +59,11 @@ export default function ReferralLeaderboard() {
             <table className="leaderboard-table">
               <thead>
                 <tr>
-                  <th>{t('อันดับ', 'Rank')}</th>
-                  <th>{t('ผู้เล่น', 'Player')}</th>
-                  <th>{t('เชิญตรง', 'Direct')}</th>
-                  <th>{t('เชิญทางอ้อม', 'Indirect')}</th>
-                  <th>{t('คะแนน', 'Points')}</th>
+                  <th>{t('à¸­à¸±à¸™à¸”à¸±à¸š', 'Rank')}</th>
+                  <th>{t('à¸œà¸¹à¹‰à¹€à¸¥à¹ˆà¸™', 'Player')}</th>
+                  <th>{t('à¹€à¸Šà¸´à¸à¸•à¸£à¸‡', 'Direct')}</th>
+                  <th>{t('à¹€à¸Šà¸´à¸à¸—à¸²à¸‡à¸­à¹‰à¸­à¸¡', 'Indirect')}</th>
+                  <th>{t('à¸„à¸°à¹à¸™à¸™', 'Points')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -79,7 +79,7 @@ export default function ReferralLeaderboard() {
                     <td className="leaderboard-rank">
                       {entry.rank <= 3 ? (
                         <span className={`leaderboard-medal medal-${entry.rank}`}>
-                          {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : '🥉'}
+                          {entry.rank === 1 ? 'ðŸ¥‡' : entry.rank === 2 ? 'ðŸ¥ˆ' : 'ðŸ¥‰'}
                         </span>
                       ) : (
                         entry.rank

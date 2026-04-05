@@ -6,7 +6,7 @@ import Link from 'next/link';
 import type { CMSNewsArticle } from '@/types/cms';
 
 export default function NewsSection({ data, news }: { data: any, news: CMSNewsArticle[] }) {
-  const { currentLang } = useLang();
+  const { lang: currentLang } = useLang();
   
   if (!data) return null;
 
@@ -45,7 +45,7 @@ export default function NewsSection({ data, news }: { data: any, news: CMSNewsAr
               className="inline-flex items-center gap-2 text-indigo-400 hover:text-white font-bold uppercase tracking-wider text-sm transition-colors group"
             >
               View All News 
-              <span className="group-hover:translate-x-2 transition-transform">→</span>
+              <span className="group-hover:translate-x-2 transition-transform">Ã¢â€ â€™</span>
             </Link>
           </motion.div>
         </div>

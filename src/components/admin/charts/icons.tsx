@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-/** SVG icons for analytics dashboard — replaces emojis with clean vector graphics */
+/** SVG icons for analytics dashboard â€” replaces emojis with clean vector graphics */
 
 export function IconChart() {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 4-8"/></svg>

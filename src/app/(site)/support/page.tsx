@@ -14,8 +14,8 @@ import {
   Send,
   Shield,
 } from 'lucide-react';
-import Navigation from '@/components/layout/Navigation';
-import Footer from '@/components/layout/Footer';
+import Navigation from '@/components/site/Navigation';
+import Footer from '@/components/site/Footer';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import RevealSection from '@/components/ui/RevealSection';
 import ScrollProgress from '@/components/ui/ScrollProgress';
@@ -39,38 +39,38 @@ interface SupportChannel {
 const SUPPORT_CHANNELS: SupportChannel[] = [
   {
     icon: <Mail size={28} />,
-    titleTh: 'อีเมลซัพพอร์ต',
+    titleTh: 'à¸­à¸µà¹€à¸¡à¸¥à¸‹à¸±à¸žà¸žà¸­à¸£à¹Œà¸•',
     titleEn: 'Email Support',
-    descTh: 'ส่งคำถามหรือรายงานปัญหาผ่านอีเมล ทีมงานจะตอบกลับภายใน 24-48 ชั่วโมง',
+    descTh: 'à¸ªà¹ˆà¸‡à¸„à¸³à¸–à¸²à¸¡à¸«à¸£à¸·à¸­à¸£à¸²à¸¢à¸‡à¸²à¸™à¸›à¸±à¸à¸«à¸²à¸œà¹ˆà¸²à¸™à¸­à¸µà¹€à¸¡à¸¥ à¸—à¸µà¸¡à¸‡à¸²à¸™à¸ˆà¸°à¸•à¸­à¸šà¸à¸¥à¸±à¸šà¸ à¸²à¸¢à¹ƒà¸™ 24-48 à¸Šà¸±à¹ˆà¸§à¹‚à¸¡à¸‡',
     descEn: 'Send questions or report issues via email. Our team responds within 24-48 hours.',
-    action: { label: 'Send Email', labelTh: 'ส่งอีเมล', href: 'mailto:support@eternaltowersaga.com' },
+    action: { label: 'Send Email', labelTh: 'à¸ªà¹ˆà¸‡à¸­à¸µà¹€à¸¡à¸¥', href: 'mailto:support@eternaltowersaga.com' },
     accent: 'from-amber-500/20 to-amber-700/10',
   },
   {
     icon: <MessageCircle size={28} />,
     titleTh: 'Discord Community',
     titleEn: 'Discord Community',
-    descTh: 'เข้าร่วมชุมชน Discord ของเรา พูดคุยกับผู้เล่นและทีมงาน รับข่าวสารและอัปเดตล่าสุด',
+    descTh: 'à¹€à¸‚à¹‰à¸²à¸£à¹ˆà¸§à¸¡à¸Šà¸¸à¸¡à¸Šà¸™ Discord à¸‚à¸­à¸‡à¹€à¸£à¸² à¸žà¸¹à¸”à¸„à¸¸à¸¢à¸à¸±à¸šà¸œà¸¹à¹‰à¹€à¸¥à¹ˆà¸™à¹à¸¥à¸°à¸—à¸µà¸¡à¸‡à¸²à¸™ à¸£à¸±à¸šà¸‚à¹ˆà¸²à¸§à¸ªà¸²à¸£à¹à¸¥à¸°à¸­à¸±à¸›à¹€à¸”à¸•à¸¥à¹ˆà¸²à¸ªà¸¸à¸”',
     descEn: 'Join our Discord community. Chat with other players and the dev team. Get the latest news and updates.',
-    action: { label: 'Join Discord', labelTh: 'เข้าร่วม Discord', href: 'https://discord.gg/eternaltowersaga', external: true },
+    action: { label: 'Join Discord', labelTh: 'à¹€à¸‚à¹‰à¸²à¸£à¹ˆà¸§à¸¡ Discord', href: 'https://discord.gg/eternaltowersaga', external: true },
     accent: 'from-indigo-500/20 to-indigo-700/10',
   },
   {
     icon: <FileQuestion size={28} />,
-    titleTh: 'คำถามที่พบบ่อย',
+    titleTh: 'à¸„à¸³à¸–à¸²à¸¡à¸—à¸µà¹ˆà¸žà¸šà¸šà¹ˆà¸­à¸¢',
     titleEn: 'FAQ',
-    descTh: 'ค้นหาคำตอบสำหรับคำถามยอดนิยมเกี่ยวกับเกม ระบบ การลงทะเบียน และอื่น ๆ',
+    descTh: 'à¸„à¹‰à¸™à¸«à¸²à¸„à¸³à¸•à¸­à¸šà¸ªà¸³à¸«à¸£à¸±à¸šà¸„à¸³à¸–à¸²à¸¡à¸¢à¸­à¸”à¸™à¸´à¸¢à¸¡à¹€à¸à¸µà¹ˆà¸¢à¸§à¸à¸±à¸šà¹€à¸à¸¡ à¸£à¸°à¸šà¸š à¸à¸²à¸£à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™ à¹à¸¥à¸°à¸­à¸·à¹ˆà¸™ à¹†',
     descEn: 'Find answers to popular questions about the game, systems, registration, and more.',
-    action: { label: 'View FAQ', labelTh: 'ดู FAQ', href: '/faq' },
+    action: { label: 'View FAQ', labelTh: 'à¸”à¸¹ FAQ', href: '/faq' },
     accent: 'from-emerald-500/20 to-emerald-700/10',
   },
   {
     icon: <BookOpen size={28} />,
-    titleTh: 'คู่มือเกม',
+    titleTh: 'à¸„à¸¹à¹ˆà¸¡à¸·à¸­à¹€à¸à¸¡',
     titleEn: 'Game Guide',
-    descTh: 'เรียนรู้ระบบต่าง ๆ ในเกม ตั้งแต่พื้นฐานไปจนถึงเนื้อหาขั้นสูง',
+    descTh: 'à¹€à¸£à¸µà¸¢à¸™à¸£à¸¹à¹‰à¸£à¸°à¸šà¸šà¸•à¹ˆà¸²à¸‡ à¹† à¹ƒà¸™à¹€à¸à¸¡ à¸•à¸±à¹‰à¸‡à¹à¸•à¹ˆà¸žà¸·à¹‰à¸™à¸à¸²à¸™à¹„à¸›à¸ˆà¸™à¸–à¸¶à¸‡à¹€à¸™à¸·à¹‰à¸­à¸«à¸²à¸‚à¸±à¹‰à¸™à¸ªà¸¹à¸‡',
     descEn: 'Learn game systems from basics to advanced content.',
-    action: { label: 'Read Guide', labelTh: 'อ่านคู่มือ', href: '/game-guide' },
+    action: { label: 'Read Guide', labelTh: 'à¸­à¹ˆà¸²à¸™à¸„à¸¹à¹ˆà¸¡à¸·à¸­', href: '/game-guide' },
     accent: 'from-sky-500/20 to-sky-700/10',
   },
 ];
@@ -78,23 +78,23 @@ const SUPPORT_CHANNELS: SupportChannel[] = [
 const INFO_ITEMS = [
   {
     icon: <Clock size={20} />,
-    titleTh: 'เวลาตอบกลับ',
+    titleTh: 'à¹€à¸§à¸¥à¸²à¸•à¸­à¸šà¸à¸¥à¸±à¸š',
     titleEn: 'Response Time',
-    descTh: 'ภายใน 24-48 ชั่วโมงทำการ',
+    descTh: 'à¸ à¸²à¸¢à¹ƒà¸™ 24-48 à¸Šà¸±à¹ˆà¸§à¹‚à¸¡à¸‡à¸—à¸³à¸à¸²à¸£',
     descEn: 'Within 24-48 business hours',
   },
   {
     icon: <Shield size={20} />,
-    titleTh: 'ความปลอดภัย',
+    titleTh: 'à¸„à¸§à¸²à¸¡à¸›à¸¥à¸­à¸”à¸ à¸±à¸¢',
     titleEn: 'Account Security',
-    descTh: 'อย่าแชร์รหัสผ่านกับผู้อื่น',
+    descTh: 'à¸­à¸¢à¹ˆà¸²à¹à¸Šà¸£à¹Œà¸£à¸«à¸±à¸ªà¸œà¹ˆà¸²à¸™à¸à¸±à¸šà¸œà¸¹à¹‰à¸­à¸·à¹ˆà¸™',
     descEn: 'Never share your password',
   },
   {
     icon: <Headphones size={20} />,
-    titleTh: 'ภาษาที่รองรับ',
+    titleTh: 'à¸ à¸²à¸©à¸²à¸—à¸µà¹ˆà¸£à¸­à¸‡à¸£à¸±à¸š',
     titleEn: 'Languages',
-    descTh: 'ไทย / English',
+    descTh: 'à¹„à¸—à¸¢ / English',
     descEn: 'Thai / English',
   },
 ];

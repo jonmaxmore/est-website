@@ -31,7 +31,7 @@ export default function SuccessModal({ show, onClose, storeUrls }: SuccessModalP
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.9, y: 20 }}
           >
-            <button onClick={onClose} className="event-modal-close">×</button>
+            <button onClick={onClose} className="event-modal-close">Ã—</button>
 
             <div className="event-parchment-card event-success-parchment">
               {/* Corner ornaments */}
@@ -41,19 +41,19 @@ export default function SuccessModal({ show, onClose, storeUrls }: SuccessModalP
               <span className="parchment-corner bottom-right" />
 
               <p className="event-success-title">
-                {t('ท่านได้ลงทะเบียนล่วงหน้าเบื้องต้นสำเร็จแล้ว!', 'Your initial pre-registration was successful!')}
+                {t('à¸—à¹ˆà¸²à¸™à¹„à¸”à¹‰à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™à¸¥à¹ˆà¸§à¸‡à¸«à¸™à¹‰à¸²à¹€à¸šà¸·à¹‰à¸­à¸‡à¸•à¹‰à¸™à¸ªà¸³à¹€à¸£à¹‡à¸ˆà¹à¸¥à¹‰à¸§!', 'Your initial pre-registration was successful!')}
               </p>
 
               <hr className="event-form-divider" />
 
               <p className="event-success-body">
                 {t(
-                  'กรุณาคลิกปุ่มด้านล่าง! ตามอุปกรณ์ของท่าน\nเพื่อยืนยันการลงทะเบียน',
+                  'à¸à¸£à¸¸à¸“à¸²à¸„à¸¥à¸´à¸à¸›à¸¸à¹ˆà¸¡à¸”à¹‰à¸²à¸™à¸¥à¹ˆà¸²à¸‡! à¸•à¸²à¸¡à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™\nà¹€à¸žà¸·à¹ˆà¸­à¸¢à¸·à¸™à¸¢à¸±à¸™à¸à¸²à¸£à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™',
                   'Please click the button below for your device\nto confirm your registration'
                 )}
               </p>
 
-              {/* App Store / Google Play badges — using CMS URLs */}
+              {/* App Store / Google Play badges â€” using CMS URLs */}
               <div className="event-store-badges">
                 <a
                   href={storeUrls.ios}
@@ -80,7 +80,7 @@ export default function SuccessModal({ show, onClose, storeUrls }: SuccessModalP
               </div>
 
               <p className="event-success-pc-note">
-                {t('* พบกับเวอร์ชั่น PC เร็วๆ นี้ *', '* PC version coming soon *')}
+                {t('* à¸žà¸šà¸à¸±à¸šà¹€à¸§à¸­à¸£à¹Œà¸Šà¸±à¹ˆà¸™ PC à¹€à¸£à¹‡à¸§à¹† à¸™à¸µà¹‰ *', '* PC version coming soon *')}
               </p>
             </div>
           </motion.div>

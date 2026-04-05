@@ -13,7 +13,7 @@ import {
   getUTMParams,
 } from '@/lib/tracking';
 
-// ─── Paths to exclude from tracking ───
+// â”€â”€â”€ Paths to exclude from tracking â”€â”€â”€
 const EXCLUDED = ['/admin', '/api/', '/_next/'];
 
 /**
@@ -22,14 +22,14 @@ const EXCLUDED = ['/admin', '/api/', '/_next/'];
  * - Scroll depth (25%, 50%, 75%, 100%)
  * - Time on page (sent on navigation away)
  * Excludes admin and internal routes.
- * Data → /api/track (internal DB, NOT GA4/Adjust)
+ * Data â†’ /api/track (internal DB, NOT GA4/Adjust)
  */
 export default function PageViewTracker() {
   const pathname = usePathname();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const heartbeatStarted = useRef(false);
 
-  // ─── Scroll handler ───
+  // â”€â”€â”€ Scroll handler â”€â”€â”€
   const handleScroll = useCallback(() => {
     const scrollTop = window.scrollY;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;

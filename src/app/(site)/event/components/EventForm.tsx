@@ -82,7 +82,7 @@ export default function EventForm({
 
             <p className="event-form-step">
               <strong>1.</strong> {t(
-                eventSettings.emailPlaceholderTh ? 'กรอกข้อมูล และตรวจสอบความถูกต้องก่อนลงทะเบียน' : 'กรอกข้อมูล และตรวจสอบความถูกต้องก่อนลงทะเบียน',
+                eventSettings.emailPlaceholderTh ? 'à¸à¸£à¸­à¸à¸‚à¹‰à¸­à¸¡à¸¹à¸¥ à¹à¸¥à¸°à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸„à¸§à¸²à¸¡à¸–à¸¹à¸à¸•à¹‰à¸­à¸‡à¸à¹ˆà¸­à¸™à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™' : 'à¸à¸£à¸­à¸à¸‚à¹‰à¸­à¸¡à¸¹à¸¥ à¹à¸¥à¸°à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸„à¸§à¸²à¸¡à¸–à¸¹à¸à¸•à¹‰à¸­à¸‡à¸à¹ˆà¸­à¸™à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™',
                 'Fill in your information and verify its accuracy before registering.'
               )}
             </p>
@@ -148,20 +148,20 @@ export default function EventForm({
                 className={`event-submit-btn ${(!platform || !region) ? 'disabled' : ''}`}
               >
                 {loading
-                  ? t('กำลังลงทะเบียน...', 'Registering...')
+                  ? t('à¸à¸³à¸¥à¸±à¸‡à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™...', 'Registering...')
                   : t(eventSettings.submitButtonTh || '', eventSettings.submitButtonEn || '')
                 }
               </button>
             </form>
           </>
         ) : (
-          /* After registration — show success inline + referral stats */
+          /* After registration â€” show success inline + referral stats */
           <div className="event-success-inline">
             <p className="event-success-title">
-              ✅ {t(eventSettings.successTitleTh || '', eventSettings.successTitleEn || '')}
+              âœ… {t(eventSettings.successTitleTh || '', eventSettings.successTitleEn || '')}
             </p>
             <p className="event-form-step">
-              {t('แชร์ให้เพื่อนเพื่อรับรางวัลพิเศษ', 'Share with friends for bonus rewards')}
+              {t('à¹à¸Šà¸£à¹Œà¹ƒà¸«à¹‰à¹€à¸žà¸·à¹ˆà¸­à¸™à¹€à¸žà¸·à¹ˆà¸­à¸£à¸±à¸šà¸£à¸²à¸‡à¸§à¸±à¸¥à¸žà¸´à¹€à¸¨à¸©', 'Share with friends for bonus rewards')}
             </p>
 
             {/* Referral link */}
@@ -173,7 +173,7 @@ export default function EventForm({
                 aria-label="Referral link"
               />
               <button onClick={copyReferralLink} className="event-referral-btn">
-                {copied ? t('✓ คัดลอก!', '✓ Copied!') : t('คัดลอก', 'Copy')}
+                {copied ? t('âœ“ à¸„à¸±à¸”à¸¥à¸­à¸!', 'âœ“ Copied!') : t('à¸„à¸±à¸”à¸¥à¸­à¸', 'Copy')}
               </button>
             </div>
 
@@ -183,15 +183,15 @@ export default function EventForm({
                 <div className="referral-stats-grid">
                   <div className="referral-stat-item">
                     <span className="referral-stat-value">{referralStats.level1Count}</span>
-                    <span className="referral-stat-label">{t('เชิญตรง (L1)', 'Direct (L1)')}</span>
+                    <span className="referral-stat-label">{t('à¹€à¸Šà¸´à¸à¸•à¸£à¸‡ (L1)', 'Direct (L1)')}</span>
                   </div>
                   <div className="referral-stat-item">
                     <span className="referral-stat-value">{referralStats.level2Count}</span>
-                    <span className="referral-stat-label">{t('ทางอ้อม (L2)', 'Indirect (L2)')}</span>
+                    <span className="referral-stat-label">{t('à¸—à¸²à¸‡à¸­à¹‰à¸­à¸¡ (L2)', 'Indirect (L2)')}</span>
                   </div>
                   <div className="referral-stat-item">
                     <span className="referral-stat-value">{referralStats.totalPoints}</span>
-                    <span className="referral-stat-label">{t('คะแนนรวม', 'Total Points')}</span>
+                    <span className="referral-stat-label">{t('à¸„à¸°à¹à¸™à¸™à¸£à¸§à¸¡', 'Total Points')}</span>
                   </div>
                 </div>
               </div>

@@ -4,7 +4,7 @@ import { useLang } from '@/lib/lang-context';
 import { motion } from 'framer-motion';
 
 export default function HeroSection({ data }: { data: any }) {
-  const { currentLang } = useLang();
+  const { lang: currentLang } = useLang();
   
   if (!data) return null;
 

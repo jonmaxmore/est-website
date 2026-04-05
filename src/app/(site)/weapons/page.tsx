@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { Play, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import Navigation from '@/components/layout/Navigation';
-import Footer from '@/components/layout/Footer';
+import Navigation from '@/components/site/Navigation';
+import Footer from '@/components/site/Footer';
 import RevealSection from '@/components/ui/RevealSection';
 import ScrollProgress from '@/components/ui/ScrollProgress';
 import FloatingParticles from '@/components/ui/FloatingParticles';
@@ -133,11 +133,11 @@ export default function WeaponsPage() {
           <div className="container-custom">
             <RevealSection>
               <div className="page-hero-content">
-                <span className="section-badge">{t('อาวุธ', 'WEAPONS')}</span>
-                <h1 className="page-hero-title">{t('อาวุธแห่ง Arcatea', 'Weapons of Arcatea')}</h1>
+                <span className="section-badge">{t('à¸­à¸²à¸§à¸¸à¸˜', 'WEAPONS')}</span>
+                <h1 className="page-hero-title">{t('à¸­à¸²à¸§à¸¸à¸˜à¹à¸«à¹ˆà¸‡ Arcatea', 'Weapons of Arcatea')}</h1>
                 <p className="page-hero-subtitle">
                   {t(
-                    'เลือกอาวุธ เปลี่ยนสไตล์การเล่น แต่ละอาวุธมีเอกลักษณ์และสกิลเฉพาะตัว',
+                    'à¹€à¸¥à¸·à¸­à¸à¸­à¸²à¸§à¸¸à¸˜ à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸ªà¹„à¸•à¸¥à¹Œà¸à¸²à¸£à¹€à¸¥à¹ˆà¸™ à¹à¸•à¹ˆà¸¥à¸°à¸­à¸²à¸§à¸¸à¸˜à¸¡à¸µà¹€à¸­à¸à¸¥à¸±à¸à¸©à¸“à¹Œà¹à¸¥à¸°à¸ªà¸à¸´à¸¥à¹€à¸‰à¸žà¸²à¸°à¸•à¸±à¸§',
                     'Choose your weapon, change your playstyle. Each weapon has its own identity and skills.',
                   )}
                 </p>
@@ -151,7 +151,7 @@ export default function WeaponsPage() {
             {weapons.length === 0 ? (
               <RevealSection>
                 <div className="weapons-detail__empty">
-                  <p>{t('ข้อมูลอาวุธจะเปิดให้ดูเร็ว ๆ นี้', 'Weapon details coming soon.')}</p>
+                  <p>{t('à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸­à¸²à¸§à¸¸à¸˜à¸ˆà¸°à¹€à¸›à¸´à¸”à¹ƒà¸«à¹‰à¸”à¸¹à¹€à¸£à¹‡à¸§ à¹† à¸™à¸µà¹‰', 'Weapon details coming soon.')}</p>
                 </div>
               </RevealSection>
             ) : (
@@ -179,7 +179,7 @@ export default function WeaponsPage() {
                         />
                       ) : (
                         <div className="weapons-detail__placeholder">
-                          <span className="weapons-detail__placeholderIcon">⚔️</span>
+                          <span className="weapons-detail__placeholderIcon">âš”ï¸</span>
                         </div>
                       )}
                     </div>

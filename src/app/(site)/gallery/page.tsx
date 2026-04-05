@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
-import Navigation from '@/components/layout/Navigation';
-import Footer from '@/components/layout/Footer';
+import Navigation from '@/components/site/Navigation';
+import Footer from '@/components/site/Footer';
 import RevealSection from '@/components/ui/RevealSection';
 import ScrollProgress from '@/components/ui/ScrollProgress';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
@@ -12,9 +12,9 @@ import { isCmsMediaUrl } from '@/lib/cms-media';
 import { useLang } from '@/lib/lang-context';
 
 const TABS = [
-  { key: 'screenshots', labelTh: 'ภาพหน้าจอ', labelEn: 'Screenshots' },
-  { key: 'wallpapers', labelTh: 'วอลเปเปอร์', labelEn: 'Wallpapers' },
-  { key: 'concept', labelTh: 'คอนเซ็ปต์อาร์ต', labelEn: 'Concept Art' },
+  { key: 'screenshots', labelTh: 'à¸ à¸²à¸žà¸«à¸™à¹‰à¸²à¸ˆà¸­', labelEn: 'Screenshots' },
+  { key: 'wallpapers', labelTh: 'à¸§à¸­à¸¥à¹€à¸›à¹€à¸›à¸­à¸£à¹Œ', labelEn: 'Wallpapers' },
+  { key: 'concept', labelTh: 'à¸„à¸­à¸™à¹€à¸‹à¹‡à¸›à¸•à¹Œà¸­à¸²à¸£à¹Œà¸•', labelEn: 'Concept Art' },
 ];
 
 interface GalleryItem {
@@ -43,8 +43,8 @@ export default function GalleryPage() {
 
   const heroBadge = galleryConfig ? t(galleryConfig.badgeTh || '', galleryConfig.badgeEn || '') : '';
   const heroTitle = galleryConfig ? t(galleryConfig.titleTh || '', galleryConfig.titleEn || '') : '';
-  const heroSubtitle = galleryConfig ? t(galleryConfig.subtitleTh || '', galleryConfig.subtitleEn || '') : t('ภาพและวอลเปเปอร์จากโลกของ Arcatea', 'Images and wallpapers from the world of Arcatea');
-  const emptyMessage = galleryConfig ? t(galleryConfig.emptyMessageTh || '', galleryConfig.emptyMessageEn || '') : t('ภาพเพิ่มเติมจะอัปเดตเร็ว ๆ นี้ ติดตามข่าวสารไว้ได้เลย', 'More images coming soon. Stay tuned.');
+  const heroSubtitle = galleryConfig ? t(galleryConfig.subtitleTh || '', galleryConfig.subtitleEn || '') : t('à¸ à¸²à¸žà¹à¸¥à¸°à¸§à¸­à¸¥à¹€à¸›à¹€à¸›à¸­à¸£à¹Œà¸ˆà¸²à¸à¹‚à¸¥à¸à¸‚à¸­à¸‡ Arcatea', 'Images and wallpapers from the world of Arcatea');
+  const emptyMessage = galleryConfig ? t(galleryConfig.emptyMessageTh || '', galleryConfig.emptyMessageEn || '') : t('à¸ à¸²à¸žà¹€à¸žà¸´à¹ˆà¸¡à¹€à¸•à¸´à¸¡à¸ˆà¸°à¸­à¸±à¸›à¹€à¸”à¸•à¹€à¸£à¹‡à¸§ à¹† à¸™à¸µà¹‰ à¸•à¸´à¸”à¸•à¸²à¸¡à¸‚à¹ˆà¸²à¸§à¸ªà¸²à¸£à¹„à¸§à¹‰à¹„à¸”à¹‰à¹€à¸¥à¸¢', 'More images coming soon. Stay tuned.');
 
   useEffect(() => {
     async function fetchGallery() {
@@ -127,7 +127,7 @@ export default function GalleryPage() {
                           unoptimized={isCmsMediaUrl(item.image.url)}
                         />
                       ) : (
-                        <span className="gallery-item-icon">{item.icon || '🖼️'}</span>
+                        <span className="gallery-item-icon">{item.icon || 'ðŸ–¼ï¸'}</span>
                       )}
 
                       <div className="gallery-item-overlay">
@@ -184,11 +184,11 @@ export default function GalleryPage() {
                 <div className="gallery-lightbox-image">
                   <span className="gallery-lightbox-icon">{selectedItem.icon}</span>
                   <h3>{selectedItem.title}</h3>
-                  <p className="gallery-lightbox-hint">{t('รูปจริงจะอัปโหลดผ่าน CMS', 'Actual image will be uploaded via CMS')}</p>
+                  <p className="gallery-lightbox-hint">{t('à¸£à¸¹à¸›à¸ˆà¸£à¸´à¸‡à¸ˆà¸°à¸­à¸±à¸›à¹‚à¸«à¸¥à¸”à¸œà¹ˆà¸²à¸™ CMS', 'Actual image will be uploaded via CMS')}</p>
                 </div>
               )}
 
-              <button className="gallery-lightbox-close" onClick={() => setSelectedItem(null)}>✕</button>
+              <button className="gallery-lightbox-close" onClick={() => setSelectedItem(null)}>âœ•</button>
             </motion.div>
           </motion.div>
         ) : null}
