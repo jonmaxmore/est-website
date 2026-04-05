@@ -47,22 +47,17 @@ export default function HomeContent({ homepageData, settings, weapons, news }: H
     <div className="home-page-shell bg-black text-white w-full overflow-hidden">
       <ScrollProgress />
 
-      {/* 
-        Snap Container: 
-        ให้ทุก Section เลื่อนทีละ 1 หน้าจอเป๊ะๆ (Full-screen Snap Scrolling)
-      */}
-      <main className="relative w-full h-screen overflow-y-auto overflow-x-hidden snap-y snap-mandatory scroll-smooth">
+      <main className="relative w-full overflow-x-hidden">
         {blocks.length > 0 ? (
-          blocks.map((block: any, index: number) => renderBlock(block, index))
+          blocks.map((block: Record<string, unknown>, index: number) => renderBlock(block, index))
         ) : (
-          <div className="h-screen flex items-center justify-center text-gray-500 snap-start">
+          <div className="min-h-[50vh] flex items-center justify-center text-gray-500">
             [No Content Blocks Configured in CMS]
           </div>
         )}
         
-        {/* ให้ Footer เป็น Section สุดท้ายที่โดน Snap ด้วย */}
-        <div className="snap-start shrink-0">
-          <Footer settings={footerSettings} />
+        <div>
+          <Footer socialLinks={settings?.site?.socialLinks || {}} footer={footerSettings} />
         </div>
       </main>
     </div>
