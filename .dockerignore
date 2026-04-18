@@ -1,0 +1,10 @@
+node_modules
+.nuxt
+.output
+.git
+*.md
+.env.local
+.env.*.local
+deploy.sh
+deploy-cmd.bat
+test-results
