@@ -33,6 +33,7 @@
     "@nuxt/ui": "^4.6.1",
     "@nuxtjs/i18n": "^10.2.4",
     "@pinia/nuxt": "^0.11.3",
+    "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
     "@vueuse/motion": "^3.0.3",
     "bcryptjs": "^3.0.3",
@@ -41,6 +42,7 @@
     "ioredis": "^5.10.1",
     "nuxt": "^4.4.2",
     "nuxt-auth-utils": "^0.5.29",
+    "pg": "^8.20.0",
     "pinia": "^3.0.4",
     "sharp": "^0.34.5",
     "vue": "^3.5.32",
@@ -49,6 +51,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/pg": "^8.20.0",
     "eslint": "^10.2.1",
     "eslint-plugin-vue": "^10.8.0",
     "husky": "^9.1.7",
