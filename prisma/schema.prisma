@@ -1,0 +1,201 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ══════════ AUTH ══════════
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  displayName  String
+  role         Role     @default(EDITOR)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("admin_users")
+}
+
+enum Role {
+  SUPER_ADMIN
+  EDITOR
+}
+
+// ══════════ PRE-REGISTRATION ══════════
+
+model PreRegistration {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  platform     Platform
+  region       Region
+  referralCode String?   @unique
+  referredBy   String?
+  ipAddress    String?
+  userAgent    String?
+  utmSource    String?
+  utmMedium    String?
+  utmCampaign  String?
+  confirmedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([createdAt])
+  @@index([platform])
+  @@index([region])
+  @@map("pre_registrations")
+}
+
+enum Platform {
+  IOS
+  ANDROID
+  PC
+}
+
+enum Region {
+  TH
+  SEA
+  GLOBAL
+}
+
+// ══════════ NEWS ══════════
+
+model NewsArticle {
+  id            Int           @id @default(autoincrement())
+  slug          String        @unique
+  titleEn       String
+  titleTh       String
+  excerptEn     String?
+  excerptTh     String?
+  contentEn     String?       @db.Text
+  contentTh     String?       @db.Text
+  category      NewsCategory
+  status        ContentStatus @default(DRAFT)
+  featuredImage String?
+  publishedAt   DateTime?
+  featureOnHome Boolean       @default(false)
+  homePriority  Int           @default(0)
+  externalUrl   String?
+  openInNewTab  Boolean       @default(false)
+  seoTitle      String?
+  seoDesc       String?
+  ogImage       String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([status, publishedAt(sort: Desc)])
+  @@map("news_articles")
+}
+
+enum NewsCategory {
+  ANNOUNCEMENT
+  EVENT
+  UPDATE
+  MEDIA
+  MAINTENANCE
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// ══════════ MEDIA ══════════
+
+model MediaAsset {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  mimeType     String
+  sizeBytes    Int
+  width        Int?
+  height       Int?
+  altText      String?
+  url          String
+  thumbnailUrl String?
+  createdAt    DateTime @default(now())
+
+  @@map("media_assets")
+}
+
+// ══════════ GAME CONTENT ══════════
+
+model Weapon {
+  id              Int       @id @default(autoincrement())
+  name            String
+  nameEn          String?
+  descriptionEn   String?
+  descriptionTh   String?
+  portrait        String?
+  infoImage       String?
+  backgroundImage String?
+  icon            String?
+  videoType       VideoType @default(NONE)
+  videoUrl        String?
+  sortOrder       Int       @default(0)
+  visible         Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("weapons")
+}
+
+enum VideoType {
+  NONE
+  YOUTUBE
+  UPLOAD
+}
+
+// ══════════ SITE CONFIG ══════════
+
+model SiteConfig {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+
+  @@map("site_config")
+}
+
+model Milestone {
+  id          Int     @id @default(autoincrement())
+  tier        Int     @unique
+  targetCount Int
+  rewardEn    String
+  rewardTh    String
+  icon        String?
+  reached     Boolean @default(false)
+  sortOrder   Int     @default(0)
+
+  @@map("milestones")
+}
+
+// ══════════ ANALYTICS ══════════
+
+model PageView {
+  id        String   @id @default(cuid())
+  path      String
+  sessionId String
+  visitorId String
+  referrer  String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("page_views")
+}
+
+model ConversionEvent {
+  id        String   @id @default(cuid())
+  eventName String
+  eventData Json?
+  sessionId String
+  validated Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([eventName, createdAt])
+  @@map("conversion_events")
+}
