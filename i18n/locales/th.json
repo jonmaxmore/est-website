@@ -6,7 +6,12 @@
     "features": "ฟีเจอร์ของเกม",
     "news": "ข่าวสาร",
     "follow": "ติดตามเรา",
-    "support": "ศูนย์ช่วยเหลือ"
+    "support": "ศูนย์ช่วยเหลือ",
+    "register": "ลงทะเบียน",
+    "download": "ดาวน์โหลด",
+    "gameGuide": "คู่มือเกม",
+    "gallery": "แกลเลอรี่",
+    "story": "เรื่องราว"
   },
   "hero": {
     "tagline": "ผจญภัยไปด้วยกัน พิชิตยอดหอคอย",
@@ -19,10 +24,53 @@
   },
   "weapons": {
     "title": "อาวุธ",
+    "subtitle": "เลือกอาวุธที่เหมาะกับสไตล์การเล่นของคุณ",
     "sword": "ดาบ",
     "bow": "ธนู",
     "crystalOrb": "ลูกแก้วคริสตัล",
     "wand": "ไม้เท้า"
+  },
+  "features": {
+    "title": "ฟีเจอร์ของเกม",
+    "subtitle": "ระบบเกมที่โดดเด่นและแตกต่าง",
+    "openWorld": "โลกเปิดกว้าง",
+    "openWorldDesc": "สำรวจโลกแฟนตาซีกว้างใหญ่ที่เต็มไปด้วยดันเจี้ยนลึกลับและบอสสุดโหด",
+    "realTimePvP": "PvP แบบเรียลไทม์",
+    "realTimePvPDesc": "ต่อสู้กับผู้เล่นจริงในสนามรบแบบเรียลไทม์ พิสูจน์ฝีมือของคุณ",
+    "guildSystem": "ระบบกิลด์",
+    "guildSystemDesc": "สร้างกิลด์ รวมพล และบุกตีบอสกิลด์เพื่อรางวัลสุดพิเศษ",
+    "petSystem": "ระบบสัตว์เลี้ยง",
+    "petSystemDesc": "เก็บสะสมและอัพเกรดสัตว์เลี้ยงหายากที่ช่วยเพิ่มพลังให้คุณ",
+    "craftSystem": "ระบบคราฟต์",
+    "craftSystemDesc": "สร้างอาวุธและชุดเกราะในตำนานจากวัตถุดิบที่หาได้ในดันเจี้ยน",
+    "towerClimb": "ปีนหอคอย",
+    "towerClimbDesc": "พิชิตหอคอยนิรันดร์ ท้าทายทุกชั้นเพื่อรางวัลสูงสุด"
+  },
+  "highlight": {
+    "title": "ไฮไลท์",
+    "subtitle": "สิ่งที่ทำให้ Eternal Tower Saga แตกต่าง",
+    "graphics": "กราฟิกระดับ K-Fantasy",
+    "graphicsDesc": "กราฟิกสวยงามสไตล์ K-Fantasy ที่ออกแบบด้วยความใส่ใจทุกรายละเอียด",
+    "crossPlatform": "เล่นข้ามแพลตฟอร์ม",
+    "crossPlatformDesc": "เล่นได้ทั้ง iOS, Android และ PC ด้วยบัญชีเดียวกัน",
+    "freeToPlay": "เล่นฟรี",
+    "freeToPlayDesc": "เข้าถึงเนื้อเรื่องหลักและระบบเกมทั้งหมดโดยไม่ต้องจ่ายเงิน"
+  },
+  "news": {
+    "title": "ข่าวสาร",
+    "latestNews": "ข่าวล่าสุด",
+    "subtitle": "ติดตามความเคลื่อนไหวล่าสุดของเกม",
+    "readMore": "อ่านเพิ่มเติม",
+    "allNews": "ดูข่าวทั้งหมด",
+    "noNews": "ยังไม่มีข่าวสาร",
+    "categories": {
+      "all": "ทั้งหมด",
+      "announcement": "ประกาศ",
+      "event": "กิจกรรม",
+      "update": "อัปเดต",
+      "media": "สื่อ",
+      "maintenance": "แจ้งซ่อมบำรุง"
+    }
   },
   "event": {
     "title": "ลงทะเบียนล่วงหน้า",
@@ -47,12 +95,34 @@
     "copied": "คัดลอกแล้ว!",
     "share": "แชร์"
   },
+  "pages": {
+    "faq": "คำถามที่พบบ่อย",
+    "gallery": "แกลเลอรี่",
+    "story": "เรื่องราว",
+    "support": "ศูนย์ช่วยเหลือ",
+    "terms": "เงื่อนไขการใช้งาน",
+    "privacy": "นโยบายความเป็นส่วนตัว",
+    "download": "ดาวน์โหลด",
+    "gameGuide": "คู่มือเกม"
+  },
+  "gameGuide": {
+    "title": "คู่มือเกม",
+    "subtitle": "เรียนรู้ระบบเกมทั้งหมดเพื่อเริ่มต้นผจญภัย",
+    "weaponTypes": "ประเภทอาวุธ",
+    "weaponTypesDesc": "อาวุธ 4 ประเภท แต่ละแบบมีสไตล์การเล่นที่แตกต่างกัน เลือกอาวุธที่เหมาะกับคุณที่สุด",
+    "comboSystem": "ระบบคอมโบ",
+    "comboSystemDesc": "เรียนรู้การร้อยเรียงสกิลเข้าด้วยกันเพื่อสร้างคอมโบทรงพลัง",
+    "dungeonGuide": "คำแนะนำดันเจี้ยน",
+    "dungeonGuideDesc": "เคล็ดลับในการบุกตีดันเจี้ยนแต่ละชั้นอย่างมีประสิทธิภาพ",
+    "gearUpgrade": "การอัพเกรดอุปกรณ์",
+    "gearUpgradeDesc": "วิธีอัพเกรดและเสริมพลังอุปกรณ์ให้แข็งแกร่งที่สุด"
+  },
   "store": {
-    "preOrderOn": "Pre-order on the",
+    "preOrderOn": "Pre-order บน",
     "appStore": "App Store",
-    "preRegisterOn": "Register on",
+    "preRegisterOn": "ลงทะเบียนบน",
     "googlePlay": "Google Play",
-    "comingSoon": "Coming soon",
+    "comingSoon": "เร็ว ๆ นี้",
     "windows": "Windows"
   },
   "footer": {
@@ -60,11 +130,13 @@
     "terms": "เงื่อนไขการใช้งาน",
     "privacy": "นโยบายความเป็นส่วนตัว",
     "fanpage": "Facebook Fanpage",
-    "customerService": "ศูนย์ช่วยเหลือ"
+    "customerService": "ศูนย์ช่วยเหลือ",
+    "gameFeatures": "ฟีเจอร์ของเกม"
   },
   "common": {
     "loading": "กำลังโหลด...",
     "error": "เกิดข้อผิดพลาด",
-    "retry": "ลองอีกครั้ง"
+    "retry": "ลองอีกครั้ง",
+    "backToHome": "กลับหน้าแรก"
   }
 }

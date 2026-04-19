@@ -6,7 +6,12 @@
     "features": "Features",
     "news": "News",
     "follow": "Follow Us",
-    "support": "Support"
+    "support": "Support",
+    "register": "Register",
+    "download": "Download",
+    "gameGuide": "Game Guide",
+    "gallery": "Gallery",
+    "story": "Story"
   },
   "hero": {
     "tagline": "Adventure together, climb higher.",
@@ -19,10 +24,53 @@
   },
   "weapons": {
     "title": "Weapons",
+    "subtitle": "Choose the weapon that matches your playstyle",
     "sword": "Sword",
     "bow": "Bow",
     "crystalOrb": "Crystal Orb",
     "wand": "Wand"
+  },
+  "features": {
+    "title": "Game Features",
+    "subtitle": "Unique systems that set this game apart",
+    "openWorld": "Open World",
+    "openWorldDesc": "Explore vast fantasy landscapes filled with mysterious dungeons and epic bosses",
+    "realTimePvP": "Real-Time PvP",
+    "realTimePvPDesc": "Battle real players in real-time arenas and prove your skills",
+    "guildSystem": "Guild System",
+    "guildSystemDesc": "Build guilds, rally allies, and conquer guild bosses for exclusive rewards",
+    "petSystem": "Pet System",
+    "petSystemDesc": "Collect and upgrade rare pets that boost your power",
+    "craftSystem": "Crafting System",
+    "craftSystemDesc": "Forge legendary weapons and armor from materials found in dungeons",
+    "towerClimb": "Tower Climbing",
+    "towerClimbDesc": "Conquer the Eternal Tower, challenging every floor for ultimate rewards"
+  },
+  "highlight": {
+    "title": "Highlights",
+    "subtitle": "What makes Eternal Tower Saga different",
+    "graphics": "K-Fantasy Graphics",
+    "graphicsDesc": "Stunning K-Fantasy graphics crafted with attention to every detail",
+    "crossPlatform": "Cross-Platform",
+    "crossPlatformDesc": "Play on iOS, Android, and PC with a single account",
+    "freeToPlay": "Free to Play",
+    "freeToPlayDesc": "Access all main story content and game systems without paying"
+  },
+  "news": {
+    "title": "News",
+    "latestNews": "Latest News",
+    "subtitle": "Stay updated with the latest game news",
+    "readMore": "Read More",
+    "allNews": "View All News",
+    "noNews": "No news yet",
+    "categories": {
+      "all": "All",
+      "announcement": "Announcement",
+      "event": "Event",
+      "update": "Update",
+      "media": "Media",
+      "maintenance": "Maintenance"
+    }
   },
   "event": {
     "title": "Pre-Registration",
@@ -47,6 +95,28 @@
     "copied": "Copied!",
     "share": "Share"
   },
+  "pages": {
+    "faq": "FAQ",
+    "gallery": "Gallery",
+    "story": "Story",
+    "support": "Support",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "download": "Download",
+    "gameGuide": "Game Guide"
+  },
+  "gameGuide": {
+    "title": "Game Guide",
+    "subtitle": "Learn all game systems to start your adventure",
+    "weaponTypes": "Weapon Types",
+    "weaponTypesDesc": "4 weapon types, each with different playstyles. Choose the one that suits you best",
+    "comboSystem": "Combo System",
+    "comboSystemDesc": "Learn to chain skills together for powerful combos",
+    "dungeonGuide": "Dungeon Guide",
+    "dungeonGuideDesc": "Tips for clearing each dungeon floor efficiently",
+    "gearUpgrade": "Gear Upgrade",
+    "gearUpgradeDesc": "How to upgrade and enhance your gear for maximum power"
+  },
   "store": {
     "preOrderOn": "Pre-order on the",
     "appStore": "App Store",
@@ -60,11 +130,13 @@
     "terms": "Terms of Service",
     "privacy": "Privacy Policy",
     "fanpage": "Facebook Fanpage",
-    "customerService": "Customer Service"
+    "customerService": "Customer Service",
+    "gameFeatures": "Game Features"
   },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
-    "retry": "Try Again"
+    "retry": "Try Again",
+    "backToHome": "Back to Home"
   }
 }
