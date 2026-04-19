@@ -138,6 +138,12 @@ model Weapon {
   videoUrl        String?
   sortOrder       Int       @default(0)
   visible         Boolean   @default(true)
+  // RPG Stats (0-100)
+  statSTR         Int       @default(50)
+  statINT         Int       @default(50)
+  statAGI         Int       @default(50)
+  statDEX         Int       @default(50)
+  statHP          Int       @default(50)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 

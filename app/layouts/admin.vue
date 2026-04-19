@@ -79,6 +79,7 @@ const navGroups = [
   {
     title: 'Content',
     items: [
+      { to: '/admin/homepage', icon: '🏠', label: 'Homepage' },
       { to: '/admin/news', icon: '📰', label: 'News' },
       { to: '/admin/weapons', icon: '⚔️', label: 'Weapons' },
       { to: '/admin/pages', icon: '📄', label: 'Pages' },

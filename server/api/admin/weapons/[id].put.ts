@@ -13,6 +13,11 @@ const weaponSchema = z.object({
   videoUrl: z.string().optional().nullable(),
   sortOrder: z.number().optional(),
   visible: z.boolean().optional(),
+  statSTR: z.number().min(0).max(100).optional(),
+  statINT: z.number().min(0).max(100).optional(),
+  statAGI: z.number().min(0).max(100).optional(),
+  statDEX: z.number().min(0).max(100).optional(),
+  statHP: z.number().min(0).max(100).optional(),
 })
 
 export default defineEventHandler(async (event) => {
