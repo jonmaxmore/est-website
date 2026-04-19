@@ -6,7 +6,13 @@ export default defineEventHandler(async (event) => {
 
   const [articles, total] = await Promise.all([
     prisma.newsArticle.findMany({
-      where: { status: 'PUBLISHED' },
+      where: {
+        status: 'PUBLISHED',
+        OR: [
+          { publishedAt: { lte: new Date() } },
+          { publishedAt: null },
+        ],
+      },
       orderBy: { publishedAt: 'desc' },
       take: limit,
       skip,
