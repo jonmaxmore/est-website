@@ -144,7 +144,7 @@
         </div>
       </section>
 
-      <!-- FEATURES (Luna Game Feature style — horizontal image cards) -->
+      <!-- FEATURES (clickable image cards with detail popup) -->
       <section
         v-else-if="section.type === 'features'"
         class="relative overflow-hidden py-[clamp(4rem,8vw,8rem)]"
@@ -159,7 +159,6 @@
             <p class="mt-2 text-white/50">{{ t('features.subtitle') }}</p>
           </div>
 
-          <!-- Luna-style Feature Cards (image-first) -->
           <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <div
               v-for="(feature, index) in featureItems"
@@ -168,20 +167,15 @@
               v-motion
               :initial="{ opacity: 0, y: 30 }"
               :visibleOnce="{ opacity: 1, y: 0, transition: { delay: index * 80 } }"
+              @click="openDetail('feature', feature.key, feature.image)"
             >
-              <!-- Feature Image -->
-              <img
-                :src="feature.image"
-                :alt="t(`features.${feature.key}`)"
-                class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <!-- Gradient overlay -->
+              <img :src="feature.image" :alt="t(`features.${feature.key}`)" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-              <!-- Content overlay -->
               <div class="absolute bottom-0 left-0 right-0 p-6">
                 <div class="mb-2 text-3xl">{{ feature.icon }}</div>
                 <h3 class="text-xl font-extrabold leading-tight drop-shadow-lg">{{ t(`features.${feature.key}`) }}</h3>
                 <p class="mt-1 text-sm text-white/60 line-clamp-2">{{ t(`features.${feature.key}Desc`) }}</p>
+                <span class="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">{{ t('features.readMore') }}</span>
               </div>
             </div>
           </div>
@@ -203,12 +197,13 @@
             <p class="mt-2 text-white/50">{{ t('highlight.subtitle') }}</p>
           </div>
 
-          <!-- Luna-style: 1 big + 2 small -->
+           <!-- Luna-style: 1 big + 2 small — all clickable -->
           <div class="grid gap-6 lg:grid-cols-2 lg:grid-rows-2">
             <!-- Big Banner -->
             <div
               class="group relative overflow-hidden rounded-2xl border border-white/8 lg:row-span-2 min-h-[300px] lg:min-h-0 cursor-pointer transition-all duration-500 hover:border-gold/30"
               v-motion :initial="{ opacity: 0, x: -30 }" :visibleOnce="{ opacity: 1, x: 0 }"
+              @click="openDetail('highlight', highlightItems[0]?.key, highlightItems[0]?.image)"
             >
               <img :src="highlightItems[0]?.image || '/images/og-cover.png'" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -216,6 +211,7 @@
                 <div class="mb-3 text-4xl">{{ highlightItems[0]?.icon }}</div>
                 <h3 class="text-2xl font-extrabold drop-shadow-lg">{{ t(`highlight.${highlightItems[0]?.key}`) }}</h3>
                 <p class="mt-2 text-sm text-white/60 max-w-md">{{ t(`highlight.${highlightItems[0]?.key}Desc`) }}</p>
+                <span class="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">{{ t('highlight.readMore') }}</span>
               </div>
             </div>
 
@@ -225,6 +221,7 @@
               :key="hl.key"
               class="group relative overflow-hidden rounded-2xl border border-white/8 min-h-[200px] cursor-pointer transition-all duration-500 hover:border-gold/30"
               v-motion :initial="{ opacity: 0, x: 30 }" :visibleOnce="{ opacity: 1, x: 0, transition: { delay: idx * 100 } }"
+              @click="openDetail('highlight', hl.key, hl.image)"
             >
               <img :src="hl.image || '/images/og-cover.png'" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -232,6 +229,7 @@
                 <div class="mb-2 text-2xl">{{ hl.icon }}</div>
                 <h3 class="text-lg font-extrabold drop-shadow-lg">{{ t(`highlight.${hl.key}`) }}</h3>
                 <p class="mt-1 text-sm text-white/60">{{ t(`highlight.${hl.key}Desc`) }}</p>
+                <span class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">{{ t('highlight.readMore') }}</span>
               </div>
             </div>
           </div>
@@ -322,6 +320,42 @@
         </div>
       </section>
     </template>
+
+    <!-- Detail Modal (Features / Highlights) -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div
+          v-if="detailModal.open"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
+          @click.self="detailModal.open = false"
+        >
+          <div class="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-white/10 bg-surface-secondary shadow-[0_40px_100px_rgba(0,0,0,0.8)]">
+            <!-- Image Header -->
+            <div class="relative h-[220px] overflow-hidden">
+              <img :src="detailModal.image" class="h-full w-full object-cover" />
+              <div class="absolute inset-0 bg-gradient-to-t from-surface-secondary via-surface-secondary/40 to-transparent" />
+              <button
+                @click="detailModal.open = false"
+                class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white/60 hover:bg-black/70 hover:text-white transition-all cursor-pointer border-none text-lg"
+              >✕</button>
+            </div>
+            <!-- Content -->
+            <div class="px-8 pb-8 -mt-8 relative">
+              <h3 class="mb-3 text-2xl font-extrabold text-gold">
+                {{ detailModal.type === 'feature' ? t(`features.${detailModal.key}`) : t(`highlight.${detailModal.key}`) }}
+              </h3>
+              <p class="mb-4 text-sm font-medium text-white/60">
+                {{ detailModal.type === 'feature' ? t(`features.${detailModal.key}Desc`) : t(`highlight.${detailModal.key}Desc`) }}
+              </p>
+              <div class="h-px w-full bg-white/8 mb-4" />
+              <p class="text-sm leading-relaxed text-white/80">
+                {{ detailModal.type === 'feature' ? t(`features.${detailModal.key}Detail`) : t(`highlight.${detailModal.key}Detail`) }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -404,4 +438,31 @@ const highlightItems = [
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })
 }
+
+// Detail modal state
+const detailModal = reactive({ open: false, type: '' as 'feature' | 'highlight', key: '', image: '' })
+function openDetail(type: 'feature' | 'highlight', key: string, image?: string) {
+  detailModal.type = type
+  detailModal.key = key
+  detailModal.image = image || '/images/og-cover.png'
+  detailModal.open = true
+}
 </script>
+
+<style scoped>
+.modal-enter-active, .modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+.modal-enter-active > div, .modal-leave-active > div {
+  transition: transform 0.3s ease;
+}
+.modal-enter-from, .modal-leave-to {
+  opacity: 0;
+}
+.modal-enter-from > div {
+  transform: scale(0.95) translateY(20px);
+}
+.modal-leave-to > div {
+  transform: scale(0.95) translateY(20px);
+}
+</style>
