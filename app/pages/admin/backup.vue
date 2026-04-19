@@ -68,6 +68,7 @@ definePageMeta({ layout: 'admin' })
 const exportOptions = ref({ news: true, weapons: true, registrations: true, config: true, users: false })
 const importFile = ref<File | null>(null)
 const wpUrl = ref('')
+const { toast, showToast } = useAdminToast()
 
 async function exportData() {
   const data = await $fetch<Blob>('/api/admin/backup/export', {
@@ -90,12 +91,12 @@ async function importData() {
   if (!importFile.value) return
   const text = await importFile.value.text()
   await $fetch('/api/admin/backup/import', { method: 'POST', body: JSON.parse(text) })
-  alert('Data imported successfully!')
+  showToast('Data imported successfully!')
 }
 
 async function importFromWP() {
   if (!wpUrl.value) return
   await $fetch('/api/admin/backup/import-wp', { method: 'POST', body: { url: wpUrl.value } })
-  alert('WordPress import complete!')
+  showToast('WordPress import complete!')
 }
 </script>

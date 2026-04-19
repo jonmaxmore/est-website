@@ -7,20 +7,20 @@
         <p class="mb-6 text-sm leading-relaxed text-white/60">{{ t('footer.copyright') }}</p>
         <div class="flex gap-2">
           <a
-            v-for="(url, platform) in socialLinks"
+            v-for="(url, platform) in socialLinksFiltered"
             :key="platform"
             :href="url"
             target="_blank"
             rel="noopener noreferrer"
-            :aria-label="platform"
+            :aria-label="String(platform)"
             class="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-xs font-bold text-white/60 no-underline transition-all duration-300 hover:border-white/30 hover:bg-white/10 hover:text-white"
           >
-            {{ platformIcon(platform as string) }}
+            {{ platformIcon(String(platform)) }}
           </a>
         </div>
       </div>
 
-      <!-- Links -->
+      <!-- Links — CMS-driven -->
       <div class="grid auto-cols-fr grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-8">
         <div v-for="group in footerGroups" :key="group.title">
           <h4 class="mb-4 text-xs font-semibold uppercase tracking-widest text-white">{{ group.title }}</h4>
@@ -45,22 +45,62 @@
 </template>
 
 <script setup lang="ts">
-import { SITE, SOCIAL_LINKS } from '~/shared/constants'
-const { t } = useI18n()
-const socialLinks = SOCIAL_LINKS
-const footerGroups = [
-  { title: t('nav.features'), links: [
-    { href: '/weapons', label: t('nav.characters') },
-    { href: '/game-guide', label: t('nav.features') },
-    { href: '/gallery', label: 'Gallery' },
-  ]},
-  { title: t('nav.support'), links: [
-    { href: '/faq', label: 'FAQ' },
-    { href: '/support', label: t('nav.support') },
-    { href: '/terms', label: t('footer.terms') },
-    { href: '/privacy', label: t('footer.privacy') },
-  ]},
-]
+import { SITE } from '~/shared/constants'
+const { t, locale } = useI18n()
+const currentLocale = computed(() => locale.value)
+
+// CMS-driven social links & footer navigation
+const { data: siteConfig } = await useFetch<{
+  navigation: { main: Array<{ labelEn: string; labelTh: string; href: string }>; footer: Array<{ labelEn?: string; labelTh?: string; label?: string; href: string }> }
+  social: Record<string, string>
+}>('/api/public/site', {
+  default: () => ({
+    navigation: { main: [], footer: [] },
+    social: {},
+  }),
+  pick: ['navigation', 'social'],
+})
+
+// Filter out empty social links
+const socialLinksFiltered = computed(() => {
+  const social = siteConfig.value?.social || {}
+  return Object.fromEntries(
+    Object.entries(social).filter(([, url]) => url && url.trim() !== '')
+  )
+})
+
+// Build footer groups from CMS data or fallback to defaults
+const footerGroups = computed(() => {
+  const footerLinks = siteConfig.value?.navigation?.footer
+  if (footerLinks && footerLinks.length > 0) {
+    // Group into chunks of 4 for display
+    const links = footerLinks.map((l) => ({
+      href: l.href,
+      label: currentLocale.value === 'th' ? (l.labelTh || l.label || l.labelEn || '') : (l.labelEn || l.label || ''),
+    }))
+    const mid = Math.ceil(links.length / 2)
+    return [
+      { title: t('nav.features'), links: links.slice(0, mid) },
+      { title: t('nav.support'), links: links.slice(mid) },
+    ]
+  }
+
+  // Fallback defaults
+  return [
+    { title: t('nav.features'), links: [
+      { href: '/weapons', label: t('nav.characters') },
+      { href: '/game-guide', label: t('nav.features') },
+      { href: '/gallery', label: 'Gallery' },
+    ]},
+    { title: t('nav.support'), links: [
+      { href: '/faq', label: 'FAQ' },
+      { href: '/support', label: t('nav.support') },
+      { href: '/terms', label: t('footer.terms') },
+      { href: '/privacy', label: t('footer.privacy') },
+    ]},
+  ]
+})
+
 function platformIcon(platform: string): string {
   const icons: Record<string, string> = { facebook: 'f', twitter: '𝕏', youtube: '▶', discord: 'D', line: 'L' }
   return icons[platform] || '•'

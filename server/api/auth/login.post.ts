@@ -34,7 +34,6 @@ export default defineEventHandler(async (event) => {
     data: { lastLoginAt: new Date() },
   })
 
-  // Set session
   await setUserSession(event, {
     user: {
       id: user.id,
@@ -43,6 +42,8 @@ export default defineEventHandler(async (event) => {
       role: user.role,
     },
   })
+
+  await logActivity(event, 'LOGIN', 'auth', `Admin login: ${user.email}`, user.id)
 
   return { success: true, user: { displayName: user.displayName, role: user.role } }
 })

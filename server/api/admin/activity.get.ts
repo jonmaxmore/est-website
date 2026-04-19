@@ -1,4 +1,7 @@
+/** Activity log — returns recent admin actions */
 export default defineEventHandler(async () => {
-  // Activity log - return from SiteConfig for now until we add a proper model
-  return []
+  return prisma.activityLog.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: 100,
+  })
 })

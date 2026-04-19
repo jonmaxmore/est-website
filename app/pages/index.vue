@@ -167,14 +167,14 @@
               v-motion
               :initial="{ opacity: 0, y: 30 }"
               :visibleOnce="{ opacity: 1, y: 0, transition: { delay: index * 80 } }"
-              @click="openDetail('feature', feature.key, feature.image)"
+              @click="openFeatureDetail(feature)"
             >
-              <img :src="feature.image" :alt="t(`features.${feature.key}`)" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <img :src="feature.image || '/images/og-cover.png'" :alt="feature.titleEn" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
               <div class="absolute bottom-0 left-0 right-0 p-6">
                 <div class="mb-2 text-3xl">{{ feature.icon }}</div>
-                <h3 class="text-xl font-extrabold leading-tight drop-shadow-lg">{{ t(`features.${feature.key}`) }}</h3>
-                <p class="mt-1 text-sm text-white/60 line-clamp-2">{{ t(`features.${feature.key}Desc`) }}</p>
+                <h3 class="text-xl font-extrabold leading-tight drop-shadow-lg">{{ currentLocale === 'th' ? feature.titleTh : feature.titleEn }}</h3>
+                <p class="mt-1 text-sm text-white/60 line-clamp-2">{{ currentLocale === 'th' ? (feature.descriptionTh || feature.descriptionEn) : feature.descriptionEn }}</p>
                 <span class="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">{{ t('features.readMore') }}</span>
               </div>
             </div>
@@ -201,16 +201,17 @@
           <div class="grid gap-6 lg:grid-cols-2 lg:grid-rows-2">
             <!-- Big Banner -->
             <div
+              v-if="highlightItems.length > 0"
               class="group relative overflow-hidden rounded-2xl border border-white/8 lg:row-span-2 min-h-[300px] lg:min-h-0 cursor-pointer transition-all duration-500 hover:border-gold/30"
               v-motion :initial="{ opacity: 0, x: -30 }" :visibleOnce="{ opacity: 1, x: 0 }"
-              @click="openDetail('highlight', highlightItems[0]?.key, highlightItems[0]?.image)"
+              @click="openHighlightDetail(highlightItems[0])"
             >
               <img :src="highlightItems[0]?.image || '/images/og-cover.png'" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
               <div class="absolute bottom-0 left-0 right-0 p-8">
                 <div class="mb-3 text-4xl">{{ highlightItems[0]?.icon }}</div>
-                <h3 class="text-2xl font-extrabold drop-shadow-lg">{{ t(`highlight.${highlightItems[0]?.key}`) }}</h3>
-                <p class="mt-2 text-sm text-white/60 max-w-md">{{ t(`highlight.${highlightItems[0]?.key}Desc`) }}</p>
+                <h3 class="text-2xl font-extrabold drop-shadow-lg">{{ currentLocale === 'th' ? highlightItems[0]?.titleTh : highlightItems[0]?.titleEn }}</h3>
+                <p class="mt-2 text-sm text-white/60 max-w-md">{{ currentLocale === 'th' ? (highlightItems[0]?.descriptionTh || highlightItems[0]?.descriptionEn) : highlightItems[0]?.descriptionEn }}</p>
                 <span class="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">{{ t('highlight.readMore') }}</span>
               </div>
             </div>
@@ -221,14 +222,14 @@
               :key="hl.key"
               class="group relative overflow-hidden rounded-2xl border border-white/8 min-h-[200px] cursor-pointer transition-all duration-500 hover:border-gold/30"
               v-motion :initial="{ opacity: 0, x: 30 }" :visibleOnce="{ opacity: 1, x: 0, transition: { delay: idx * 100 } }"
-              @click="openDetail('highlight', hl.key, hl.image)"
+              @click="openHighlightDetail(hl)"
             >
               <img :src="hl.image || '/images/og-cover.png'" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
               <div class="absolute bottom-0 left-0 right-0 p-6">
                 <div class="mb-2 text-2xl">{{ hl.icon }}</div>
-                <h3 class="text-lg font-extrabold drop-shadow-lg">{{ t(`highlight.${hl.key}`) }}</h3>
-                <p class="mt-1 text-sm text-white/60">{{ t(`highlight.${hl.key}Desc`) }}</p>
+                <h3 class="text-lg font-extrabold drop-shadow-lg">{{ currentLocale === 'th' ? hl.titleTh : hl.titleEn }}</h3>
+                <p class="mt-1 text-sm text-white/60">{{ currentLocale === 'th' ? (hl.descriptionTh || hl.descriptionEn) : hl.descriptionEn }}</p>
                 <span class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">{{ t('highlight.readMore') }}</span>
               </div>
             </div>
@@ -342,14 +343,14 @@
             <!-- Content -->
             <div class="px-8 pb-8 -mt-8 relative">
               <h3 class="mb-3 text-2xl font-extrabold text-gold">
-                {{ detailModal.type === 'feature' ? t(`features.${detailModal.key}`) : t(`highlight.${detailModal.key}`) }}
+                {{ detailModal.title }}
               </h3>
               <p class="mb-4 text-sm font-medium text-white/60">
-                {{ detailModal.type === 'feature' ? t(`features.${detailModal.key}Desc`) : t(`highlight.${detailModal.key}Desc`) }}
+                {{ detailModal.description }}
               </p>
               <div class="h-px w-full bg-white/8 mb-4" />
               <p class="text-sm leading-relaxed text-white/80">
-                {{ detailModal.type === 'feature' ? t(`features.${detailModal.key}Detail`) : t(`highlight.${detailModal.key}Detail`) }}
+                {{ detailModal.detail }}
               </p>
             </div>
           </div>
@@ -360,7 +361,8 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const currentLocale = computed(() => locale.value)
 
 useHead({ title: 'Eternal Tower Saga — เกม RPG บนมือถือ' })
 
@@ -418,33 +420,52 @@ interface NewsArticle {
 const { data: newsData } = await useFetch<{ data: NewsArticle[] }>('/api/public/news', { query: { limit: 6 }, default: () => ({ data: [] }) })
 const newsArticles = computed(() => newsData.value?.data || [])
 
-// Features (configurable via admin later — static default)
-const featureItems = [
-  { key: 'openWorld', icon: '🌍', image: '/images/features/open-world.webp' },
-  { key: 'realTimePvP', icon: '⚔️', image: '/images/features/pvp.webp' },
-  { key: 'guildSystem', icon: '🏰', image: '/images/features/guild.webp' },
-  { key: 'petSystem', icon: '🐉', image: '/images/features/pets.webp' },
-  { key: 'craftSystem', icon: '🔨', image: '/images/features/craft.webp' },
-  { key: 'towerClimb', icon: '🗼', image: '/images/features/tower.webp' },
-]
+// Features from API (CMS-driven — no more hardcoded array)
+interface FeatureData {
+  id: number; key: string; titleEn: string; titleTh: string
+  descriptionEn?: string; descriptionTh?: string; detailEn?: string; detailTh?: string
+  icon: string; image?: string; sortOrder: number; visible: boolean
+}
+const { data: featuresRaw } = await useFetch<FeatureData[]>('/api/public/features', { default: () => [] })
+const featureItems = computed(() => featuresRaw.value || [])
 
-// Highlights
-const highlightItems = [
-  { key: 'graphics', icon: '✨', image: '/images/highlights/k-fantasy.webp' },
-  { key: 'crossPlatform', icon: '📱', image: '/images/highlights/cross-play.webp' },
-  { key: 'freeToPlay', icon: '🎮', image: '/images/highlights/free.webp' },
-]
+// Highlights from API (CMS-driven — no more hardcoded array)
+interface HighlightData {
+  id: number; key: string; titleEn: string; titleTh: string
+  descriptionEn?: string; descriptionTh?: string; detailEn?: string; detailTh?: string
+  icon: string; image?: string; sortOrder: number; visible: boolean
+}
+const { data: highlightsRaw } = await useFetch<HighlightData[]>('/api/public/highlights', { default: () => [] })
+const highlightItems = computed(() => highlightsRaw.value || [])
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
-// Detail modal state
-const detailModal = reactive({ open: false, type: '' as 'feature' | 'highlight', key: '', image: '' })
-function openDetail(type: 'feature' | 'highlight', key: string, image?: string) {
-  detailModal.type = type
-  detailModal.key = key
-  detailModal.image = image || '/images/og-cover.png'
+// Detail modal state — now uses CMS data directly
+const detailModal = reactive({
+  open: false,
+  title: '',
+  description: '',
+  detail: '',
+  image: '',
+})
+
+function openFeatureDetail(feature: FeatureData) {
+  const isTh = currentLocale.value === 'th'
+  detailModal.title = isTh ? feature.titleTh : feature.titleEn
+  detailModal.description = isTh ? (feature.descriptionTh || feature.descriptionEn || '') : (feature.descriptionEn || '')
+  detailModal.detail = isTh ? (feature.detailTh || feature.detailEn || '') : (feature.detailEn || '')
+  detailModal.image = feature.image || '/images/og-cover.png'
+  detailModal.open = true
+}
+
+function openHighlightDetail(highlight: HighlightData) {
+  const isTh = currentLocale.value === 'th'
+  detailModal.title = isTh ? highlight.titleTh : highlight.titleEn
+  detailModal.description = isTh ? (highlight.descriptionTh || highlight.descriptionEn || '') : (highlight.descriptionEn || '')
+  detailModal.detail = isTh ? (highlight.detailTh || highlight.detailEn || '') : (highlight.detailEn || '')
+  detailModal.image = highlight.image || '/images/og-cover.png'
   detailModal.open = true
 }
 </script>

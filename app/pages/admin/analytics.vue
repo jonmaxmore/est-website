@@ -66,8 +66,17 @@ const { data } = await useFetch<{
 }>('/api/admin/analytics', {
   default: () => ({ totalViews: 0, todayViews: 0, uniqueVisitors: 0, conversionRate: 0, dailyViews: [], topPages: [], conversions: [] })
 })
+const weeklyChange = computed(() => {
+  const days = data.value.dailyViews || []
+  if (days.length < 14) return 'Insufficient data'
+  const thisWeek = days.slice(-7).reduce((sum, d) => sum + d.views, 0)
+  const lastWeek = days.slice(-14, -7).reduce((sum, d) => sum + d.views, 0)
+  if (lastWeek === 0) return thisWeek > 0 ? '+100%' : '0%'
+  const change = ((thisWeek - lastWeek) / lastWeek * 100).toFixed(0)
+  return `${Number(change) >= 0 ? '+' : ''}${change}% vs last week`
+})
 const statCards = computed(() => [
-  { label: 'Total Page Views', value: data.value.totalViews.toLocaleString(), change: '+12% this week' },
+  { label: 'Total Page Views', value: data.value.totalViews.toLocaleString(), change: weeklyChange.value },
   { label: 'Today', value: data.value.todayViews.toLocaleString(), change: 'Last 24 hours' },
   { label: 'Unique Visitors', value: data.value.uniqueVisitors.toLocaleString(), change: 'All time' },
   { label: 'Conversion Rate', value: `${data.value.conversionRate.toFixed(1)}%`, change: 'Pre-registration' },

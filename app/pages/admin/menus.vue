@@ -88,9 +88,12 @@ const footerNav = ref([
 function addMainNav() { mainNav.value.push({ label: 'New Link', href: '/', visible: true }) }
 function addFooterNav() { footerNav.value.push({ label: 'New Link', href: '/', visible: true }) }
 
+const { toast, showToast } = useAdminToast()
 async function save() {
-  await $fetch('/api/admin/config', { method: 'PUT', body: { key: 'navigation', value: { main: mainNav.value, footer: footerNav.value } } })
-  alert('Navigation saved!')
+  try {
+    await $fetch('/api/admin/config', { method: 'PUT', body: { key: 'navigation', value: { main: mainNav.value, footer: footerNav.value } } })
+    showToast('Navigation saved!')
+  } catch { showToast('Failed to save navigation', 'error') }
 }
 
 onMounted(async () => {

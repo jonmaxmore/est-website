@@ -21,5 +21,8 @@ export default defineEventHandler(async (event) => {
     create: { key, value: value as object },
   })
 
+  await logActivity(event, 'UPDATE', 'config', `Updated config: ${key}`, key)
+
   return config
 })
+

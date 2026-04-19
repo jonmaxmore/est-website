@@ -92,9 +92,12 @@ async function load() {
     if (data) Object.assign(appearance.value, data)
   } catch { /* defaults */ }
 }
+const { toast, showToast } = useAdminToast()
 async function save() {
-  await $fetch('/api/admin/config', { method: 'PUT', body: { key: 'appearance', value: appearance.value } })
-  alert('Appearance saved!')
+  try {
+    await $fetch('/api/admin/config', { method: 'PUT', body: { key: 'appearance', value: appearance.value } })
+    showToast('Appearance saved!')
+  } catch { showToast('Failed to save appearance', 'error') }
 }
 onMounted(load)
 </script>

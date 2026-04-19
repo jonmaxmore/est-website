@@ -15,15 +15,15 @@
         </div>
       </NuxtLink>
 
-      <!-- Desktop Nav -->
+      <!-- Desktop Nav — CMS-driven -->
       <nav class="ml-8 mr-auto hidden gap-8 lg:flex">
         <NuxtLink
-          v-for="link in links"
+          v-for="link in navLinks"
           :key="link.href"
           :to="link.href"
           class="group relative text-sm font-medium tracking-wide text-white/60 no-underline transition-colors duration-300 hover:text-white"
         >
-          {{ t(link.labelKey) }}
+          {{ currentLocale === 'th' ? link.labelTh : link.labelEn }}
           <span class="absolute -bottom-1 left-0 h-0.5 w-0 bg-white transition-all duration-300 group-hover:w-full" />
         </NuxtLink>
       </nav>
@@ -56,13 +56,13 @@
         class="fixed inset-x-0 top-[72px] bottom-0 z-49 flex flex-col items-center gap-6 bg-black/95 px-6 pt-12 backdrop-blur-xl"
       >
         <NuxtLink
-          v-for="link in links"
+          v-for="link in navLinks"
           :key="link.href"
           :to="link.href"
           class="text-xl font-medium text-white/60 no-underline transition-colors duration-300 hover:text-white"
           @click="mobileOpen = false"
         >
-          {{ t(link.labelKey) }}
+          {{ currentLocale === 'th' ? link.labelTh : link.labelEn }}
         </NuxtLink>
         <NuxtLink
           to="/event"
@@ -77,18 +77,33 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const currentLocale = computed(() => locale.value)
 
 const scrolled = ref(false)
 const mobileOpen = ref(false)
 
-const links = [
-  { href: '/', labelKey: 'nav.home' },
-  { href: '/weapons', labelKey: 'nav.characters' },
-  { href: '/news', labelKey: 'nav.news' },
-  { href: '/game-guide', labelKey: 'nav.features' },
-  { href: '/support', labelKey: 'nav.support' },
+// CMS-driven navigation — fetched from admin config
+interface NavItem { labelEn: string; labelTh: string; href: string }
+const defaultLinks: NavItem[] = [
+  { labelEn: 'Home', labelTh: 'หน้าแรก', href: '/' },
+  { labelEn: 'Weapons', labelTh: 'อาวุธ', href: '/weapons' },
+  { labelEn: 'News', labelTh: 'ข่าวสาร', href: '/news' },
+  { labelEn: 'Game Guide', labelTh: 'คู่มือเกม', href: '/game-guide' },
+  { labelEn: 'Support', labelTh: 'ช่วยเหลือ', href: '/support' },
 ]
+
+const { data: siteConfig } = await useFetch<{
+  navigation: { main: NavItem[]; footer: NavItem[] }
+}>('/api/public/site', {
+  default: () => ({ navigation: { main: defaultLinks, footer: [] } }),
+  pick: ['navigation'],
+})
+
+const navLinks = computed(() => {
+  const main = siteConfig.value?.navigation?.main
+  return main && main.length > 0 ? main : defaultLinks
+})
 
 onMounted(() => {
   const onScroll = () => { scrolled.value = window.scrollY > 20 }

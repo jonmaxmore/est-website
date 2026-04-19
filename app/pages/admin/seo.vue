@@ -78,9 +78,12 @@ const seo = ref({
   gaId: '', gscVerification: '',
   schemaType: 'VideoGame', canonicalUrl: 'https://eternaltowersaga.com',
 })
+const { toast, showToast } = useAdminToast()
 async function save() {
-  await $fetch('/api/admin/config', { method: 'PUT', body: { key: 'seo', value: seo.value } })
-  alert('SEO settings saved!')
+  try {
+    await $fetch('/api/admin/config', { method: 'PUT', body: { key: 'seo', value: seo.value } })
+    showToast('SEO settings saved!')
+  } catch { showToast('Failed to save SEO settings', 'error') }
 }
 onMounted(async () => {
   try { const data = await $fetch<typeof seo.value>('/api/admin/config?key=seo'); if (data) Object.assign(seo.value, data) } catch { /* defaults */ }

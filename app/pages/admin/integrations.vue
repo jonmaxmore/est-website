@@ -129,9 +129,12 @@ const integrations = ref({
   wix: { enabled: false, accountId: '', apiKey: '', webhookSecret: '' },
 })
 
+const { toast, showToast } = useAdminToast()
 async function save() {
-  await $fetch('/api/admin/config', { method: 'PUT', body: { key: 'integrations', value: integrations.value } })
-  alert('Integration settings saved!')
+  try {
+    await $fetch('/api/admin/config', { method: 'PUT', body: { key: 'integrations', value: integrations.value } })
+    showToast('Integration settings saved!')
+  } catch { showToast('Failed to save integration settings', 'error') }
 }
 onMounted(async () => {
   try { const data = await $fetch<typeof integrations.value>('/api/admin/config?key=integrations'); if (data) Object.assign(integrations.value, data) } catch { /* defaults */ }

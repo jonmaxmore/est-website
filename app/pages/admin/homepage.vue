@@ -156,9 +156,13 @@ function addSection() {
 }
 
 async function saveSections() {
-  await $fetch('/api/admin/config', { method: 'PUT', body: { key: 'homepage_sections', value: { sections: sections.value } } })
-  alert('Homepage layout saved!')
+  try {
+    await $fetch('/api/admin/config', { method: 'PUT', body: { key: 'homepage_sections', value: { sections: sections.value } } })
+    showToast('Homepage layout saved!')
+  } catch { showToast('Failed to save layout', 'error') }
 }
+
+const { toast, showToast } = useAdminToast()
 
 onMounted(async () => {
   try {
