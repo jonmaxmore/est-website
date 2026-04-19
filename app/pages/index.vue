@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 1. HERO SECTION -->
-    <HeroSection />
+    <OrganismsHeroSection />
 
     <!-- 2. WEAPONS SHOWCASE -->
     <section class="mx-auto max-w-7xl px-6 py-[clamp(4rem,8vw,8rem)]">
