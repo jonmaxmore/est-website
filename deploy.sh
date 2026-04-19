@@ -110,11 +110,11 @@ sleep 5
 
 MAX_RETRIES=30
 RETRIES=0
-until docker compose exec -T db pg_isready -U postgres > /dev/null 2>&1; do
+until docker compose exec -T postgres pg_isready -U ${POSTGRES_USER:-est_admin} > /dev/null 2>&1; do
   RETRIES=$((RETRIES + 1))
   if [ $RETRIES -ge $MAX_RETRIES ]; then
     error "PostgreSQL did not start in time"
-    docker compose logs db
+    docker compose logs postgres
     exit 1
   fi
   sleep 2
