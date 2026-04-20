@@ -84,6 +84,7 @@ const navGroups = [
       { to: '/admin/weapons', icon: '⚔️', label: 'Weapons' },
       { to: '/admin/features', icon: '🌟', label: 'Features' },
       { to: '/admin/highlights', icon: '✨', label: 'Highlights' },
+      { to: '/admin/faq', icon: '❓', label: 'FAQ' },
       { to: '/admin/pages', icon: '📄', label: 'Pages' },
       { to: '/admin/media', icon: '🖼️', label: 'Media' },
     ],

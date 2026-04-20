@@ -51,20 +51,21 @@
       </div>
     </div>
     <!-- Toast -->
-    <Transition name="fade">
-      <div v-if="toast" class="fixed right-8 bottom-8 z-[200] rounded-lg border border-emerald-500/30 bg-emerald-500/15 px-6 py-3 text-sm font-medium text-emerald-400">✅ {{ toast }}</div>
-    </Transition>
+    <AdminToast :toast="toast" />
   </div>
 </template>
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 interface ConfigEntry { key: string; value: unknown }
-const toast = ref('')
+const { toast, showToast } = useAdminToast()
 const navItems = reactive<Array<{ labelEn: string; labelTh: string; href: string }>>([])
 const seo = reactive({ titleEn: '', titleTh: '', descriptionEn: '', descriptionTh: '' })
 const social = reactive({ facebook: '', twitter: '', youtube: '', discord: '', line: '' })
 const maintenance = reactive({ enabled: false, messageEn: '', messageTh: '' })
 async function loadConfigs() { try { const configs: ConfigEntry[] = await $fetch('/api/admin/config'); for (const c of configs) { if (c.key === 'navigation' && Array.isArray(c.value)) { navItems.splice(0, navItems.length, ...(c.value as typeof navItems)) }; if (c.key === 'seo') Object.assign(seo, c.value); if (c.key === 'social') Object.assign(social, c.value); if (c.key === 'maintenance') Object.assign(maintenance, c.value) } } catch {} }
-async function saveConfig(key: string, value: unknown) { try { await $fetch('/api/admin/config', { method: 'PUT', body: { key, value } }); toast.value = `${key} saved successfully`; setTimeout(() => { toast.value = '' }, 3000) } catch { toast.value = '' } }
+async function saveConfig(key: string, value: unknown) {
+  try { await $fetch('/api/admin/config', { method: 'PUT', body: { key, value } }); showToast(`${key} saved successfully`) }
+  catch { showToast(`Failed to save ${key}`, 'error') }
+}
 await loadConfigs()
 </script>

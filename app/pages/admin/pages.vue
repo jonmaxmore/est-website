@@ -1,20 +1,14 @@
 <template>
   <div>
-    <div class="mb-6 flex items-center justify-between">
-      <div>
-        <h2 class="text-2xl font-bold">Pages</h2>
-        <p class="mt-1 text-sm text-white/50">Manage static pages content (FAQ, Terms, Privacy, etc.)</p>
-      </div>
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold">Pages</h2>
+      <p class="mt-1 text-sm text-white/50">Manage static pages content (FAQ, Terms, Privacy, etc.)</p>
     </div>
 
-    <!-- Page List -->
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <div
-        v-for="page in pages"
-        :key="page.key"
+      <div v-for="page in pages" :key="page.key"
         class="group cursor-pointer rounded-2xl border border-white/6 bg-white/4 p-6 transition-all duration-300 hover:border-gold/20 hover:bg-white/6"
-        @click="editPage(page)"
-      >
+        @click="editPage(page)">
         <div class="mb-3 text-3xl">{{ page.icon }}</div>
         <h3 class="mb-1 text-lg font-bold">{{ page.title }}</h3>
         <p class="text-sm text-white/50">{{ page.description }}</p>
@@ -29,33 +23,34 @@
     </div>
 
     <!-- Editor Modal -->
-    <Teleport to="body">
-      <div v-if="editing" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" @click.self="editing = null">
-        <div class="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-surface-secondary p-6">
-          <div class="mb-6 flex items-center justify-between">
-            <h3 class="text-xl font-bold">Edit: {{ editing.title }}</h3>
-            <button class="cursor-pointer border-none bg-none text-white/50 text-xl hover:text-white" @click="editing = null">✕</button>
+    <UModal v-model:open="editorOpen" :title="`Edit: ${editing?.title || ''}`" class="sm:max-w-4xl">
+      <template #body>
+        <div class="flex flex-col gap-4 p-1">
+          <div class="grid grid-cols-2 gap-4">
+            <UFormField label="SEO Title (EN)"><UInput v-model="editForm.seoTitle" /></UFormField>
+            <UFormField label="SEO Title (TH)"><UInput v-model="editForm.seoTitleTh" /></UFormField>
           </div>
-
-          <div class="mb-4">
-            <label class="mb-1 block text-sm font-medium text-white/60">SEO Title</label>
-            <input v-model="editForm.seoTitle" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50" />
+          <div class="grid grid-cols-2 gap-4">
+            <UFormField label="SEO Description (EN)"><UTextarea v-model="editForm.seoDesc" :rows="2" /></UFormField>
+            <UFormField label="SEO Description (TH)"><UTextarea v-model="editForm.seoDescTh" :rows="2" /></UFormField>
           </div>
-          <div class="mb-4">
-            <label class="mb-1 block text-sm font-medium text-white/60">SEO Description</label>
-            <input v-model="editForm.seoDesc" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50" />
-          </div>
-          <div class="mb-4">
-            <label class="mb-1 block text-sm font-medium text-white/60">Content (HTML)</label>
-            <textarea v-model="editForm.content" rows="15" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-3 text-sm text-white font-mono outline-none focus:border-gold/50" />
-          </div>
-          <div class="flex gap-3">
-            <button @click="savePage" class="rounded-lg bg-gold px-6 py-2.5 text-sm font-bold text-black cursor-pointer border-none hover:bg-gold-light transition-colors">Save Changes</button>
-            <button @click="editing = null" class="rounded-lg border border-white/10 bg-transparent px-6 py-2.5 text-sm text-white/50 cursor-pointer hover:text-white transition-colors">Cancel</button>
-          </div>
+          <UFormField label="Content (EN) — HTML supported">
+            <textarea v-model="editForm.content" rows="10" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-3 text-sm text-white font-mono outline-none focus:border-gold/50" />
+          </UFormField>
+          <UFormField label="Content (TH) — HTML supported">
+            <textarea v-model="editForm.contentTh" rows="10" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-3 text-sm text-white font-mono outline-none focus:border-gold/50" />
+          </UFormField>
         </div>
-      </div>
-    </Teleport>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-3">
+          <UButton variant="ghost" @click="editorOpen = false">Cancel</UButton>
+          <UButton :loading="saving" class="bg-gradient-to-br from-gold to-gold-light font-bold text-black" @click="savePage">Save Changes</UButton>
+        </div>
+      </template>
+    </UModal>
+
+    <AdminToast :toast="toast" />
   </div>
 </template>
 
@@ -73,23 +68,34 @@ const pages = ref([
   { key: 'download', title: 'Download', icon: '📥', description: 'Download links', route: '/download', status: 'published' },
 ])
 
-interface EditForm { seoTitle: string; seoDesc: string; content: string }
 const editing = ref<typeof pages.value[0] | null>(null)
-const editForm = ref<EditForm>({ seoTitle: '', seoDesc: '', content: '' })
+const editorOpen = ref(false)
+const saving = ref(false)
+const editForm = reactive({ seoTitle: '', seoTitleTh: '', seoDesc: '', seoDescTh: '', content: '', contentTh: '' })
+const { toast, showToast } = useAdminToast()
 
 async function editPage(page: typeof pages.value[0]) {
   editing.value = page
   try {
-    const data = await $fetch<{ seoTitle: string; seoDesc: string; content: string }>(`/api/admin/pages/${page.key}`)
-    editForm.value = { seoTitle: data.seoTitle || page.title, seoDesc: data.seoDesc || '', content: data.content || '' }
+    const data = await $fetch<Record<string, string>>(`/api/admin/pages/${page.key}`)
+    Object.assign(editForm, {
+      seoTitle: data.seoTitle || page.title, seoTitleTh: data.seoTitleTh || '',
+      seoDesc: data.seoDesc || '', seoDescTh: data.seoDescTh || '',
+      content: data.content || '', contentTh: data.contentTh || '',
+    })
   } catch {
-    editForm.value = { seoTitle: page.title, seoDesc: '', content: '' }
+    Object.assign(editForm, { seoTitle: page.title, seoTitleTh: '', seoDesc: '', seoDescTh: '', content: '', contentTh: '' })
   }
+  editorOpen.value = true
 }
 
 async function savePage() {
   if (!editing.value) return
-  await $fetch(`/api/admin/pages/${editing.value.key}`, { method: 'PUT', body: editForm.value })
-  editing.value = null
+  saving.value = true
+  try {
+    await $fetch(`/api/admin/pages/${editing.value.key}`, { method: 'PUT', body: editForm })
+    editorOpen.value = false; showToast('Page saved!')
+  } catch { showToast('Failed to save page', 'error') }
+  finally { saving.value = false }
 }
 </script>
