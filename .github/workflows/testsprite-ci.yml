@@ -2,18 +2,14 @@
 # TestSprite CI — Automated Testing on PR
 # EST-Website (Nuxt 4 + Docker + DigitalOcean)
 # ═══════════════════════════════════════
-# 
-# This workflow:
-# 1. Triggers on every pull request
-# 2. Builds & deploys a preview via Docker on the same server
-# 3. Runs TestSprite AI tests against the preview
-# 4. Posts results as a PR comment
 #
 # Required secrets:
 #   TESTSPRITE_API_KEY  — from TestSprite Web Portal > API Keys
-#   DO_SSH_KEY          — SSH private key for Digital Ocean
-#   DO_HOST             — Server IP (178.128.127.161)
+#   DO_HOST             — Server IP
 #   DO_USER             — Server user (root)
+#   DO_PASSWORD         — Server password
+#   DATABASE_URL        — PostgreSQL connection string
+#   NUXT_SESSION_PASSWORD — Session secret
 
 name: TestSprite CI
 
@@ -23,39 +19,29 @@ on:
 
 env:
   PREVIEW_PORT: 3001
-  APP_NAME: est-website-preview
 
 jobs:
   # ── Step 1: Deploy preview on Digital Ocean ──
   deploy-preview:
     runs-on: ubuntu-latest
-    outputs:
-      url: ${{ steps.deploy.outputs.url }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Deploy Preview to Digital Ocean
-        id: deploy
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USER }}
-          key: ${{ secrets.DO_SSH_KEY }}
+          password: ${{ secrets.DO_PASSWORD }}
           script: |
             cd /root/est-website
+            git fetch origin pull/${{ github.event.pull_request.number }}/head:pr-${{ github.event.pull_request.number }} 2>/dev/null || git fetch origin
+            git checkout pr-${{ github.event.pull_request.number }} 2>/dev/null || git checkout main
             
-            # Pull the PR branch
-            git fetch origin pull/${{ github.event.pull_request.number }}/head:pr-${{ github.event.pull_request.number }}
-            git checkout pr-${{ github.event.pull_request.number }}
-            
-            # Build preview container
             docker build -t est-preview -f docker/Dockerfile .
-            
-            # Stop existing preview if running
             docker stop est-preview 2>/dev/null || true
             docker rm est-preview 2>/dev/null || true
             
-            # Start preview on port 3001
             docker run -d \
               --name est-preview \
               --network est-website_default \
@@ -66,50 +52,36 @@ jobs:
               -e NUXT_SESSION_PASSWORD="${{ secrets.NUXT_SESSION_PASSWORD }}" \
               est-preview
             
-            # Wait for app to start
             sleep 10
-            
-            # Verify preview is running
-            curl -sf http://localhost:3001 > /dev/null && echo "Preview deployed successfully"
-            
-            # Return to main branch
+            curl -sf http://localhost:3001 > /dev/null && echo "Preview OK" || echo "Preview failed"
             git checkout main
-
-      - name: Set Preview URL
-        id: set-url
-        run: echo "url=http://${{ secrets.DO_HOST }}:3001" >> $GITHUB_OUTPUT
 
   # ── Step 2: Run TestSprite Tests ──
   test:
     needs: deploy-preview
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: TestSprite Action
-        id: testsprite
         uses: TestSprite/run-action@v1
         with:
           testsprite-api-key: ${{ secrets.TESTSPRITE_API_KEY }}
-          base_url: http://${{ secrets.DO_HOST }}:${{ env.PREVIEW_PORT }}
+          base_url: http://${{ secrets.DO_HOST }}:3001
           blocking: 'true'
 
-  # ── Step 3: Cleanup preview after tests ──
+  # ── Step 3: Cleanup ──
   cleanup:
     needs: test
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - name: Cleanup Preview Container
+      - name: Cleanup Preview
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USER }}
-          key: ${{ secrets.DO_SSH_KEY }}
+          password: ${{ secrets.DO_PASSWORD }}
           script: |
             docker stop est-preview 2>/dev/null || true
             docker rm est-preview 2>/dev/null || true
             docker rmi est-preview 2>/dev/null || true
-            echo "Preview cleaned up"
