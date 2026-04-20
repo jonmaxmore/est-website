@@ -24,7 +24,12 @@ export default defineNuxtConfig({
     defaultLocale: 'th',
     lazy: true,
     langDir: '../i18n/locales',
-    strategy: 'no_prefix',
+    strategy: 'prefix_except_default',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_lang',
+      redirectOn: 'root',
+    },
   },
 
   // ── Auth Session ──

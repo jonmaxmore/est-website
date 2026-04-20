@@ -1,58 +1,76 @@
 <template>
   <div>
     <div class="mb-6 flex items-center justify-between">
-      <div><h2 class="text-2xl font-bold">Highlights</h2><p class="mt-1 text-sm text-white/50">Manage homepage highlight banners</p></div>
-      <UButton color="primary" class="bg-gradient-to-br from-gold to-gold-light font-bold text-black" @click="openEditor(null)">+ New Highlight</UButton>
+      <div>
+        <h2 class="text-2xl font-bold">Highlights</h2>
+        <p class="mt-1 text-sm text-white/50">Manage homepage highlight cards</p>
+      </div>
+      <button class="gold-btn" @click="openEditor(null)">+ New Highlight</button>
     </div>
 
     <div class="flex flex-col gap-3">
-      <div
-        v-for="(item, index) in items"
-        :key="item.id"
-        class="flex items-center gap-4 rounded-2xl border border-white/6 bg-white/4 p-4 transition-all hover:border-white/15"
-      >
+      <div v-for="(item, index) in items" :key="item.id" class="flex items-center gap-4 rounded-2xl border border-white/6 bg-white/4 p-4 transition-all hover:border-white/15">
         <div class="flex flex-col gap-1">
-          <button class="text-xs text-white/30 hover:text-white disabled:opacity-20" :disabled="index === 0" @click="reorder(index, -1)">▲</button>
-          <button class="text-xs text-white/30 hover:text-white disabled:opacity-20" :disabled="index === items.length - 1" @click="reorder(index, 1)">▼</button>
+          <button class="sort-btn" :disabled="index === 0" @click="reorder(index, -1)">▲</button>
+          <button class="sort-btn" :disabled="index === items.length - 1" @click="reorder(index, 1)">▼</button>
         </div>
         <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-white/4 text-2xl">{{ item.icon }}</div>
         <img v-if="item.image" :src="item.image" class="h-12 w-20 rounded-lg object-cover" />
-        <div class="flex-1">
+        <div class="flex-1 min-w-0">
           <p class="font-semibold">{{ item.titleEn }}</p>
-          <p class="text-xs text-white/40">{{ item.titleTh }} · {{ item.key }}</p>
+          <p class="text-xs text-white/40 truncate">{{ item.titleTh }} · {{ item.key }}</p>
         </div>
         <label class="flex items-center gap-2 text-xs text-white/40">
-          <input type="checkbox" :checked="item.visible" @change="toggleVisibility(item)" class="accent-gold" />
-          {{ item.visible ? 'Visible' : 'Hidden' }}
+          <input type="checkbox" :checked="item.visible" @change="toggleVisibility(item)" class="accent-[#d4a843]" />
+          <AdminStatusBadge :status="item.visible ? 'VISIBLE' : 'HIDDEN'" />
         </label>
         <div class="flex gap-1">
-          <button class="flex h-8 w-8 items-center justify-center rounded-md transition-colors hover:bg-white/8" @click="openEditor(item)">✏️</button>
-          <button class="flex h-8 w-8 items-center justify-center rounded-md transition-colors hover:bg-red-500/15" @click="confirmDelete(item)">🗑️</button>
+          <button class="icon-btn" @click="openEditor(item)">✏️</button>
+          <button class="icon-btn danger" @click="confirmDeleteItem(item)">🗑️</button>
         </div>
       </div>
-      <p v-if="items.length === 0" class="py-12 text-center text-white/30">No highlights yet. Create one to get started.</p>
+      <AdminEmptyState v-if="items.length === 0" icon="✨" title="No highlights yet" message="Create highlight cards to showcase on your homepage." action-label="+ New Highlight" @action="openEditor(null)" />
     </div>
 
-    <UModal v-model:open="editorOpen" :title="editorMode === 'create' ? 'Create Highlight' : 'Edit Highlight'" class="sm:max-w-2xl">
+    <UModal v-model:open="editorOpen" :title="editorMode === 'create' ? 'Create Highlight' : 'Edit Highlight'" class="sm:max-w-3xl">
       <template #body>
         <div class="flex flex-col gap-4 p-1">
           <div class="grid grid-cols-2 gap-4">
-            <UFormField label="Key *"><UInput v-model="form.key" placeholder="graphics" /></UFormField>
+            <UFormField label="Key *">
+              <UInput v-model="form.key" placeholder="graphics" :class="{ 'ring-1 ring-red-500/50': fieldErrors.key }" @input="fieldErrors.key = ''" />
+              <p v-if="fieldErrors.key" class="mt-1 text-xs text-red-400">{{ fieldErrors.key }}</p>
+            </UFormField>
             <UFormField label="Icon"><UInput v-model="form.icon" placeholder="✨" /></UFormField>
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <UFormField label="Title (EN) *"><UInput v-model="form.titleEn" placeholder="K-Fantasy Graphics" /></UFormField>
-            <UFormField label="Title (TH) *"><UInput v-model="form.titleTh" placeholder="กราฟฟิกสไตล์ K-Fantasy" /></UFormField>
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <UFormField label="Description (EN)"><UTextarea v-model="form.descriptionEn" :rows="2" /></UFormField>
-            <UFormField label="Description (TH)"><UTextarea v-model="form.descriptionTh" :rows="2" /></UFormField>
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <UFormField label="Detail (EN)"><UTextarea v-model="form.detailEn" :rows="4" /></UFormField>
-            <UFormField label="Detail (TH)"><UTextarea v-model="form.detailTh" :rows="4" /></UFormField>
-          </div>
-          <UFormField label="Image URL"><UInput v-model="form.image" placeholder="/images/highlights/..." /></UFormField>
+          <AdminContentLanguageTabs
+            ref="langTabsRef"
+            :th-filled="!!form.titleTh"
+            :en-filled="!!form.titleEn"
+            :th-errors="tabErrors.th"
+            :en-errors="tabErrors.en"
+            show-copy-button
+            @copy="handleCopy"
+          >
+            <template #th>
+              <UFormField label="Title (TH) *" class="mb-3">
+                <UInput v-model="form.titleTh" :class="{ 'ring-1 ring-red-500/50': fieldErrors.titleTh }" @input="fieldErrors.titleTh = ''" />
+                <p v-if="fieldErrors.titleTh" class="mt-1 text-xs text-red-400">{{ fieldErrors.titleTh }}</p>
+              </UFormField>
+              <UFormField label="Description (TH)" class="mb-3"><UTextarea v-model="form.descriptionTh" :rows="2" /></UFormField>
+              <div class="mb-2 text-sm font-medium text-white/60">Detail (TH)</div>
+              <AdminRichTextEditor v-model="form.detailTh" placeholder="รายละเอียด..." />
+            </template>
+            <template #en>
+              <UFormField label="Title (EN) *" class="mb-3">
+                <UInput v-model="form.titleEn" :class="{ 'ring-1 ring-red-500/50': fieldErrors.titleEn }" @input="fieldErrors.titleEn = ''" />
+                <p v-if="fieldErrors.titleEn" class="mt-1 text-xs text-red-400">{{ fieldErrors.titleEn }}</p>
+              </UFormField>
+              <UFormField label="Description (EN)" class="mb-3"><UTextarea v-model="form.descriptionEn" :rows="2" /></UFormField>
+              <div class="mb-2 text-sm font-medium text-white/60">Detail (EN)</div>
+              <AdminRichTextEditor v-model="form.detailEn" placeholder="Details..." />
+            </template>
+          </AdminContentLanguageTabs>
+          <AdminMediaPicker v-model="form.image" label="Highlight Image" />
           <p v-if="formError" class="text-center text-sm text-red-400">{{ formError }}</p>
         </div>
       </template>
@@ -64,6 +82,7 @@
       </template>
     </UModal>
 
+    <AdminConfirmDialog v-model="deleteDialogOpen" title="Delete Highlight?" :message="`Delete '${deletingItem?.titleEn}'? This cannot be undone.`" confirm-text="Delete" variant="danger" @confirm="doDelete" />
     <AdminToast :toast="toast" />
   </div>
 </template>
@@ -83,11 +102,25 @@ const editorMode = ref<'create' | 'edit'>('create')
 const editingId = ref<number | null>(null)
 const saving = ref(false)
 const formError = ref('')
+const deleteDialogOpen = ref(false)
+const deletingItem = ref<HighlightItem | null>(null)
+const validationTriggered = ref(false)
+const langTabsRef = ref<{ focusFirstError: () => void } | null>(null)
 const { toast, showToast } = useAdminToast()
 
 const form = reactive({
   key: '', titleEn: '', titleTh: '', descriptionEn: '', descriptionTh: '',
   detailEn: '', detailTh: '', icon: '✨', image: '',
+})
+
+const fieldErrors = reactive<Record<string, string>>({ key: '', titleEn: '', titleTh: '' })
+
+const tabErrors = computed(() => {
+  const th: string[] = []
+  const en: string[] = []
+  if (!validationTriggered.value) return { th, en }
+  if (!form.titleTh && !form.titleEn) { th.push('Title required'); en.push('Title required') }
+  return { th, en }
 })
 
 async function loadItems() {
@@ -96,6 +129,8 @@ async function loadItems() {
 
 function openEditor(item: HighlightItem | null) {
   formError.value = ''
+  validationTriggered.value = false
+  Object.keys(fieldErrors).forEach(k => fieldErrors[k] = '')
   if (item) {
     editorMode.value = 'edit'; editingId.value = item.id
     Object.assign(form, { key: item.key, titleEn: item.titleEn, titleTh: item.titleTh, descriptionEn: item.descriptionEn || '', descriptionTh: item.descriptionTh || '', detailEn: item.detailEn || '', detailTh: item.detailTh || '', icon: item.icon, image: item.image || '' })
@@ -106,8 +141,28 @@ function openEditor(item: HighlightItem | null) {
   editorOpen.value = true
 }
 
+function handleCopy(from: 'th' | 'en') {
+  if (from === 'th') { form.titleEn = form.titleTh; form.descriptionEn = form.descriptionTh; form.detailEn = form.detailTh }
+  else { form.titleTh = form.titleEn; form.descriptionTh = form.descriptionEn; form.detailTh = form.detailEn }
+  showToast(`Copied ${from.toUpperCase()} content`)
+}
+
+function validate(): boolean {
+  validationTriggered.value = true
+  let valid = true
+  Object.keys(fieldErrors).forEach(k => fieldErrors[k] = '')
+  if (!form.key) { fieldErrors.key = 'Key is required'; valid = false }
+  if (!form.titleEn && !form.titleTh) {
+    fieldErrors.titleEn = 'At least one title required'
+    fieldErrors.titleTh = 'At least one title required'
+    valid = false
+  }
+  if (!valid) nextTick(() => langTabsRef.value?.focusFirstError())
+  return valid
+}
+
 async function saveItem() {
-  if (!form.key || !form.titleEn || !form.titleTh) { formError.value = 'Key, Title (EN), and Title (TH) are required.'; return }
+  if (!validate()) { formError.value = 'Please fix the errors above.'; return }
   saving.value = true; formError.value = ''
   try {
     const payload = { ...form, sortOrder: editingId.value ? undefined : items.value.length, visible: true }
@@ -115,32 +170,40 @@ async function saveItem() {
     else { await $fetch(`/api/admin/highlights/${editingId.value}`, { method: 'PUT', body: payload }) }
     editorOpen.value = false; showToast(editorMode.value === 'create' ? 'Highlight created!' : 'Highlight updated!')
     await loadItems()
-  } catch (e: unknown) { const err = e as { data?: { message?: string } }; formError.value = err?.data?.message || 'Save failed' }
+  } catch (e: unknown) { formError.value = (e as { data?: { message?: string } })?.data?.message || 'Save failed' }
   finally { saving.value = false }
 }
 
 async function toggleVisibility(item: HighlightItem) {
-  try {
-    await $fetch(`/api/admin/highlights/${item.id}`, { method: 'PUT', body: { visible: !item.visible } })
-    await loadItems(); showToast(`Highlight ${!item.visible ? 'shown' : 'hidden'}`)
-  } catch { showToast('Failed to update visibility', 'error') }
+  try { await $fetch(`/api/admin/highlights/${item.id}`, { method: 'PUT', body: { visible: !item.visible } }); await loadItems(); showToast(`Highlight ${!item.visible ? 'shown' : 'hidden'}`) }
+  catch { showToast('Failed to update', 'error') }
 }
 
 async function reorder(index: number, dir: -1 | 1) {
-  const newIndex = index + dir
-  const arr = [...items.value]
+  const newIndex = index + dir; const arr = [...items.value]
   ;[arr[index], arr[newIndex]] = [arr[newIndex], arr[index]]
-  for (let i = 0; i < arr.length; i++) {
-    await $fetch(`/api/admin/highlights/${arr[i].id}`, { method: 'PUT', body: { sortOrder: i } })
-  }
+  for (let i = 0; i < arr.length; i++) { await $fetch(`/api/admin/highlights/${arr[i].id}`, { method: 'PUT', body: { sortOrder: i } }) }
   await loadItems()
 }
 
-async function confirmDelete(item: HighlightItem) {
-  if (!confirm(`Delete "${item.titleEn}"?`)) return
-  try { await $fetch(`/api/admin/highlights/${item.id}`, { method: 'DELETE' }); showToast('Highlight deleted'); await loadItems() }
+function confirmDeleteItem(item: HighlightItem) { deletingItem.value = item; deleteDialogOpen.value = true }
+
+async function doDelete() {
+  if (!deletingItem.value) return
+  try { await $fetch(`/api/admin/highlights/${deletingItem.value.id}`, { method: 'DELETE' }); showToast('Highlight deleted'); await loadItems() }
   catch { showToast('Delete failed', 'error') }
 }
 
 await loadItems()
 </script>
+
+<style scoped>
+.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, #d4a843, #b8922e); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
+.gold-btn:hover { filter: brightness(1.1); }
+.sort-btn { border: none; background: transparent; color: rgba(255,255,255,0.3); font-size: 0.625rem; cursor: pointer; padding: 2px; }
+.sort-btn:hover { color: white; }
+.sort-btn:disabled { opacity: 0.2; }
+.icon-btn { display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 6px; border: none; background: transparent; cursor: pointer; }
+.icon-btn:hover { background: rgba(255,255,255,0.08); }
+.icon-btn.danger:hover { background: rgba(239,68,68,0.15); }
+</style>

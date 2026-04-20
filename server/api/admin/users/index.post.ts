@@ -13,5 +13,8 @@ export default defineEventHandler(async (event) => {
     data: { displayName, email, passwordHash, role: role || 'EDITOR' },
     select: { id: true, email: true, displayName: true, role: true },
   })
+
+  await logActivity(event, 'CREATE', 'users', `Created user: ${displayName} (${email})`, user.id)
+
   return user
 })

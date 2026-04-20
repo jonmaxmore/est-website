@@ -6,5 +6,8 @@ export default defineEventHandler(async (event) => {
     update: { value: body },
     create: { key: `page_${key}`, value: body },
   })
+
+  await logActivity(event, 'UPDATE', 'pages', `Updated page: ${key}`, key)
+
   return { success: true }
 })

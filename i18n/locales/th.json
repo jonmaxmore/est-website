@@ -148,6 +148,8 @@
     "loading": "กำลังโหลด...",
     "error": "เกิดข้อผิดพลาด",
     "retry": "ลองอีกครั้ง",
-    "backToHome": "กลับหน้าแรก"
+    "backToHome": "กลับหน้าแรก",
+    "language": "ภาษา",
+    "switchLanguage": "เปลี่ยนภาษา"
   }
 }

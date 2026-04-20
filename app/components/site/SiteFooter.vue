@@ -18,6 +18,9 @@
             {{ platformIcon(String(platform)) }}
           </a>
         </div>
+        <div class="mt-4">
+          <SiteLanguageSwitcher />
+        </div>
       </div>
 
       <!-- Links — CMS-driven -->

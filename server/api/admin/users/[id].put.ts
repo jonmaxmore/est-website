@@ -15,5 +15,8 @@ export default defineEventHandler(async (event) => {
     data,
     select: { id: true, email: true, displayName: true, role: true },
   })
+
+  await logActivity(event, 'UPDATE', 'users', `Updated user: ${user.displayName} (${user.email})`, id)
+
   return user
 })

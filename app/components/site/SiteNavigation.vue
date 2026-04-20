@@ -28,8 +28,9 @@
         </NuxtLink>
       </nav>
 
-      <!-- CTA -->
+      <!-- CTA + Language Switcher -->
       <div class="hidden items-center gap-3 lg:flex">
+        <SiteLanguageSwitcher />
         <NuxtLink
           to="/event"
           class="inline-flex h-10 items-center justify-center rounded-full bg-gradient-to-br from-gold to-gold-light px-7 text-sm font-bold tracking-wider text-black shadow-[0_0_15px_rgba(212,168,67,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(212,168,67,0.5)]"
@@ -64,9 +65,12 @@
         >
           {{ currentLocale === 'th' ? link.labelTh : link.labelEn }}
         </NuxtLink>
+        <div class="mt-6">
+          <SiteLanguageSwitcher />
+        </div>
         <NuxtLink
           to="/event"
-          class="mt-8 inline-flex h-12 w-full max-w-[280px] items-center justify-center rounded-full bg-gradient-to-br from-gold to-gold-light text-base font-bold text-black shadow-[0_0_30px_rgba(212,168,67,0.3)]"
+          class="mt-4 inline-flex h-12 w-full max-w-[280px] items-center justify-center rounded-full bg-gradient-to-br from-gold to-gold-light text-base font-bold text-black shadow-[0_0_30px_rgba(212,168,67,0.3)]"
           @click="mobileOpen = false"
         >
           {{ t('nav.register') }}

@@ -148,6 +148,8 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "retry": "Try Again",
-    "backToHome": "Back to Home"
+    "backToHome": "Back to Home",
+    "language": "Language",
+    "switchLanguage": "Switch Language"
   }
 }

@@ -13,11 +13,8 @@
         <h3 class="mb-1 text-lg font-bold">{{ page.title }}</h3>
         <p class="text-sm text-white/50">{{ page.description }}</p>
         <div class="mt-4 flex items-center justify-between">
-          <span class="rounded-full px-2 py-0.5 text-[0.625rem] font-semibold"
-            :class="page.status === 'published' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-gray-500/10 text-gray-400'">
-            {{ page.status }}
-          </span>
-          <span class="text-xs text-white/30">{{ page.route }}</span>
+          <AdminStatusBadge :status="page.status" />
+          <span class="text-xs text-white/30 font-mono">{{ page.route }}</span>
         </div>
       </div>
     </div>
@@ -26,20 +23,37 @@
     <UModal v-model:open="editorOpen" :title="`Edit: ${editing?.title || ''}`" class="sm:max-w-4xl">
       <template #body>
         <div class="flex flex-col gap-4 p-1">
-          <div class="grid grid-cols-2 gap-4">
-            <UFormField label="SEO Title (EN)"><UInput v-model="editForm.seoTitle" /></UFormField>
-            <UFormField label="SEO Title (TH)"><UInput v-model="editForm.seoTitleTh" /></UFormField>
+          <!-- SEO -->
+          <div class="rounded-xl border border-white/6 bg-white/3 p-5">
+            <h4 class="mb-4 text-xs font-semibold uppercase tracking-widest text-white/40">SEO Settings</h4>
+            <AdminContentLanguageTabs :th-filled="!!editForm.seoTitleTh" :en-filled="!!editForm.seoTitle">
+              <template #th>
+                <UFormField label="SEO Title (TH)" class="mb-3"><UInput v-model="editForm.seoTitleTh" /></UFormField>
+                <UFormField label="SEO Description (TH)"><UTextarea v-model="editForm.seoDescTh" :rows="2" /></UFormField>
+              </template>
+              <template #en>
+                <UFormField label="SEO Title (EN)" class="mb-3"><UInput v-model="editForm.seoTitle" /></UFormField>
+                <UFormField label="SEO Description (EN)"><UTextarea v-model="editForm.seoDesc" :rows="2" /></UFormField>
+              </template>
+            </AdminContentLanguageTabs>
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <UFormField label="SEO Description (EN)"><UTextarea v-model="editForm.seoDesc" :rows="2" /></UFormField>
-            <UFormField label="SEO Description (TH)"><UTextarea v-model="editForm.seoDescTh" :rows="2" /></UFormField>
-          </div>
-          <UFormField label="Content (EN) — HTML supported">
-            <textarea v-model="editForm.content" rows="10" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-3 text-sm text-white font-mono outline-none focus:border-gold/50" />
-          </UFormField>
-          <UFormField label="Content (TH) — HTML supported">
-            <textarea v-model="editForm.contentTh" rows="10" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-3 text-sm text-white font-mono outline-none focus:border-gold/50" />
-          </UFormField>
+
+          <!-- Content -->
+          <AdminContentLanguageTabs
+            :th-filled="!!editForm.contentTh"
+            :en-filled="!!editForm.content"
+            show-copy-button
+            @copy="handleCopy"
+          >
+            <template #th>
+              <div class="mb-2 text-sm font-medium text-white/60">Page Content (TH)</div>
+              <AdminRichTextEditor v-model="editForm.contentTh" placeholder="เนื้อหาหน้าเพจภาษาไทย..." />
+            </template>
+            <template #en>
+              <div class="mb-2 text-sm font-medium text-white/60">Page Content (EN)</div>
+              <AdminRichTextEditor v-model="editForm.content" placeholder="English page content..." />
+            </template>
+          </AdminContentLanguageTabs>
         </div>
       </template>
       <template #footer>
@@ -58,14 +72,14 @@
 definePageMeta({ layout: 'admin' })
 
 const pages = ref([
-  { key: 'faq', title: 'FAQ', icon: '❓', description: 'Frequently asked questions', route: '/faq', status: 'published' },
-  { key: 'terms', title: 'Terms of Service', icon: '📜', description: 'Terms and conditions', route: '/terms', status: 'published' },
-  { key: 'privacy', title: 'Privacy Policy', icon: '🔒', description: 'Privacy and data policy', route: '/privacy', status: 'published' },
-  { key: 'support', title: 'Support', icon: '🎧', description: 'Customer support page', route: '/support', status: 'published' },
-  { key: 'story', title: 'Story', icon: '📖', description: 'Game story and lore', route: '/story', status: 'published' },
-  { key: 'game-guide', title: 'Game Guide', icon: '🗺️', description: 'Game guide and tutorials', route: '/game-guide', status: 'published' },
-  { key: 'gallery', title: 'Gallery', icon: '🖼️', description: 'Screenshots and artwork', route: '/gallery', status: 'published' },
-  { key: 'download', title: 'Download', icon: '📥', description: 'Download links', route: '/download', status: 'published' },
+  { key: 'faq', title: 'FAQ', icon: '❓', description: 'Frequently asked questions', route: '/faq', status: 'PUBLISHED' },
+  { key: 'terms', title: 'Terms of Service', icon: '📜', description: 'Terms and conditions', route: '/terms', status: 'PUBLISHED' },
+  { key: 'privacy', title: 'Privacy Policy', icon: '🔒', description: 'Privacy and data policy', route: '/privacy', status: 'PUBLISHED' },
+  { key: 'support', title: 'Support', icon: '🎧', description: 'Customer support page', route: '/support', status: 'PUBLISHED' },
+  { key: 'story', title: 'Story', icon: '📖', description: 'Game story and lore', route: '/story', status: 'PUBLISHED' },
+  { key: 'game-guide', title: 'Game Guide', icon: '🗺️', description: 'Game guide and tutorials', route: '/game-guide', status: 'PUBLISHED' },
+  { key: 'gallery', title: 'Gallery', icon: '🖼️', description: 'Screenshots and artwork', route: '/gallery', status: 'PUBLISHED' },
+  { key: 'download', title: 'Download', icon: '📥', description: 'Download links', route: '/download', status: 'PUBLISHED' },
 ])
 
 const editing = ref<typeof pages.value[0] | null>(null)
@@ -87,6 +101,12 @@ async function editPage(page: typeof pages.value[0]) {
     Object.assign(editForm, { seoTitle: page.title, seoTitleTh: '', seoDesc: '', seoDescTh: '', content: '', contentTh: '' })
   }
   editorOpen.value = true
+}
+
+function handleCopy(from: 'th' | 'en') {
+  if (from === 'th') { editForm.content = editForm.contentTh }
+  else { editForm.contentTh = editForm.content }
+  showToast(`Copied ${from.toUpperCase()} content`)
 }
 
 async function savePage() {

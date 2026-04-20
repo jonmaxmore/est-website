@@ -105,6 +105,8 @@
         </div>
       </div>
     </Teleport>
+
+    <AdminToast :toast="toast" />
   </div>
 </template>
 
@@ -166,8 +168,17 @@ const { toast, showToast } = useAdminToast()
 
 onMounted(async () => {
   try {
-    const data = await $fetch<{ sections: SectionConfig[] }>('/api/public/sections')
-    if (data?.sections?.length) sections.value = data.sections
-  } catch { /* use defaults */ }
+    const data = await $fetch<{ sections: SectionConfig[] }>('/api/admin/config?key=homepage_sections')
+    if (data && typeof data === 'object' && Array.isArray(data.sections) && data.sections.length) {
+      sections.value = data.sections
+    }
+  } catch {
+    // Try public API as fallback
+    try {
+      const fallback = await $fetch<{ sections: SectionConfig[] }>('/api/public/sections')
+      if (fallback?.sections?.length) sections.value = fallback.sections
+    } catch { /* use defaults */ }
+  }
 })
 </script>
+

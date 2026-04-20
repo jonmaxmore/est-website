@@ -22,6 +22,8 @@
     </div>
 
     <button @click="save" class="mt-6 rounded-lg bg-gold px-8 py-2.5 text-sm font-bold text-black cursor-pointer border-none hover:bg-gold-light transition-colors">Save Navigation</button>
+
+    <AdminToast :toast="toast" />
   </div>
 </template>
 
@@ -99,8 +101,10 @@ async function save() {
 onMounted(async () => {
   try {
     const data = await $fetch<{ main: typeof mainNav.value; footer: typeof footerNav.value }>('/api/admin/config?key=navigation')
-    if (data?.main) mainNav.value = data.main
-    if (data?.footer) footerNav.value = data.footer
-  } catch { /* defaults */ }
+    if (data && typeof data === 'object') {
+      if (data.main) mainNav.value = data.main
+      if (data.footer) footerNav.value = data.footer
+    }
+  } catch { /* keep defaults */ }
 })
 </script>

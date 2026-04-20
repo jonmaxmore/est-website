@@ -2,37 +2,50 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div><h2 class="text-2xl font-bold">User Management</h2><p class="mt-1 text-sm text-white/50">Manage admin users and roles</p></div>
-      <UButton class="bg-gradient-to-br from-gold to-gold-light font-bold text-black" @click="openEditor(null)">+ Add User</UButton>
+      <button class="gold-btn" @click="openEditor(null)">+ Add User</button>
     </div>
 
     <div class="overflow-hidden rounded-2xl border border-white/6 bg-white/4">
       <table class="w-full text-sm">
         <thead>
-          <tr class="border-b border-white/6">
-            <th class="px-5 py-3 text-left text-[0.6875rem] font-medium uppercase tracking-widest text-white/30">User</th>
-            <th class="px-5 py-3 text-left text-[0.6875rem] font-medium uppercase tracking-widest text-white/30">Email</th>
-            <th class="px-5 py-3 text-left text-[0.6875rem] font-medium uppercase tracking-widest text-white/30">Role</th>
-            <th class="px-5 py-3 text-left text-[0.6875rem] font-medium uppercase tracking-widest text-white/30">Last Login</th>
-            <th class="px-5 py-3 text-right text-[0.6875rem] font-medium uppercase tracking-widest text-white/30">Actions</th>
+          <tr class="border-b border-white/6 bg-white/2">
+            <th class="th-cell">User</th>
+            <th class="th-cell">Email</th>
+            <th class="th-cell">Role</th>
+            <th class="th-cell">Last Login</th>
+            <th class="th-cell text-right">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="u in users" :key="u.id" class="border-b border-white/3 transition-colors hover:bg-white/2">
-            <td class="px-5 py-3 font-medium">{{ u.displayName }}</td>
-            <td class="px-5 py-3 text-white/50">{{ u.email }}</td>
             <td class="px-5 py-3">
-              <span class="rounded-full px-2 py-0.5 text-[0.625rem] font-semibold"
+              <div class="flex items-center gap-3">
+                <div class="flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold" :class="u.role === 'SUPER_ADMIN' ? 'bg-gold/15 text-gold' : 'bg-blue-500/15 text-blue-400'">
+                  {{ (u.displayName || 'A').charAt(0).toUpperCase() }}
+                </div>
+                <span class="font-medium">{{ u.displayName }}</span>
+              </div>
+            </td>
+            <td class="px-5 py-3 text-white/50 font-mono text-xs">{{ u.email }}</td>
+            <td class="px-5 py-3">
+              <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[0.625rem] font-bold"
                 :class="u.role === 'SUPER_ADMIN' ? 'bg-gold/10 text-gold' : 'bg-blue-500/10 text-blue-400'">
-                {{ u.role }}
+                {{ u.role === 'SUPER_ADMIN' ? '👑' : '✏️' }} {{ u.role.replace('_', ' ') }}
               </span>
             </td>
-            <td class="px-5 py-3 text-white/30 whitespace-nowrap">{{ u.lastLoginAt ? formatDate(u.lastLoginAt) : 'Never' }}</td>
+            <td class="px-5 py-3 text-white/30 whitespace-nowrap text-xs">{{ u.lastLoginAt ? formatDate(u.lastLoginAt) : '—' }}</td>
             <td class="px-5 py-3 text-right">
-              <button class="mr-2 text-sm text-white/50 hover:text-gold transition-colors" @click="openEditor(u)">Edit</button>
-              <button class="text-sm text-white/50 hover:text-red-400 transition-colors" @click="deleteUser(u)">Delete</button>
+              <div class="flex justify-end gap-1">
+                <button class="icon-btn" title="Edit" @click="openEditor(u)">✏️</button>
+                <button class="icon-btn danger" title="Delete" @click="confirmDelete(u)">🗑️</button>
+              </div>
             </td>
           </tr>
-          <tr v-if="users.length === 0"><td colspan="5" class="px-5 py-12 text-center text-white/30">No users found</td></tr>
+          <tr v-if="users.length === 0">
+            <td colspan="5">
+              <AdminEmptyState icon="👤" title="No users" message="Create admin users to manage the CMS." action-label="+ Add User" @action="openEditor(null)" />
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -41,12 +54,44 @@
     <UModal v-model:open="editorOpen" :title="editorMode === 'create' ? 'Create User' : 'Edit User'" class="sm:max-w-md">
       <template #body>
         <div class="flex flex-col gap-4 p-1">
-          <UFormField label="Display Name *"><UInput v-model="form.displayName" /></UFormField>
-          <UFormField label="Email *"><UInput v-model="form.email" type="email" /></UFormField>
-          <UFormField :label="editorMode === 'edit' ? 'Password (leave blank to keep)' : 'Password *'"><UInput v-model="form.password" type="password" /></UFormField>
-          <UFormField label="Role">
-            <USelect v-model="form.role" :items="[{label:'Editor',value:'EDITOR'},{label:'Super Admin',value:'SUPER_ADMIN'}]" value-key="value" />
+          <UFormField label="Display Name *">
+            <UInput v-model="form.displayName" placeholder="John Doe" :class="{ 'ring-1 ring-red-500/50': fieldErrors.displayName }" @input="fieldErrors.displayName = ''" />
+            <p v-if="fieldErrors.displayName" class="mt-1 text-xs text-red-400">{{ fieldErrors.displayName }}</p>
           </UFormField>
+
+          <UFormField label="Email *">
+            <UInput v-model="form.email" type="email" placeholder="admin@example.com" :class="{ 'ring-1 ring-red-500/50': fieldErrors.email }" @input="fieldErrors.email = ''" />
+            <p v-if="fieldErrors.email" class="mt-1 text-xs text-red-400">{{ fieldErrors.email }}</p>
+          </UFormField>
+
+          <UFormField :label="editorMode === 'edit' ? 'Password (leave blank to keep)' : 'Password *'">
+            <UInput v-model="form.password" type="password" placeholder="••••••••" :class="{ 'ring-1 ring-red-500/50': fieldErrors.password }" @input="fieldErrors.password = ''" />
+            <p v-if="fieldErrors.password" class="mt-1 text-xs text-red-400">{{ fieldErrors.password }}</p>
+            <!-- Password Strength -->
+            <div v-if="form.password" class="mt-2">
+              <div class="flex gap-1">
+                <div v-for="i in 4" :key="i" class="h-1 flex-1 rounded-full" :class="i <= passwordStrength ? strengthColor : 'bg-white/8'" />
+              </div>
+              <p class="mt-1 text-[0.625rem]" :class="strengthTextColor">{{ strengthLabel }}</p>
+            </div>
+          </UFormField>
+
+          <UFormField label="Role">
+            <div class="grid grid-cols-2 gap-2">
+              <button
+                v-for="r in roles"
+                :key="r.value"
+                type="button"
+                class="role-btn"
+                :class="{ active: form.role === r.value }"
+                @click="form.role = r.value"
+              >
+                <span>{{ r.icon }}</span>
+                <span>{{ r.label }}</span>
+              </button>
+            </div>
+          </UFormField>
+
           <p v-if="formError" class="text-center text-sm text-red-400">{{ formError }}</p>
         </div>
       </template>
@@ -57,6 +102,16 @@
         </div>
       </template>
     </UModal>
+
+    <!-- Delete Confirm -->
+    <AdminConfirmDialog
+      v-model="deleteOpen"
+      title="Delete User?"
+      :message="`Permanently delete '${deleteTarget?.displayName}'? This action cannot be undone.`"
+      confirm-text="Delete"
+      variant="danger"
+      @confirm="doDelete"
+    />
 
     <AdminToast :toast="toast" />
   </div>
@@ -72,8 +127,41 @@ const editorMode = ref<'create' | 'edit'>('create')
 const editingId = ref<string | null>(null)
 const saving = ref(false)
 const formError = ref('')
+const deleteOpen = ref(false)
+const deleteTarget = ref<AdminUser | null>(null)
 const { toast, showToast } = useAdminToast()
+
 const form = reactive({ displayName: '', email: '', password: '', role: 'EDITOR' })
+const fieldErrors = reactive<Record<string, string>>({ displayName: '', email: '', password: '' })
+
+const roles = [
+  { value: 'EDITOR', icon: '✏️', label: 'Editor' },
+  { value: 'SUPER_ADMIN', icon: '👑', label: 'Super Admin' },
+]
+
+// Password strength
+const passwordStrength = computed(() => {
+  const p = form.password
+  if (!p) return 0
+  let s = 0
+  if (p.length >= 6) s++
+  if (p.length >= 10) s++
+  if (/[A-Z]/.test(p) && /[a-z]/.test(p)) s++
+  if (/[^a-zA-Z0-9]/.test(p)) s++
+  return s
+})
+const strengthColor = computed(() => {
+  const m: Record<number, string> = { 1: 'bg-red-500', 2: 'bg-amber-500', 3: 'bg-blue-500', 4: 'bg-emerald-500' }
+  return m[passwordStrength.value] || 'bg-white/8'
+})
+const strengthTextColor = computed(() => {
+  const m: Record<number, string> = { 1: 'text-red-400', 2: 'text-amber-400', 3: 'text-blue-400', 4: 'text-emerald-400' }
+  return m[passwordStrength.value] || 'text-white/20'
+})
+const strengthLabel = computed(() => {
+  const m: Record<number, string> = { 1: 'Weak', 2: 'Fair', 3: 'Good', 4: 'Strong' }
+  return m[passwordStrength.value] || ''
+})
 
 async function loadUsers() {
   try { users.value = await $fetch<AdminUser[]>('/api/admin/users') } catch { users.value = [] }
@@ -81,6 +169,7 @@ async function loadUsers() {
 
 function openEditor(u: AdminUser | null) {
   formError.value = ''
+  Object.keys(fieldErrors).forEach(k => fieldErrors[k] = '')
   if (u) {
     editorMode.value = 'edit'; editingId.value = u.id
     Object.assign(form, { displayName: u.displayName, email: u.email, password: '', role: u.role })
@@ -91,9 +180,19 @@ function openEditor(u: AdminUser | null) {
   editorOpen.value = true
 }
 
+function validate(): boolean {
+  let valid = true
+  Object.keys(fieldErrors).forEach(k => fieldErrors[k] = '')
+  if (!form.displayName) { fieldErrors.displayName = 'Display name is required'; valid = false }
+  if (!form.email) { fieldErrors.email = 'Email is required'; valid = false }
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { fieldErrors.email = 'Enter a valid email address'; valid = false }
+  if (editorMode.value === 'create' && !form.password) { fieldErrors.password = 'Password is required'; valid = false }
+  if (form.password && form.password.length < 6) { fieldErrors.password = 'Password must be at least 6 characters'; valid = false }
+  return valid
+}
+
 async function saveUser() {
-  if (!form.displayName || !form.email) { formError.value = 'Name and email are required.'; return }
-  if (editorMode.value === 'create' && !form.password) { formError.value = 'Password is required for new users.'; return }
+  if (!validate()) return
   saving.value = true; formError.value = ''
   try {
     if (editorMode.value === 'create') { await $fetch('/api/admin/users', { method: 'POST', body: form }) }
@@ -104,12 +203,31 @@ async function saveUser() {
   finally { saving.value = false }
 }
 
-async function deleteUser(u: AdminUser) {
-  if (!confirm(`Delete user "${u.displayName}"?`)) return
-  try { await $fetch(`/api/admin/users/${u.id}`, { method: 'DELETE' }); showToast('User deleted'); await loadUsers() }
+function confirmDelete(u: AdminUser) { deleteTarget.value = u; deleteOpen.value = true }
+async function doDelete() {
+  if (!deleteTarget.value) return
+  try { await $fetch(`/api/admin/users/${deleteTarget.value.id}`, { method: 'DELETE' }); showToast('User deleted'); await loadUsers() }
   catch { showToast('Delete failed', 'error') }
 }
 
 function formatDate(d: string) { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }
 await loadUsers()
 </script>
+
+<style scoped>
+.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, #d4a843, #b8922e); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: filter 0.15s; }
+.gold-btn:hover { filter: brightness(1.1); }
+.th-cell { padding: 12px 20px; text-align: left; font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); }
+.icon-btn { display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 6px; border: none; background: transparent; cursor: pointer; transition: background 0.15s; }
+.icon-btn:hover { background: rgba(255,255,255,0.08); }
+.icon-btn.danger:hover { background: rgba(239,68,68,0.15); }
+
+.role-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;
+  background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.4);
+  font-size: 0.8125rem; font-weight: 500; cursor: pointer; transition: all 0.2s;
+}
+.role-btn:hover { border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); }
+.role-btn.active { border-color: rgba(212,168,67,0.3); background: rgba(212,168,67,0.06); color: #d4a843; }
+</style>

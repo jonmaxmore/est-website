@@ -282,3 +282,50 @@ model Highlight {
 
   @@map("highlights")
 }
+
+// ══════════ EVENTS & HOT TIME ══════════
+
+model GameEvent {
+  id            String      @id @default(cuid())
+  titleEn       String
+  titleTh       String
+  descriptionEn String?     @db.Text
+  descriptionTh String?     @db.Text
+  type          EventType
+  status        EventStatus @default(SCHEDULED)
+  startsAt      DateTime
+  endsAt        DateTime
+  timezone      String      @default("Asia/Bangkok")
+
+  // Hot Time specific
+  multiplier    Float?      // e.g., 2.0 for "2x EXP"
+  bonusType     String?     // EXP, GOLD, DROP_RATE, etc.
+
+  // Display
+  bannerImage   String?
+  icon          String?
+  color         String?     // hex color for event badge
+  visible       Boolean     @default(true)
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([startsAt, endsAt])
+  @@index([status])
+  @@map("game_events")
+}
+
+enum EventType {
+  EVENT
+  HOT_TIME
+  MAINTENANCE
+  CAMPAIGN
+}
+
+enum EventStatus {
+  DRAFT
+  SCHEDULED
+  ACTIVE
+  ENDED
+  CANCELLED
+}

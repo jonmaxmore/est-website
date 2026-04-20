@@ -1,24 +1,24 @@
-/** Activity log — returns admin actions with pagination and filtering */
+/** List game events with pagination and filtering */
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
-  const limit = Math.min(Number(query.limit) || 50, 200)
+  const limit = Math.min(Number(query.limit) || 25, 100)
   const page = Math.max(Number(query.page) || 1, 1)
   const skip = (page - 1) * limit
-  const action = (query.action as string) || ''
-  const resource = (query.resource as string) || ''
+  const type = (query.type as string) || ''
+  const status = (query.status as string) || ''
 
   const where: Record<string, unknown> = {}
-  if (action) where.action = action
-  if (resource) where.resource = resource
+  if (type) where.type = type
+  if (status) where.status = status
 
   const [rows, total] = await Promise.all([
-    prisma.activityLog.findMany({
+    prisma.gameEvent.findMany({
       where,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { startsAt: 'desc' },
       take: limit,
       skip,
     }),
-    prisma.activityLog.count({ where }),
+    prisma.gameEvent.count({ where }),
   ])
 
   return {

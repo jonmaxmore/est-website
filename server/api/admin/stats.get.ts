@@ -1,10 +1,13 @@
-/** Dashboard stats — aggregated counts + recent activity */
+/** Dashboard stats — aggregated counts + recent activity + system health */
 export default defineEventHandler(async () => {
   const [
     newsCount,
     publishedNewsCount,
     weaponCount,
     registrationCount,
+    featureCount,
+    highlightCount,
+    mediaCount,
     recentRegistrations,
     recentNews,
   ] = await Promise.all([
@@ -12,6 +15,9 @@ export default defineEventHandler(async () => {
     prisma.newsArticle.count({ where: { status: 'PUBLISHED' } }),
     prisma.weapon.count(),
     prisma.preRegistration.count(),
+    prisma.feature.count(),
+    prisma.highlight.count(),
+    prisma.mediaAsset.count(),
     prisma.preRegistration.findMany({
       orderBy: { createdAt: 'desc' },
       take: 5,
@@ -41,9 +47,27 @@ export default defineEventHandler(async () => {
   fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14)
 
   const dailyRegistrations = await prisma.$queryRawUnsafe<Array<{ date: string; count: bigint }>>(
-    `SELECT DATE(\"createdAt\") as date, COUNT(*) as count FROM pre_registrations WHERE "createdAt" >= $1 GROUP BY DATE("createdAt") ORDER BY date`,
+    `SELECT DATE("createdAt") as date, COUNT(*) as count FROM pre_registrations WHERE "createdAt" >= $1 GROUP BY DATE("createdAt") ORDER BY date`,
     fourteenDaysAgo,
   )
+
+  // Recent activity
+  let recentActivity: Array<{ action: string; resource: string; userName: string; createdAt: Date }> = []
+  try {
+    recentActivity = await prisma.activityLog.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 5,
+      select: { action: true, resource: true, userName: true, createdAt: true },
+    })
+  } catch { /* table may not exist yet */ }
+
+  // Page view count (today)
+  let todayPageViews = 0
+  try {
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
+    todayPageViews = await prisma.pageView.count({ where: { createdAt: { gte: todayStart } } })
+  } catch { /* ignore */ }
 
   return {
     counts: {
@@ -51,6 +75,10 @@ export default defineEventHandler(async () => {
       publishedNews: publishedNewsCount,
       weapons: weaponCount,
       registrations: registrationCount,
+      features: featureCount,
+      highlights: highlightCount,
+      media: mediaCount,
+      todayPageViews,
     },
     platformStats: platformStats.map((s) => ({ platform: s.platform, count: s._count.id })),
     regionStats: regionStats.map((s) => ({ region: s.region, count: s._count.id })),
@@ -60,5 +88,6 @@ export default defineEventHandler(async () => {
     })),
     recentRegistrations,
     recentNews,
+    recentActivity,
   }
 })
