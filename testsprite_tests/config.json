@@ -1,0 +1,53 @@
+{
+  "project_name": "est-website",
+  "base_url": "http://178.128.127.161",
+  "tests": [
+    {
+      "name": "Homepage loads correctly",
+      "steps": [
+        { "action": "navigate", "url": "/" },
+        { "action": "assert_status", "expected": 200 },
+        { "action": "assert_text_exists", "text": "Eternal Tower Saga" }
+      ]
+    },
+    {
+      "name": "Admin login page accessible",
+      "steps": [
+        { "action": "navigate", "url": "/admin/login" },
+        { "action": "assert_status", "expected": 200 },
+        { "action": "assert_element_exists", "selector": "input[type='email']" }
+      ]
+    },
+    {
+      "name": "Features API returns data",
+      "steps": [
+        { "action": "navigate", "url": "/api/public/features" },
+        { "action": "assert_status", "expected": 200 },
+        { "action": "assert_json_not_empty" }
+      ]
+    },
+    {
+      "name": "FAQ page loads",
+      "steps": [
+        { "action": "navigate", "url": "/faq" },
+        { "action": "assert_status", "expected": 200 }
+      ]
+    },
+    {
+      "name": "Event registration page",
+      "steps": [
+        { "action": "navigate", "url": "/event" },
+        { "action": "assert_status", "expected": 200 },
+        { "action": "assert_element_exists", "selector": "form" }
+      ]
+    },
+    {
+      "name": "Site config API",
+      "steps": [
+        { "action": "navigate", "url": "/api/public/site" },
+        { "action": "assert_status", "expected": 200 },
+        { "action": "assert_json_not_empty" }
+      ]
+    }
+  ]
+}
