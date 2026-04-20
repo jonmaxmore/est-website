@@ -364,7 +364,10 @@
 const { t, locale } = useI18n()
 const currentLocale = computed(() => locale.value)
 
-useHead({ title: 'Eternal Tower Saga — เกม RPG บนมือถือ' })
+usePageSeo({
+  title: 'Eternal Tower Saga — เกม RPG บนมือถือ',
+  description: 'Eternal Tower Saga — เกม RPG บนมือถือที่ดีที่สุด ปีนหอคอยสุดท้าทาย ต่อสู้ผู้เล่นในระบบ PvP สร้างกิลด์และพิชิตโลกแฟนตาซี',
+})
 
 // Dynamic sections from API
 interface Section { id: string; type: string; visible: boolean; order: number; background: string; config: Record<string, unknown> }

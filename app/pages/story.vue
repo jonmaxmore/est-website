@@ -14,5 +14,8 @@
   </div>
 </template>
 <script setup lang="ts">
-useHead({ title: 'Story | Eternal Tower Saga' })
+usePageSeo({
+  title: 'Story | Eternal Tower Saga',
+  description: 'Discover the epic story of Eternal Tower Saga. An ancient tower, fallen heroes, and a world in need of a champion.',
+})
 </script>

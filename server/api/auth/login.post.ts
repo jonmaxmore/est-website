@@ -1,12 +1,22 @@
 import { z } from 'zod'
 
 const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
+  email: z.string().email().max(255),
+  password: z.string().min(1).max(255),
 })
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
+  let body: unknown
+  try {
+    body = await readBody(event)
+  } catch {
+    throw createError({ statusCode: 400, message: 'Invalid request body' })
+  }
+
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    throw createError({ statusCode: 400, message: 'Request body must be a JSON object with email and password' })
+  }
+
   const parsed = loginSchema.safeParse(body)
 
   if (!parsed.success) {

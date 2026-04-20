@@ -36,7 +36,10 @@
 </template>
 <script setup lang="ts">
 const { t } = useI18n()
-useHead({ title: 'Game Guide | Eternal Tower Saga' })
+usePageSeo({
+  title: 'Game Guide | Eternal Tower Saga',
+  description: 'Master the tower with our comprehensive game guide. Learn combat systems, tower mechanics, and guild strategies.',
+})
 const tabs = [
   { label: 'Combat System', icon: '⚔️', items: [
     { title: 'Weapon Types', desc: 'Choose from 4 weapon types: Sword, Bow, Wand, and Axe. Each has a unique skill tree.' },

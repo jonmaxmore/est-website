@@ -20,6 +20,11 @@ const route = useRoute()
 const slug = route.params.slug as string
 interface Article { titleEn: string; titleTh: string; category: string; featuredImage?: string | null; publishedAt?: string | null; contentEn?: string | null; excerptEn?: string | null; seoTitle?: string | null; seoDesc?: string | null; ogImage?: string | null }
 const { data: article } = await useFetch<Article>(`/api/public/news/${slug}`)
-useHead({ title: article.value?.seoTitle || article.value?.titleEn || 'News', meta: [{ name: 'description', content: article.value?.seoDesc || article.value?.excerptEn || '' }] })
+usePageSeo({
+  title: article.value?.seoTitle || article.value?.titleEn || 'News',
+  description: article.value?.seoDesc || article.value?.excerptEn || 'Read the latest news from Eternal Tower Saga.',
+  image: article.value?.ogImage || article.value?.featuredImage || null,
+  type: 'article',
+})
 function formatDate(d: string | null | undefined): string { if (!d) return ''; return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }
 </script>

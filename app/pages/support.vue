@@ -18,7 +18,10 @@
 </template>
 <script setup lang="ts">
 const { t } = useI18n()
-useHead({ title: `${t('nav.support')} | Eternal Tower Saga` })
+usePageSeo({
+  title: `${t('nav.support')} | Eternal Tower Saga`,
+  description: 'Need help with Eternal Tower Saga? Contact our support team for assistance with accounts, billing, and gameplay.',
+})
 const supportItems = [
   { icon: '📧', title: 'Email Support', desc: 'Send us a message and our team will respond within 24 hours.', link: 'mailto:support@eternaltowersaga.com', linkLabel: 'support@eternaltowersaga.com' },
   { icon: '💬', title: 'Discord Community', desc: 'Join our Discord for live support and community discussions.', link: 'https://discord.gg/eternaltowersaga', linkLabel: 'Join Discord' },

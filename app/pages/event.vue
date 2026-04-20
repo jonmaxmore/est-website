@@ -155,7 +155,10 @@
 
 <script setup lang="ts">
 const { t, locale } = useI18n()
-useHead({ title: `${t('event.preRegister')} | Eternal Tower Saga` })
+usePageSeo({
+  title: `${t('event.preRegister')} | Eternal Tower Saga`,
+  description: 'Pre-register for Eternal Tower Saga and unlock exclusive rewards. Join the community and be first to play.',
+})
 
 // --- Form ---
 const form = reactive({ email: '', platform: 'ANDROID', region: 'TH', referralCode: '' })

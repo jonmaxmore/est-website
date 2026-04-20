@@ -16,5 +16,8 @@
   </div>
 </template>
 <script setup lang="ts">
-useHead({ title: 'Privacy Policy | Eternal Tower Saga' })
+usePageSeo({
+  title: 'Privacy Policy | Eternal Tower Saga',
+  description: 'Read the privacy policy of Eternal Tower Saga. Learn how we collect, use, and protect your data.',
+})
 </script>

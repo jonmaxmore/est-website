@@ -64,7 +64,10 @@
 
 <script setup lang="ts">
 const { t } = useI18n()
-useHead({ title: `${t('nav.news')} | Eternal Tower Saga` })
+usePageSeo({
+  title: `${t('nav.news')} | Eternal Tower Saga`,
+  description: 'Stay up-to-date with the latest announcements, events, and updates from Eternal Tower Saga.',
+})
 const activeCategory = ref('ALL')
 const categories = [
   { value: 'ALL', label: 'All' },

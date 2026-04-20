@@ -30,7 +30,10 @@
 <script setup lang="ts">
 const { locale } = useI18n()
 const currentLocale = computed(() => locale.value)
-useHead({ title: 'FAQ | Eternal Tower Saga' })
+usePageSeo({
+  title: 'FAQ | Eternal Tower Saga',
+  description: 'Frequently asked questions about Eternal Tower Saga. Find answers about gameplay, accounts, platforms, and more.',
+})
 
 // Fetch FAQ from CMS (SiteConfig)
 interface FaqItem {

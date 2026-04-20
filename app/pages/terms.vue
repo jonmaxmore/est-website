@@ -16,5 +16,8 @@
   </div>
 </template>
 <script setup lang="ts">
-useHead({ title: 'Terms of Service | Eternal Tower Saga' })
+usePageSeo({
+  title: 'Terms of Service | Eternal Tower Saga',
+  description: 'Read the terms of service for Eternal Tower Saga. By playing, you agree to these terms and conditions.',
+})
 </script>

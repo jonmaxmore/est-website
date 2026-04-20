@@ -29,6 +29,8 @@ npm-debug.log*
 # Test
 coverage/
 test-results/
+playwright-report/
+.env.test
 
 # Prisma
 prisma/migrations/**/migration_lock.toml

@@ -15,5 +15,8 @@
   </div>
 </template>
 <script setup lang="ts">
-useHead({ title: 'Download | Eternal Tower Saga' })
+usePageSeo({
+  title: 'Download | Eternal Tower Saga',
+  description: 'Download Eternal Tower Saga on iOS, Android, and PC. Pre-register now to get exclusive rewards at launch.',
+})
 </script>

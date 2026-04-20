@@ -40,7 +40,10 @@
 
 <script setup lang="ts">
 const { t } = useI18n()
-useHead({ title: `${t('nav.characters')} | Eternal Tower Saga` })
+usePageSeo({
+  title: `${t('nav.characters')} | Eternal Tower Saga`,
+  description: 'Choose your weapon class in Eternal Tower Saga. Explore Sword, Bow, Wand, and Axe — each with unique skills and combat styles.',
+})
 const activeWeapon = ref(0)
 const { data: weapons } = await useFetch('/api/public/weapons', {
   default: () => [

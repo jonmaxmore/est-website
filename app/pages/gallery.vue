@@ -22,7 +22,10 @@
   </div>
 </template>
 <script setup lang="ts">
-useHead({ title: 'Gallery | Eternal Tower Saga' })
+usePageSeo({
+  title: 'Gallery | Eternal Tower Saga',
+  description: 'Explore stunning screenshots, concept art, and official media from Eternal Tower Saga.',
+})
 const lightboxOpen = ref(false); const lightboxIndex = ref(0)
 function openLightbox(i: number) { lightboxIndex.value = i; lightboxOpen.value = true }
 const images = [
