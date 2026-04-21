@@ -16,7 +16,7 @@
           </Transition>
         </NuxtLink>
         <button class="collapse-btn desktop-only" @click="sidebarCollapsed = !sidebarCollapsed" :title="sidebarCollapsed ? 'Expand' : 'Collapse'">
-          {{ sidebarCollapsed ? '▶' : '◀' }}
+          <UIcon :name="sidebarCollapsed ? 'i-lucide-chevron-right' : 'i-lucide-chevron-left'" />
         </button>
       </div>
 
@@ -34,7 +34,7 @@
             :title="sidebarCollapsed ? item.label : ''"
             @click="mobileMenuOpen = false"
           >
-            <span class="nav-icon">{{ item.icon }}</span>
+            <UIcon :name="item.icon" class="nav-icon-svg" />
             <Transition name="nav-label">
               <span v-if="!sidebarCollapsed" class="nav-label">{{ item.label }}</span>
             </Transition>
@@ -51,7 +51,7 @@
           class="sidebar-footer-btn view-site-btn"
           :title="sidebarCollapsed ? 'View Site' : ''"
         >
-          <span>🌐</span>
+          <UIcon name="i-lucide-external-link" class="sidebar-icon" />
           <span v-if="!sidebarCollapsed">View Site</span>
         </NuxtLink>
         <button
@@ -59,7 +59,7 @@
           :title="sidebarCollapsed ? 'Logout' : ''"
           @click="handleLogout"
         >
-          <span>🚪</span>
+          <UIcon name="i-lucide-log-out" class="sidebar-icon" />
           <span v-if="!sidebarCollapsed">Logout</span>
         </button>
       </div>
@@ -71,14 +71,14 @@
       <header class="topbar">
         <div class="topbar-left">
           <button class="mobile-menu-btn" @click="mobileMenuOpen = !mobileMenuOpen">
-            ☰
+            <UIcon name="i-lucide-menu" />
           </button>
           <AdminBreadcrumb />
         </div>
         <div class="topbar-right">
           <!-- Search Trigger -->
           <button class="topbar-search-btn" @click="commandPalette?.open()" title="Search (Ctrl+K)">
-            <span class="search-icon">🔍</span>
+            <UIcon name="i-lucide-search" class="search-icon-svg" />
             <span class="search-label">Search...</span>
             <kbd class="search-kbd">⌘K</kbd>
           </button>
@@ -140,46 +140,46 @@ const navGroups = [
   {
     title: 'Overview',
     items: [
-      { to: '/admin', icon: '📊', label: 'Dashboard' },
-      { to: '/admin/analytics', icon: '📈', label: 'Analytics' },
+      { to: '/admin', icon: 'i-lucide-layout-dashboard', label: 'Dashboard' },
+      { to: '/admin/analytics', icon: 'i-lucide-bar-chart-3', label: 'Analytics' },
     ],
   },
   {
     title: 'Content',
     items: [
-      { to: '/admin/homepage', icon: '🏠', label: 'Homepage' },
-      { to: '/admin/news', icon: '📰', label: 'News' },
-      { to: '/admin/weapons', icon: '⚔️', label: 'Weapons' },
-      { to: '/admin/features', icon: '🌟', label: 'Features' },
-      { to: '/admin/highlights', icon: '✨', label: 'Highlights' },
-      { to: '/admin/events', icon: '📅', label: 'Events & Hot Time' },
-      { to: '/admin/faq', icon: '❓', label: 'FAQ' },
-      { to: '/admin/pages', icon: '📄', label: 'Pages' },
-      { to: '/admin/media', icon: '🖼️', label: 'Media' },
+      { to: '/admin/homepage', icon: 'i-lucide-home', label: 'Homepage' },
+      { to: '/admin/news', icon: 'i-lucide-newspaper', label: 'News' },
+      { to: '/admin/weapons', icon: 'i-lucide-swords', label: 'Weapons' },
+      { to: '/admin/features', icon: 'i-lucide-sparkles', label: 'Features' },
+      { to: '/admin/highlights', icon: 'i-lucide-star', label: 'Highlights' },
+      { to: '/admin/events', icon: 'i-lucide-calendar', label: 'Events & Hot Time' },
+      { to: '/admin/faq', icon: 'i-lucide-help-circle', label: 'FAQ' },
+      { to: '/admin/pages', icon: 'i-lucide-file-text', label: 'Pages' },
+      { to: '/admin/media', icon: 'i-lucide-image', label: 'Media' },
     ],
   },
   {
     title: 'Marketing',
     items: [
-      { to: '/admin/registrations', icon: '👥', label: 'Registrations' },
+      { to: '/admin/registrations', icon: 'i-lucide-users', label: 'Registrations' },
     ],
   },
   {
     title: 'Appearance',
     items: [
-      { to: '/admin/menus', icon: '🧭', label: 'Navigation' },
-      { to: '/admin/appearance', icon: '🎨', label: 'Theme' },
-      { to: '/admin/seo', icon: '🔍', label: 'SEO' },
+      { to: '/admin/menus', icon: 'i-lucide-menu', label: 'Navigation' },
+      { to: '/admin/appearance', icon: 'i-lucide-palette', label: 'Theme' },
+      { to: '/admin/seo', icon: 'i-lucide-search', label: 'SEO' },
     ],
   },
   {
     title: 'System',
     items: [
-      { to: '/admin/users', icon: '👤', label: 'Users' },
-      { to: '/admin/integrations', icon: '🔗', label: 'Integrations' },
-      { to: '/admin/activity', icon: '📋', label: 'Activity Log' },
-      { to: '/admin/backup', icon: '💾', label: 'Backup' },
-      { to: '/admin/settings', icon: '⚙️', label: 'Settings' },
+      { to: '/admin/users', icon: 'i-lucide-user', label: 'Users' },
+      { to: '/admin/integrations', icon: 'i-lucide-plug', label: 'Integrations' },
+      { to: '/admin/activity', icon: 'i-lucide-clipboard-list', label: 'Activity Log' },
+      { to: '/admin/backup', icon: 'i-lucide-hard-drive', label: 'Backup' },
+      { to: '/admin/settings', icon: 'i-lucide-settings', label: 'Settings' },
     ],
   },
 ]
@@ -346,6 +346,26 @@ onMounted(() => {
   text-align: center;
   font-size: 0.9375rem;
   flex-shrink: 0;
+}
+.nav-icon-svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.nav-item.active .nav-icon-svg {
+  opacity: 1;
+  color: var(--gold);
+}
+.sidebar-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.search-icon-svg {
+  width: 14px;
+  height: 14px;
+  opacity: 0.5;
 }
 .nav-label { font-weight: 500; }
 .nav-badge {

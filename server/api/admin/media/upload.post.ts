@@ -45,12 +45,15 @@ export default defineEventHandler(async (event) => {
 
     if (part.type.startsWith('image/')) {
       try {
-        const sharp = (await import('sharp')).default
-        const metadata = await sharp(part.data).metadata()
-        width = metadata.width || null
-        height = metadata.height || null
+        // sharp is optional — skip dimensions if not available
+        const sharpModule = await import('sharp').catch(() => null)
+        if (sharpModule?.default) {
+          const metadata = await sharpModule.default(part.data).metadata()
+          width = metadata.width || null
+          height = metadata.height || null
+        }
       } catch {
-        // Non-critical: skip if sharp fails
+        // Non-critical: skip if sharp is not installed or fails
       }
     }
 

@@ -3,7 +3,7 @@
     <!-- Welcome header -->
     <div class="mb-6 flex items-start justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Welcome back, {{ user?.displayName || 'Admin' }} 👋</h2>
+        <h2 class="text-2xl font-bold">Welcome back, {{ user?.displayName || 'Admin' }}</h2>
         <p class="mt-1 text-sm text-white/50">Here's what's happening with your portal today.</p>
       </div>
       <div class="text-sm text-white/30 whitespace-nowrap">{{ todayFormatted }}</div>
@@ -12,7 +12,7 @@
     <!-- Quick Actions -->
     <div class="mb-6 grid gap-3" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr))">
       <NuxtLink v-for="action in quickActions" :key="action.to" :to="action.to" class="quick-action-card">
-        <span class="text-xl">{{ action.icon }}</span>
+        <UIcon :name="action.icon" class="w-5 h-5" />
         <span class="text-xs font-medium">{{ action.label }}</span>
       </NuxtLink>
     </div>
@@ -20,7 +20,7 @@
     <!-- Stat Cards -->
     <div class="mb-6 grid gap-4" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr))">
       <div v-for="stat in statCards" :key="stat.label" class="stat-card">
-        <div class="stat-icon" :style="{ background: stat.bg }">{{ stat.icon }}</div>
+        <div class="stat-icon" :style="{ background: stat.bg }"><UIcon :name="stat.icon" class="w-6 h-6" /></div>
         <div>
           <p class="text-2xl font-extrabold leading-tight">{{ stat.value }}</p>
           <p class="text-xs font-medium text-white/50">{{ stat.label }}</p>
@@ -47,7 +47,7 @@
         <div class="mb-8 flex flex-col gap-3.5">
           <div v-for="p in platformData" :key="p.platform" class="flex items-center gap-3">
             <div class="flex w-[90px] flex-shrink-0 items-center gap-2 text-sm">
-              <span>{{ platformIcon(p.platform) }}</span><span>{{ p.platform }}</span>
+              <span>{{ platformIconLabel(p.platform) }}</span><span>{{ p.platform }}</span>
             </div>
             <div class="h-2 flex-1 overflow-hidden rounded-full bg-white/4">
               <div class="h-full rounded-full bg-gradient-to-r from-blue-500 to-blue-400 transition-all duration-500" :style="{ width: platformPercent(p.count) }" />
@@ -59,7 +59,7 @@
         <div class="flex flex-col gap-3.5">
           <div v-for="r in regionData" :key="r.region" class="flex items-center gap-3">
             <div class="flex w-[90px] flex-shrink-0 items-center gap-2 text-sm">
-              <span>{{ regionIcon(r.region) }}</span><span>{{ r.region }}</span>
+              <span>{{ regionIconLabel(r.region) }}</span><span>{{ r.region }}</span>
             </div>
             <div class="h-2 flex-1 overflow-hidden rounded-full bg-white/4">
               <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500" :style="{ width: regionPercent(r.count) }" />
@@ -77,7 +77,7 @@
         <h3 class="panel-title">Content Status</h3>
         <div class="flex flex-col gap-3">
           <div v-for="item in contentStatus" :key="item.label" class="flex items-center gap-3">
-            <span class="text-lg">{{ item.icon }}</span>
+            <UIcon :name="item.icon" class="w-4 h-4 opacity-60" />
             <span class="flex-1 text-sm">{{ item.label }}</span>
             <span class="rounded-full px-2 py-0.5 text-xs font-bold"
               :class="item.count > 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-white/5 text-white/25'">
@@ -188,31 +188,31 @@ const { data: stats } = await useFetch<Stats>('/api/admin/stats', {
 const todayFormatted = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 
 const quickActions = [
-  { icon: '📰', label: 'New Article', to: '/admin/news' },
-  { icon: '🖼️', label: 'Upload Media', to: '/admin/media' },
-  { icon: '🌟', label: 'Add Feature', to: '/admin/features' },
-  { icon: '⚔️', label: 'Edit Weapons', to: '/admin/weapons' },
-  { icon: '🏠', label: 'Edit Homepage', to: '/admin/homepage' },
-  { icon: '🌐', label: 'View Site', to: '/' },
+  { icon: 'i-lucide-newspaper', label: 'New Article', to: '/admin/news' },
+  { icon: 'i-lucide-upload', label: 'Upload Media', to: '/admin/media' },
+  { icon: 'i-lucide-sparkles', label: 'Add Feature', to: '/admin/features' },
+  { icon: 'i-lucide-swords', label: 'Edit Weapons', to: '/admin/weapons' },
+  { icon: 'i-lucide-home', label: 'Edit Homepage', to: '/admin/homepage' },
+  { icon: 'i-lucide-external-link', label: 'View Site', to: '/' },
 ]
 
 const statCards = computed(() => [
-  { icon: '👥', label: 'Registrations', value: stats.value.counts.registrations.toLocaleString(), bg: 'rgba(59,130,246,0.12)' },
-  { icon: '📰', label: 'News', value: stats.value.counts.news.toString(), bg: 'rgba(16,185,129,0.12)' },
-  { icon: '✅', label: 'Published', value: stats.value.counts.publishedNews.toString(), bg: 'rgba(245,158,11,0.12)' },
-  { icon: '⚔️', label: 'Weapons', value: stats.value.counts.weapons.toString(), bg: 'rgba(139,92,246,0.12)' },
-  { icon: '🌟', label: 'Features', value: stats.value.counts.features.toString(), bg: 'rgba(236,72,153,0.12)' },
-  { icon: '✨', label: 'Highlights', value: stats.value.counts.highlights.toString(), bg: 'rgba(14,165,233,0.12)' },
-  { icon: '🖼️', label: 'Media', value: stats.value.counts.media.toString(), bg: 'rgba(168,85,247,0.12)' },
-  { icon: '👁️', label: 'Views Today', value: stats.value.counts.todayPageViews.toLocaleString(), bg: 'rgba(251,146,60,0.12)' },
+  { icon: 'i-lucide-users', label: 'Registrations', value: stats.value.counts.registrations.toLocaleString(), bg: 'rgba(59,130,246,0.12)' },
+  { icon: 'i-lucide-newspaper', label: 'News', value: stats.value.counts.news.toString(), bg: 'rgba(16,185,129,0.12)' },
+  { icon: 'i-lucide-check-circle', label: 'Published', value: stats.value.counts.publishedNews.toString(), bg: 'rgba(245,158,11,0.12)' },
+  { icon: 'i-lucide-swords', label: 'Weapons', value: stats.value.counts.weapons.toString(), bg: 'rgba(139,92,246,0.12)' },
+  { icon: 'i-lucide-sparkles', label: 'Features', value: stats.value.counts.features.toString(), bg: 'rgba(236,72,153,0.12)' },
+  { icon: 'i-lucide-star', label: 'Highlights', value: stats.value.counts.highlights.toString(), bg: 'rgba(14,165,233,0.12)' },
+  { icon: 'i-lucide-image', label: 'Media', value: stats.value.counts.media.toString(), bg: 'rgba(168,85,247,0.12)' },
+  { icon: 'i-lucide-eye', label: 'Views Today', value: stats.value.counts.todayPageViews.toLocaleString(), bg: 'rgba(251,146,60,0.12)' },
 ])
 
 const contentStatus = computed(() => [
-  { icon: '📰', label: 'News Articles', count: stats.value.counts.news },
-  { icon: '⚔️', label: 'Weapons', count: stats.value.counts.weapons },
-  { icon: '🌟', label: 'Features', count: stats.value.counts.features },
-  { icon: '✨', label: 'Highlights', count: stats.value.counts.highlights },
-  { icon: '🖼️', label: 'Media Assets', count: stats.value.counts.media },
+  { icon: 'i-lucide-newspaper', label: 'News Articles', count: stats.value.counts.news },
+  { icon: 'i-lucide-swords', label: 'Weapons', count: stats.value.counts.weapons },
+  { icon: 'i-lucide-sparkles', label: 'Features', count: stats.value.counts.features },
+  { icon: 'i-lucide-star', label: 'Highlights', count: stats.value.counts.highlights },
+  { icon: 'i-lucide-image', label: 'Media Assets', count: stats.value.counts.media },
 ])
 
 const chartData = computed(() => stats.value.dailyRegistrations || [])
@@ -228,8 +228,8 @@ const maxRegion = computed(() => Math.max(1, ...regionData.value.map((r) => r.co
 function barHeight(count: number) { return `${(count / maxChart.value) * 100}%` }
 function platformPercent(count: number) { return `${(count / maxPlatform.value) * 100}%` }
 function regionPercent(count: number) { return `${(count / maxRegion.value) * 100}%` }
-function platformIcon(p: string) { return p === 'IOS' ? '🍎' : p === 'ANDROID' ? '🤖' : '🖥️' }
-function regionIcon(r: string) { return r === 'TH' ? '🇹🇭' : r === 'SEA' ? '🌏' : '🌍' }
+function platformIconLabel(p: string) { return p === 'IOS' ? 'iOS' : p === 'ANDROID' ? 'AND' : 'PC' }
+function regionIconLabel(r: string) { return r === 'TH' ? 'TH' : r === 'SEA' ? 'SEA' : 'GLB' }
 function formatDate(d: string) { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) }
 </script>
 

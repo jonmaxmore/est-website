@@ -172,7 +172,6 @@
               <img :src="feature.image || '/images/og-cover.png'" :alt="feature.titleEn" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
               <div class="absolute bottom-0 left-0 right-0 p-6">
-                <div class="mb-2 text-3xl">{{ feature.icon }}</div>
                 <h3 class="text-xl font-extrabold leading-tight drop-shadow-lg">{{ currentLocale === 'th' ? feature.titleTh : feature.titleEn }}</h3>
                 <p class="mt-1 text-sm text-white/60 line-clamp-2">{{ currentLocale === 'th' ? (feature.descriptionTh || feature.descriptionEn) : feature.descriptionEn }}</p>
                 <span class="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">{{ t('features.readMore') }}</span>
@@ -209,7 +208,6 @@
               <img :src="highlightItems[0]?.image || '/images/og-cover.png'" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
               <div class="absolute bottom-0 left-0 right-0 p-8">
-                <div class="mb-3 text-4xl">{{ highlightItems[0]?.icon }}</div>
                 <h3 class="text-2xl font-extrabold drop-shadow-lg">{{ currentLocale === 'th' ? highlightItems[0]?.titleTh : highlightItems[0]?.titleEn }}</h3>
                 <p class="mt-2 text-sm text-white/60 max-w-md">{{ currentLocale === 'th' ? (highlightItems[0]?.descriptionTh || highlightItems[0]?.descriptionEn) : highlightItems[0]?.descriptionEn }}</p>
                 <span class="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">{{ t('highlight.readMore') }}</span>
@@ -227,7 +225,6 @@
               <img :src="hl.image || '/images/og-cover.png'" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
               <div class="absolute bottom-0 left-0 right-0 p-6">
-                <div class="mb-2 text-2xl">{{ hl.icon }}</div>
                 <h3 class="text-lg font-extrabold drop-shadow-lg">{{ currentLocale === 'th' ? hl.titleTh : hl.titleEn }}</h3>
                 <p class="mt-1 text-sm text-white/60">{{ currentLocale === 'th' ? (hl.descriptionTh || hl.descriptionEn) : hl.descriptionEn }}</p>
                 <span class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">{{ t('highlight.readMore') }}</span>

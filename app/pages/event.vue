@@ -17,8 +17,8 @@
       </div>
 
       <div class="relative z-10 px-6 pt-32 pb-20" v-motion :initial="{ opacity: 0, y: 30 }" :enter="{ opacity: 1, y: 0 }">
-        <span class="mb-5 inline-block rounded-full border border-gold/25 bg-black/50 px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-gold backdrop-blur-md">
-          🎮 {{ t('event.preRegister') }}
+        <span class="mb-5 inline-block rounded-full border border-gold/25 bg-black/50 px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.25em] text-gold backdrop-blur-md">
+          {{ t('event.preRegister') }}
         </span>
         <h1 class="mb-5 text-[clamp(2.5rem,6vw,4.5rem)] font-extrabold leading-[1.05] tracking-tight">
           <span class="bg-gradient-to-b from-white via-white to-white/40 bg-clip-text text-transparent drop-shadow-[0_2px_20px_rgba(255,255,255,0.3)]">
@@ -37,7 +37,7 @@
           </div>
           <span v-if="false" class="text-2xl font-light text-gold/30 -mt-6">:</span>
         </div>
-        <p class="mt-5 text-xs text-white/25">🔥 CBT Launch Target</p>
+        <p class="mt-5 text-xs text-white/25">CBT Launch Target</p>
 
         <!-- CTA Arrow -->
         <div class="mt-8 animate-bounce text-2xl text-gold/40">↓</div>
@@ -60,7 +60,6 @@
           class="overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-b from-white/[0.06] to-white/[0.02] backdrop-blur-xl shadow-[0_8px_40px_rgba(0,0,0,0.3)]">
           <!-- Form Header -->
           <div class="border-b border-white/6 bg-white/[0.02] px-8 py-6 text-center">
-            <div class="mb-2 text-3xl">⚔️</div>
             <h2 class="text-xl font-bold">{{ t('event.registerButton') }}</h2>
             <p class="mt-1 text-xs text-white/30">Get exclusive rewards at launch!</p>
           </div>
@@ -77,13 +76,13 @@
                 <USelect v-model="form.region" :items="regionItems" size="lg" value-key="value" />
               </UFormField>
             </div>
-            <UFormField label="Referral Code (Optional)">
-              <UInput v-model="form.referralCode" placeholder="FRIEND-XXXX" size="lg" />
+            <UFormField label="Referral Code (Optional)" class="col-span-2">
+              <UInput v-model="form.referredBy" placeholder="ETS-XXXXXXX" size="lg" />
             </UFormField>
             <p v-if="error" class="text-center text-sm text-red-400">{{ error }}</p>
             <UButton type="submit" size="lg" block :loading="loading"
               class="mt-2 bg-gradient-to-br from-gold to-gold-light font-bold text-black shadow-[0_4px_25px_rgba(212,168,67,0.35)] transition-all duration-300 hover:shadow-[0_6px_35px_rgba(212,168,67,0.55)] hover:-translate-y-0.5">
-              🚀 {{ t('event.registerButton') }}
+              {{ t('event.registerButton') }}
             </UButton>
           </form>
           <p class="border-t border-white/4 px-8 py-3 text-center text-[0.6rem] text-white/15">
@@ -116,7 +115,7 @@
 
     <!-- ═══ MILESTONES SECTION ═══ -->
     <section class="relative mx-auto max-w-5xl px-6 pb-20">
-      <h2 class="mb-8 text-center text-2xl font-bold">🎯 Milestone Rewards</h2>
+      <h2 class="mb-8 text-center text-2xl font-bold">Milestone Rewards</h2>
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <div v-for="(ms, idx) in milestones" :key="ms.id"
           class="group relative overflow-hidden rounded-2xl border p-6 transition-all duration-500"
@@ -155,13 +154,13 @@
     <!-- ═══ REWARDS SECTION ═══ -->
     <section class="relative border-t border-white/6 bg-gradient-to-b from-transparent via-white/[0.015] to-transparent py-20">
       <div class="mx-auto max-w-5xl px-6">
-        <h2 class="mb-3 text-center text-2xl font-bold">🎁 Pre-Registration Rewards</h2>
+        <h2 class="mb-3 text-center text-2xl font-bold">Pre-Registration Rewards</h2>
         <p class="mb-12 text-center text-sm text-white/35">Everyone who pre-registers will receive these exclusive items at launch</p>
         <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <div v-for="(reward, ri) in baseRewards" :key="ri"
             class="group rounded-2xl border border-white/6 bg-white/[0.03] p-7 text-center transition-all duration-500 hover:border-gold/20 hover:bg-white/[0.06] hover:-translate-y-1"
             v-motion :initial="{ opacity: 0, y: 25 }" :enter="{ opacity: 1, y: 0, transition: { delay: ri * 120 } }">
-            <div class="mb-4 text-5xl transition-transform duration-300 group-hover:scale-110">{{ reward.icon }}</div>
+            <div class="mb-4 flex h-14 w-14 mx-auto items-center justify-center rounded-xl bg-gold/10 text-gold text-lg font-bold">{{ reward.abbr }}</div>
             <h3 class="mb-1 text-sm font-bold">{{ reward.title }}</h3>
             <p class="text-xs text-white/35 leading-relaxed">{{ reward.desc }}</p>
           </div>
@@ -179,7 +178,7 @@ usePageSeo({
 })
 
 // --- Form ---
-const form = reactive({ email: '', platform: 'ANDROID', region: 'TH', referralCode: '' })
+const form = reactive({ email: '', platform: 'ANDROID', region: 'TH', referredBy: '' })
 const regionItems = [{ label: 'Thailand', value: 'TH' }, { label: 'Southeast Asia', value: 'SEA' }, { label: 'Global', value: 'GLOBAL' }]
 const loading = ref(false); const error = ref(''); const submitted = ref(false); const referralCode = ref(''); const copied = ref(false)
 
@@ -188,7 +187,9 @@ async function handleSubmit() {
   try {
     const result = await $fetch<{ referralCode: string }>('/api/register', { method: 'POST', body: form })
     referralCode.value = result.referralCode; submitted.value = true
-    totalRegistrations.value++
+    // Re-fetch actual count from backend
+    const freshStats = await $fetch<{ totalRegistrations?: number }>('/api/public/stats').catch(() => null)
+    if (freshStats?.totalRegistrations) totalRegistrations.value = freshStats.totalRegistrations
   } catch (e: unknown) { const err = e as { data?: { message?: string } }; error.value = err?.data?.message || 'Registration failed.' }
   finally { loading.value = false }
 }
@@ -215,7 +216,7 @@ const countdown = ref([
   { label: 'Days', value: 0 }, { label: 'Hours', value: 0 },
   { label: 'Minutes', value: 0 }, { label: 'Seconds', value: 0 },
 ])
-const cbtDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
+const cbtDate = new Date('2026-10-01T00:00:00+07:00') // Fixed CBT target date
 
 function updateCountdown() {
   const diff = Math.max(0, cbtDate.getTime() - Date.now())
@@ -229,10 +230,10 @@ if (import.meta.client) setInterval(updateCountdown, 1000)
 
 // --- Base Rewards ---
 const baseRewards = [
-  { icon: '💎', title: 'Gems x1000', desc: 'Premium currency to start strong' },
-  { icon: '⚔️', title: 'SR Weapon Box', desc: 'Choose any SR weapon at launch' },
-  { icon: '🦸', title: 'Exclusive Title', desc: '"Pioneer" title for early supporters' },
-  { icon: '🎨', title: 'Avatar Frame', desc: 'Limited edition golden frame' },
+  { abbr: 'GEM', title: 'Gems x1000', desc: 'Premium currency to start strong' },
+  { abbr: 'SR', title: 'SR Weapon Box', desc: 'Choose any SR weapon at launch' },
+  { abbr: 'TTL', title: 'Exclusive Title', desc: '"Pioneer" title for early supporters' },
+  { abbr: 'AVT', title: 'Avatar Frame', desc: 'Limited edition golden frame' },
 ]
 </script>
 
