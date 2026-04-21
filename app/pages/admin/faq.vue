@@ -23,11 +23,11 @@
           <input type="checkbox" :checked="item.visible" @change="toggleVisibility(index)" class="accent-[#d4a843]" />
         </label>
         <div class="flex gap-1">
-          <button class="icon-btn" @click="openEditor(item, index)">✏️</button>
-          <button class="icon-btn danger" @click="confirmDeleteItem(index)">🗑️</button>
+          <button class="icon-btn" @click="openEditor(item, index)"><UIcon name="i-lucide-pencil" class="w-4 h-4" /></button>
+          <button class="icon-btn danger" @click="confirmDeleteItem(index)"><UIcon name="i-lucide-trash-2" class="w-4 h-4" /></button>
         </div>
       </div>
-      <AdminEmptyState v-if="items.length === 0" icon="❓" title="No FAQ items yet" message="Create questions and answers for your FAQ page." action-label="+ New FAQ" @action="openEditor(null)" />
+      <AdminEmptyState v-if="items.length === 0" icon="i-lucide-help-circle" title="No FAQ items yet" message="Create questions and answers for your FAQ page." action-label="+ New FAQ" @action="openEditor(null)" />
     </div>
 
     <UModal v-model:open="editorOpen" :title="editingIndex !== null ? 'Edit FAQ' : 'Create FAQ'" class="sm:max-w-3xl">

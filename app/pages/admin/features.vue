@@ -35,11 +35,11 @@
         </label>
         <!-- Actions -->
         <div class="flex gap-1">
-          <button class="icon-btn" @click="openEditor(item)">✏️</button>
-          <button class="icon-btn danger" @click="confirmDeleteItem(item)">🗑️</button>
+          <button class="icon-btn" @click="openEditor(item)"><UIcon name="i-lucide-pencil" class="w-4 h-4" /></button>
+          <button class="icon-btn danger" @click="confirmDeleteItem(item)"><UIcon name="i-lucide-trash-2" class="w-4 h-4" /></button>
         </div>
       </div>
-      <AdminEmptyState v-if="items.length === 0" icon="🌟" title="No features yet" message="Create feature cards to showcase on your homepage." action-label="+ New Feature" @action="openEditor(null)" />
+      <AdminEmptyState v-if="items.length === 0" icon="i-lucide-sparkles" title="No features yet" message="Create feature cards to showcase on your homepage." action-label="+ New Feature" @action="openEditor(null)" />
     </div>
 
     <!-- Editor Modal -->
@@ -151,7 +151,8 @@ const tabErrors = computed(() => {
 })
 
 async function loadItems() {
-  try { items.value = await $fetch<FeatureItem[]>('/api/admin/features') } catch { items.value = [] }
+  try { items.value = await $fetch<FeatureItem[]>('/api/admin/features') }
+  catch (err: any) { showToast(err?.data?.message || 'Failed to load features', 'error'); items.value = [] }
 }
 
 function openEditor(item: FeatureItem | null) {

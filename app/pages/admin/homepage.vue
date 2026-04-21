@@ -24,8 +24,8 @@
           </div>
 
           <!-- Icon & Type -->
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10 text-xl flex-shrink-0">
-            {{ sectionIcon(section.type) }}
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10 flex-shrink-0">
+            <UIcon :name="sectionIcon(section.type)" class="w-5 h-5 text-[#d4a843]" />
           </div>
 
           <!-- Info -->
@@ -41,15 +41,15 @@
 
           <!-- Actions -->
           <div class="flex items-center gap-2 flex-shrink-0">
-            <button @click="editSection(section)" class="cursor-pointer rounded-lg border border-white/10 bg-transparent px-3 py-1.5 text-xs text-white/50 hover:text-gold hover:border-gold/30 transition-colors">⚙️ Edit</button>
-            <button @click="section.visible = !section.visible" class="cursor-pointer border-none bg-none text-lg" :title="section.visible ? 'Hide' : 'Show'">{{ section.visible ? '👁️' : '🚫' }}</button>
+            <button @click="editSection(section)" class="cursor-pointer rounded-lg border border-white/10 bg-transparent px-3 py-1.5 text-xs text-white/50 hover:text-gold hover:border-gold/30 transition-colors"><UIcon name="i-lucide-settings" class="w-3 h-3 inline" /> Edit</button>
+            <button @click="section.visible = !section.visible" class="cursor-pointer border-none bg-none" :title="section.visible ? 'Hide' : 'Show'"><UIcon :name="section.visible ? 'i-lucide-eye' : 'i-lucide-eye-off'" class="w-4 h-4" /></button>
             <button v-if="!defaultTypes.includes(section.type)" @click="removeSection(index)" class="cursor-pointer border-none bg-none text-xs text-red-400/50 hover:text-red-400">✕</button>
           </div>
         </div>
       </div>
     </div>
 
-    <button @click="saveSections" class="mt-6 rounded-lg bg-gold px-8 py-2.5 text-sm font-bold text-black cursor-pointer border-none hover:bg-gold-light transition-colors">💾 Save Layout</button>
+    <button @click="saveSections" class="mt-6 rounded-lg bg-gold px-8 py-2.5 text-sm font-bold text-black cursor-pointer border-none hover:bg-gold-light transition-colors">Save Layout</button>
 
     <!-- Edit Modal -->
     <Teleport to="body">
@@ -129,8 +129,8 @@ const sections = ref<SectionConfig[]>([...defaultSections])
 const editingSection = ref<SectionConfig | null>(null)
 
 function sectionIcon(type: string) {
-  const icons: Record<string, string> = { hero: '🏠', weapons: '⚔️', features: '⭐', highlights: '🔥', news: '📰', cta: '🎯', custom_html: '📝', gallery: '🖼️', video: '🎬' }
-  return icons[type] || '📦'
+  const icons: Record<string, string> = { hero: 'i-lucide-home', weapons: 'i-lucide-swords', features: 'i-lucide-sparkles', highlights: 'i-lucide-flame', news: 'i-lucide-newspaper', cta: 'i-lucide-target', custom_html: 'i-lucide-code', gallery: 'i-lucide-image', video: 'i-lucide-film' }
+  return icons[type] || 'i-lucide-box'
 }
 function sectionLabel(type: string) {
   const labels: Record<string, string> = { hero: 'Hero Banner', weapons: 'Weapons / Classes', features: 'Game Features', highlights: 'Highlights', news: 'Latest News', cta: 'Call to Action', custom_html: 'Custom HTML', gallery: 'Gallery', video: 'Video' }

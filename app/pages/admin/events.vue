@@ -75,14 +75,14 @@
               </td>
               <td class="px-4 py-3">
                 <div class="flex gap-1">
-                  <button class="icon-btn" @click="openEditor(ev)">✏️</button>
-                  <button class="icon-btn danger" @click="confirmDelete(ev)">🗑️</button>
+                  <button class="icon-btn" @click="openEditor(ev)"><UIcon name="i-lucide-pencil" class="w-4 h-4" /></button>
+                  <button class="icon-btn danger" @click="confirmDelete(ev)"><UIcon name="i-lucide-trash-2" class="w-4 h-4" /></button>
                 </div>
               </td>
             </tr>
             <tr v-if="events.length === 0">
               <td colspan="6">
-                <AdminEmptyState icon="📅" title="No events yet" message="Create events, hot times, and maintenance schedules." action-label="+ New Event" @action="openEditor(null)" />
+                <AdminEmptyState icon="i-lucide-calendar" title="No events yet" message="Create events, hot times, and maintenance schedules." action-label="+ New Event" @action="openEditor(null)" />
               </td>
             </tr>
           </tbody>
@@ -187,7 +187,7 @@
           <!-- Hot Time Specific -->
           <Transition name="slide">
             <div v-if="form.type === 'HOT_TIME'" class="rounded-xl border border-[#d4a843]/15 bg-[#d4a843]/5 p-4">
-              <h4 class="mb-3 text-sm font-bold text-[#d4a843]">🔥 Hot Time Multiplier</h4>
+              <h4 class="mb-3 text-sm font-bold text-[#d4a843]">Hot Time Multiplier</h4>
               <div class="grid grid-cols-2 gap-4">
                 <UFormField label="Multiplier *">
                   <UInput v-model.number="form.multiplier" type="number" :min="1" step="0.5" placeholder="2.0" />

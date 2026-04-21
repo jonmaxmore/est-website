@@ -7,7 +7,7 @@
         <button type="button" class="mp-clear" title="Remove" @click.stop="emit('update:modelValue', '')">✕</button>
       </div>
       <button type="button" class="mp-browse-btn" @click="openModal">
-        {{ modelValue ? 'Change' : '📁 Browse Media' }}
+        {{ modelValue ? 'Change' : 'Browse Media' }}
       </button>
     </div>
 
@@ -119,7 +119,10 @@ async function loadAssets() {
   loading.value = true
   try {
     assets.value = await $fetch<MediaAssetItem[]>('/api/admin/media')
-  } catch { assets.value = [] }
+  } catch (err: any) {
+    console.error('[MediaPicker] Failed to load assets:', err?.data?.message || err?.message)
+    assets.value = []
+  }
   finally { loading.value = false }
 }
 
@@ -147,7 +150,9 @@ async function uploadFiles(files: FileList | File[]) {
   try {
     await $fetch('/api/admin/media/upload', { method: 'POST', body: formData })
     await loadAssets()
-  } catch {}
+  } catch (err: any) {
+    console.error('[MediaPicker] Upload failed:', err?.data?.message || err?.message)
+  }
   finally { uploading.value = false; uploadProgress.value = '' }
 }
 

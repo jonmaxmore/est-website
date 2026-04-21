@@ -9,7 +9,7 @@
       <div v-for="page in pages" :key="page.key"
         class="group cursor-pointer rounded-2xl border border-white/6 bg-white/4 p-6 transition-all duration-300 hover:border-gold/20 hover:bg-white/6"
         @click="editPage(page)">
-        <div class="mb-3 text-3xl">{{ page.icon }}</div>
+        <div class="mb-3"><UIcon :name="page.icon" class="w-8 h-8 text-[#d4a843]" /></div>
         <h3 class="mb-1 text-lg font-bold">{{ page.title }}</h3>
         <p class="text-sm text-white/50">{{ page.description }}</p>
         <div class="mt-4 flex items-center justify-between">
@@ -72,14 +72,14 @@
 definePageMeta({ layout: 'admin' })
 
 const pages = ref([
-  { key: 'faq', title: 'FAQ', icon: '❓', description: 'Frequently asked questions', route: '/faq', status: 'PUBLISHED' },
-  { key: 'terms', title: 'Terms of Service', icon: '📜', description: 'Terms and conditions', route: '/terms', status: 'PUBLISHED' },
-  { key: 'privacy', title: 'Privacy Policy', icon: '🔒', description: 'Privacy and data policy', route: '/privacy', status: 'PUBLISHED' },
-  { key: 'support', title: 'Support', icon: '🎧', description: 'Customer support page', route: '/support', status: 'PUBLISHED' },
-  { key: 'story', title: 'Story', icon: '📖', description: 'Game story and lore', route: '/story', status: 'PUBLISHED' },
-  { key: 'game-guide', title: 'Game Guide', icon: '🗺️', description: 'Game guide and tutorials', route: '/game-guide', status: 'PUBLISHED' },
-  { key: 'gallery', title: 'Gallery', icon: '🖼️', description: 'Screenshots and artwork', route: '/gallery', status: 'PUBLISHED' },
-  { key: 'download', title: 'Download', icon: '📥', description: 'Download links', route: '/download', status: 'PUBLISHED' },
+  { key: 'faq', title: 'FAQ', icon: 'i-lucide-help-circle', description: 'Frequently asked questions', route: '/faq', status: 'PUBLISHED' },
+  { key: 'terms', title: 'Terms of Service', icon: 'i-lucide-file-text', description: 'Terms and conditions', route: '/terms', status: 'PUBLISHED' },
+  { key: 'privacy', title: 'Privacy Policy', icon: 'i-lucide-shield', description: 'Privacy and data policy', route: '/privacy', status: 'PUBLISHED' },
+  { key: 'support', title: 'Support', icon: 'i-lucide-headphones', description: 'Customer support page', route: '/support', status: 'PUBLISHED' },
+  { key: 'story', title: 'Story', icon: 'i-lucide-book-open', description: 'Game story and lore', route: '/story', status: 'PUBLISHED' },
+  { key: 'game-guide', title: 'Game Guide', icon: 'i-lucide-map', description: 'Game guide and tutorials', route: '/game-guide', status: 'PUBLISHED' },
+  { key: 'gallery', title: 'Gallery', icon: 'i-lucide-image', description: 'Screenshots and artwork', route: '/gallery', status: 'PUBLISHED' },
+  { key: 'download', title: 'Download', icon: 'i-lucide-download', description: 'Download links', route: '/download', status: 'PUBLISHED' },
 ])
 
 const editing = ref<typeof pages.value[0] | null>(null)

@@ -4,10 +4,10 @@
     <div class="grid gap-6" style="grid-template-columns: repeat(auto-fit, minmax(420px, 1fr))">
       <!-- Navigation -->
       <div class="settings-card">
-        <div class="settings-card-header"><h3 class="font-semibold">🧭 Navigation</h3><p class="text-xs text-white/30">Configure the main navigation menu items</p></div>
+        <div class="settings-card-header"><h3 class="font-semibold">Navigation</h3><p class="text-xs text-white/30">Configure the main navigation menu items</p></div>
         <div class="flex-1 p-5">
           <div v-for="(item, i) in navItems" :key="i" class="mb-2 flex items-center gap-2">
-            <span class="sort-handle text-xs text-white/15">☰</span>
+            <span class="sort-handle text-xs text-white/15">=</span>
             <UInput v-model="item.labelEn" placeholder="Label (EN)" size="sm" class="flex-1" />
             <UInput v-model="item.labelTh" placeholder="Label (TH)" size="sm" class="flex-1" />
             <UInput v-model="item.href" placeholder="/path" size="sm" class="flex-1" />
@@ -23,7 +23,7 @@
 
       <!-- SEO — Now with Language Tabs -->
       <div class="settings-card">
-        <div class="settings-card-header"><h3 class="font-semibold">🔍 SEO Defaults</h3><p class="text-xs text-white/30">Default meta tags for search engines</p></div>
+        <div class="settings-card-header"><h3 class="font-semibold">SEO Defaults</h3><p class="text-xs text-white/30">Default meta tags for search engines</p></div>
         <div class="flex-1 p-5">
           <AdminContentLanguageTabs :th-filled="!!seo.titleTh" :en-filled="!!seo.titleEn">
             <template #th>
@@ -44,7 +44,7 @@
 
       <!-- Social Links -->
       <div class="settings-card">
-        <div class="settings-card-header"><h3 class="font-semibold">📱 Social Links</h3><p class="text-xs text-white/30">Social media and community links</p></div>
+        <div class="settings-card-header"><h3 class="font-semibold">Social Links</h3><p class="text-xs text-white/30">Social media and community links</p></div>
         <div class="flex-1 p-5 flex flex-col gap-3">
           <div v-for="s in socialFields" :key="s.key" class="flex items-center gap-3">
             <span class="text-lg flex-shrink-0">{{ s.icon }}</span>
@@ -59,13 +59,13 @@
 
       <!-- Maintenance -->
       <div class="settings-card">
-        <div class="settings-card-header"><h3 class="font-semibold">🔧 Maintenance Mode</h3><p class="text-xs text-white/30">Take the site offline for maintenance</p></div>
+        <div class="settings-card-header"><h3 class="font-semibold">Maintenance Mode</h3><p class="text-xs text-white/30">Take the site offline for maintenance</p></div>
         <div class="flex-1 p-5 flex flex-col gap-4">
           <label class="flex items-center gap-3 rounded-xl p-3 cursor-pointer transition-colors" :class="maintenance.enabled ? 'bg-red-500/8 border border-red-500/20' : 'bg-white/2 border border-white/4'">
             <input v-model="maintenance.enabled" type="checkbox" class="accent-red-500 w-5 h-5" />
             <div>
               <p class="text-sm font-medium" :class="maintenance.enabled ? 'text-red-400' : 'text-white/50'">
-                {{ maintenance.enabled ? '🔴 Maintenance Mode ACTIVE' : '🟢 Site is live' }}
+                {{ maintenance.enabled ? 'Maintenance Mode ACTIVE' : 'Site is live' }}
               </p>
               <p class="text-xs text-white/25">Users will see the maintenance page</p>
             </div>
@@ -106,11 +106,11 @@ const savingSocial = ref(false)
 const savingMaint = ref(false)
 
 const socialFields = [
-  { key: 'facebook', icon: '📘', placeholder: 'https://facebook.com/...' },
-  { key: 'twitter', icon: '🐦', placeholder: 'https://twitter.com/...' },
-  { key: 'youtube', icon: '▶️', placeholder: 'https://youtube.com/...' },
-  { key: 'discord', icon: '💬', placeholder: 'https://discord.gg/...' },
-  { key: 'line', icon: '💚', placeholder: 'https://line.me/...' },
+  { key: 'facebook', icon: 'facebook', placeholder: 'https://facebook.com/...' },
+  { key: 'twitter', icon: 'twitter', placeholder: 'https://twitter.com/...' },
+  { key: 'youtube', icon: 'youtube', placeholder: 'https://youtube.com/...' },
+  { key: 'discord', icon: 'message-circle', placeholder: 'https://discord.gg/...' },
+  { key: 'line', icon: 'message-square', placeholder: 'https://line.me/...' },
 ]
 
 async function loadConfigs() {

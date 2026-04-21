@@ -46,14 +46,14 @@
               <td class="px-4 py-3 text-white/30 whitespace-nowrap">{{ article.publishedAt ? formatDate(article.publishedAt) : '—' }}</td>
               <td class="px-4 py-3">
                 <div class="flex gap-1">
-                  <button class="icon-btn" @click="openEditor(article)">✏️</button>
-                  <button class="icon-btn danger" @click="confirmDelete(article)">🗑️</button>
+                  <button class="icon-btn" @click="openEditor(article)"><UIcon name="i-lucide-pencil" class="w-4 h-4" /></button>
+                  <button class="icon-btn danger" @click="confirmDelete(article)"><UIcon name="i-lucide-trash-2" class="w-4 h-4" /></button>
                 </div>
               </td>
             </tr>
             <tr v-if="articles.length === 0">
               <td colspan="6">
-                <AdminEmptyState icon="📰" title="No articles found" message="Create your first news article to get started." action-label="+ Create Article" @action="openEditor(null)" />
+                <AdminEmptyState icon="i-lucide-newspaper" title="No articles found" message="Create your first news article to get started." action-label="+ Create Article" @action="openEditor(null)" />
               </td>
             </tr>
           </tbody>
@@ -87,7 +87,7 @@
             :class="{ active: !previewMode }"
             @click="previewMode = false"
           >
-            ✏️ Edit
+            <UIcon name="i-lucide-pencil" class="w-4 h-4 inline" /> Edit
           </button>
           <button
             type="button"
@@ -95,11 +95,11 @@
             :class="{ active: previewMode }"
             @click="previewMode = true"
           >
-            👁️ Preview
+            <UIcon name="i-lucide-eye" class="w-4 h-4 inline" /> Preview
           </button>
           <div class="ml-auto flex items-center gap-2 text-xs text-white/30">
-            <span v-if="autosaveStatus === 'saving'">💾 Saving draft...</span>
-            <span v-else-if="autosaveStatus === 'saved'" class="text-emerald-400/50">✓ Draft saved</span>
+            <span v-if="autosaveStatus === 'saving'">Saving draft...</span>
+            <span v-else-if="autosaveStatus === 'saved'" class="text-emerald-400/50">Draft saved</span>
           </div>
         </div>
 

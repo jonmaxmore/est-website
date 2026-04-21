@@ -33,15 +33,15 @@
           </div>
         </div>
         <div class="flex flex-col gap-1">
-          <button class="icon-btn" @click="openEditor(weapon)">✏️</button>
-          <button class="icon-btn danger" @click="confirmDeleteItem(weapon)">🗑️</button>
+          <button class="icon-btn" @click="openEditor(weapon)"><UIcon name="i-lucide-pencil" class="w-4 h-4" /></button>
+          <button class="icon-btn danger" @click="confirmDeleteItem(weapon)"><UIcon name="i-lucide-trash-2" class="w-4 h-4" /></button>
           <label class="flex items-center justify-center mt-1">
             <input type="checkbox" :checked="weapon.visible" @change="toggleVisibility(weapon)" class="accent-[#d4a843]" />
           </label>
         </div>
       </div>
       <div v-if="weapons.length === 0" class="col-span-full">
-        <AdminEmptyState icon="⚔️" title="No weapons yet" message="Add weapon classes for your game." action-label="+ New Weapon" @action="openEditor(null)" />
+        <AdminEmptyState icon="i-lucide-swords" title="No weapons yet" message="Add weapon classes for your game." action-label="+ New Weapon" @action="openEditor(null)" />
       </div>
     </div>
 
@@ -78,7 +78,7 @@
 
           <!-- RPG Stats with Sliders -->
           <div class="rounded-xl border border-white/6 bg-white/2 p-4">
-            <h4 class="mb-3 text-sm font-semibold text-white/60">⚔️ RPG Stats</h4>
+            <h4 class="mb-3 text-sm font-semibold text-white/60">RPG Stats</h4>
             <div class="flex flex-col gap-3">
               <div v-for="stat in statFields" :key="stat.key" class="flex items-center gap-3">
                 <span class="w-10 text-xs font-bold text-white/40 text-right">{{ stat.label }}</span>

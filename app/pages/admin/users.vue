@@ -30,20 +30,20 @@
             <td class="px-5 py-3">
               <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[0.625rem] font-bold"
                 :class="u.role === 'SUPER_ADMIN' ? 'bg-gold/10 text-gold' : 'bg-blue-500/10 text-blue-400'">
-                {{ u.role === 'SUPER_ADMIN' ? '👑' : '✏️' }} {{ u.role.replace('_', ' ') }}
+                <UIcon :name="u.role === 'SUPER_ADMIN' ? 'i-lucide-shield-check' : 'i-lucide-pencil'" class="w-3 h-3 inline" /> {{ u.role.replace('_', ' ') }}
               </span>
             </td>
             <td class="px-5 py-3 text-white/30 whitespace-nowrap text-xs">{{ u.lastLoginAt ? formatDate(u.lastLoginAt) : '—' }}</td>
             <td class="px-5 py-3 text-right">
               <div class="flex justify-end gap-1">
-                <button class="icon-btn" title="Edit" @click="openEditor(u)">✏️</button>
-                <button class="icon-btn danger" title="Delete" @click="confirmDelete(u)">🗑️</button>
+                <button class="icon-btn" title="Edit" @click="openEditor(u)"><UIcon name="i-lucide-pencil" class="w-4 h-4" /></button>
+                <button class="icon-btn danger" title="Delete" @click="confirmDelete(u)"><UIcon name="i-lucide-trash-2" class="w-4 h-4" /></button>
               </div>
             </td>
           </tr>
           <tr v-if="users.length === 0">
             <td colspan="5">
-              <AdminEmptyState icon="👤" title="No users" message="Create admin users to manage the CMS." action-label="+ Add User" @action="openEditor(null)" />
+              <AdminEmptyState icon="i-lucide-user" title="No users" message="Create admin users to manage the CMS." action-label="+ Add User" @action="openEditor(null)" />
             </td>
           </tr>
         </tbody>
@@ -135,8 +135,8 @@ const form = reactive({ displayName: '', email: '', password: '', role: 'EDITOR'
 const fieldErrors = reactive<Record<string, string>>({ displayName: '', email: '', password: '' })
 
 const roles = [
-  { value: 'EDITOR', icon: '✏️', label: 'Editor' },
-  { value: 'SUPER_ADMIN', icon: '👑', label: 'Super Admin' },
+  { value: 'EDITOR', icon: 'pencil', label: 'Editor' },
+  { value: 'SUPER_ADMIN', icon: 'shield-check', label: 'Super Admin' },
 ]
 
 // Password strength

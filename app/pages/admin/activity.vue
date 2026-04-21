@@ -6,7 +6,7 @@
         <p class="mt-1 text-sm text-white/50">{{ total }} total actions recorded</p>
       </div>
       <button @click="refresh" class="rounded-lg border border-white/10 bg-transparent px-4 py-2 text-sm text-white/50 cursor-pointer hover:text-gold hover:border-gold/30 transition-colors">
-        🔄 Refresh
+        <UIcon name="i-lucide-refresh-cw" class="w-4 h-4" /> Refresh
       </button>
     </div>
 

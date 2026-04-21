@@ -9,7 +9,7 @@
       <!-- WordPress -->
       <div class="rounded-2xl border border-white/6 bg-white/4 p-6">
         <div class="mb-4 flex items-center gap-3">
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-2xl">📝</div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10"><UIcon name="i-lucide-file-text" class="w-6 h-6 text-blue-400" /></div>
           <div>
             <h3 class="text-lg font-bold">WordPress</h3>
             <p class="text-xs text-white/40">Bidirectional content sync</p>
@@ -43,7 +43,7 @@
       <!-- Wix -->
       <div class="rounded-2xl border border-white/6 bg-white/4 p-6">
         <div class="mb-4 flex items-center gap-3">
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/10 text-2xl">🎨</div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/10"><UIcon name="i-lucide-palette" class="w-6 h-6 text-purple-400" /></div>
           <div>
             <h3 class="text-lg font-bold">Wix</h3>
             <p class="text-xs text-white/40">Webhook-based content sync</p>
@@ -73,7 +73,7 @@
       <!-- Webhook Endpoint -->
       <div class="rounded-2xl border border-white/6 bg-white/4 p-6">
         <div class="mb-4 flex items-center gap-3">
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10 text-2xl">🔗</div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10"><UIcon name="i-lucide-link" class="w-6 h-6 text-[#d4a843]" /></div>
           <div>
             <h3 class="text-lg font-bold">Webhook Endpoint</h3>
             <p class="text-xs text-white/40">Receive events from external services</p>
@@ -88,7 +88,7 @@
       <!-- Generic REST API -->
       <div class="rounded-2xl border border-white/6 bg-white/4 p-6">
         <div class="mb-4 flex items-center gap-3">
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-2xl">📡</div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10"><UIcon name="i-lucide-radio" class="w-6 h-6 text-emerald-400" /></div>
           <div>
             <h3 class="text-lg font-bold">REST API</h3>
             <p class="text-xs text-white/40">Public API endpoints for external access</p>

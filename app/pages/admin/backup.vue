@@ -42,7 +42,7 @@
         </div>
 
         <button @click="exportData" :disabled="exporting" class="w-full rounded-lg bg-gold px-6 py-2.5 text-sm font-bold text-black cursor-pointer border-none hover:bg-gold-light transition-colors disabled:opacity-50 disabled:cursor-wait">
-          {{ exporting ? '📦 Exporting...' : '📦 Export Selected Data' }}
+          {{ exporting ? 'Exporting...' : 'Export Selected Data' }}
         </button>
       </div>
 
@@ -53,7 +53,7 @@
 
         <div class="mb-4 rounded-xl border-2 border-dashed border-white/10 p-8 text-center">
           <input type="file" accept=".json" @change="handleFile" class="hidden" ref="fileInput" />
-          <div class="mb-3 text-4xl">📁</div>
+          <UIcon name="i-lucide-folder-open" class="mb-3 w-10 h-10 text-white/30" />
           <p class="mb-2 text-sm text-white/50">Drop JSON file here or</p>
           <button @click="($refs.fileInput as HTMLInputElement)?.click()" class="cursor-pointer rounded-lg border border-white/10 bg-transparent px-4 py-2 text-sm text-white/60 hover:text-white transition-colors">Browse Files</button>
         </div>
@@ -66,7 +66,7 @@
         <!-- Import Results -->
         <div v-if="importResult" class="mb-4 rounded-lg border p-4" :class="importResult.success ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-red-500/20 bg-red-500/5'">
           <p class="mb-2 text-sm font-semibold" :class="importResult.success ? 'text-emerald-400' : 'text-red-400'">
-            {{ importResult.success ? '✅ Import Complete' : '⚠️ Import with Errors' }}
+            {{ importResult.success ? 'Import Complete' : 'Import with Errors' }}
           </p>
           <div class="flex flex-wrap gap-2 mb-2">
             <span v-for="(count, key) in importResult.imported" :key="key" class="rounded-full bg-white/5 px-2 py-0.5 text-xs text-white/50">
@@ -79,7 +79,7 @@
         </div>
 
         <button @click="importData" :disabled="!importFile || importing" class="w-full rounded-lg border border-white/10 bg-transparent px-6 py-2.5 text-sm font-bold text-white/50 cursor-pointer hover:border-gold/30 hover:text-gold transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
-          {{ importing ? '📥 Importing...' : '📥 Import Data' }}
+          {{ importing ? 'Importing...' : 'Import Data' }}
         </button>
 
         <!-- WordPress Import -->
@@ -88,7 +88,7 @@
           <p class="mb-3 text-xs text-white/40">Import posts from WordPress REST API</p>
           <input v-model="wpUrl" class="mb-3 w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="https://your-wp-site.com" />
           <button @click="importFromWP" :disabled="!wpUrl || importingWP" class="w-full rounded-lg border border-blue-500/30 bg-blue-500/10 px-4 py-2.5 text-sm font-medium text-blue-400 cursor-pointer hover:bg-blue-500/20 transition-colors disabled:opacity-50">
-            {{ importingWP ? '🔗 Importing...' : '🔗 Import from WordPress' }}
+            {{ importingWP ? 'Importing...' : 'Import from WordPress' }}
           </button>
         </div>
       </div>

@@ -230,12 +230,12 @@ function validateFiles(files: File[]): { valid: File[]; rejected: string[] } {
 
     // Check file type
     if (!ALLOWED_TYPES.includes(file.type) && !ALLOWED_EXTENSIONS.includes(ext)) {
-      rejected.push(`❌ "${file.name}" — unsupported file type. Allowed: PNG, JPG, WebP, AVIF, GIF, MP4`)
+      rejected.push(`"${file.name}" — unsupported file type. Allowed: PNG, JPG, WebP, AVIF, GIF, MP4`)
       continue
     }
     // Check file size
     if (file.size > MAX_FILE_SIZE) {
-      rejected.push(`❌ "${file.name}" — exceeds 10MB limit (${formatBytes(file.size)})`)
+      rejected.push(`"${file.name}" — exceeds 10MB limit (${formatBytes(file.size)})`)
       continue
     }
     valid.push(file)
@@ -281,6 +281,7 @@ function uploadSingleFile(file: File, queueItem: UploadQueueItem): Promise<void>
     })
 
     xhr.open('POST', '/api/admin/media/upload')
+    xhr.withCredentials = true
     queueItem.status = 'uploading'
     xhr.send(formData)
   })
@@ -316,7 +317,7 @@ async function uploadFiles(fileList: FileList | File[]) {
 
   const doneCount = newItems.filter(q => q.status === 'done').length
   if (doneCount > 0) {
-    showToast(`✅ Uploaded ${doneCount} file(s)`)
+    showToast(`Uploaded ${doneCount} file(s) successfully`)
     await loadAssets()
   }
 
