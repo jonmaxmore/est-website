@@ -1,6 +1,7 @@
 <template>
   <div class="aes-wrapper">
-    <div class="aes-icon">{{ icon }}</div>
+    <UIcon v-if="icon.startsWith('i-')" :name="icon" class="aes-icon-svg" />
+    <div v-else class="aes-icon">{{ icon }}</div>
     <h3 class="aes-title">{{ title }}</h3>
     <p class="aes-message">{{ message }}</p>
     <button v-if="actionLabel" type="button" class="aes-btn" @click="emit('action')">
@@ -16,7 +17,7 @@ withDefaults(defineProps<{
   message?: string
   actionLabel?: string
 }>(), {
-  icon: '📭',
+  icon: 'i-lucide-inbox',
   title: 'No items yet',
   message: 'Get started by creating your first item.',
   actionLabel: '',
@@ -31,6 +32,7 @@ const emit = defineEmits<{ action: [] }>()
   padding: 48px 24px; text-align: center;
 }
 .aes-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+.aes-icon-svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.4; color: rgba(255,255,255,0.5); }
 .aes-title { font-size: 1rem; font-weight: 600; margin: 0 0 8px; color: rgba(255,255,255,0.6); }
 .aes-message { font-size: 0.875rem; color: rgba(255,255,255,0.3); margin: 0 0 20px; line-height: 1.5; max-width: 320px; }
 .aes-btn {

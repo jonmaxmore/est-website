@@ -76,7 +76,7 @@
         </div>
         <div class="h-[140px] overflow-hidden bg-black/20" @click="selectAsset(asset)">
           <img v-if="asset.mimeType.startsWith('image/')" :src="asset.thumbnailUrl || asset.url" :alt="asset.altText || asset.originalName" class="h-full w-full object-cover transition-transform group-hover:scale-105" loading="lazy" />
-          <div v-else class="flex h-full items-center justify-center text-3xl">🎬</div>
+          <div v-else class="flex h-full items-center justify-center"><UIcon name="i-lucide-film" class="w-8 h-8 text-white/30" /></div>
         </div>
         <div class="p-3" @click="selectAsset(asset)">
           <p class="truncate text-xs font-medium" :title="asset.originalName">{{ asset.originalName }}</p>
@@ -84,8 +84,8 @@
         </div>
         <!-- Hover Overlay Actions -->
         <div class="absolute inset-x-0 bottom-[40px] flex items-center justify-center gap-1 p-1.5 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-black/60 to-transparent">
-          <button class="hover-action-btn" title="Copy URL" @click.stop="copyUrl(asset.url)">📋</button>
-          <button class="hover-action-btn" title="View Details" @click.stop="selectAsset(asset)">🔍</button>
+          <button class="hover-action-btn" title="Copy URL" @click.stop="copyUrl(asset.url)"><UIcon name="i-lucide-link" class="w-3.5 h-3.5" /></button>
+          <button class="hover-action-btn" title="View Details" @click.stop="selectAsset(asset)"><UIcon name="i-lucide-eye" class="w-3.5 h-3.5" /></button>
           <button class="hover-action-btn danger" title="Delete" @click.stop="confirmDeleteSingle(asset)">✕</button>
         </div>
       </div>
@@ -113,8 +113,8 @@
             <td class="px-3 py-2 text-white/30">{{ formatDate(asset.createdAt) }}</td>
             <td class="px-3 py-2">
               <div class="flex gap-1">
-                <button class="icon-btn" title="Copy URL" @click.stop="copyUrl(asset.url)">📋</button>
-                <button class="icon-btn danger" @click.stop="confirmDeleteSingle(asset)">🗑️</button>
+                <button class="icon-btn" title="Copy URL" @click.stop="copyUrl(asset.url)"><UIcon name="i-lucide-link" class="w-3.5 h-3.5" /></button>
+                <button class="icon-btn danger" @click.stop="confirmDeleteSingle(asset)"><UIcon name="i-lucide-trash-2" class="w-3.5 h-3.5" /></button>
               </div>
             </td>
           </tr>
@@ -122,7 +122,7 @@
       </table>
     </div>
 
-    <AdminEmptyState v-if="filteredAssets.length === 0 && !loading" icon="🖼️" title="No media assets" message="Upload images and videos for your content." />
+    <AdminEmptyState icon="i-lucide-image" title="No media assets" message="Upload images and videos for your content." />
 
     <!-- Detail / Edit Modal -->
     <UModal v-model:open="detailOpen" title="Asset Details" class="sm:max-w-lg">

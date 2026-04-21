@@ -2,12 +2,12 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div><h2 class="text-2xl font-bold">Pre-Registrations</h2><p class="mt-1 text-sm text-white/50">{{ total }} total registrations</p></div>
-      <UButton tag="a" href="/api/admin/registrations/export" download class="bg-gradient-to-br from-gold to-gold-light font-bold text-black">📥 Export CSV</UButton>
+      <UButton tag="a" href="/api/admin/registrations/export" download class="bg-gradient-to-br from-gold to-gold-light font-bold text-black"><UIcon name="i-lucide-download" class="w-4 h-4" /> Export CSV</UButton>
     </div>
     <div class="mb-4 flex flex-wrap gap-3 rounded-2xl border border-white/6 bg-white/4 p-4">
       <UInput v-model="search" placeholder="Search by email..." class="min-w-[200px] flex-1" @input="debounceLoad" />
-      <USelect v-model="filterPlatform" :items="[{ label: 'All Platforms', value: '' }, { label: 'iOS', value: 'IOS' }, { label: 'Android', value: 'ANDROID' }, { label: 'PC', value: 'PC' }]" value-key="value" class="w-36" @update:model-value="loadData" />
-      <USelect v-model="filterRegion" :items="[{ label: 'All Regions', value: '' }, { label: 'Thailand', value: 'TH' }, { label: 'SEA', value: 'SEA' }, { label: 'Global', value: 'GLOBAL' }]" value-key="value" class="w-36" @update:model-value="loadData" />
+      <USelect v-model="filterPlatform" :items="[{ label: 'All Platforms', value: 'all' }, { label: 'iOS', value: 'IOS' }, { label: 'Android', value: 'ANDROID' }, { label: 'PC', value: 'PC' }]" value-key="value" class="w-36" @update:model-value="loadData" />
+      <USelect v-model="filterRegion" :items="[{ label: 'All Regions', value: 'all' }, { label: 'Thailand', value: 'TH' }, { label: 'SEA', value: 'SEA' }, { label: 'Global', value: 'GLOBAL' }]" value-key="value" class="w-36" @update:model-value="loadData" />
     </div>
     <div class="overflow-hidden rounded-2xl border border-white/6 bg-white/4">
       <div class="overflow-x-auto">
@@ -37,9 +37,9 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 interface Registration { id: string; email: string; platform: string; region: string; referralCode?: string | null; referredBy?: string | null; ipAddress?: string | null; utmSource?: string | null; createdAt: string }
-const rows = ref<Registration[]>([]); const total = ref(0); const totalPages = ref(1); const page = ref(1); const search = ref(''); const filterPlatform = ref(''); const filterRegion = ref('')
+const rows = ref<Registration[]>([]); const total = ref(0); const totalPages = ref(1); const page = ref(1); const search = ref(''); const filterPlatform = ref('all'); const filterRegion = ref('all')
 let debounceTimer: ReturnType<typeof setTimeout>
-async function loadData() { try { const res = await $fetch<{ data: Registration[]; meta: { total: number; totalPages: number } }>('/api/admin/registrations', { query: { page: page.value, search: search.value, platform: filterPlatform.value, region: filterRegion.value } }); rows.value = res.data; total.value = res.meta.total; totalPages.value = res.meta.totalPages } catch { rows.value = [] } }
+async function loadData() { try { const res = await $fetch<{ data: Registration[]; meta: { total: number; totalPages: number } }>('/api/admin/registrations', { query: { page: page.value, search: search.value, platform: filterPlatform.value === 'all' ? '' : filterPlatform.value, region: filterRegion.value === 'all' ? '' : filterRegion.value } }); rows.value = res.data; total.value = res.meta.total; totalPages.value = res.meta.totalPages } catch { rows.value = [] } }
 function debounceLoad() { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => loadData(), 300) }
 function formatDate(d: string) { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }
 await loadData()
