@@ -3,7 +3,7 @@
     <Transition name="confirm-fade">
       <div v-if="modelValue" class="acd-overlay" @click.self="cancel">
         <div class="acd-dialog" :class="variant">
-          <div class="acd-icon">{{ icon }}</div>
+          <UIcon :name="iconName" class="w-10 h-10" :class="variant === 'danger' ? 'text-red-400' : variant === 'warning' ? 'text-amber-400' : 'text-blue-400'" />
           <h3 class="acd-title">{{ title }}</h3>
           <p class="acd-message">{{ message }}</p>
           <div class="acd-actions">
@@ -38,10 +38,10 @@ const emit = defineEmits<{
   cancel: []
 }>()
 
-const icon = computed(() => {
-  if (props.variant === 'danger') return '⚠️'
-  if (props.variant === 'warning') return '⚡'
-  return 'ℹ️'
+const iconName = computed(() => {
+  if (props.variant === 'danger') return 'i-lucide-alert-triangle'
+  if (props.variant === 'warning') return 'i-lucide-zap'
+  return 'i-lucide-info'
 })
 
 function confirm() {

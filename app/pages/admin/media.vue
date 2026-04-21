@@ -7,9 +7,9 @@
       </div>
       <div class="flex gap-2">
         <button v-if="selectedIds.size > 0" class="danger-btn" @click="bulkDeleteOpen = true">
-          🗑️ Delete {{ selectedIds.size }} selected
+          <UIcon name="i-lucide-trash-2" class="w-4 h-4" /> Delete {{ selectedIds.size }} selected
         </button>
-        <label for="media-file-input" class="gold-btn" style="cursor:pointer">📤 Upload Files</label>
+        <label for="media-file-input" class="gold-btn" style="cursor:pointer"><UIcon name="i-lucide-upload" class="w-4 h-4 inline" /> Upload Files</label>
         <input id="media-file-input" type="file" multiple accept="image/*,video/*" class="hidden" @change="handleFileSelect" />
       </div>
     </div>
@@ -24,7 +24,7 @@
       @click="($refs.hiddenFileInput as HTMLInputElement)?.click()"
     >
       <input ref="hiddenFileInput" type="file" multiple accept="image/*,video/*" class="hidden" @change="handleFileSelect" />
-      <span class="mb-3 block text-4xl">{{ uploadQueue.length > 0 ? '⏳' : '📁' }}</span>
+      <UIcon :name="uploadQueue.length > 0 ? 'i-lucide-loader' : 'i-lucide-folder-open'" class="mb-3 block w-8 h-8 mx-auto opacity-40" />
       <p v-if="uploadQueue.length === 0" class="text-sm text-white/50">
         Drag & drop files here, or click to <span class="text-[#d4a843] font-medium">browse</span>
       </p>
@@ -34,7 +34,7 @@
     <!-- Upload Progress Cards -->
     <div v-if="uploadQueue.length > 0" class="mb-4 flex flex-col gap-2">
       <div v-for="item in uploadQueue" :key="item.id" class="flex items-center gap-3 rounded-xl border border-white/6 bg-white/4 px-4 py-3">
-        <span class="text-lg flex-shrink-0">{{ item.status === 'done' ? '✅' : item.status === 'error' ? '❌' : '📄' }}</span>
+        <UIcon :name="item.status === 'done' ? 'i-lucide-check-circle' : item.status === 'error' ? 'i-lucide-x-circle' : 'i-lucide-file'" class="w-5 h-5 flex-shrink-0" :class="item.status === 'done' ? 'text-emerald-400' : item.status === 'error' ? 'text-red-400' : 'text-white/40'" />
         <div class="flex-1 min-w-0">
           <p class="text-sm font-medium truncate">{{ item.name }}</p>
           <p class="text-[0.625rem] text-white/30">{{ formatBytes(item.size) }}</p>
@@ -53,8 +53,8 @@
     <div class="mb-4 flex items-center gap-3 rounded-2xl border border-white/6 bg-white/4 p-3">
       <UInput v-model="searchQuery" placeholder="Search media..." class="flex-1" />
       <div class="flex border border-white/6 rounded-lg overflow-hidden">
-        <button class="view-btn" :class="{ active: viewMode === 'grid' }" @click="viewMode = 'grid'">⊞</button>
-        <button class="view-btn" :class="{ active: viewMode === 'list' }" @click="viewMode = 'list'">☰</button>
+        <button class="view-btn" :class="{ active: viewMode === 'grid' }" @click="viewMode = 'grid'"><UIcon name="i-lucide-grid-2x2" class="w-4 h-4" /></button>
+        <button class="view-btn" :class="{ active: viewMode === 'list' }" @click="viewMode = 'list'"><UIcon name="i-lucide-list" class="w-4 h-4" /></button>
       </div>
       <label class="flex items-center gap-2 text-xs text-white/40">
         <input type="checkbox" :checked="allSelected" @change="toggleSelectAll" class="accent-[#d4a843]" />
@@ -142,7 +142,7 @@
             <span class="text-[0.625rem] font-semibold uppercase text-white/25">URL</span>
             <div class="flex gap-2 mt-1">
               <UInput :model-value="selectedAsset.url" readonly class="flex-1 text-xs font-mono" />
-              <UButton size="sm" variant="ghost" @click="copyUrl(selectedAsset.url)">📋 Copy</UButton>
+              <UButton size="sm" variant="ghost" @click="copyUrl(selectedAsset.url)">Copy</UButton>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 <template>
   <nav class="ab-nav" aria-label="Breadcrumb">
-    <NuxtLink to="/admin" class="ab-item ab-home" title="Dashboard">📊</NuxtLink>
+    <NuxtLink to="/admin" class="ab-item ab-home" title="Dashboard"><UIcon name="i-lucide-layout-dashboard" class="w-4 h-4" /></NuxtLink>
     <template v-for="(crumb, i) in crumbs" :key="i">
       <span class="ab-sep">›</span>
       <NuxtLink v-if="i < crumbs.length - 1" :to="crumb.path" class="ab-item">{{ crumb.label }}</NuxtLink>
