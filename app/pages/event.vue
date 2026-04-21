@@ -45,7 +45,7 @@
     </section>
 
     <!-- ═══ REGISTRATION SECTION ═══ -->
-    <section class="relative mx-auto max-w-5xl px-6 py-20">
+    <section class="relative mx-auto max-w-3xl px-6 py-20">
       <!-- Total Registrations -->
       <div class="mb-14 text-center" v-motion :initial="{ opacity: 0, scale: 0.9 }" :enter="{ opacity: 1, scale: 1 }">
         <p class="mb-2 text-[0.65rem] font-bold uppercase tracking-[0.25em] text-white/25">Total Pre-Registrations</p>
@@ -54,107 +54,99 @@
         </div>
       </div>
 
-      <div class="grid gap-10 lg:grid-cols-[1fr_420px]">
-        <!-- ── Milestones (LEFT) ── -->
-        <div>
-          <h2 class="mb-6 flex items-center gap-2 text-xl font-bold">
-            <span class="text-2xl">🎯</span>Milestone Rewards
-          </h2>
-          <div class="flex flex-col gap-3">
-            <div v-for="(ms, idx) in milestones" :key="ms.id"
-              class="group relative overflow-hidden rounded-2xl border p-5 transition-all duration-500"
-              :class="ms.reached
-                ? 'border-gold/30 bg-gradient-to-br from-gold/8 to-gold/3'
-                : 'border-white/6 bg-white/[0.03] hover:border-white/15 hover:bg-white/[0.05]'"
-              v-motion :initial="{ opacity: 0, x: -30 }" :enter="{ opacity: 1, x: 0, transition: { delay: idx * 100 } }">
-              <!-- Shine effect on reached -->
-              <div v-if="ms.reached" class="absolute inset-0 bg-gradient-to-r from-transparent via-gold/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-              <div class="relative flex items-center gap-4">
-                <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl text-2xl transition-transform duration-300 group-hover:scale-110"
-                  :class="ms.reached ? 'bg-gold/15 shadow-[0_0_20px_rgba(212,168,67,0.15)]' : 'bg-white/[0.04]'">
-                  {{ ms.icon }}
-                </div>
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-2 flex-wrap">
-                    <span class="text-sm font-bold" :class="ms.reached ? 'text-gold' : 'text-white/80'">
-                      {{ locale === 'th' ? ms.rewardTh : ms.rewardEn }}
-                    </span>
-                    <span v-if="ms.reached" class="rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-[0.5rem] font-bold uppercase tracking-wider text-emerald-400">
-                      ✓ Unlocked
-                    </span>
-                  </div>
-                  <p class="mt-0.5 text-[0.7rem] text-white/25">{{ ms.targetCount.toLocaleString() }} registrations</p>
-                  <!-- Progress bar -->
-                  <div class="mt-2.5 h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
-                    <div class="h-full rounded-full transition-all duration-1000 ease-out"
-                      :class="ms.reached ? 'bg-gradient-to-r from-gold to-gold-light shadow-[0_0_10px_rgba(212,168,67,0.3)]' : 'bg-gradient-to-r from-gold/50 to-gold/20'"
-                      :style="{ width: `${Math.min((totalRegistrations / ms.targetCount) * 100, 100)}%` }" />
-                  </div>
-                  <p class="mt-1 text-right text-[0.55rem] text-white/15">
-                    {{ Math.min((totalRegistrations / ms.targetCount * 100), 100).toFixed(1) }}%
-                  </p>
-                </div>
-              </div>
-            </div>
+      <!-- ── Registration Form (CENTERED) ── -->
+      <div class="mx-auto max-w-md">
+        <div v-if="!submitted"
+          class="overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-b from-white/[0.06] to-white/[0.02] backdrop-blur-xl shadow-[0_8px_40px_rgba(0,0,0,0.3)]">
+          <!-- Form Header -->
+          <div class="border-b border-white/6 bg-white/[0.02] px-8 py-6 text-center">
+            <div class="mb-2 text-3xl">⚔️</div>
+            <h2 class="text-xl font-bold">{{ t('event.registerButton') }}</h2>
+            <p class="mt-1 text-xs text-white/30">Get exclusive rewards at launch!</p>
           </div>
+          <!-- Form Body -->
+          <form @submit.prevent="handleSubmit" class="flex flex-col gap-4 p-8">
+            <UFormField label="Email *">
+              <UInput v-model="form.email" type="email" placeholder="your@email.com" size="lg" required />
+            </UFormField>
+            <div class="grid grid-cols-2 gap-3">
+              <UFormField label="Platform">
+                <USelect v-model="form.platform" :items="['IOS', 'ANDROID', 'PC']" size="lg" />
+              </UFormField>
+              <UFormField label="Region">
+                <USelect v-model="form.region" :items="regionItems" size="lg" value-key="value" />
+              </UFormField>
+            </div>
+            <UFormField label="Referral Code (Optional)">
+              <UInput v-model="form.referralCode" placeholder="FRIEND-XXXX" size="lg" />
+            </UFormField>
+            <p v-if="error" class="text-center text-sm text-red-400">{{ error }}</p>
+            <UButton type="submit" size="lg" block :loading="loading"
+              class="mt-2 bg-gradient-to-br from-gold to-gold-light font-bold text-black shadow-[0_4px_25px_rgba(212,168,67,0.35)] transition-all duration-300 hover:shadow-[0_6px_35px_rgba(212,168,67,0.55)] hover:-translate-y-0.5">
+              🚀 {{ t('event.registerButton') }}
+            </UButton>
+          </form>
+          <p class="border-t border-white/4 px-8 py-3 text-center text-[0.6rem] text-white/15">
+            By registering, you agree to receive game updates. No spam.
+          </p>
         </div>
 
-        <!-- ── Registration Form (RIGHT — sticky) ── -->
-        <div class="lg:sticky lg:top-24 self-start">
-          <div v-if="!submitted"
-            class="overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-b from-white/[0.06] to-white/[0.02] backdrop-blur-xl shadow-[0_8px_40px_rgba(0,0,0,0.3)]">
-            <!-- Form Header -->
-            <div class="border-b border-white/6 bg-white/[0.02] px-8 py-6 text-center">
-              <div class="mb-2 text-3xl">⚔️</div>
-              <h2 class="text-xl font-bold">{{ t('event.registerButton') }}</h2>
-              <p class="mt-1 text-xs text-white/30">Get exclusive rewards at launch!</p>
-            </div>
-            <!-- Form Body -->
-            <form @submit.prevent="handleSubmit" class="flex flex-col gap-4 p-8">
-              <UFormField label="Email *">
-                <UInput v-model="form.email" type="email" placeholder="your@email.com" size="lg" required />
-              </UFormField>
-              <div class="grid grid-cols-2 gap-3">
-                <UFormField label="Platform">
-                  <USelect v-model="form.platform" :items="['IOS', 'ANDROID', 'PC']" size="lg" />
-                </UFormField>
-                <UFormField label="Region">
-                  <USelect v-model="form.region" :items="regionItems" size="lg" value-key="value" />
-                </UFormField>
-              </div>
-              <UFormField label="Referral Code (Optional)">
-                <UInput v-model="form.referralCode" placeholder="FRIEND-XXXX" size="lg" />
-              </UFormField>
-              <p v-if="error" class="text-center text-sm text-red-400">{{ error }}</p>
-              <UButton type="submit" size="lg" block :loading="loading"
-                class="mt-2 bg-gradient-to-br from-gold to-gold-light font-bold text-black shadow-[0_4px_25px_rgba(212,168,67,0.35)] transition-all duration-300 hover:shadow-[0_6px_35px_rgba(212,168,67,0.55)] hover:-translate-y-0.5">
-                🚀 {{ t('event.registerButton') }}
-              </UButton>
-            </form>
-            <p class="border-t border-white/4 px-8 py-3 text-center text-[0.6rem] text-white/15">
-              By registering, you agree to receive game updates. No spam.
-            </p>
+        <!-- ── Success ── -->
+        <div v-else class="rounded-2xl border border-gold/20 bg-gradient-to-b from-gold/8 to-gold/3 p-8 text-center backdrop-blur-xl"
+          v-motion :initial="{ opacity: 0, scale: 0.9 }" :enter="{ opacity: 1, scale: 1 }">
+          <div class="mb-4 text-6xl">🎉</div>
+          <h2 class="mb-3 text-2xl font-bold text-gold">Registration Successful!</h2>
+          <p class="mb-2 text-sm text-white/60">Your referral code:</p>
+          <div class="mx-auto mb-4 inline-block rounded-xl border border-gold/30 bg-gold/10 px-8 py-3 font-mono text-xl font-bold tracking-wider text-gold shadow-[0_0_25px_rgba(212,168,67,0.2)]">
+            {{ referralCode }}
           </div>
+          <p class="mb-6 text-sm text-white/50">Share your code with friends — both of you get bonus rewards! 🎁</p>
+          <div class="flex items-center justify-center gap-3">
+            <button @click="copyCode" class="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white transition-colors hover:bg-white/[0.08] cursor-pointer">
+              {{ copied ? '✅ Copied!' : '📋 Copy Code' }}
+            </button>
+            <a :href="`https://twitter.com/intent/tweet?text=I just pre-registered for Eternal Tower Saga! Use my referral code: ${referralCode} 🎮⚔️&url=http://178.128.127.161/event`"
+              target="_blank" class="flex items-center gap-2 rounded-lg bg-[#1DA1F2]/10 px-4 py-2.5 text-sm text-[#1DA1F2] transition-colors hover:bg-[#1DA1F2]/20 no-underline">
+              𝕏 Share
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-          <!-- ── Success ── -->
-          <div v-else class="rounded-2xl border border-gold/20 bg-gradient-to-b from-gold/8 to-gold/3 p-8 text-center backdrop-blur-xl"
-            v-motion :initial="{ opacity: 0, scale: 0.9 }" :enter="{ opacity: 1, scale: 1 }">
-            <div class="mb-4 text-6xl">🎉</div>
-            <h2 class="mb-3 text-2xl font-bold text-gold">Registration Successful!</h2>
-            <p class="mb-2 text-sm text-white/60">Your referral code:</p>
-            <div class="mx-auto mb-4 inline-block rounded-xl border border-gold/30 bg-gold/10 px-8 py-3 font-mono text-xl font-bold tracking-wider text-gold shadow-[0_0_25px_rgba(212,168,67,0.2)]">
-              {{ referralCode }}
+    <!-- ═══ MILESTONES SECTION ═══ -->
+    <section class="relative mx-auto max-w-5xl px-6 pb-20">
+      <h2 class="mb-8 text-center text-2xl font-bold">🎯 Milestone Rewards</h2>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div v-for="(ms, idx) in milestones" :key="ms.id"
+          class="group relative overflow-hidden rounded-2xl border p-6 transition-all duration-500"
+          :class="ms.reached
+            ? 'border-gold/30 bg-gradient-to-br from-gold/8 to-gold/3'
+            : 'border-white/6 bg-white/[0.03] hover:border-white/15 hover:bg-white/[0.05]'"
+          v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: idx * 100 } }">
+          <!-- Shine effect on reached -->
+          <div v-if="ms.reached" class="absolute inset-0 bg-gradient-to-r from-transparent via-gold/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+          <div class="relative text-center">
+            <div class="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl text-3xl transition-transform duration-300 group-hover:scale-110"
+              :class="ms.reached ? 'bg-gold/15 shadow-[0_0_20px_rgba(212,168,67,0.15)]' : 'bg-white/[0.04]'">
+              {{ ms.icon }}
             </div>
-            <p class="mb-6 text-sm text-white/50">Share your code with friends — both of you get bonus rewards! 🎁</p>
-            <div class="flex items-center justify-center gap-3">
-              <button @click="copyCode" class="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white transition-colors hover:bg-white/[0.08] cursor-pointer">
-                {{ copied ? '✅ Copied!' : '📋 Copy Code' }}
-              </button>
-              <a :href="`https://twitter.com/intent/tweet?text=I just pre-registered for Eternal Tower Saga! Use my referral code: ${referralCode} 🎮⚔️&url=http://178.128.127.161/event`"
-                target="_blank" class="flex items-center gap-2 rounded-lg bg-[#1DA1F2]/10 px-4 py-2.5 text-sm text-[#1DA1F2] transition-colors hover:bg-[#1DA1F2]/20 no-underline">
-                𝕏 Share
-              </a>
+            <h3 class="mb-1 text-sm font-bold" :class="ms.reached ? 'text-gold' : 'text-white/80'">
+              {{ locale === 'th' ? ms.rewardTh : ms.rewardEn }}
+            </h3>
+            <p class="mb-3 text-[0.7rem] text-white/25">{{ ms.targetCount.toLocaleString() }} registrations</p>
+            <span v-if="ms.reached" class="mb-3 inline-block rounded-full bg-emerald-500/15 px-3 py-1 text-[0.6rem] font-bold uppercase tracking-wider text-emerald-400">
+              ✓ Unlocked
+            </span>
+            <!-- Progress bar -->
+            <div class="h-2 rounded-full bg-white/[0.04] overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-1000 ease-out"
+                :class="ms.reached ? 'bg-gradient-to-r from-gold to-gold-light shadow-[0_0_10px_rgba(212,168,67,0.3)]' : 'bg-gradient-to-r from-gold/50 to-gold/20'"
+                :style="{ width: `${Math.min((totalRegistrations / ms.targetCount) * 100, 100)}%` }" />
             </div>
+            <p class="mt-1.5 text-[0.6rem] text-white/20">
+              {{ Math.min((totalRegistrations / ms.targetCount * 100), 100).toFixed(1) }}%
+            </p>
           </div>
         </div>
       </div>
