@@ -8,8 +8,7 @@
       :title="loc.name"
       @click="switchTo(loc.code)"
     >
-      <span class="lang-flag">{{ loc.flag }}</span>
-      <span class="lang-code">{{ loc.code.toUpperCase() }}</span>
+      {{ loc.code.toUpperCase() }}
     </button>
   </div>
 </template>
@@ -20,8 +19,8 @@ const switchLocalePath = useSwitchLocalePath()
 const router = useRouter()
 
 const availableLocales = [
-  { code: 'th', name: 'ไทย', flag: '🇹🇭' },
-  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'th', name: 'ไทย' },
+  { code: 'en', name: 'English' },
 ]
 
 function switchTo(code: string) {
@@ -39,26 +38,24 @@ function switchTo(code: string) {
   display: flex;
   align-items: center;
   gap: 2px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
-  padding: 2px;
+  padding: 3px;
 }
 
 .lang-btn {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 10px;
+  padding: 6px 14px;
   border: none;
-  border-radius: 8px;
+  border-radius: 7px;
   background: transparent;
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 0.6875rem;
-  font-weight: 600;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.75rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.25s ease;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  line-height: 1;
 }
 
 .lang-btn:hover {
@@ -67,17 +64,8 @@ function switchTo(code: string) {
 }
 
 .lang-btn.active {
-  background: linear-gradient(135deg, rgba(212, 168, 67, 0.15), rgba(212, 168, 67, 0.08));
+  background: linear-gradient(135deg, rgba(212, 168, 67, 0.2), rgba(212, 168, 67, 0.1));
   color: #d4a843;
-  box-shadow: 0 0 12px rgba(212, 168, 67, 0.08);
-}
-
-.lang-flag {
-  font-size: 0.875rem;
-  line-height: 1;
-}
-
-.lang-code {
-  line-height: 1;
+  box-shadow: 0 0 12px rgba(212, 168, 67, 0.1);
 }
 </style>
