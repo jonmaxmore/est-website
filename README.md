@@ -27,6 +27,23 @@ npx prisma migrate dev
 npm run db:seed
 ```
 
+## Server Database Migration Workflow
+
+This repo now includes a Prisma baseline migration for the existing production schema.
+
+For a database that already has the EST tables in place, record that baseline once:
+
+```bash
+npm run db:status
+npx prisma migrate resolve --applied 20260422193000_release1_baseline
+```
+
+After that, deploy future schema changes normally:
+
+```bash
+npm run db:deploy
+```
+
 ## Docker Production
 
 ```bash

@@ -32,9 +32,6 @@ test-results/
 playwright-report/
 .env.test
 
-# Prisma
-prisma/migrations/**/migration_lock.toml
-
 # Misc
 _reuse/
 *.tar
