@@ -1,4 +1,4 @@
-import { normalizeNavigationConfig } from '../../../app/shared/cms/navigation'
+import { normalizeNavigationConfig, resolveNavigationHref } from '../../../app/shared/cms/navigation'
 
 /** Enhanced public site config â€” returns navigation, social, appearance, FAQ in one call */
 export default defineEventHandler(async () => {
@@ -29,10 +29,34 @@ export default defineEventHandler(async () => {
     ]
   }
 
+  const pageKeys = [...mainNav, ...footerNav]
+    .filter((item) => item.type === 'page' && item.pageKey)
+    .map((item) => item.pageKey as string)
+
+  const pageRecords = pageKeys.length > 0
+    ? await prisma.pageContent.findMany({
+        where: {
+          key: { in: [...new Set(pageKeys)] },
+          status: 'PUBLISHED',
+        },
+        select: { key: true, slug: true, isSystemPage: true },
+      })
+    : []
+
+  const pageMap = new Map(pageRecords.map((page) => [page.key, page]))
+  const resolveVisibleItems = (items: typeof mainNav) =>
+    items
+      .filter((item) => item.visible !== false)
+      .map((item) => {
+        const href = resolveNavigationHref(item, item.pageKey ? pageMap.get(item.pageKey) : undefined)
+        return href ? { ...item, href } : null
+      })
+      .filter((item): item is NonNullable<typeof item> => item !== null)
+
   return {
     navigation: {
-      main: mainNav.filter((item) => item.visible !== false),
-      footer: footerNav.filter((item) => item.visible !== false),
+      main: resolveVisibleItems(mainNav),
+      footer: resolveVisibleItems(footerNav),
     },
     social: (configMap.get('social') || {}) as Record<string, string>,
     appearance: (configMap.get('appearance') || {}) as Record<string, string>,

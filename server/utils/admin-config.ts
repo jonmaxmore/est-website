@@ -70,6 +70,22 @@ const maintenanceSchema = z.object({
 
 const stringRecordSchema = z.record(z.string(), z.string())
 
+function parseNavigationConfig(value: unknown) {
+  const navigation = normalizeNavigationConfig(value)
+
+  for (const item of [...navigation.main, ...navigation.footer]) {
+    if (item.type === 'page' && !item.pageKey?.trim()) {
+      throw new Error('Page navigation items require a page key')
+    }
+
+    if (item.type === 'custom' && !item.href?.trim()) {
+      throw new Error('Custom navigation items require an href')
+    }
+  }
+
+  return navigation
+}
+
 export const DEFAULT_HOMEPAGE_SECTIONS = [
   { id: 'hero', type: 'hero', visible: true, order: 0, background: '/images/hero-bg.webp', config: {} },
   { id: 'weapons', type: 'weapons', visible: true, order: 1, background: '', config: {} },
@@ -131,7 +147,7 @@ export function normalizeIntegrationsConfig(value: unknown) {
 }
 
 const configParsers = {
-  navigation: (value: unknown) => normalizeNavigationConfig(value),
+  navigation: parseNavigationConfig,
   seo: (value: unknown) => stringRecordSchema.parse(value),
   social: (value: unknown) => stringRecordSchema.parse(value),
   appearance: (value: unknown) => stringRecordSchema.parse(value),

@@ -6,6 +6,7 @@ const createPageSchema = z.object({
   titleEn: z.string().trim().min(1),
   titleTh: z.string().trim().min(1),
   slug: z.string().trim().min(1),
+  status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional(),
 })
 
 export default defineEventHandler(async (event) => {
@@ -33,7 +34,12 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 409, message: `Page "${pageInput.slug}" already exists` })
   }
 
-  const page = await prisma.pageContent.create({ data: pageInput })
+  const page = await prisma.pageContent.create({
+    data: {
+      ...pageInput,
+      status: parsedBody.data.status ?? pageInput.status,
+    },
+  })
 
   await logActivity(event, 'CREATE', 'pages', `Created page: ${page.key}`, page.key)
   return {

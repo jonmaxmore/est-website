@@ -49,5 +49,9 @@ export function resolveNavigationHref(
     return page.slug === '' ? '/' : `/${page.slug}`
   }
 
+  if (item.type === 'page') {
+    return null
+  }
+
   return item.href || '/'
 }

@@ -25,4 +25,16 @@ describe('admin config validation', () => {
       }),
     )
   })
+
+  it('rejects page-backed navigation items without a page key', () => {
+    assert.throws(() =>
+      parseAdminConfigWrite({
+        key: 'navigation',
+        value: {
+          main: [{ id: 'nav-missing', type: 'page', labelEn: 'Missing', labelTh: 'Missing', visible: true }],
+          footer: [],
+        },
+      }),
+    )
+  })
 })

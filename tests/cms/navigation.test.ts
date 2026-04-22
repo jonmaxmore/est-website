@@ -19,4 +19,17 @@ describe('navigation helpers', () => {
 
     assert.equal(href, '/')
   })
+
+  it('does not invent hrefs for page-backed items without a backing page', () => {
+    const href = resolveNavigationHref({
+      id: 'nav-missing',
+      type: 'page',
+      labelEn: 'Missing',
+      labelTh: 'Missing',
+      pageKey: 'missing',
+      visible: true,
+    })
+
+    assert.equal(href, null)
+  })
 })
