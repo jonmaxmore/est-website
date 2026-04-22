@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 // Load test-specific env vars
 dotenv.config({ path: '.env.test' })
 
-const BASE_URL = process.env.BASE_URL || 'http://178.128.127.161'
+const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:3000'
 
 export default defineConfig({
   testDir: './e2e',
