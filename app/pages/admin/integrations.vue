@@ -76,13 +76,17 @@
           <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10"><UIcon name="i-lucide-link" class="w-6 h-6 text-[#d4a843]" /></div>
           <div>
             <h3 class="text-lg font-bold">Webhook Endpoint</h3>
-            <p class="text-xs text-white/40">Receive events from external services</p>
+            <p class="text-xs text-white/40">Receive signed events from external services</p>
           </div>
+        </div>
+        <div class="mb-3">
+          <label class="mb-1 block text-sm text-white/60">Shared Webhook Secret</label>
+          <input v-model="integrations.webhookSecret" type="password" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
         </div>
         <div class="rounded-lg bg-white/2 p-4 font-mono text-xs text-gold">
           POST {{ siteUrl }}/api/integration/webhook
         </div>
-        <p class="mt-3 text-xs text-white/40">Send JSON payloads to this endpoint to sync content from any external CMS.</p>
+        <p class="mt-3 text-xs text-white/40">Send JSON payloads with the <code>x-webhook-secret</code> header to sync content from an external CMS.</p>
       </div>
 
       <!-- Generic REST API -->
@@ -127,6 +131,7 @@ const config = useRuntimeConfig()
 const siteUrl = config.public.siteUrl || 'http://178.128.127.161'
 
 const integrations = ref({
+  webhookSecret: '',
   wordpress: { enabled: false, url: '', apiKey: '', syncDirection: 'bidirectional' },
   wix: { enabled: false, accountId: '', apiKey: '', webhookSecret: '' },
 })

@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { parseAdminConfigWrite } from '../../utils/admin-config'
+
 const configSchema = z.object({
   key: z.string().min(1),
   value: z.unknown(),
@@ -13,15 +15,21 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Validation error', data: parsed.error.flatten() })
   }
 
-  const { key, value } = parsed.data
+  let configInput: ReturnType<typeof parseAdminConfigWrite>
+
+  try {
+    configInput = parseAdminConfigWrite(parsed.data)
+  } catch (error) {
+    throw createError({ statusCode: 400, message: (error as Error).message })
+  }
 
   const config = await prisma.siteConfig.upsert({
-    where: { key },
-    update: { value: value as object },
-    create: { key, value: value as object },
+    where: { key: configInput.key },
+    update: { value: configInput.value as object },
+    create: { key: configInput.key, value: configInput.value as object },
   })
 
-  await logActivity(event, 'UPDATE', 'config', `Updated config: ${key}`, key)
+  await logActivity(event, 'UPDATE', 'config', `Updated config: ${configInput.key}`, configInput.key)
 
   return config
 })

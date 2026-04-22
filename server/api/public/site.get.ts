@@ -1,6 +1,7 @@
-/** Enhanced public site config — returns navigation, social, appearance, FAQ in one call */
+import { normalizeNavigationConfig } from '../../../app/shared/cms/navigation'
+
+/** Enhanced public site config â€” returns navigation, social, appearance, FAQ in one call */
 export default defineEventHandler(async () => {
-  // Fetch all relevant configs in one query
   const configs = await prisma.siteConfig.findMany({
     where: {
       key: {
@@ -10,46 +11,43 @@ export default defineEventHandler(async () => {
   })
 
   const configMap = new Map<string, unknown>()
-  for (const c of configs) {
-    configMap.set(c.key, c.value)
+  for (const config of configs) {
+    configMap.set(config.key, config.value)
   }
 
-  // Parse navigation — support both legacy (array) and new (object with main/footer) formats
-  const navRaw = configMap.get('navigation')
-  let mainNav: Array<{ labelEn: string; labelTh: string; href: string; visible?: boolean }> = []
-  let footerNav: Array<{ labelEn: string; labelTh: string; href: string; visible?: boolean }> = []
+  const navigation = normalizeNavigationConfig(configMap.get('navigation'))
+  let mainNav = navigation.main
+  const footerNav = navigation.footer
 
-  if (Array.isArray(navRaw)) {
-    // Legacy format: flat array of nav items
-    mainNav = navRaw as typeof mainNav
-  } else if (navRaw && typeof navRaw === 'object') {
-    const navObj = navRaw as { main?: typeof mainNav; footer?: typeof footerNav }
-    mainNav = navObj.main || []
-    footerNav = navObj.footer || []
-  }
-
-  // Defaults if empty
   if (mainNav.length === 0) {
     mainNav = [
-      { labelEn: 'Home', labelTh: 'หน้าแรก', href: '/' },
-      { labelEn: 'Weapons', labelTh: 'อาวุธ', href: '/weapons' },
-      { labelEn: 'News', labelTh: 'ข่าวสาร', href: '/news' },
-      { labelEn: 'Game Guide', labelTh: 'คู่มือเกม', href: '/game-guide' },
-      { labelEn: 'Support', labelTh: 'ช่วยเหลือ', href: '/support' },
+      { id: 'default-home', type: 'custom', labelEn: 'Home', labelTh: 'à¸«à¸™à¹‰à¸²à¹à¸£à¸', href: '/', visible: true, target: '_self' },
+      { id: 'default-weapons', type: 'custom', labelEn: 'Weapons', labelTh: 'à¸­à¸²à¸§à¸¸à¸˜', href: '/weapons', visible: true, target: '_self' },
+      { id: 'default-news', type: 'custom', labelEn: 'News', labelTh: 'à¸‚à¹ˆà¸²à¸§à¸ªà¸²à¸£', href: '/news', visible: true, target: '_self' },
+      { id: 'default-guide', type: 'custom', labelEn: 'Game Guide', labelTh: 'à¸„à¸¹à¹ˆà¸¡à¸·à¸­à¹€à¸à¸¡', href: '/game-guide', visible: true, target: '_self' },
+      { id: 'default-support', type: 'custom', labelEn: 'Support', labelTh: 'à¸Šà¹ˆà¸§à¸¢à¹€à¸«à¸¥à¸·à¸­', href: '/support', visible: true, target: '_self' },
     ]
   }
 
   return {
     navigation: {
-      main: mainNav.filter((n) => n.visible !== false),
-      footer: footerNav.filter((n) => n.visible !== false),
+      main: mainNav.filter((item) => item.visible !== false),
+      footer: footerNav.filter((item) => item.visible !== false),
     },
     social: (configMap.get('social') || {}) as Record<string, string>,
     appearance: (configMap.get('appearance') || {}) as Record<string, string>,
     seo: (configMap.get('seo') || {}) as Record<string, string>,
     faq: (configMap.get('faq') || []) as Array<{
-      labelEn: string; labelTh: string; contentEn: string; contentTh: string; visible: boolean
+      labelEn: string
+      labelTh: string
+      contentEn: string
+      contentTh: string
+      visible: boolean
     }>,
-    maintenance: (configMap.get('maintenance') || { enabled: false }) as { enabled: boolean; messageEn?: string; messageTh?: string },
+    maintenance: (configMap.get('maintenance') || { enabled: false }) as {
+      enabled: boolean
+      messageEn?: string
+      messageTh?: string
+    },
   }
 })
