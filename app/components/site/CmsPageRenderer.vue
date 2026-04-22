@@ -19,6 +19,8 @@
 </template>
 
 <script setup lang="ts">
+import { sanitizeRichHtml } from '../../shared/cms/sanitize-html'
+
 const props = defineProps<{
   page: {
     titleEn: string
@@ -40,7 +42,7 @@ const isThai = computed(() => locale.value === 'th')
 const localizedTitle = computed(() => (isThai.value ? props.page.titleTh || props.page.titleEn : props.page.titleEn || props.page.titleTh))
 const localizedDescription = computed(() => (isThai.value ? props.page.seoDescTh || props.page.seoDesc || props.page.description || '' : props.page.seoDesc || props.page.seoDescTh || props.page.description || ''))
 const localizedSeoTitle = computed(() => (isThai.value ? props.page.seoTitleTh || props.page.seoTitle || localizedTitle.value : props.page.seoTitle || props.page.seoTitleTh || localizedTitle.value))
-const renderedHtml = computed(() => (isThai.value ? props.page.contentTh || props.page.contentEn || '' : props.page.contentEn || props.page.contentTh || ''))
+const renderedHtml = computed(() => sanitizeRichHtml(isThai.value ? props.page.contentTh || props.page.contentEn || '' : props.page.contentEn || props.page.contentTh || ''))
 
 useHead(() => ({
   title: localizedSeoTitle.value.includes('Eternal Tower Saga') ? localizedSeoTitle.value : `${localizedSeoTitle.value} | Eternal Tower Saga`,

@@ -79,7 +79,7 @@ test.describe('admin media flows', () => {
       )
       expect(uploadStatus).toBe(200)
 
-      await page.reload({ waitUntil: 'networkidle' })
+      await page.reload({ waitUntil: 'domcontentloaded' })
       const assetName = page.getByText(fileName)
       await expect(assetName).toBeVisible({ timeout: 30000 })
       await assetName.click()
@@ -89,7 +89,7 @@ test.describe('admin media flows', () => {
       await page.getByRole('button', { name: /^save$/i }).click()
       await expect(page.getByText('Alt text saved')).toBeVisible()
 
-      await page.reload({ waitUntil: 'networkidle' })
+      await page.reload({ waitUntil: 'domcontentloaded' })
       await page.getByText(fileName).click()
       await expect(page.getByPlaceholder('Describe this image...')).toHaveValue(altText)
     } finally {

@@ -261,6 +261,8 @@
 </template>
 
 <script setup lang="ts">
+import { sanitizeRichHtml } from '../../../shared/cms/sanitize-html'
+
 definePageMeta({ layout: 'admin' })
 
 interface Article {
@@ -324,7 +326,7 @@ const tabErrors = computed(() => {
 const validationTriggered = ref(false)
 
 // Preview helpers
-const previewContent = computed(() => previewLang.value === 'th' ? form.contentTh : form.contentEn)
+const previewContent = computed(() => sanitizeRichHtml(previewLang.value === 'th' ? form.contentTh : form.contentEn))
 const previewExcerpt = computed(() => previewLang.value === 'th' ? form.excerptTh : form.excerptEn)
 
 const { toast, showToast } = useAdminToast()
