@@ -33,6 +33,7 @@ RUN adduser --system --uid 1001 nuxt
 COPY --from=builder --chown=nuxt:nuxt /app/.output ./.output
 COPY --from=builder --chown=nuxt:nuxt /app/prisma ./prisma
 COPY --from=builder --chown=nuxt:nuxt /app/prisma.config.ts ./prisma.config.ts
+COPY --from=builder --chown=nuxt:nuxt /app/server/utils/password.ts ./server/utils/password.ts
 COPY --from=builder --chown=nuxt:nuxt /app/node_modules ./node_modules
 COPY --from=builder --chown=nuxt:nuxt /app/package.json ./package.json
 
