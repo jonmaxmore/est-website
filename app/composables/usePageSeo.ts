@@ -4,10 +4,6 @@
 // Provides canonical URL, OG tags, Twitter cards, and
 // meta description to all pages automatically.
 
-const BASE_URL = 'http://178.128.127.161'
-const SITE_NAME = 'Eternal Tower Saga'
-const DEFAULT_OG_IMAGE = `${BASE_URL}/og-image.png`
-
 interface SeoOptions {
   title: string
   description: string
@@ -18,12 +14,15 @@ interface SeoOptions {
 
 export function usePageSeo(options: SeoOptions) {
   const route = useRoute()
+  const config = useRuntimeConfig()
+  const baseUrl = String(config.public.siteUrl || 'https://eternaltowersaga.com').replace(/\/$/, '')
+  const siteName = String(config.public.siteName || 'Eternal Tower Saga')
   const path = options.path || route.path
-  const canonicalUrl = `${BASE_URL}${path}`
-  const ogImage = options.image || DEFAULT_OG_IMAGE
-  const fullTitle = options.title.includes(SITE_NAME)
+  const canonicalUrl = `${baseUrl}${path}`
+  const ogImage = options.image || `${baseUrl}/images/og-cover.png`
+  const fullTitle = options.title.includes(siteName)
     ? options.title
-    : `${options.title} | ${SITE_NAME}`
+    : `${options.title} | ${siteName}`
 
   useHead({
     title: fullTitle,
@@ -38,7 +37,7 @@ export function usePageSeo(options: SeoOptions) {
       { property: 'og:type', content: options.type || 'website' },
       { property: 'og:url', content: canonicalUrl },
       { property: 'og:image', content: ogImage },
-      { property: 'og:site_name', content: SITE_NAME },
+      { property: 'og:site_name', content: siteName },
       // Twitter
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: fullTitle },

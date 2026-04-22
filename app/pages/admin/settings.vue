@@ -132,7 +132,7 @@ interface ConfigEntry {
 const { toast, showToast } = useAdminToast()
 
 const seo = reactive({ titleEn: '', titleTh: '', descriptionEn: '', descriptionTh: '' })
-const social = reactive({ facebook: '', twitter: '', youtube: '', discord: '', line: '' })
+const social = reactive({ facebook: '', instagram: '', twitter: '', youtube: '', tiktok: '', discord: '', line: '' })
 const maintenance = reactive({ enabled: false, messageEn: '', messageTh: '' })
 
 const savingSeo = ref(false)
@@ -141,8 +141,10 @@ const savingMaint = ref(false)
 
 const socialFields = [
   { key: 'facebook', label: 'Facebook', placeholder: 'https://facebook.com/...' },
+  { key: 'instagram', label: 'Instagram', placeholder: 'https://instagram.com/...' },
   { key: 'twitter', label: 'Twitter', placeholder: 'https://twitter.com/...' },
   { key: 'youtube', label: 'YouTube', placeholder: 'https://youtube.com/...' },
+  { key: 'tiktok', label: 'TikTok', placeholder: 'https://tiktok.com/@...' },
   { key: 'discord', label: 'Discord', placeholder: 'https://discord.gg/...' },
   { key: 'line', label: 'Line', placeholder: 'https://line.me/...' },
 ]

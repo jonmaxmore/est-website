@@ -89,6 +89,48 @@
         <p class="mt-3 text-xs text-white/40">Send JSON payloads with the <code>x-webhook-secret</code> header to sync content from an external CMS.</p>
       </div>
 
+      <!-- Marketing Tracking -->
+      <div class="rounded-2xl border border-white/6 bg-white/4 p-6">
+        <div class="mb-4 flex items-center gap-3">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10"><UIcon name="i-lucide-chart-no-axes-combined" class="w-6 h-6 text-emerald-400" /></div>
+          <div>
+            <h3 class="text-lg font-bold">Marketing Tracking</h3>
+            <p class="text-xs text-white/40">Google Analytics, Tag Manager, and Meta Pixel</p>
+          </div>
+          <span class="ml-auto rounded-full px-2 py-0.5 text-[0.625rem] font-semibold"
+            :class="integrations.analytics.enabled ? 'bg-emerald-500/10 text-emerald-400' : 'bg-gray-500/10 text-gray-400'">
+            {{ integrations.analytics.enabled ? 'Enabled' : 'Disabled' }}
+          </span>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label class="mb-1 block text-sm text-white/60">GA4 Measurement ID</label>
+            <input v-model="integrations.analytics.googleAnalyticsId" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="G-XXXXXXXXXX" />
+          </div>
+          <div>
+            <label class="mb-1 block text-sm text-white/60">Google Tag Manager ID</label>
+            <input v-model="integrations.analytics.googleTagManagerId" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="GTM-XXXXXXX" />
+          </div>
+          <div>
+            <label class="mb-1 block text-sm text-white/60">Meta Pixel / Dataset ID</label>
+            <input v-model="integrations.analytics.metaPixelId" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="1234567890" />
+          </div>
+          <div>
+            <label class="mb-1 block text-sm text-white/60">Meta Conversions API Token</label>
+            <input v-model="integrations.analytics.metaConversionsApiToken" type="password" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
+          </div>
+        </div>
+        <div class="mt-4 flex flex-wrap gap-4">
+          <label class="flex items-center gap-2 cursor-pointer text-sm">
+            <input type="checkbox" v-model="integrations.analytics.enabled" class="accent-gold" /> Enable browser tracking
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-sm">
+            <input type="checkbox" v-model="integrations.analytics.debug" class="accent-gold" /> Debug mode
+          </label>
+        </div>
+        <p class="mt-3 text-xs text-white/40">Server-side event storage remains active for dashboard analytics even when external pixels are disabled.</p>
+      </div>
+
       <!-- Generic REST API -->
       <div class="rounded-2xl border border-white/6 bg-white/4 p-6">
         <div class="mb-4 flex items-center gap-3">
@@ -132,6 +174,14 @@ const siteUrl = config.public.siteUrl || 'http://178.128.127.161'
 
 const integrations = ref({
   webhookSecret: '',
+  analytics: {
+    enabled: false,
+    googleAnalyticsId: '',
+    googleTagManagerId: '',
+    metaPixelId: '',
+    metaConversionsApiToken: '',
+    debug: false,
+  },
   wordpress: { enabled: false, url: '', apiKey: '', syncDirection: 'bidirectional' },
   wix: { enabled: false, accountId: '', apiKey: '', webhookSecret: '' },
 })

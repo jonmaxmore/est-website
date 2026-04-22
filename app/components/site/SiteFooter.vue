@@ -14,8 +14,9 @@
             rel="noopener noreferrer"
             :aria-label="String(platform)"
             class="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-xs font-bold text-white/60 no-underline transition-all duration-300 hover:border-white/30 hover:bg-white/10 hover:text-white"
+            @click="trackSocial(String(platform), String(platform))"
           >
-            {{ platformIcon(String(platform)) }}
+            <UIcon :name="platformIconName(String(platform))" class="h-4 w-4" />
           </a>
         </div>
         <div class="mt-4">
@@ -50,6 +51,7 @@
 <script setup lang="ts">
 import { SITE } from '~/shared/constants'
 const { t, locale } = useI18n()
+const { trackSocial } = useTracking()
 const currentLocale = computed(() => locale.value)
 
 // CMS-driven social links & footer navigation
@@ -104,8 +106,19 @@ const footerGroups = computed(() => {
   ]
 })
 
-function platformIcon(platform: string): string {
-  const icons: Record<string, string> = { facebook: 'f', twitter: '𝕏', youtube: '▶', discord: 'D', line: 'L' }
-  return icons[platform] || '•'
+function platformIconName(platform: string) {
+  const icons: Record<string, string> = {
+    facebook: 'i-lucide-facebook',
+    instagram: 'i-lucide-instagram',
+    twitter: 'i-lucide-twitter',
+    x: 'i-lucide-twitter',
+    youtube: 'i-lucide-youtube',
+    discord: 'i-lucide-message-circle',
+    line: 'i-lucide-message-circle',
+    tiktok: 'i-lucide-music-2',
+  }
+
+  return icons[platform.toLowerCase()] || 'i-lucide-globe'
 }
+
 </script>

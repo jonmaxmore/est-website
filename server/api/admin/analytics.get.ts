@@ -4,10 +4,14 @@ export default defineEventHandler(async () => {
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 
-  const [totalViews, todayViews, totalRegs] = await Promise.all([
+  const [totalViews, todayViews, totalRegs, preRegisterSuccess, downloadClicks, socialClicks, newsClicks] = await Promise.all([
     prisma.pageView.count(),
     prisma.pageView.count({ where: { createdAt: { gte: todayStart } } }),
     prisma.preRegistration.count(),
+    prisma.conversionEvent.count({ where: { eventName: 'pre_register_success' } }),
+    prisma.conversionEvent.count({ where: { eventName: 'download_click' } }),
+    prisma.conversionEvent.count({ where: { eventName: 'social_click' } }),
+    prisma.conversionEvent.count({ where: { eventName: 'news_click' } }),
   ])
 
   // Unique visitors
@@ -62,13 +66,29 @@ export default defineEventHandler(async () => {
 
   const conversionRate = totalViews > 0 ? (totalRegs / totalViews) * 100 : 0
 
+  let registrationsByPlatform: { platform: string; count: number }[] = []
+  try {
+    const rawPlatforms = await prisma.preRegistration.groupBy({
+      by: ['platform'],
+      _count: { _all: true },
+      orderBy: { _count: { platform: 'desc' } },
+    })
+    registrationsByPlatform = rawPlatforms.map((row) => ({ platform: row.platform, count: row._count._all }))
+  } catch { registrationsByPlatform = [] }
+
   return {
     totalViews,
     todayViews,
     uniqueVisitors,
+    totalRegistrations: totalRegs,
+    preRegisterSuccess,
+    downloadClicks,
+    socialClicks,
+    newsClicks,
     conversionRate,
     dailyViews,
     topPages,
     conversions,
+    registrationsByPlatform,
   }
 })

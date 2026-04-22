@@ -153,6 +153,8 @@ const navGroups = [
       { to: '/admin/features', icon: 'i-lucide-sparkles', label: 'Features' },
       { to: '/admin/highlights', icon: 'i-lucide-star', label: 'Highlights' },
       { to: '/admin/events', icon: 'i-lucide-calendar', label: 'Events & Hot Time' },
+      { to: '/admin/milestones', icon: 'i-lucide-trophy', label: 'Milestones' },
+      { to: '/admin/download', icon: 'i-lucide-download', label: 'Download Page' },
       { to: '/admin/faq', icon: 'i-lucide-help-circle', label: 'FAQ' },
       { to: '/admin/pages', icon: 'i-lucide-file-text', label: 'Pages' },
       { to: '/admin/media', icon: 'i-lucide-image', label: 'Media' },

@@ -3,7 +3,7 @@
     <!-- Dynamic Section Renderer -->
     <template v-for="section in visibleSections" :key="section.id">
       <!-- HERO -->
-      <OrganismsHeroSection v-if="section.type === 'hero'" :background="section.background" />
+      <OrganismsHeroSection v-if="section.type === 'hero'" :background="section.background" :config="section.config" />
 
       <!-- WEAPONS (Korean MMO Class Selector — Premium Edition) -->
       <section

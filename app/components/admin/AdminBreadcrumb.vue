@@ -15,7 +15,7 @@ const route = useRoute()
 const labelMap: Record<string, string> = {
   admin: 'Dashboard', news: 'News', weapons: 'Weapons', features: 'Features',
   highlights: 'Highlights', faq: 'FAQ', pages: 'Pages', media: 'Media',
-  registrations: 'Registrations', menus: 'Navigation', appearance: 'Theme',
+  registrations: 'Registrations', milestones: 'Milestones', download: 'Download Page', menus: 'Navigation', appearance: 'Theme',
   seo: 'SEO', users: 'Users', integrations: 'Integrations', activity: 'Activity Log',
   backup: 'Backup', settings: 'Settings', analytics: 'Analytics', homepage: 'Homepage',
 }

@@ -8,6 +8,71 @@
       <button class="gold-btn" @click="openEditor(null)">+ New Event</button>
     </div>
 
+    <!-- Event landing page controls -->
+    <div class="mb-6 rounded-2xl border border-white/6 bg-white/4 p-5">
+      <div class="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+        <div>
+          <h3 class="text-lg font-bold">Event Landing Page</h3>
+          <p class="mt-1 text-sm text-white/45">Control countdown, pre-registration display, background, and campaign copy.</p>
+        </div>
+        <UButton :loading="savingEventPage" class="bg-gradient-to-br from-gold to-gold-light font-bold text-black" @click="saveEventPage">
+          Save Landing Page
+        </UButton>
+      </div>
+
+      <div class="grid gap-4 lg:grid-cols-[1fr_280px]">
+        <div>
+          <AdminContentLanguageTabs :th-filled="!!eventPage.titleTh" :en-filled="!!eventPage.titleEn">
+            <template #th>
+              <div class="grid gap-3 sm:grid-cols-2">
+                <UFormField label="Badge (TH)"><UInput v-model="eventPage.badgeTh" /></UFormField>
+                <UFormField label="Title (TH)"><UInput v-model="eventPage.titleTh" /></UFormField>
+              </div>
+              <UFormField label="Subtitle (TH)" class="mt-3"><UTextarea v-model="eventPage.subtitleTh" :rows="2" /></UFormField>
+              <div class="mt-3 grid gap-3 sm:grid-cols-2">
+                <UFormField label="Form title (TH)"><UInput v-model="eventPage.formTitleTh" /></UFormField>
+                <UFormField label="Registration label (TH)"><UInput v-model="eventPage.registrationLabelTh" /></UFormField>
+              </div>
+            </template>
+            <template #en>
+              <div class="grid gap-3 sm:grid-cols-2">
+                <UFormField label="Badge (EN)"><UInput v-model="eventPage.badgeEn" /></UFormField>
+                <UFormField label="Title (EN)"><UInput v-model="eventPage.titleEn" /></UFormField>
+              </div>
+              <UFormField label="Subtitle (EN)" class="mt-3"><UTextarea v-model="eventPage.subtitleEn" :rows="2" /></UFormField>
+              <div class="mt-3 grid gap-3 sm:grid-cols-2">
+                <UFormField label="Form title (EN)"><UInput v-model="eventPage.formTitleEn" /></UFormField>
+                <UFormField label="Registration label (EN)"><UInput v-model="eventPage.registrationLabelEn" /></UFormField>
+              </div>
+            </template>
+          </AdminContentLanguageTabs>
+
+          <div class="mt-5 grid gap-4 sm:grid-cols-3">
+            <UFormField label="Target date">
+              <input v-model="eventPage.targetDate" type="datetime-local" class="w-full rounded-lg border border-white/10 bg-white/4 px-3 py-2 text-sm text-white outline-none focus:border-gold/50" />
+            </UFormField>
+            <UFormField label="Registration display">
+              <USelect v-model="eventPage.registrationDisplayMode" :items="registrationDisplayModes" value-key="value" />
+            </UFormField>
+            <UFormField label="Manual marketing count">
+              <UInput v-model.number="eventPage.manualRegistrationCount" type="number" min="0" />
+            </UFormField>
+          </div>
+        </div>
+
+        <div>
+          <AdminMediaPicker v-model="eventPage.backgroundImage" label="Background" />
+          <div class="mt-4 overflow-hidden rounded-xl border border-white/8 bg-black/30">
+            <div class="h-28 bg-cover bg-center" :style="{ backgroundImage: `url(${eventPage.backgroundImage})` }" />
+            <div class="p-3">
+              <p class="text-sm font-bold">{{ eventPage.titleEn }}</p>
+              <p class="mt-1 line-clamp-2 text-xs text-white/40">{{ eventPage.subtitleEn }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Filters -->
     <div class="mb-4 flex flex-wrap gap-3 rounded-2xl border border-white/6 bg-white/4 p-4">
       <USelect v-model="filterType" :items="typeFilterOptions" value-key="value" class="w-40" @update:model-value="loadEvents" />
@@ -19,7 +84,7 @@
       <h3 class="mb-3 text-[0.6875rem] font-bold uppercase tracking-wider text-white/40">Today's Active Events</h3>
       <div class="flex flex-col gap-2">
         <div v-for="ev in todayEvents" :key="ev.id" class="flex items-center gap-3 rounded-lg p-2.5" :style="{ background: `${ev.color || '#d4a843'}10` }">
-          <span class="text-lg">{{ typeIcon(ev.type) }}</span>
+          <UIcon :name="typeIcon(ev.type)" class="h-5 w-5" />
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium truncate">{{ ev.titleEn || ev.titleTh }}</p>
             <p class="text-xs text-white/30">{{ formatTime(ev.startsAt) }} — {{ formatTime(ev.endsAt) }}</p>
@@ -48,7 +113,7 @@
             <tr v-for="ev in events" :key="ev.id" class="border-b border-white/3 transition-colors hover:bg-white/2">
               <td class="px-4 py-3">
                 <div class="flex items-center gap-3">
-                  <span class="text-lg">{{ typeIcon(ev.type) }}</span>
+                  <UIcon :name="typeIcon(ev.type)" class="h-5 w-5" />
                   <div class="min-w-0">
                     <p class="font-medium truncate max-w-[200px]">{{ ev.titleEn || ev.titleTh }}</p>
                     <p class="text-[0.625rem] text-white/30 truncate">{{ ev.titleTh }}</p>
@@ -62,7 +127,7 @@
               </td>
               <td class="px-4 py-3">
                 <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.625rem] font-bold" :class="statusClass(ev.status)">
-                  {{ statusDot(ev.status) }} {{ ev.status }}
+                  {{ ev.status }}
                 </span>
               </td>
               <td class="px-4 py-3">
@@ -111,7 +176,7 @@
               :class="{ active: form.type === t.value }"
               @click="form.type = t.value"
             >
-              <span class="text-xl">{{ t.icon }}</span>
+              <UIcon :name="t.icon" class="h-5 w-5" />
               <span class="text-[0.6875rem]">{{ t.label }}</span>
             </button>
           </div>
@@ -170,7 +235,7 @@
                   :class="[statusClass(s), { active: form.status === s }]"
                   @click="form.status = s"
                 >
-                  {{ statusDot(s) }} {{ s }}
+                  {{ s }}
                 </button>
               </div>
             </UFormField>
@@ -201,10 +266,7 @@
           </Transition>
 
           <!-- Display Options -->
-          <div class="grid grid-cols-3 gap-4">
-            <UFormField label="Icon">
-              <UInput v-model="form.icon" placeholder="🎉" />
-            </UFormField>
+          <div class="grid grid-cols-2 gap-4">
             <UFormField label="Color">
               <input v-model="form.color" type="color" class="h-9 w-full rounded-lg border border-white/8 bg-white/4 p-1 cursor-pointer" />
             </UFormField>
@@ -245,6 +307,46 @@ interface GameEventItem {
   visible: boolean; createdAt: string
 }
 
+interface EventReward {
+  id: string
+  titleEn: string
+  titleTh: string
+  descriptionEn: string
+  descriptionTh: string
+  image: string
+  label: string
+  visible: boolean
+  order: number
+}
+
+interface EventPageConfig {
+  badgeEn: string
+  badgeTh: string
+  titleEn: string
+  titleTh: string
+  subtitleEn: string
+  subtitleTh: string
+  backgroundImage: string
+  targetDate: string
+  countdownLabelEn: string
+  countdownLabelTh: string
+  registrationLabelEn: string
+  registrationLabelTh: string
+  registrationDisplayMode: 'actual' | 'manual' | 'actual_plus_manual'
+  manualRegistrationCount: number
+  formTitleEn: string
+  formTitleTh: string
+  formDescriptionEn: string
+  formDescriptionTh: string
+  legalCopyEn: string
+  legalCopyTh: string
+  rewardsTitleEn: string
+  rewardsTitleTh: string
+  rewardsSubtitleEn: string
+  rewardsSubtitleTh: string
+  baseRewards: EventReward[]
+}
+
 const events = ref<GameEventItem[]>([])
 const page = ref(1)
 const totalPages = ref(1)
@@ -258,6 +360,35 @@ const formGlobalError = ref('')
 const deleteOpen = ref(false)
 const deleteTarget = ref<GameEventItem | null>(null)
 const { toast, showToast } = useAdminToast()
+const savingEventPage = ref(false)
+
+const eventPage = reactive<EventPageConfig>({
+  badgeEn: 'Pre-registration',
+  badgeTh: 'Pre-registration',
+  titleEn: 'Pre-registration',
+  titleTh: 'Pre-registration',
+  subtitleEn: 'Join early and unlock launch rewards for everyone.',
+  subtitleTh: 'Join early and unlock launch rewards for everyone.',
+  backgroundImage: '/images/hero-bg.webp',
+  targetDate: '2026-10-01T00:00',
+  countdownLabelEn: 'Launch target',
+  countdownLabelTh: 'Launch target',
+  registrationLabelEn: 'Total Pre-Registrations',
+  registrationLabelTh: 'Total Pre-Registrations',
+  registrationDisplayMode: 'actual',
+  manualRegistrationCount: 0,
+  formTitleEn: 'Pre-register now',
+  formTitleTh: 'Pre-register now',
+  formDescriptionEn: 'Get exclusive rewards at launch.',
+  formDescriptionTh: 'Get exclusive rewards at launch.',
+  legalCopyEn: 'By registering, you agree to receive game updates.',
+  legalCopyTh: 'By registering, you agree to receive game updates.',
+  rewardsTitleEn: 'Pre-Registration Rewards',
+  rewardsTitleTh: 'Pre-Registration Rewards',
+  rewardsSubtitleEn: 'Everyone who pre-registers will receive these launch rewards.',
+  rewardsSubtitleTh: 'Everyone who pre-registers will receive these launch rewards.',
+  baseRewards: [],
+})
 
 const typeFilterOptions = [
   { label: 'All Types', value: '' }, { label: 'Event', value: 'EVENT' },
@@ -269,18 +400,23 @@ const statusFilterOptions = [
   { label: 'Scheduled', value: 'SCHEDULED' }, { label: 'Active', value: 'ACTIVE' },
   { label: 'Ended', value: 'ENDED' }, { label: 'Cancelled', value: 'CANCELLED' },
 ]
+const registrationDisplayModes = [
+  { label: 'Actual database count', value: 'actual' },
+  { label: 'Manual marketing count', value: 'manual' },
+  { label: 'Actual + manual markup', value: 'actual_plus_manual' },
+]
 const eventTypes = [
-  { value: 'EVENT', label: 'Event', icon: '🎮' },
-  { value: 'HOT_TIME', label: 'Hot Time', icon: '🔥' },
-  { value: 'MAINTENANCE', label: 'Maintenance', icon: '🔧' },
-  { value: 'CAMPAIGN', label: 'Campaign', icon: '📢' },
+  { value: 'EVENT', label: 'Event', icon: 'i-lucide-calendar-days' },
+  { value: 'HOT_TIME', label: 'Hot Time', icon: 'i-lucide-flame' },
+  { value: 'MAINTENANCE', label: 'Maintenance', icon: 'i-lucide-wrench' },
+  { value: 'CAMPAIGN', label: 'Campaign', icon: 'i-lucide-megaphone' },
 ]
 const statuses = ['DRAFT', 'SCHEDULED', 'ACTIVE', 'ENDED', 'CANCELLED']
 
 const form = reactive({
   titleEn: '', titleTh: '', descriptionEn: '', descriptionTh: '',
   type: 'EVENT', status: 'SCHEDULED', startsAt: '', endsAt: '',
-  multiplier: 2, bonusType: 'EXP', bannerImage: '', icon: '🎮', color: '#d4a843',
+  multiplier: 2, bonusType: 'EXP', bannerImage: '', icon: '', color: '#d4a843',
   visible: true,
 })
 const formErrors = reactive<Record<string, string>>({
@@ -306,6 +442,30 @@ async function loadEvents() {
   } catch { events.value = [] }
 }
 
+async function loadEventPage() {
+  try {
+    const data = await $fetch<EventPageConfig>('/api/admin/config?key=event_page')
+    Object.assign(eventPage, data)
+    if (eventPage.targetDate.includes('+')) {
+      eventPage.targetDate = eventPage.targetDate.slice(0, 16)
+    }
+  } catch {
+    showToast('Failed to load event landing page settings', 'error')
+  }
+}
+
+async function saveEventPage() {
+  savingEventPage.value = true
+  try {
+    await $fetch('/api/admin/config', { method: 'PUT', body: { key: 'event_page', value: eventPage } })
+    showToast('Event landing page saved')
+  } catch (error: any) {
+    showToast(error?.data?.message || 'Failed to save event landing page', 'error')
+  } finally {
+    savingEventPage.value = false
+  }
+}
+
 function openEditor(ev: GameEventItem | null) {
   formGlobalError.value = ''
   Object.keys(formErrors).forEach(k => formErrors[k] = '')
@@ -318,7 +478,7 @@ function openEditor(ev: GameEventItem | null) {
       type: ev.type, status: ev.status,
       startsAt: ev.startsAt, endsAt: ev.endsAt,
       multiplier: ev.multiplier ?? 2, bonusType: ev.bonusType || 'EXP',
-      bannerImage: ev.bannerImage || '', icon: ev.icon || '🎮',
+      bannerImage: ev.bannerImage || '', icon: ev.icon || '',
       color: ev.color || '#d4a843', visible: ev.visible,
     })
   } else {
@@ -326,7 +486,7 @@ function openEditor(ev: GameEventItem | null) {
     Object.assign(form, {
       titleEn: '', titleTh: '', descriptionEn: '', descriptionTh: '',
       type: 'EVENT', status: 'SCHEDULED', startsAt: '', endsAt: '',
-      multiplier: 2, bonusType: 'EXP', bannerImage: '', icon: '🎮',
+      multiplier: 2, bonusType: 'EXP', bannerImage: '', icon: '',
       color: '#d4a843', visible: true,
     })
   }
@@ -392,8 +552,16 @@ async function doDelete() {
 
 // Helpers
 function typeIcon(type: string) {
+  const lucide: Record<string, string> = {
+    EVENT: 'i-lucide-calendar-days',
+    HOT_TIME: 'i-lucide-flame',
+    MAINTENANCE: 'i-lucide-wrench',
+    CAMPAIGN: 'i-lucide-megaphone',
+  }
+  if (lucide[type]) return lucide[type]
+
   const m: Record<string, string> = { EVENT: '🎮', HOT_TIME: '🔥', MAINTENANCE: '🔧', CAMPAIGN: '📢' }
-  return m[type] || '📅'
+  return m[type] || 'i-lucide-calendar'
 }
 function typeColor(type: string) {
   const m: Record<string, string> = { EVENT: '#3b82f6', HOT_TIME: '#f59e0b', MAINTENANCE: '#ef4444', CAMPAIGN: '#8b5cf6' }
@@ -420,7 +588,7 @@ function formatTime(d: string) {
   return new Date(d).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
 }
 
-await loadEvents()
+await Promise.all([loadEvents(), loadEventPage()])
 </script>
 
 <style scoped>

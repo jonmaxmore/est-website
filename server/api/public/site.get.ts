@@ -1,11 +1,12 @@
 import { normalizeNavigationConfig, resolveNavigationHref } from '../../../app/shared/cms/navigation'
+import { normalizeIntegrationsConfig } from '../../utils/admin-config'
 
 /** Enhanced public site config â€” returns navigation, social, appearance, FAQ in one call */
 export default defineEventHandler(async () => {
   const configs = await prisma.siteConfig.findMany({
     where: {
       key: {
-        in: ['navigation', 'social', 'appearance', 'seo', 'faq', 'maintenance'],
+        in: ['navigation', 'social', 'appearance', 'seo', 'faq', 'maintenance', 'integrations'],
       },
     },
   })
@@ -16,6 +17,7 @@ export default defineEventHandler(async () => {
   }
 
   const navigation = normalizeNavigationConfig(configMap.get('navigation'))
+  const integrations = normalizeIntegrationsConfig(configMap.get('integrations'))
   let mainNav = navigation.main
   const footerNav = navigation.footer
 
@@ -61,6 +63,13 @@ export default defineEventHandler(async () => {
     social: (configMap.get('social') || {}) as Record<string, string>,
     appearance: (configMap.get('appearance') || {}) as Record<string, string>,
     seo: (configMap.get('seo') || {}) as Record<string, string>,
+    tracking: {
+      enabled: integrations.analytics.enabled,
+      googleAnalyticsId: integrations.analytics.googleAnalyticsId,
+      googleTagManagerId: integrations.analytics.googleTagManagerId,
+      metaPixelId: integrations.analytics.metaPixelId,
+      debug: integrations.analytics.debug,
+    },
     faq: (configMap.get('faq') || []) as Array<{
       labelEn: string
       labelTh: string

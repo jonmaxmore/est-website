@@ -3,7 +3,7 @@
     <!-- ═══ HERO — Full-bleed with game art ═══ -->
     <section class="relative flex min-h-[70vh] items-center justify-center overflow-hidden text-center">
       <!-- Background Art -->
-      <img src="/images/hero-bg.webp" alt="" class="absolute inset-0 h-full w-full object-cover object-top" />
+      <img :src="eventConfig.backgroundImage" alt="" class="absolute inset-0 h-full w-full object-cover object-top" />
       <!-- Overlay gradient -->
       <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-[rgb(10,8,20)]" />
       <div class="absolute inset-0 bg-gradient-to-t from-[rgb(10,8,20)] via-transparent to-transparent" />
@@ -18,14 +18,14 @@
 
       <div class="relative z-10 px-6 pt-32 pb-20" v-motion :initial="{ opacity: 0, y: 30 }" :enter="{ opacity: 1, y: 0 }">
         <span class="mb-5 inline-block rounded-full border border-gold/25 bg-black/50 px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.25em] text-gold backdrop-blur-md">
-          {{ t('event.preRegister') }}
+          {{ localized('badge') }}
         </span>
         <h1 class="mb-5 text-[clamp(2.5rem,6vw,4.5rem)] font-extrabold leading-[1.05] tracking-tight">
           <span class="bg-gradient-to-b from-white via-white to-white/40 bg-clip-text text-transparent drop-shadow-[0_2px_20px_rgba(255,255,255,0.3)]">
-            {{ t('event.preRegister') }}
+            {{ localized('title') }}
           </span>
         </h1>
-        <p class="mx-auto max-w-xl text-lg text-white/60 drop-shadow-md">{{ t('hero.tagline') }}</p>
+        <p class="mx-auto max-w-xl text-lg text-white/60 drop-shadow-md">{{ localized('subtitle') }}</p>
 
         <!-- Countdown -->
         <div class="mt-10 flex items-center justify-center gap-3 sm:gap-5" v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 300 } }">
@@ -37,7 +37,7 @@
           </div>
           <span v-if="false" class="text-2xl font-light text-gold/30 -mt-6">:</span>
         </div>
-        <p class="mt-5 text-xs text-white/25">CBT Launch Target</p>
+        <p class="mt-5 text-xs text-white/25">{{ localized('countdownLabel') }}</p>
 
         <!-- CTA Arrow -->
         <div class="mt-8 animate-bounce text-2xl text-gold/40">↓</div>
@@ -48,9 +48,9 @@
     <section class="relative mx-auto max-w-3xl px-6 py-20">
       <!-- Total Registrations -->
       <div class="mb-14 text-center" v-motion :initial="{ opacity: 0, scale: 0.9 }" :enter="{ opacity: 1, scale: 1 }">
-        <p class="mb-2 text-[0.65rem] font-bold uppercase tracking-[0.25em] text-white/25">Total Pre-Registrations</p>
+        <p class="mb-2 text-[0.65rem] font-bold uppercase tracking-[0.25em] text-white/25">{{ localized('registrationLabel') }}</p>
         <div class="text-[clamp(3.5rem,10vw,6rem)] font-extrabold tabular-nums bg-gradient-to-b from-gold via-gold-light to-gold/50 bg-clip-text text-transparent drop-shadow-[0_4px_40px_rgba(212,168,67,0.3)]">
-          {{ totalRegistrations.toLocaleString() }}
+          {{ displayRegistrations.toLocaleString() }}
         </div>
       </div>
 
@@ -60,8 +60,8 @@
           class="overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-b from-white/[0.06] to-white/[0.02] backdrop-blur-xl shadow-[0_8px_40px_rgba(0,0,0,0.3)]">
           <!-- Form Header -->
           <div class="border-b border-white/6 bg-white/[0.02] px-8 py-6 text-center">
-            <h2 class="text-xl font-bold">{{ t('event.registerButton') }}</h2>
-            <p class="mt-1 text-xs text-white/30">Get exclusive rewards at launch!</p>
+            <h2 class="text-xl font-bold">{{ localized('formTitle') }}</h2>
+            <p class="mt-1 text-xs text-white/30">{{ localized('formDescription') }}</p>
           </div>
           <!-- Form Body -->
           <form @submit.prevent="handleSubmit" class="flex flex-col gap-4 p-8">
@@ -86,7 +86,7 @@
             </UButton>
           </form>
           <p class="border-t border-white/4 px-8 py-3 text-center text-[0.6rem] text-white/15">
-            By registering, you agree to receive game updates. No spam.
+            {{ localized('legalCopy') }}
           </p>
         </div>
 
@@ -104,7 +104,7 @@
             <button @click="copyCode" class="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white transition-colors hover:bg-white/[0.08] cursor-pointer">
               {{ copied ? '✅ Copied!' : '📋 Copy Code' }}
             </button>
-            <a :href="`https://twitter.com/intent/tweet?text=I just pre-registered for Eternal Tower Saga! Use my referral code: ${referralCode} 🎮⚔️&url=http://178.128.127.161/event`"
+            <a :href="shareHref"
               target="_blank" class="flex items-center gap-2 rounded-lg bg-[#1DA1F2]/10 px-4 py-2.5 text-sm text-[#1DA1F2] transition-colors hover:bg-[#1DA1F2]/20 no-underline">
               𝕏 Share
             </a>
@@ -128,7 +128,7 @@
           <div class="relative text-center">
             <div class="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl text-3xl transition-transform duration-300 group-hover:scale-110"
               :class="ms.reached ? 'bg-gold/15 shadow-[0_0_20px_rgba(212,168,67,0.15)]' : 'bg-white/[0.04]'">
-              {{ ms.icon }}
+              {{ ms.icon || `T${ms.tier}` }}
             </div>
             <h3 class="mb-1 text-sm font-bold" :class="ms.reached ? 'text-gold' : 'text-white/80'">
               {{ locale === 'th' ? ms.rewardTh : ms.rewardEn }}
@@ -141,10 +141,10 @@
             <div class="h-2 rounded-full bg-white/[0.04] overflow-hidden">
               <div class="h-full rounded-full transition-all duration-1000 ease-out"
                 :class="ms.reached ? 'bg-gradient-to-r from-gold to-gold-light shadow-[0_0_10px_rgba(212,168,67,0.3)]' : 'bg-gradient-to-r from-gold/50 to-gold/20'"
-                :style="{ width: `${Math.min((totalRegistrations / ms.targetCount) * 100, 100)}%` }" />
+                :style="{ width: `${Math.min((displayRegistrations / ms.targetCount) * 100, 100)}%` }" />
             </div>
             <p class="mt-1.5 text-[0.6rem] text-white/20">
-              {{ Math.min((totalRegistrations / ms.targetCount * 100), 100).toFixed(1) }}%
+              {{ Math.min((displayRegistrations / ms.targetCount * 100), 100).toFixed(1) }}%
             </p>
           </div>
         </div>
@@ -154,15 +154,18 @@
     <!-- ═══ REWARDS SECTION ═══ -->
     <section class="relative border-t border-white/6 bg-gradient-to-b from-transparent via-white/[0.015] to-transparent py-20">
       <div class="mx-auto max-w-5xl px-6">
-        <h2 class="mb-3 text-center text-2xl font-bold">Pre-Registration Rewards</h2>
-        <p class="mb-12 text-center text-sm text-white/35">Everyone who pre-registers will receive these exclusive items at launch</p>
+        <h2 class="mb-3 text-center text-2xl font-bold">{{ localized('rewardsTitle') }}</h2>
+        <p class="mb-12 text-center text-sm text-white/35">{{ localized('rewardsSubtitle') }}</p>
         <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <div v-for="(reward, ri) in baseRewards" :key="ri"
             class="group rounded-2xl border border-white/6 bg-white/[0.03] p-7 text-center transition-all duration-500 hover:border-gold/20 hover:bg-white/[0.06] hover:-translate-y-1"
             v-motion :initial="{ opacity: 0, y: 25 }" :enter="{ opacity: 1, y: 0, transition: { delay: ri * 120 } }">
-            <div class="mb-4 flex h-14 w-14 mx-auto items-center justify-center rounded-xl bg-gold/10 text-gold text-lg font-bold">{{ reward.abbr }}</div>
-            <h3 class="mb-1 text-sm font-bold">{{ reward.title }}</h3>
-            <p class="text-xs text-white/35 leading-relaxed">{{ reward.desc }}</p>
+            <div class="mb-4 flex h-14 w-14 mx-auto items-center justify-center overflow-hidden rounded-xl bg-gold/10 text-gold text-lg font-bold">
+              <img v-if="reward.image" :src="reward.image" :alt="rewardTitle(reward)" class="h-full w-full object-cover" />
+              <span v-else>{{ reward.label || rewardTitle(reward).slice(0, 3).toUpperCase() }}</span>
+            </div>
+            <h3 class="mb-1 text-sm font-bold">{{ rewardTitle(reward) }}</h3>
+            <p class="text-xs text-white/35 leading-relaxed">{{ rewardDescription(reward) }}</p>
           </div>
         </div>
       </div>
@@ -172,10 +175,87 @@
 
 <script setup lang="ts">
 const { t, locale } = useI18n()
+const { trackPreRegister, trackPreRegisterSuccess, trackReferralCopy } = useTracking()
+
+interface EventReward {
+  id: string
+  titleEn: string
+  titleTh: string
+  descriptionEn: string
+  descriptionTh: string
+  image: string
+  label: string
+  visible: boolean
+  order: number
+}
+
+interface EventPageConfig {
+  badgeEn: string
+  badgeTh: string
+  titleEn: string
+  titleTh: string
+  subtitleEn: string
+  subtitleTh: string
+  backgroundImage: string
+  targetDate: string
+  countdownLabelEn: string
+  countdownLabelTh: string
+  registrationLabelEn: string
+  registrationLabelTh: string
+  registrationDisplayMode: 'actual' | 'manual' | 'actual_plus_manual'
+  manualRegistrationCount: number
+  formTitleEn: string
+  formTitleTh: string
+  formDescriptionEn: string
+  formDescriptionTh: string
+  legalCopyEn: string
+  legalCopyTh: string
+  rewardsTitleEn: string
+  rewardsTitleTh: string
+  rewardsSubtitleEn: string
+  rewardsSubtitleTh: string
+  baseRewards: EventReward[]
+}
+
+const defaultEventConfig: EventPageConfig = {
+  badgeEn: 'Pre-registration',
+  badgeTh: 'Pre-registration',
+  titleEn: 'Pre-registration',
+  titleTh: 'Pre-registration',
+  subtitleEn: 'Join early and unlock launch rewards for everyone.',
+  subtitleTh: 'Join early and unlock launch rewards for everyone.',
+  backgroundImage: '/images/hero-bg.webp',
+  targetDate: '2026-10-01T00:00:00+07:00',
+  countdownLabelEn: 'Launch target',
+  countdownLabelTh: 'Launch target',
+  registrationLabelEn: 'Total Pre-Registrations',
+  registrationLabelTh: 'Total Pre-Registrations',
+  registrationDisplayMode: 'actual',
+  manualRegistrationCount: 0,
+  formTitleEn: 'Pre-register now',
+  formTitleTh: 'Pre-register now',
+  formDescriptionEn: 'Get exclusive rewards at launch.',
+  formDescriptionTh: 'Get exclusive rewards at launch.',
+  legalCopyEn: 'By registering, you agree to receive game updates.',
+  legalCopyTh: 'By registering, you agree to receive game updates.',
+  rewardsTitleEn: 'Pre-Registration Rewards',
+  rewardsTitleTh: 'Pre-Registration Rewards',
+  rewardsSubtitleEn: 'Everyone who pre-registers will receive these launch rewards.',
+  rewardsSubtitleTh: 'Everyone who pre-registers will receive these launch rewards.',
+  baseRewards: [],
+}
+const { data: eventPage } = await useFetch<EventPageConfig>('/api/public/event-page', { default: () => defaultEventConfig })
+const eventConfig = computed(() => eventPage.value || defaultEventConfig)
+
 usePageSeo({
-  title: `${t('event.preRegister')} | Eternal Tower Saga`,
-  description: 'Pre-register for Eternal Tower Saga and unlock exclusive rewards. Join the community and be first to play.',
+  title: `${eventConfig.value.titleEn || t('event.preRegister')} | Eternal Tower Saga`,
+  description: eventConfig.value.subtitleEn || 'Pre-register for Eternal Tower Saga and unlock exclusive rewards.',
 })
+
+function localized(field: 'badge' | 'title' | 'subtitle' | 'countdownLabel' | 'registrationLabel' | 'formTitle' | 'formDescription' | 'legalCopy' | 'rewardsTitle' | 'rewardsSubtitle') {
+  const suffix = locale.value === 'th' ? 'Th' : 'En'
+  return eventConfig.value[`${field}${suffix}` as keyof EventPageConfig] as string
+}
 
 // --- Form ---
 const form = reactive({ email: '', platform: 'ANDROID', region: 'TH', referredBy: '' })
@@ -185,8 +265,10 @@ const loading = ref(false); const error = ref(''); const submitted = ref(false);
 async function handleSubmit() {
   loading.value = true; error.value = ''
   try {
+    trackPreRegister(form.platform, form.region)
     const result = await $fetch<{ referralCode: string }>('/api/register', { method: 'POST', body: form })
     referralCode.value = result.referralCode; submitted.value = true
+    trackPreRegisterSuccess(form.platform, form.region)
     // Re-fetch actual count from backend
     const freshStats = await $fetch<{ totalRegistrations?: number }>('/api/public/stats').catch(() => null)
     if (freshStats?.totalRegistrations) totalRegistrations.value = freshStats.totalRegistrations
@@ -196,6 +278,7 @@ async function handleSubmit() {
 
 function copyCode() {
   navigator.clipboard.writeText(referralCode.value); copied.value = true
+  trackReferralCopy()
   setTimeout(() => { copied.value = false }, 2000)
 }
 
@@ -208,18 +291,24 @@ const milestones = computed(() => milestonesData.value || [])
 const totalRegistrations = ref(0)
 try {
   const stats = await $fetch<{ totalRegistrations?: number }>('/api/public/stats').catch(() => null)
-  totalRegistrations.value = stats?.totalRegistrations || 847
-} catch { totalRegistrations.value = 847 }
+  totalRegistrations.value = stats?.totalRegistrations || 0
+} catch { totalRegistrations.value = 0 }
+
+const displayRegistrations = computed(() => {
+  if (eventConfig.value.registrationDisplayMode === 'manual') return eventConfig.value.manualRegistrationCount
+  if (eventConfig.value.registrationDisplayMode === 'actual_plus_manual') return totalRegistrations.value + eventConfig.value.manualRegistrationCount
+  return totalRegistrations.value
+})
 
 // --- Countdown ---
 const countdown = ref([
   { label: 'Days', value: 0 }, { label: 'Hours', value: 0 },
   { label: 'Minutes', value: 0 }, { label: 'Seconds', value: 0 },
 ])
-const cbtDate = new Date('2026-10-01T00:00:00+07:00') // Fixed CBT target date
+const targetDate = computed(() => new Date(eventConfig.value.targetDate || '2026-10-01T00:00:00+07:00'))
 
 function updateCountdown() {
-  const diff = Math.max(0, cbtDate.getTime() - Date.now())
+  const diff = Math.max(0, targetDate.value.getTime() - Date.now())
   countdown.value[0].value = Math.floor(diff / (1000 * 60 * 60 * 24))
   countdown.value[1].value = Math.floor((diff / (1000 * 60 * 60)) % 24)
   countdown.value[2].value = Math.floor((diff / (1000 * 60)) % 60)
@@ -229,12 +318,27 @@ updateCountdown()
 if (import.meta.client) setInterval(updateCountdown, 1000)
 
 // --- Base Rewards ---
-const baseRewards = [
-  { abbr: 'GEM', title: 'Gems x1000', desc: 'Premium currency to start strong' },
-  { abbr: 'SR', title: 'SR Weapon Box', desc: 'Choose any SR weapon at launch' },
-  { abbr: 'TTL', title: 'Exclusive Title', desc: '"Pioneer" title for early supporters' },
-  { abbr: 'AVT', title: 'Avatar Frame', desc: 'Limited edition golden frame' },
-]
+const baseRewards = computed(() =>
+  eventConfig.value.baseRewards
+    .filter((reward) => reward.visible !== false)
+    .sort((left, right) => left.order - right.order)
+)
+
+const shareHref = computed(() => {
+  const url = import.meta.client ? `${window.location.origin}/event` : 'https://eternaltowersaga.com/event'
+  const text = `I just pre-registered for Eternal Tower Saga! Use my referral code: ${referralCode.value}`
+  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`
+})
+
+function rewardTitle(reward: EventReward) {
+  return locale.value === 'th' ? reward.titleTh || reward.titleEn : reward.titleEn || reward.titleTh
+}
+
+function rewardDescription(reward: EventReward) {
+  return locale.value === 'th'
+    ? reward.descriptionTh || reward.descriptionEn
+    : reward.descriptionEn || reward.descriptionTh
+}
 </script>
 
 <style scoped>

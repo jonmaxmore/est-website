@@ -73,6 +73,61 @@
             </div>
           </div>
 
+          <div v-if="editingSection.type === 'hero'" class="mb-4 rounded-xl border border-white/6 bg-white/3 p-4">
+            <h4 class="mb-3 text-xs font-semibold uppercase tracking-widest text-white/40">Hero Content</h4>
+            <div class="mb-3">
+              <label class="mb-1 block text-sm font-medium text-white/60">Logo URL</label>
+              <input v-model="editingSection.config.logo" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="/images/logo.webp" />
+            </div>
+            <div class="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label class="mb-1 block text-sm font-medium text-white/60">Subtitle (TH)</label>
+                <textarea v-model="editingSection.config.subtitleTh" rows="2" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50" />
+              </div>
+              <div>
+                <label class="mb-1 block text-sm font-medium text-white/60">Subtitle (EN)</label>
+                <textarea v-model="editingSection.config.subtitleEn" rows="2" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50" />
+              </div>
+            </div>
+            <label class="mt-3 flex items-center gap-3 text-sm">
+              <input v-model="editingSection.config.showSocialLinks" type="checkbox" class="accent-gold" />
+              Show social icons from Site Settings
+            </label>
+
+            <div class="mt-5 flex items-center justify-between">
+              <h4 class="text-xs font-semibold uppercase tracking-widest text-white/40">Hero Buttons</h4>
+              <button class="rounded-lg border border-gold/25 bg-gold/10 px-3 py-1.5 text-xs font-bold text-gold" @click="addHeroButton">+ Add Button</button>
+            </div>
+            <div class="mt-3 flex flex-col gap-3">
+              <div v-for="(button, buttonIndex) in heroButtons" :key="button.id" class="rounded-lg border border-white/6 bg-black/20 p-3">
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <input v-model="button.labelTh" class="rounded-lg border border-white/10 bg-white/4 px-3 py-2 text-sm text-white outline-none focus:border-gold/50" placeholder="Label TH" />
+                  <input v-model="button.labelEn" class="rounded-lg border border-white/10 bg-white/4 px-3 py-2 text-sm text-white outline-none focus:border-gold/50" placeholder="Label EN" />
+                  <input v-model="button.href" class="rounded-lg border border-white/10 bg-white/4 px-3 py-2 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="/event" />
+                  <select v-model="button.variant" class="rounded-lg border border-white/10 bg-white/4 px-3 py-2 text-sm text-white outline-none focus:border-gold/50">
+                    <option value="primary">Primary</option>
+                    <option value="secondary">Secondary</option>
+                    <option value="ghost">Ghost</option>
+                  </select>
+                </div>
+                <div class="mt-3 flex flex-wrap items-center gap-3">
+                  <label class="flex items-center gap-2 text-xs text-white/50">
+                    <input v-model="button.visible" type="checkbox" class="accent-gold" />
+                    Visible
+                  </label>
+                  <label class="flex items-center gap-2 text-xs text-white/50">
+                    Target
+                    <select v-model="button.target" class="rounded border border-white/10 bg-white/4 px-2 py-1 text-xs text-white">
+                      <option value="_self">Same tab</option>
+                      <option value="_blank">New tab</option>
+                    </select>
+                  </label>
+                  <button class="ml-auto text-xs text-red-400/70 hover:text-red-400" @click="removeHeroButton(buttonIndex)">Remove</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="mb-4 flex items-center gap-3">
             <input type="checkbox" v-model="editingSection.visible" class="accent-gold" />
             <label class="text-sm">Visible on Homepage</label>
@@ -96,10 +151,20 @@ import { SUPPORTED_HOMEPAGE_SECTION_TYPES } from '../../shared/cms/homepage'
 definePageMeta({ layout: 'admin' })
 
 interface SectionConfig { id: string; type: string; visible: boolean; order: number; background: string; config: Record<string, any> }
+interface HeroButtonConfig {
+  id: string
+  labelEn: string
+  labelTh: string
+  href: string
+  variant: 'primary' | 'secondary' | 'ghost'
+  visible: boolean
+  order: number
+  target: '_self' | '_blank'
+}
 
 const defaultTypes = [...SUPPORTED_HOMEPAGE_SECTION_TYPES]
 const defaultSections: SectionConfig[] = [
-  { id: 'hero', type: 'hero', visible: true, order: 0, background: '/images/hero-bg.webp', config: {} },
+  { id: 'hero', type: 'hero', visible: true, order: 0, background: '/images/hero-bg.webp', config: defaultHeroConfig() },
   { id: 'weapons', type: 'weapons', visible: true, order: 1, background: '', config: {} },
   { id: 'features', type: 'features', visible: true, order: 2, background: '', config: {} },
   { id: 'highlights', type: 'highlights', visible: true, order: 3, background: '', config: {} },
@@ -127,6 +192,35 @@ function sectionLabel(type: string) {
   return labels[type] || type
 }
 
+const heroButtons = computed<HeroButtonConfig[]>(() => {
+  const buttons = editingSection.value?.config?.buttons
+  return Array.isArray(buttons) ? buttons : []
+})
+
+function defaultHeroConfig() {
+  return {
+    logo: '/images/logo.webp',
+    subtitleEn: '',
+    subtitleTh: '',
+    showSocialLinks: true,
+    buttons: [
+      { id: 'pre-register', labelEn: 'Pre-register', labelTh: 'Pre-register', href: '/event', variant: 'primary', visible: true, order: 0, target: '_self' },
+      { id: 'download', labelEn: 'Download', labelTh: 'Download', href: '/download', variant: 'secondary', visible: true, order: 1, target: '_self' },
+    ],
+  }
+}
+
+function ensureHeroConfig(section: SectionConfig) {
+  if (section.type !== 'hero') return
+  section.config = {
+    ...defaultHeroConfig(),
+    ...(section.config || {}),
+    buttons: Array.isArray(section.config?.buttons) && section.config.buttons.length
+      ? section.config.buttons
+      : defaultHeroConfig().buttons,
+  }
+}
+
 function moveUp(index: number) {
   if (index === 0) return
   const items = [...sections.value]
@@ -141,10 +235,35 @@ function moveDown(index: number) {
   items.forEach((s, i) => s.order = i)
   sections.value = items
 }
-function editSection(section: SectionConfig) { editingSection.value = section }
+function editSection(section: SectionConfig) {
+  ensureHeroConfig(section)
+  editingSection.value = section
+}
 function removeSection(index: number) { sections.value.splice(index, 1); sections.value.forEach((s, i) => s.order = i) }
 function addSection() {
   sections.value.push({ id: `section_${Date.now()}`, type: 'cta', visible: true, order: sections.value.length, background: '', config: {} })
+}
+
+function addHeroButton() {
+  if (!editingSection.value) return
+  ensureHeroConfig(editingSection.value)
+  const buttons = editingSection.value.config.buttons as HeroButtonConfig[]
+  buttons.push({
+    id: `hero-button-${Date.now()}`,
+    labelEn: 'New Button',
+    labelTh: 'New Button',
+    href: '/',
+    variant: buttons.length === 0 ? 'primary' : 'secondary',
+    visible: true,
+    order: buttons.length,
+    target: '_self',
+  })
+}
+
+function removeHeroButton(index: number) {
+  if (!editingSection.value || !Array.isArray(editingSection.value.config.buttons)) return
+  editingSection.value.config.buttons.splice(index, 1)
+  editingSection.value.config.buttons.forEach((button: HeroButtonConfig, buttonIndex: number) => { button.order = buttonIndex })
 }
 
 async function saveSections() {
