@@ -8,8 +8,10 @@ async function fillLoginForm(page: Page, email: string, password: string) {
   const passwordInput = page.locator('input[type="password"]')
 
   await expect(async () => {
-    await emailInput.fill(email)
-    await passwordInput.fill(password)
+    await emailInput.clear()
+    await emailInput.pressSequentially(email)
+    await passwordInput.clear()
+    await passwordInput.pressSequentially(password)
     await expect(emailInput).toHaveValue(email, { timeout: 1_000 })
     await expect(passwordInput).toHaveValue(password, { timeout: 1_000 })
   }).toPass({ timeout: 10_000 })
