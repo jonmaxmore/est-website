@@ -33,14 +33,8 @@ RUN adduser --system --uid 1001 nuxt
 COPY --from=builder --chown=nuxt:nuxt /app/.output ./.output
 COPY --from=builder --chown=nuxt:nuxt /app/prisma ./prisma
 COPY --from=builder --chown=nuxt:nuxt /app/prisma.config.ts ./prisma.config.ts
-COPY --from=builder --chown=nuxt:nuxt /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder --chown=nuxt:nuxt /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder --chown=nuxt:nuxt /app/node_modules/dotenv ./node_modules/dotenv
+COPY --from=builder --chown=nuxt:nuxt /app/node_modules ./node_modules
 COPY --from=builder --chown=nuxt:nuxt /app/package.json ./package.json
-
-# Copy seed dependencies
-COPY --from=builder --chown=nuxt:nuxt /app/node_modules/bcryptjs ./node_modules/bcryptjs
-COPY --from=builder --chown=nuxt:nuxt /app/prisma/seed.ts ./prisma/seed.ts
 
 # Create uploads directory
 RUN mkdir -p public/uploads && chown -R nuxt:nuxt public
