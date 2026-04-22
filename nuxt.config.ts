@@ -1,4 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+const publicSiteUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com'
+const sessionCookieSecureOverride = process.env.NUXT_SESSION_COOKIE_SECURE?.toLowerCase()
+const sessionCookieSecure =
+  sessionCookieSecureOverride === 'true'
+    ? true
+    : sessionCookieSecureOverride === 'false'
+      ? false
+      : process.env.NODE_ENV === 'production' && publicSiteUrl.startsWith('https://')
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
 
@@ -34,14 +43,20 @@ export default defineNuxtConfig({
 
   // ── Auth Session ──
   runtimeConfig: {
-    sessionPassword: process.env.NUXT_SESSION_PASSWORD || '',
+    session: {
+      password: process.env.NUXT_SESSION_PASSWORD || '',
+      cookie: {
+        sameSite: 'lax',
+        secure: sessionCookieSecure,
+      },
+    },
     databaseUrl: process.env.DATABASE_URL || '',
     redisUrl: process.env.REDIS_URL || '',
     recaptchaSecretKey: process.env.NUXT_RECAPTCHA_SECRET_KEY || '',
     adminSeedEmail: process.env.ADMIN_SEED_EMAIL || '',
     adminSeedPassword: process.env.ADMIN_SEED_PASSWORD || '',
     public: {
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com',
+      siteUrl: publicSiteUrl,
       siteName: process.env.NUXT_PUBLIC_SITE_NAME || 'Eternal Tower Saga',
       gtmId: process.env.NUXT_PUBLIC_GTM_ID || '',
       metaPixelId: process.env.NUXT_PUBLIC_META_PIXEL_ID || '',

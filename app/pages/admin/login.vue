@@ -25,13 +25,24 @@
 </template>
 <script setup lang="ts">
 definePageMeta({ layout: false })
+const route = useRoute()
+const { fetch: fetchUserSession } = useUserSession()
 const form = reactive({ email: '', password: '' })
 const loading = ref(false); const error = ref('')
+
+function getRedirectTarget() {
+  const redirect = route.query.redirect
+  if (typeof redirect !== 'string') return '/admin'
+  if (!redirect.startsWith('/admin') || redirect.startsWith('/admin/login')) return '/admin'
+  return redirect
+}
+
 async function handleLogin() {
   loading.value = true; error.value = ''
   try {
     await $fetch('/api/auth/login', { method: 'POST', body: form })
-    navigateTo('/admin')
+    await fetchUserSession()
+    await navigateTo(getRedirectTarget())
   } catch (e: unknown) { const err = e as { data?: { message?: string } }; error.value = err?.data?.message || 'Login failed' }
   finally { loading.value = false }
 }

@@ -47,6 +47,14 @@ test.describe('Admin Authentication', () => {
     await expect(heading).toBeVisible()
   })
 
+  test('should redirect unauthenticated admin pages to login', async ({ page }) => {
+    await page.goto('/admin/media', { waitUntil: 'domcontentloaded' })
+
+    await page.waitForURL(/\/admin\/login/, { timeout: 10_000 })
+    expect(page.url()).toContain('redirect=%2Fadmin%2Fmedia')
+    await expect(page.getByRole('heading', { name: /Admin Login/i })).toBeVisible()
+  })
+
   test('should login successfully with valid credentials', async ({ page }) => {
     test.skip(
       ADMIN_PASSWORD === 'change-me',
