@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { toDuplicateConflictError } from '../../../utils/prisma-errors'
+
 const featureSchema = z.object({
   key: z.string().min(1),
   titleEn: z.string().min(1),
@@ -22,7 +24,11 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Validation error', data: parsed.error.flatten() })
   }
 
-  const feature = await prisma.feature.create({ data: parsed.data })
-  await logActivity(event, 'CREATE', 'features', `Created feature: ${parsed.data.titleEn}`, String(feature.id))
-  return feature
+  try {
+    const feature = await prisma.feature.create({ data: parsed.data })
+    await logActivity(event, 'CREATE', 'features', `Created feature: ${parsed.data.titleEn}`, String(feature.id))
+    return feature
+  } catch (error) {
+    throw toDuplicateConflictError(error as { code?: string; meta?: { target?: string[] | string } }, { resource: 'Feature' }) ?? error
+  }
 })

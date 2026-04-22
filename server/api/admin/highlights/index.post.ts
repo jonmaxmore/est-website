@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { toDuplicateConflictError } from '../../../utils/prisma-errors'
+
 const highlightSchema = z.object({
   key: z.string().min(1),
   titleEn: z.string().min(1),
@@ -22,7 +24,11 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Validation error', data: parsed.error.flatten() })
   }
 
-  const highlight = await prisma.highlight.create({ data: parsed.data })
-  await logActivity(event, 'CREATE', 'highlights', `Created highlight: ${parsed.data.titleEn}`, String(highlight.id))
-  return highlight
+  try {
+    const highlight = await prisma.highlight.create({ data: parsed.data })
+    await logActivity(event, 'CREATE', 'highlights', `Created highlight: ${parsed.data.titleEn}`, String(highlight.id))
+    return highlight
+  } catch (error) {
+    throw toDuplicateConflictError(error as { code?: string; meta?: { target?: string[] | string } }, { resource: 'Highlight' }) ?? error
+  }
 })
