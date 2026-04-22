@@ -1,7 +1,19 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 
 const ADMIN_EMAIL = process.env.TEST_ADMIN_EMAIL || 'admin@eternaltowersaga.com'
 const ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD || 'change-me'
+
+async function fillLoginForm(page: Page, email: string, password: string) {
+  const emailInput = page.locator('input[type="email"]')
+  const passwordInput = page.locator('input[type="password"]')
+
+  await expect(async () => {
+    await emailInput.fill(email)
+    await passwordInput.fill(password)
+    await expect(emailInput).toHaveValue(email, { timeout: 1_000 })
+    await expect(passwordInput).toHaveValue(password, { timeout: 1_000 })
+  }).toPass({ timeout: 10_000 })
+}
 
 test.describe('Admin Authentication', () => {
   test('should render the admin login page', async ({ page }) => {
@@ -21,10 +33,9 @@ test.describe('Admin Authentication', () => {
   })
 
   test('should show error for invalid credentials', async ({ page }) => {
-    await page.goto('/admin/login', { waitUntil: 'domcontentloaded' })
+    await page.goto('/admin/login', { waitUntil: 'networkidle' })
 
-    await page.locator('input[type="email"]').fill('wrong@example.com')
-    await page.locator('input[type="password"]').fill('wrong-password')
+    await fillLoginForm(page, 'wrong@example.com', 'wrong-password')
     await page.getByRole('button', { name: /Sign In/i }).click()
 
     const errorMsg = page.locator('.text-red-400')
@@ -33,7 +44,7 @@ test.describe('Admin Authentication', () => {
 
   test('should protect admin dashboard from unauthenticated access', async ({ page }) => {
     // Go to admin login directly — this is the entry point for unauthenticated users
-    await page.goto('/admin/login', { waitUntil: 'domcontentloaded' })
+    await page.goto('/admin/login', { waitUntil: 'networkidle' })
 
     // The login page should be accessible and render a login form
     const passwordField = page.locator('input[type="password"]')
@@ -63,8 +74,7 @@ test.describe('Admin Authentication', () => {
 
     await page.goto('/admin/login', { waitUntil: 'domcontentloaded' })
 
-    await page.locator('input[type="email"]').fill(ADMIN_EMAIL)
-    await page.locator('input[type="password"]').fill(ADMIN_PASSWORD)
+    await fillLoginForm(page, ADMIN_EMAIL, ADMIN_PASSWORD)
     await page.getByRole('button', { name: /Sign In/i }).click()
 
     await page.waitForURL(/\/admin(?!\/login)/, { timeout: 10_000 })
