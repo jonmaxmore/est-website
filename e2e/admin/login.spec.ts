@@ -51,7 +51,7 @@ test.describe('Admin Authentication', () => {
     await page.goto('/admin/media', { waitUntil: 'domcontentloaded' })
 
     await page.waitForURL(/\/admin\/login/, { timeout: 10_000 })
-    expect(page.url()).toContain('redirect=%2Fadmin%2Fmedia')
+    expect(new URL(page.url()).searchParams.get('redirect')).toBe('/admin/media')
     await expect(page.getByRole('heading', { name: /Admin Login/i })).toBeVisible()
   })
 
