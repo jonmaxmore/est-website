@@ -312,10 +312,15 @@ async function uploadFiles(fileList: FileList | File[]) {
 
   for (let index = 0; index < valid.length; index += 1) {
     const queueItem = newItems[index]
+    const file = valid[index]
+
+    if (!queueItem || !file) {
+      continue
+    }
 
     try {
       queueItem.status = 'uploading'
-      await uploadFile(valid[index], (percent) => {
+      await uploadFile(file, (percent) => {
         queueItem.progress = percent
       })
       queueItem.status = 'done'
@@ -412,7 +417,7 @@ async function doBulkDelete() {
     try {
       await $fetch(`/api/admin/media/${id}`, { method: 'DELETE' })
     } catch {
-      showToast('Some assets could not be deleted', 'warning')
+      showToast('Some assets could not be deleted', 'error')
     }
   }
 

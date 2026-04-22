@@ -203,11 +203,46 @@ async function main() {
     { key: 'download', titleEn: 'Download', titleTh: 'ดาวน์โหลด', icon: '📥' },
   ]
 
+  const pageContentMeta: Record<string, { description: string; icon: string; showInHeader?: boolean; showInFooter?: boolean; headerOrder?: number; footerOrder?: number }> = {
+    faq: { description: 'Frequently asked questions', icon: 'i-lucide-help-circle', showInFooter: true, footerOrder: 1 },
+    terms: { description: 'Terms and conditions', icon: 'i-lucide-file-text', showInFooter: true, footerOrder: 2 },
+    privacy: { description: 'Privacy and data policy', icon: 'i-lucide-shield', showInFooter: true, footerOrder: 3 },
+    support: { description: 'Customer support page', icon: 'i-lucide-headphones', showInHeader: true, headerOrder: 5 },
+    story: { description: 'Game story and lore', icon: 'i-lucide-book-open' },
+    'game-guide': { description: 'Game guide and tutorials', icon: 'i-lucide-map', showInHeader: true, headerOrder: 4 },
+    gallery: { description: 'Screenshots and artwork', icon: 'i-lucide-image' },
+    download: { description: 'Download links', icon: 'i-lucide-download' },
+  }
+
   for (const pc of pageContents) {
+    const meta = pageContentMeta[pc.key] || { description: '', icon: pc.icon || '' }
+
     await prisma.pageContent.upsert({
       where: { key: pc.key },
-      update: pc,
-      create: pc,
+      update: {
+        ...pc,
+        slug: pc.key,
+        description: meta.description,
+        template: 'default',
+        icon: meta.icon,
+        showInHeader: meta.showInHeader || false,
+        showInFooter: meta.showInFooter || false,
+        headerOrder: meta.headerOrder || 0,
+        footerOrder: meta.footerOrder || 0,
+        isSystemPage: true,
+      },
+      create: {
+        ...pc,
+        slug: pc.key,
+        description: meta.description,
+        template: 'default',
+        icon: meta.icon,
+        showInHeader: meta.showInHeader || false,
+        showInFooter: meta.showInFooter || false,
+        headerOrder: meta.headerOrder || 0,
+        footerOrder: meta.footerOrder || 0,
+        isSystemPage: true,
+      },
     })
   }
   console.log(`  ✅ ${pageContents.length} page contents seeded`)

@@ -2,7 +2,7 @@
   <div>
     <div class="mb-6">
       <h2 class="text-2xl font-bold">Pages</h2>
-      <p class="mt-1 text-sm text-white/50">Manage static pages content (FAQ, Terms, Privacy, etc.)</p>
+      <p class="mt-1 text-sm text-white/50">Manage system and custom pages from the shared CMS page registry.</p>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -10,7 +10,7 @@
         class="group cursor-pointer rounded-2xl border border-white/6 bg-white/4 p-6 transition-all duration-300 hover:border-gold/20 hover:bg-white/6"
         @click="editPage(page)">
         <div class="mb-3"><UIcon :name="page.icon" class="w-8 h-8 text-[#d4a843]" /></div>
-        <h3 class="mb-1 text-lg font-bold">{{ page.title }}</h3>
+        <h3 class="mb-1 text-lg font-bold">{{ page.titleEn }}</h3>
         <p class="text-sm text-white/50">{{ page.description }}</p>
         <div class="mt-4 flex items-center justify-between">
           <AdminStatusBadge :status="page.status" />
@@ -20,7 +20,7 @@
     </div>
 
     <!-- Editor Modal -->
-    <UModal v-model:open="editorOpen" :title="`Edit: ${editing?.title || ''}`" class="sm:max-w-4xl">
+    <UModal v-model:open="editorOpen" :title="`Edit: ${editing?.titleEn || ''}`" class="sm:max-w-4xl">
       <template #body>
         <div class="flex flex-col gap-4 p-1">
           <!-- SEO -->
@@ -71,34 +71,49 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 
-const pages = ref([
-  { key: 'faq', title: 'FAQ', icon: 'i-lucide-help-circle', description: 'Frequently asked questions', route: '/faq', status: 'PUBLISHED' },
-  { key: 'terms', title: 'Terms of Service', icon: 'i-lucide-file-text', description: 'Terms and conditions', route: '/terms', status: 'PUBLISHED' },
-  { key: 'privacy', title: 'Privacy Policy', icon: 'i-lucide-shield', description: 'Privacy and data policy', route: '/privacy', status: 'PUBLISHED' },
-  { key: 'support', title: 'Support', icon: 'i-lucide-headphones', description: 'Customer support page', route: '/support', status: 'PUBLISHED' },
-  { key: 'story', title: 'Story', icon: 'i-lucide-book-open', description: 'Game story and lore', route: '/story', status: 'PUBLISHED' },
-  { key: 'game-guide', title: 'Game Guide', icon: 'i-lucide-map', description: 'Game guide and tutorials', route: '/game-guide', status: 'PUBLISHED' },
-  { key: 'gallery', title: 'Gallery', icon: 'i-lucide-image', description: 'Screenshots and artwork', route: '/gallery', status: 'PUBLISHED' },
-  { key: 'download', title: 'Download', icon: 'i-lucide-download', description: 'Download links', route: '/download', status: 'PUBLISHED' },
-])
+interface AdminPageItem {
+  key: string
+  slug?: string | null
+  titleEn: string
+  titleTh: string
+  description: string
+  icon: string
+  route: string
+  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED'
+}
 
-const editing = ref<typeof pages.value[0] | null>(null)
+const pages = ref<AdminPageItem[]>([])
+const editing = ref<AdminPageItem | null>(null)
 const editorOpen = ref(false)
 const saving = ref(false)
 const editForm = reactive({ seoTitle: '', seoTitleTh: '', seoDesc: '', seoDescTh: '', content: '', contentTh: '' })
 const { toast, showToast } = useAdminToast()
 
-async function editPage(page: typeof pages.value[0]) {
+async function loadPages() {
+  try {
+    const data = await $fetch<AdminPageItem[]>('/api/admin/pages')
+    pages.value = data.map((page) => ({
+      ...page,
+      description: page.description || '',
+      icon: page.icon || 'i-lucide-file-text',
+    }))
+  } catch {
+    pages.value = []
+    showToast('Failed to load pages', 'error')
+  }
+}
+
+async function editPage(page: AdminPageItem) {
   editing.value = page
   try {
     const data = await $fetch<Record<string, string>>(`/api/admin/pages/${page.key}`)
     Object.assign(editForm, {
-      seoTitle: data.seoTitle || page.title, seoTitleTh: data.seoTitleTh || '',
+      seoTitle: data.seoTitle || page.titleEn, seoTitleTh: data.seoTitleTh || '',
       seoDesc: data.seoDesc || '', seoDescTh: data.seoDescTh || '',
       content: data.content || '', contentTh: data.contentTh || '',
     })
   } catch {
-    Object.assign(editForm, { seoTitle: page.title, seoTitleTh: '', seoDesc: '', seoDescTh: '', content: '', contentTh: '' })
+    Object.assign(editForm, { seoTitle: page.titleEn, seoTitleTh: '', seoDesc: '', seoDescTh: '', content: '', contentTh: '' })
   }
   editorOpen.value = true
 }
@@ -114,8 +129,11 @@ async function savePage() {
   saving.value = true
   try {
     await $fetch(`/api/admin/pages/${editing.value.key}`, { method: 'PUT', body: editForm })
+    await loadPages()
     editorOpen.value = false; showToast('Page saved!')
   } catch { showToast('Failed to save page', 'error') }
   finally { saving.value = false }
 }
+
+await loadPages()
 </script>

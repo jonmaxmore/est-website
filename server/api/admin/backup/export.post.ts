@@ -32,11 +32,10 @@ export default defineEventHandler(async (event) => {
     result.highlights = await prisma.highlight.findMany()
   }
   if (body.pages) {
-    // Pages are stored in SiteConfig with page_ prefix
-    const pageConfigs = await prisma.siteConfig.findMany({
-      where: { key: { startsWith: 'page_' } },
+    const pages = await prisma.pageContent.findMany({
+      orderBy: [{ isSystemPage: 'desc' }, { updatedAt: 'desc' }],
     })
-    result.pages = pageConfigs
+    result.pages = pages
   }
   if (body.media) {
     result.media = await prisma.mediaAsset.findMany()
