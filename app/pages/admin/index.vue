@@ -188,11 +188,11 @@ const { data: stats } = await useFetch<Stats>('/api/admin/stats', {
 const todayFormatted = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 
 const quickActions = [
-  { icon: 'i-lucide-newspaper', label: 'New Article', to: '/admin/news' },
+  { icon: 'i-lucide-file-plus', label: 'New CMS Page', to: '/admin/pages' },
   { icon: 'i-lucide-upload', label: 'Upload Media', to: '/admin/media' },
-  { icon: 'i-lucide-sparkles', label: 'Add Feature', to: '/admin/features' },
-  { icon: 'i-lucide-swords', label: 'Edit Weapons', to: '/admin/weapons' },
+  { icon: 'i-lucide-menu', label: 'Manage Menus', to: '/admin/menus' },
   { icon: 'i-lucide-home', label: 'Edit Homepage', to: '/admin/homepage' },
+  { icon: 'i-lucide-newspaper', label: 'News Workflow', to: '/admin/news' },
   { icon: 'i-lucide-external-link', label: 'View Site', to: '/' },
 ]
 

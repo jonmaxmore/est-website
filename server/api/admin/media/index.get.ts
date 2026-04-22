@@ -1,6 +1,6 @@
-/** Admin — list all media assets */
+/** Admin - list all media assets */
 export default defineEventHandler(async () => {
   return prisma.mediaAsset.findMany({
-    orderBy: { createdAt: 'desc' },
+    orderBy: [{ createdAt: 'desc' }, { originalName: 'asc' }],
   })
 })

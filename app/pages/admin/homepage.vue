@@ -60,15 +60,7 @@
           <div class="mb-4">
             <label class="mb-1 block text-sm font-medium text-white/60">Section Type</label>
             <select v-model="editingSection.type" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50">
-              <option value="hero">Hero Banner</option>
-              <option value="weapons">Weapons / Class Selector</option>
-              <option value="features">Game Features</option>
-              <option value="highlights">Highlights</option>
-              <option value="news">News</option>
-              <option value="cta">Call to Action</option>
-              <option value="custom_html">Custom HTML</option>
-              <option value="gallery">Gallery</option>
-              <option value="video">Video</option>
+              <option v-for="option in sectionTypeOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
             </select>
           </div>
 
@@ -79,18 +71,6 @@
             <div v-if="editingSection.background" class="mt-2 h-24 overflow-hidden rounded-lg border border-white/10">
               <img :src="editingSection.background" class="h-full w-full object-cover" />
             </div>
-          </div>
-
-          <!-- Custom HTML Config -->
-          <div v-if="editingSection.type === 'custom_html'" class="mb-4">
-            <label class="mb-1 block text-sm font-medium text-white/60">Custom HTML Content</label>
-            <textarea v-model="editingSection.config.html" rows="8" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-3 text-sm text-white font-mono outline-none focus:border-gold/50" />
-          </div>
-
-          <!-- Video Config -->
-          <div v-if="editingSection.type === 'video'" class="mb-4">
-            <label class="mb-1 block text-sm font-medium text-white/60">YouTube URL</label>
-            <input v-model="editingSection.config.videoUrl" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="https://youtube.com/watch?v=..." />
           </div>
 
           <div class="mb-4 flex items-center gap-3">
@@ -111,11 +91,13 @@
 </template>
 
 <script setup lang="ts">
+import { SUPPORTED_HOMEPAGE_SECTION_TYPES } from '../../shared/cms/homepage'
+
 definePageMeta({ layout: 'admin' })
 
 interface SectionConfig { id: string; type: string; visible: boolean; order: number; background: string; config: Record<string, any> }
 
-const defaultTypes = ['hero', 'weapons', 'features', 'highlights', 'news', 'cta']
+const defaultTypes = [...SUPPORTED_HOMEPAGE_SECTION_TYPES]
 const defaultSections: SectionConfig[] = [
   { id: 'hero', type: 'hero', visible: true, order: 0, background: '/images/hero-bg.webp', config: {} },
   { id: 'weapons', type: 'weapons', visible: true, order: 1, background: '', config: {} },
@@ -127,13 +109,21 @@ const defaultSections: SectionConfig[] = [
 
 const sections = ref<SectionConfig[]>([...defaultSections])
 const editingSection = ref<SectionConfig | null>(null)
+const sectionTypeOptions = [
+  { value: 'hero', label: 'Hero Banner' },
+  { value: 'weapons', label: 'Weapons / Class Selector' },
+  { value: 'features', label: 'Game Features' },
+  { value: 'highlights', label: 'Highlights' },
+  { value: 'news', label: 'News' },
+  { value: 'cta', label: 'Call to Action' },
+]
 
 function sectionIcon(type: string) {
-  const icons: Record<string, string> = { hero: 'i-lucide-home', weapons: 'i-lucide-swords', features: 'i-lucide-sparkles', highlights: 'i-lucide-flame', news: 'i-lucide-newspaper', cta: 'i-lucide-target', custom_html: 'i-lucide-code', gallery: 'i-lucide-image', video: 'i-lucide-film' }
+  const icons: Record<string, string> = { hero: 'i-lucide-home', weapons: 'i-lucide-swords', features: 'i-lucide-sparkles', highlights: 'i-lucide-flame', news: 'i-lucide-newspaper', cta: 'i-lucide-target' }
   return icons[type] || 'i-lucide-box'
 }
 function sectionLabel(type: string) {
-  const labels: Record<string, string> = { hero: 'Hero Banner', weapons: 'Weapons / Classes', features: 'Game Features', highlights: 'Highlights', news: 'Latest News', cta: 'Call to Action', custom_html: 'Custom HTML', gallery: 'Gallery', video: 'Video' }
+  const labels: Record<string, string> = { hero: 'Hero Banner', weapons: 'Weapons / Classes', features: 'Game Features', highlights: 'Highlights', news: 'Latest News', cta: 'Call to Action' }
   return labels[type] || type
 }
 
@@ -154,7 +144,7 @@ function moveDown(index: number) {
 function editSection(section: SectionConfig) { editingSection.value = section }
 function removeSection(index: number) { sections.value.splice(index, 1); sections.value.forEach((s, i) => s.order = i) }
 function addSection() {
-  sections.value.push({ id: `section_${Date.now()}`, type: 'custom_html', visible: true, order: sections.value.length, background: '', config: { html: '' } })
+  sections.value.push({ id: `section_${Date.now()}`, type: 'cta', visible: true, order: sections.value.length, background: '', config: {} })
 }
 
 async function saveSections() {
