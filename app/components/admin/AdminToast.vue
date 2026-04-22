@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   toast: { show: boolean; message: string; type: 'success' | 'error' | 'info' | 'warning' }
 }>()
 
@@ -47,8 +47,15 @@ function getIcon(type: string) {
   return icons[type] || ''
 }
 
-// Watch prop for backward compatibility
-watch(() => defineProps, () => {}, { immediate: false })
+watch(
+  () => props.toast,
+  (toast) => {
+    if (toast?.show && toast.message) {
+      addToast(toast.message, toast.type)
+    }
+  },
+  { deep: true },
+)
 
 defineExpose({ addToast, dismiss })
 </script>

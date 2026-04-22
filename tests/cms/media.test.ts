@@ -5,7 +5,9 @@ import {
   ALLOWED_MEDIA_MIME_TYPES,
   MAX_MEDIA_UPLOAD_BYTES,
   buildMediaUploadError,
+  isAllowedMediaExtension,
   isAllowedMediaMimeType,
+  isAllowedMediaUpload,
 } from '../../app/shared/cms/media'
 
 describe('media helpers', () => {
@@ -17,6 +19,12 @@ describe('media helpers', () => {
 
   it('rejects unsupported mime types', () => {
     assert.equal(isAllowedMediaMimeType('application/pdf'), false)
+  })
+
+  it('accepts supported file extensions when mime types are missing', () => {
+    assert.equal(isAllowedMediaExtension('hero-banner.webp'), true)
+    assert.equal(isAllowedMediaExtension('document.pdf'), false)
+    assert.equal(isAllowedMediaUpload('hero-banner.webp', ''), true)
   })
 
   it('uses a single shared upload limit', () => {

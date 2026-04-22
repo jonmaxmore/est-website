@@ -22,6 +22,23 @@ export function isAllowedMediaMimeType(mimeType: string) {
   return (ALLOWED_MEDIA_MIME_TYPES as readonly string[]).includes(mimeType)
 }
 
+export function isAllowedMediaExtension(fileName: string) {
+  const parts = fileName.toLowerCase().split('.')
+  if (parts.length < 2) {
+    return false
+  }
+
+  return (ALLOWED_MEDIA_EXTENSIONS as readonly string[]).includes(`.${parts[parts.length - 1]}`)
+}
+
+export function isAllowedMediaUpload(fileName: string, mimeType?: string | null) {
+  if (mimeType && isAllowedMediaMimeType(mimeType)) {
+    return true
+  }
+
+  return isAllowedMediaExtension(fileName)
+}
+
 export function buildMediaUploadError(code: MediaUploadErrorCode, message: string, field?: string) {
   return field ? { code, message, field } : { code, message }
 }

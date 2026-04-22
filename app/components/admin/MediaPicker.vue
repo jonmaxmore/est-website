@@ -4,24 +4,26 @@
     <div class="mp-preview-row">
       <div v-if="modelValue" class="mp-thumb" @click="openModal">
         <img :src="modelValue" :alt="label || 'Selected image'" />
-        <button type="button" class="mp-clear" title="Remove" @click.stop="emit('update:modelValue', '')">✕</button>
+        <button type="button" class="mp-clear" title="Remove" @click.stop="emit('update:modelValue', '')">
+          <UIcon name="i-lucide-x" class="h-3 w-3" />
+        </button>
       </div>
       <button type="button" class="mp-browse-btn" @click="openModal">
         {{ modelValue ? 'Change' : 'Browse Media' }}
       </button>
     </div>
 
-    <!-- Modal -->
     <Teleport to="body">
       <Transition name="mp-fade">
-        <div v-if="modalOpen" class="mp-overlay" @click.self="modalOpen = false">
+        <div v-if="modalOpen" class="mp-overlay" @click.self="closeModal">
           <div class="mp-modal">
             <div class="mp-modal-header">
               <h3>Select Media</h3>
-              <button type="button" class="mp-close" @click="modalOpen = false">✕</button>
+              <button type="button" class="mp-close" @click="closeModal">
+                <UIcon name="i-lucide-x" class="h-4 w-4" />
+              </button>
             </div>
 
-            <!-- Upload Zone -->
             <div
               class="mp-upload-zone"
               :class="{ dragover: dragActive }"
@@ -37,12 +39,10 @@
               <input id="mp-file-input" type="file" accept="image/*" class="mp-hidden" @change="handleFileSelect" />
             </div>
 
-            <!-- Search -->
             <div class="mp-search">
               <input v-model="searchQuery" placeholder="Search media..." class="mp-search-input" />
             </div>
 
-            <!-- Grid -->
             <div class="mp-grid">
               <div
                 v-for="asset in filteredAssets"
@@ -51,26 +51,22 @@
                 :class="{ selected: selectedUrl === asset.url }"
                 @click="selectedUrl = asset.url"
               >
-                <img :src="asset.thumbnailUrl || asset.url" :alt="asset.originalName" loading="lazy" />
+                <img :src="asset.thumbnailUrl || asset.url" :alt="asset.altText || asset.originalName" loading="lazy" />
                 <div class="mp-item-name">{{ asset.originalName }}</div>
-                <div v-if="selectedUrl === asset.url" class="mp-check">✓</div>
+                <div v-if="selectedUrl === asset.url" class="mp-check">
+                  <UIcon name="i-lucide-check" class="h-3 w-3" />
+                </div>
               </div>
               <div v-if="filteredAssets.length === 0 && !loading" class="mp-empty">
                 No media found. Upload files above.
               </div>
             </div>
 
-            <!-- Footer -->
             <div class="mp-modal-footer">
               <span class="mp-count">{{ filteredAssets.length }} items</span>
               <div class="mp-actions">
-                <button type="button" class="mp-btn-ghost" @click="modalOpen = false">Cancel</button>
-                <button
-                  type="button"
-                  class="mp-btn-primary"
-                  :disabled="!selectedUrl"
-                  @click="confirmSelection"
-                >
+                <button type="button" class="mp-btn-ghost" @click="closeModal">Cancel</button>
+                <button type="button" class="mp-btn-primary" :disabled="!selectedUrl" @click="confirmSelection">
                   Select
                 </button>
               </div>
@@ -83,21 +79,30 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  modelValue: string
+interface MediaAssetItem {
+  id: string
+  filename: string
+  originalName: string
+  mimeType: string
+  sizeBytes: number
+  altText?: string | null
+  url: string
+  thumbnailUrl?: string | null
+  createdAt: string
+}
+
+const props = withDefaults(defineProps<{
+  modelValue?: string
   label?: string
-}>()
+}>(), {
+  modelValue: '',
+})
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
   select: [url: string]
   close: []
 }>()
-
-interface MediaAssetItem {
-  id: string; filename: string; originalName: string; mimeType: string
-  sizeBytes: number; url: string; thumbnailUrl?: string | null; createdAt: string
-}
 
 const modalOpen = ref(false)
 const assets = ref<MediaAssetItem[]>([])
@@ -108,62 +113,89 @@ const uploading = ref(false)
 const uploadProgress = ref('')
 const loading = ref(false)
 
+const { showToast } = useAdminToast()
+const { uploadFile } = useAdminMediaUpload()
+
 const filteredAssets = computed(() => {
-  const q = searchQuery.value.toLowerCase()
-  const imgs = assets.value.filter((a) => a.mimeType.startsWith('image/'))
-  if (!q) return imgs
-  return imgs.filter((a) => a.originalName.toLowerCase().includes(q))
+  const query = searchQuery.value.toLowerCase()
+  const images = assets.value.filter((asset) => asset.mimeType.startsWith('image/'))
+
+  if (!query) {
+    return images
+  }
+
+  return images.filter((asset) => asset.originalName.toLowerCase().includes(query))
 })
 
 async function loadAssets() {
   loading.value = true
+
   try {
     assets.value = await $fetch<MediaAssetItem[]>('/api/admin/media')
-  } catch (err: any) {
-    console.error('[MediaPicker] Failed to load assets:', err?.data?.message || err?.message)
+  } catch (error: any) {
     assets.value = []
+    showToast(error?.data?.message || error?.message || 'Failed to load media library', 'error')
+  } finally {
+    loading.value = false
   }
-  finally { loading.value = false }
 }
 
-function openModal() {
+async function openModal() {
   selectedUrl.value = props.modelValue || ''
   modalOpen.value = true
-  loadAssets()
+  await loadAssets()
+}
+
+function closeModal() {
+  modalOpen.value = false
+  emit('close')
 }
 
 function confirmSelection() {
   emit('update:modelValue', selectedUrl.value)
   emit('select', selectedUrl.value)
-  modalOpen.value = false
+  closeModal()
 }
 
 async function uploadFiles(files: FileList | File[]) {
-  if (!files || files.length === 0) return
+  const fileList = Array.from(files || [])
+  if (!fileList.length) {
+    return
+  }
+
   uploading.value = true
-  uploadProgress.value = `0/${files.length}`
-  const formData = new FormData()
-  for (let i = 0; i < files.length; i++) {
-    formData.append('file', files[i])
-    uploadProgress.value = `${i + 1}/${files.length}`
-  }
+  uploadProgress.value = `0/${fileList.length}`
+
   try {
-    await $fetch('/api/admin/media/upload', { method: 'POST', body: formData })
+    for (let index = 0; index < fileList.length; index += 1) {
+      uploadProgress.value = `${index + 1}/${fileList.length}`
+      await uploadFile(fileList[index])
+    }
+
     await loadAssets()
-  } catch (err: any) {
-    console.error('[MediaPicker] Upload failed:', err?.data?.message || err?.message)
+    showToast(`Uploaded ${fileList.length} file(s) successfully`)
+  } catch (error: any) {
+    showToast(error?.message || error?.data?.message || 'Upload failed', 'error')
+  } finally {
+    uploading.value = false
+    uploadProgress.value = ''
   }
-  finally { uploading.value = false; uploadProgress.value = '' }
 }
 
-function handleDrop(e: DragEvent) {
+function handleDrop(event: DragEvent) {
   dragActive.value = false
-  if (e.dataTransfer?.files) uploadFiles(e.dataTransfer.files)
+  if (event.dataTransfer?.files) {
+    uploadFiles(event.dataTransfer.files)
+  }
 }
 
-function handleFileSelect(e: Event) {
-  const files = (e.target as HTMLInputElement).files
-  if (files) uploadFiles(files)
+function handleFileSelect(event: Event) {
+  const input = event.target as HTMLInputElement
+  if (input.files) {
+    uploadFiles(input.files)
+  }
+
+  input.value = ''
 }
 </script>
 
@@ -229,8 +261,6 @@ function handleFileSelect(e: Event) {
   color: #d4a843;
   background: rgba(212, 168, 67, 0.05);
 }
-
-/* Modal */
 .mp-overlay {
   position: fixed;
   inset: 0;
@@ -280,8 +310,6 @@ function handleFileSelect(e: Event) {
   transition: all 0.15s;
 }
 .mp-close:hover { background: rgba(255, 255, 255, 0.06); color: white; }
-
-/* Upload & Search */
 .mp-upload-zone {
   margin: 12px 20px 0;
   padding: 20px;
@@ -310,8 +338,6 @@ function handleFileSelect(e: Event) {
   outline: none;
 }
 .mp-search-input:focus { border-color: rgba(212, 168, 67, 0.4); }
-
-/* Grid */
 .mp-grid {
   flex: 1;
   overflow-y: auto;
@@ -349,9 +375,9 @@ function handleFileSelect(e: Event) {
   position: absolute;
   top: 4px;
   right: 4px;
-  width: 20px;
+  min-width: 24px;
   height: 20px;
-  border-radius: 50%;
+  border-radius: 999px;
   background: #d4a843;
   color: black;
   font-size: 0.625rem;
@@ -359,6 +385,7 @@ function handleFileSelect(e: Event) {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 6px;
 }
 .mp-empty {
   grid-column: 1 / -1;
@@ -367,8 +394,6 @@ function handleFileSelect(e: Event) {
   color: rgba(255, 255, 255, 0.25);
   font-size: 0.875rem;
 }
-
-/* Footer */
 .mp-modal-footer {
   display: flex;
   align-items: center;
@@ -402,8 +427,6 @@ function handleFileSelect(e: Event) {
 }
 .mp-btn-primary:hover { filter: brightness(1.1); }
 .mp-btn-primary:disabled { opacity: 0.4; cursor: default; filter: none; }
-
-/* Transition */
 .mp-fade-enter-active, .mp-fade-leave-active { transition: opacity 0.2s; }
 .mp-fade-enter-from, .mp-fade-leave-to { opacity: 0; }
 </style>
