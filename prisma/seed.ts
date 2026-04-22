@@ -203,15 +203,51 @@ async function main() {
     { key: 'download', titleEn: 'Download', titleTh: 'ดาวน์โหลด', icon: '📥' },
   ]
 
-  const pageContentMeta: Record<string, { description: string; icon: string; showInHeader?: boolean; showInFooter?: boolean; headerOrder?: number; footerOrder?: number }> = {
+  const pageContentMeta: Record<string, { description: string; icon: string; contentEn?: string; contentTh?: string; showInHeader?: boolean; showInFooter?: boolean; headerOrder?: number; footerOrder?: number }> = {
     faq: { description: 'Frequently asked questions', icon: 'i-lucide-help-circle', showInFooter: true, footerOrder: 1 },
-    terms: { description: 'Terms and conditions', icon: 'i-lucide-file-text', showInFooter: true, footerOrder: 2 },
-    privacy: { description: 'Privacy and data policy', icon: 'i-lucide-shield', showInFooter: true, footerOrder: 3 },
-    support: { description: 'Customer support page', icon: 'i-lucide-headphones', showInHeader: true, headerOrder: 5 },
-    story: { description: 'Game story and lore', icon: 'i-lucide-book-open' },
-    'game-guide': { description: 'Game guide and tutorials', icon: 'i-lucide-map', showInHeader: true, headerOrder: 4 },
-    gallery: { description: 'Screenshots and artwork', icon: 'i-lucide-image' },
-    download: { description: 'Download links', icon: 'i-lucide-download' },
+    terms: {
+      description: 'Terms and conditions',
+      icon: 'i-lucide-file-text',
+      contentEn: `<p>Last updated: April 2026</p><h2>1. Acceptance of Terms</h2><p>By accessing or using Eternal Tower Saga, you agree to be bound by these Terms of Service.</p><h2>2. Account Registration</h2><p>You must provide accurate and complete information during registration. You are responsible for maintaining the security of your account.</p><h2>3. Prohibited Conduct</h2><p>Users may not engage in cheating, hacking, harassment, or any activity that disrupts the game experience.</p><h2>4. Virtual Items</h2><p>Virtual items are licensed, not sold. We may modify or remove virtual items at any time.</p><h2>5. Limitation of Liability</h2><p>The game is provided as is without warranties. We are not liable for damages arising from use of the game.</p><h2>6. Changes to Terms</h2><p>We reserve the right to update these terms at any time. Continued use constitutes acceptance of the updated terms.</p>`,
+      showInFooter: true,
+      footerOrder: 2,
+    },
+    privacy: {
+      description: 'Privacy and data policy',
+      icon: 'i-lucide-shield',
+      contentEn: `<p>Last updated: April 2026</p><h2>1. Information We Collect</h2><p>We collect email addresses, platform preferences, and usage analytics to improve the game experience.</p><h2>2. How We Use Your Data</h2><p>Your data is used for account management, game improvements, and marketing communications where you opt in.</p><h2>3. Data Sharing</h2><p>We do not sell personal data. Data may be shared with analytics providers under strict data processing agreements.</p><h2>4. Data Retention</h2><p>Personal data is retained for the duration of your account. You may request deletion at any time.</p><h2>5. Your Rights</h2><p>Under applicable privacy laws, you can request access, correction, and deletion of your personal data.</p><h2>6. Contact</h2><p>For privacy inquiries, email <a href="mailto:privacy@eternaltowersaga.com">privacy@eternaltowersaga.com</a>.</p>`,
+      showInFooter: true,
+      footerOrder: 3,
+    },
+    support: {
+      description: 'Customer support page',
+      icon: 'i-lucide-headphones',
+      contentEn: `<p>Need help with Eternal Tower Saga? Reach out to our support team and community channels below.</p><h2>Email Support</h2><p>Send us a message and our team will respond within 24 hours at <a href="mailto:support@eternaltowersaga.com">support@eternaltowersaga.com</a>.</p><h2>Discord Community</h2><p>Join our official community server for announcements, live help, and feedback: <a href="https://discord.gg/eternaltowersaga" target="_blank" rel="noreferrer">discord.gg/eternaltowersaga</a>.</p><h2>Frequently Asked Questions</h2><p>Looking for common answers first? Visit the <a href="/faq">FAQ page</a>.</p>`,
+      showInHeader: true,
+      headerOrder: 5,
+    },
+    story: {
+      description: 'Game story and lore',
+      icon: 'i-lucide-book-open',
+      contentEn: `<p>In a world where the skies are scarred by a tower that stretches beyond the clouds, civilizations rise and fall in its shadow. The Eternal Tower promises limitless power to those who reach its summit.</p><p>For centuries, warriors, mages, and rogues have attempted the climb. None have returned from the upper floors. Legends speak of a guardian at the apex who destroys all who approach.</p><p>But a new age of heroes has dawned. As a mercenary chosen by fate, you must gather allies, forge legendary weapons, and uncover the truth hidden within the tower's walls.</p><p>The question is not whether you can reach the top. It is whether you are prepared for what awaits.</p><p><a href="/event">Begin your journey</a></p>`,
+    },
+    'game-guide': {
+      description: 'Game guide and tutorials',
+      icon: 'i-lucide-map',
+      contentEn: `<h2>Combat System</h2><ul><li><strong>Weapon Types:</strong> Choose from Sword, Bow, Wand, and Axe. Each offers a distinct skill tree.</li><li><strong>Combo Timing:</strong> Chain skills together for stronger burst damage and crowd control.</li><li><strong>Elemental Advantage:</strong> Fire, Ice, Lightning, and Nature create matchup advantages in key encounters.</li></ul><h2>Tower System</h2><ul><li><strong>Infinite Floors:</strong> The Eternal Tower grows harder with every climb.</li><li><strong>Weekly Reset:</strong> Rankings reset weekly and reward top climbers.</li><li><strong>Co-op Challenges:</strong> Tackle special floors with your party for better loot.</li></ul><h2>Guild System</h2><ul><li><strong>Guild Wars:</strong> Coordinate large scale battles for territory control.</li><li><strong>Guild Dungeons:</strong> Unlock exclusive PvE content with your team.</li><li><strong>Guild Missions:</strong> Complete weekly objectives to climb the rankings.</li></ul>`,
+      showInHeader: true,
+      headerOrder: 4,
+    },
+    gallery: {
+      description: 'Screenshots and artwork',
+      icon: 'i-lucide-image',
+      contentEn: `<p>Explore official screenshots and key art from Eternal Tower Saga.</p><p><img src="/images/hero-bg.webp" alt="Eternal Tower Saga world"></p><p><img src="/images/mercenary-companions.webp" alt="Mercenary companions"></p><p><img src="/images/characters/weapon-info-sword.png" alt="Sword warrior"></p><p><img src="/images/characters/weapon-info-bow.png" alt="Bow hunter"></p><p><img src="/images/characters/weapon-info-wand.png" alt="Wand mage"></p><p><img src="/images/characters/weapon-info-axe.png" alt="Axe berserker"></p>`,
+    },
+    download: {
+      description: 'Download links',
+      icon: 'i-lucide-download',
+      contentEn: `<p>Download Eternal Tower Saga on iOS, Android, and PC when the game launches.</p><p>The game is currently in pre-registration. Download links will be published here as soon as release begins.</p><p><a href="/event">Pre-register now</a></p>`,
+    },
   }
 
   for (const pc of pageContents) {
@@ -224,7 +260,12 @@ async function main() {
         slug: pc.key,
         description: meta.description,
         template: 'default',
+        seoTitle: pc.titleEn,
+        seoTitleTh: pc.titleTh,
+        seoDesc: meta.description,
         icon: meta.icon,
+        contentEn: meta.contentEn || '',
+        contentTh: meta.contentTh || '',
         showInHeader: meta.showInHeader || false,
         showInFooter: meta.showInFooter || false,
         headerOrder: meta.headerOrder || 0,
@@ -236,7 +277,12 @@ async function main() {
         slug: pc.key,
         description: meta.description,
         template: 'default',
+        seoTitle: pc.titleEn,
+        seoTitleTh: pc.titleTh,
+        seoDesc: meta.description,
         icon: meta.icon,
+        contentEn: meta.contentEn || '',
+        contentTh: meta.contentTh || '',
         showInHeader: meta.showInHeader || false,
         showInFooter: meta.showInFooter || false,
         headerOrder: meta.headerOrder || 0,
