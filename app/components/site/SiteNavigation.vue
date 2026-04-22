@@ -41,8 +41,11 @@
 
       <!-- Hamburger -->
       <button
-        class="z-51 flex h-11 w-11 cursor-pointer items-center justify-center border-none bg-none text-2xl text-white lg:hidden"
+        type="button"
+        class="mobile-menu-toggle z-51 flex h-11 w-11 cursor-pointer items-center justify-center border-none bg-none text-2xl text-white lg:hidden"
         :aria-label="mobileOpen ? 'Close menu' : 'Open menu'"
+        :aria-expanded="mobileOpen"
+        aria-controls="site-mobile-menu"
         @click="mobileOpen = !mobileOpen"
       >
         <span v-if="mobileOpen">✕</span>
@@ -53,6 +56,7 @@
     <!-- Mobile Overlay -->
     <Transition name="slide-down">
       <div
+        id="site-mobile-menu"
         v-if="mobileOpen"
         class="fixed inset-x-0 top-[72px] bottom-0 z-49 flex flex-col items-center gap-6 bg-black/95 px-6 pt-12 backdrop-blur-xl"
       >

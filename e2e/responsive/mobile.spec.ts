@@ -21,17 +21,11 @@ test.describe('Responsive / Mobile', () => {
     const nav = page.locator('nav, header')
     await expect(nav.first()).toBeVisible()
 
-    const menuButton = page.locator([
-      'button[aria-label*="menu" i]',
-      'button[aria-label*="Menu" i]',
-      '[class*="hamburger"]',
-      '[class*="mobile-menu"]',
-      'header button',
-      'nav button',
-    ].join(', '))
+    const menuButton = page.getByRole('button', { name: /open menu|close menu/i })
 
     const hasMenu = await menuButton.count()
     if (hasMenu > 0) {
+      await expect(menuButton.first()).toBeVisible()
       await menuButton.first().click()
       await page.waitForTimeout(500)
     }

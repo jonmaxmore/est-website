@@ -308,14 +308,22 @@ const countdown = ref([
 const targetDate = computed(() => new Date(eventConfig.value.targetDate || '2026-10-01T00:00:00+07:00'))
 
 function updateCountdown() {
-  const diff = Math.max(0, targetDate.value.getTime() - Date.now())
+  const targetTime = targetDate.value.getTime()
+  const diff = Number.isFinite(targetTime) ? Math.max(0, targetTime - Date.now()) : 0
   countdown.value[0].value = Math.floor(diff / (1000 * 60 * 60 * 24))
   countdown.value[1].value = Math.floor((diff / (1000 * 60 * 60)) % 24)
   countdown.value[2].value = Math.floor((diff / (1000 * 60)) % 60)
   countdown.value[3].value = Math.floor((diff / 1000) % 60)
 }
-updateCountdown()
-if (import.meta.client) setInterval(updateCountdown, 1000)
+
+let countdownTimer: ReturnType<typeof window.setInterval> | undefined
+onMounted(() => {
+  updateCountdown()
+  countdownTimer = window.setInterval(updateCountdown, 1000)
+})
+onBeforeUnmount(() => {
+  if (countdownTimer !== undefined) window.clearInterval(countdownTimer)
+})
 
 // --- Base Rewards ---
 const baseRewards = computed(() =>
