@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { toDuplicateConflictError } from '../../../utils/prisma-errors'
+
 const newsSchema = z.object({
   titleEn: z.string().min(1),
   titleTh: z.string().min(1),
@@ -29,12 +31,16 @@ export default defineEventHandler(async (event) => {
   }
 
   const data = parsed.data
-  const article = await prisma.newsArticle.create({
-    data: {
-      ...data,
-      publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
-    },
-  })
+  try {
+    const article = await prisma.newsArticle.create({
+      data: {
+        ...data,
+        publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
+      },
+    })
 
-  return article
+    return article
+  } catch (error) {
+    throw toDuplicateConflictError(error as { code?: string; meta?: { target?: string[] | string } }, { resource: 'News article' }) ?? error
+  }
 })
