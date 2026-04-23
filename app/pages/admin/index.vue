@@ -169,6 +169,13 @@ interface Stats {
     news: number; publishedNews: number; weapons: number; registrations: number
     features: number; highlights: number; media: number; todayPageViews: number
   }
+  webzineSummary: {
+    liveBanners: number
+    scheduledBanners: number
+    draftArticles: number
+    articlesMissingTopic: number
+    articlesMissingFeaturedImage: number
+  }
   platformStats: Array<{ platform: string; count: number }>
   regionStats: Array<{ region: string; count: number }>
   dailyRegistrations: Array<{ date: string; count: number }>
@@ -180,6 +187,7 @@ interface Stats {
 const { data: stats } = await useFetch<Stats>('/api/admin/stats', {
   default: () => ({
     counts: { news: 0, publishedNews: 0, weapons: 0, registrations: 0, features: 0, highlights: 0, media: 0, todayPageViews: 0 },
+    webzineSummary: { liveBanners: 0, scheduledBanners: 0, draftArticles: 0, articlesMissingTopic: 0, articlesMissingFeaturedImage: 0 },
     platformStats: [], regionStats: [], dailyRegistrations: [],
     recentRegistrations: [], recentNews: [], recentActivity: [],
   }),
@@ -208,11 +216,12 @@ const statCards = computed(() => [
 ])
 
 const contentStatus = computed(() => [
-  { icon: 'i-lucide-newspaper', label: 'News Articles', count: stats.value.counts.news },
-  { icon: 'i-lucide-swords', label: 'Weapons', count: stats.value.counts.weapons },
-  { icon: 'i-lucide-sparkles', label: 'Features', count: stats.value.counts.features },
-  { icon: 'i-lucide-star', label: 'Highlights', count: stats.value.counts.highlights },
-  { icon: 'i-lucide-image', label: 'Media Assets', count: stats.value.counts.media },
+  { icon: 'i-lucide-newspaper', label: 'Webzine Articles', count: stats.value.counts.news },
+  { icon: 'i-lucide-flag', label: 'Live Banners', count: stats.value.webzineSummary.liveBanners },
+  { icon: 'i-lucide-clock-3', label: 'Scheduled Banners', count: stats.value.webzineSummary.scheduledBanners },
+  { icon: 'i-lucide-pencil', label: 'Draft Articles', count: stats.value.webzineSummary.draftArticles },
+  { icon: 'i-lucide-tags', label: 'Missing Topic', count: stats.value.webzineSummary.articlesMissingTopic },
+  { icon: 'i-lucide-image-off', label: 'Missing Featured Image', count: stats.value.webzineSummary.articlesMissingFeaturedImage },
 ])
 
 const chartData = computed(() => stats.value.dailyRegistrations || [])
