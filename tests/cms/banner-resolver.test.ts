@@ -75,4 +75,30 @@ describe('resolveMarketingBanners', () => {
 
     assert.equal(resolved.floating, null)
   })
+
+  it('matches specific-topic banners by targetTopicKey', () => {
+    const now = new Date('2026-04-23T12:00:00.000Z')
+    const resolved = resolveMarketingBanners({
+      now,
+      routeType: 'topic_page',
+      topicKey: 'getting-started',
+      banners: [
+        {
+          id: 'topic-banner',
+          placement: 'homepage_inline',
+          status: 'LIVE',
+          scope: 'specific_topic',
+          priority: 20,
+          isActive: true,
+          updatedAt: new Date('2026-04-23T11:00:00.000Z'),
+          startsAt: null,
+          endsAt: null,
+          targetTopicKey: 'getting-started',
+          config: {},
+        },
+      ],
+    })
+
+    assert.equal(resolved.homepage_inline?.id, 'topic-banner')
+  })
 })

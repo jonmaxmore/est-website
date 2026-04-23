@@ -23,6 +23,7 @@ export type BannerRecord = {
   endsAt: Date | null
   updatedAt: Date
   targetArticleId?: number | null
+  targetTopicKey?: string | null
   config: Record<string, unknown>
 }
 
@@ -52,7 +53,7 @@ function bannerMatches(input: ResolveInput, banner: BannerRecord) {
   }
 
   if (banner.scope === 'specific_topic' && input.routeType === 'topic_page') {
-    return String(banner.config.topicKey || '') === String(input.topicKey || '')
+    return String(banner.targetTopicKey || '') === String(input.topicKey || '')
   }
 
   return false

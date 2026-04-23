@@ -152,7 +152,7 @@
             </div>
             <div v-if="form.scope === 'specific_topic'">
               <label for="banner-topic-key" class="field-label">Topic Key</label>
-              <input id="banner-topic-key" v-model="form.topicKey" class="field-input" placeholder="getting-started" />
+              <input id="banner-topic-key" v-model="form.targetTopicKey" class="field-input" placeholder="getting-started" />
             </div>
             <div>
               <label for="banner-campaign-code" class="field-label">Campaign Code</label>
@@ -229,7 +229,7 @@ const form = reactive({
   targetNewTab: false,
   dismissible: true,
   isActive: true,
-  topicKey: '',
+  targetTopicKey: '',
 })
 
 function resetForm() {
@@ -256,7 +256,7 @@ function resetForm() {
     targetNewTab: false,
     dismissible: true,
     isActive: true,
-    topicKey: '',
+    targetTopicKey: '',
   })
 }
 
@@ -311,7 +311,7 @@ function openEditBanner(banner: Banner) {
     targetNewTab: banner.targetNewTab,
     dismissible: banner.dismissible,
     isActive: banner.isActive,
-    topicKey: banner.config?.topicKey || '',
+    targetTopicKey: banner.targetTopicKey || '',
   })
   editorOpen.value = true
 }
@@ -335,11 +335,12 @@ function toPayload() {
     targetArticleId: form.targetType === 'article' ? form.targetArticleId : null,
     targetPageKey: form.targetType === 'page' ? form.targetPageKey : null,
     targetEventId: form.targetType === 'event' ? form.targetEventId : null,
+    targetTopicKey: form.scope === 'specific_topic' ? form.targetTopicKey : null,
     targetUrl: form.targetType === 'url' ? form.targetUrl : null,
     targetNewTab: form.targetNewTab,
     dismissible: form.dismissible,
     isActive: form.isActive,
-    config: form.scope === 'specific_topic' ? { topicKey: form.topicKey } : {},
+    config: {},
   }
 }
 

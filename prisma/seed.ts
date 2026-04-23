@@ -3,8 +3,9 @@ import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import pg from 'pg'
 import { hashAdminPassword } from '../server/utils/password'
+import { resolvePgConnectionString } from '../server/utils/database-url'
 
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+const pool = new pg.Pool({ connectionString: resolvePgConnectionString(process.env.DATABASE_URL) })
 const adapter = new PrismaPg(pool)
 const prisma = new PrismaClient({ adapter } as never)
 

@@ -30,6 +30,7 @@ const bannerPayloadSchema = z.object({
   targetArticleId: nullableIntSchema,
   targetPageKey: nullableStringSchema,
   targetEventId: nullableStringSchema,
+  targetTopicKey: nullableStringSchema,
   targetUrl: nullableStringSchema,
   targetNewTab: z.boolean().optional().default(false),
   dismissible: z.boolean().optional().default(true),
@@ -75,8 +76,8 @@ export function parseMarketingBannerPayload(input: unknown) {
     throw new Error('specific_article scope requires targetArticleId')
   }
 
-  if (parsed.scope === 'specific_topic' && !String(parsed.config.topicKey || '').trim()) {
-    throw new Error('specific_topic scope requires config.topicKey')
+  if (parsed.scope === 'specific_topic' && !parsed.targetTopicKey) {
+    throw new Error('specific_topic scope requires targetTopicKey')
   }
 
   if (startsAt && endsAt && endsAt <= startsAt) {

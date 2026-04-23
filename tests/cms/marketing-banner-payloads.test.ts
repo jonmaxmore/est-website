@@ -36,4 +36,21 @@ describe('marketing banner payload parsing', () => {
       }),
     )
   })
+
+  it('accepts specific-topic scope when targetTopicKey is provided', () => {
+    const payload = parseMarketingBannerPayload({
+      placement: 'homepage_inline',
+      status: 'LIVE',
+      scope: 'specific_topic',
+      titleEn: 'Starter Topic Banner',
+      titleTh: 'Starter Topic Banner',
+      targetType: 'article',
+      targetArticleId: 1,
+      targetTopicKey: 'getting-started',
+      config: {},
+    })
+
+    assert.equal(payload.scope, 'specific_topic')
+    assert.equal(payload.targetTopicKey, 'getting-started')
+  })
 })
