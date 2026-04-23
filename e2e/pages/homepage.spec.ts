@@ -3,6 +3,21 @@ import { test, expect } from '@playwright/test'
 test.describe('Homepage', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' })
+    await page.locator('[data-testid="homepage-shell"][data-ready="true"]').waitFor({ state: 'attached', timeout: 30000 })
+  })
+
+  test('should render seeded homepage marketing banners across release 1 placements', async ({ page }) => {
+    await expect(page.locator('[data-testid="marketing-banner-announcement_bar"]')).toContainText(/ETS Beginner Guide/i)
+    await expect(page.locator('[data-testid="marketing-banner-homepage_inline"]')).toContainText(/Tower Chronicle Starter Kit/i)
+
+    const popupBanner = page.locator('[data-testid="marketing-banner-popup"]')
+    await expect(popupBanner).toContainText(/Claim Your Founder Cache/i, { timeout: 7000 })
+
+    await page.getByRole('button', { name: /close popup/i }).click()
+    await expect(popupBanner).toBeHidden()
+
+    await expect(page.locator('[data-testid="marketing-banner-floating"]')).toContainText(/Need a fast start/i)
+    await expect(page.locator('[data-testid="marketing-banner-footer_strip"]')).toContainText(/Season Zero Patch Notes/i)
   })
 
   test('should load with correct title and meta', async ({ page }) => {

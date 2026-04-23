@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <div data-testid="homepage-shell" :data-ready="hydrated ? 'true' : 'false'">
+    <SiteMarketingBannerSlot class="mx-6 pt-24 md:mx-auto md:max-w-7xl" placement="announcement_bar" :banner="banners?.announcement_bar || null" />
+    <SiteMarketingBannerSlot placement="popup" :banner="banners?.popup || null" />
+    <SiteMarketingBannerSlot placement="floating" :banner="banners?.floating || null" />
+
     <!-- Dynamic Section Renderer -->
     <template v-for="section in visibleSections" :key="section.id">
       <!-- HERO -->
@@ -319,6 +323,9 @@
       </section>
     </template>
 
+    <SiteMarketingBannerSlot class="mx-6 my-10 md:mx-auto md:max-w-6xl" placement="homepage_inline" :banner="banners?.homepage_inline || null" />
+    <SiteMarketingBannerSlot class="mx-6 mb-10 md:mx-auto md:max-w-7xl" placement="footer_strip" :banner="banners?.footer_strip || null" />
+
     <!-- Detail Modal (Features / Highlights) -->
     <Teleport to="body">
       <Transition name="modal">
@@ -360,6 +367,8 @@
 <script setup lang="ts">
 const { t, locale } = useI18n()
 const currentLocale = computed(() => locale.value)
+const { data: banners } = await useResolvedBanners({ routeType: 'homepage' })
+const hydrated = ref(false)
 
 usePageSeo({
   title: 'Eternal Tower Saga — เกม RPG บนมือถือ',
@@ -468,6 +477,10 @@ function openHighlightDetail(highlight: HighlightData) {
   detailModal.image = highlight.image || '/images/og-cover.png'
   detailModal.open = true
 }
+
+onMounted(() => {
+  hydrated.value = true
+})
 </script>
 
 <style scoped>

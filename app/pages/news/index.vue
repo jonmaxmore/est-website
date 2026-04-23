@@ -55,6 +55,44 @@
             <SiteWebzineArticleCard v-for="article in landing?.sections?.guides || []" :key="article.slug" :article="article" />
           </div>
         </section>
+
+        <section>
+          <div class="mb-5">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-gold/80">Lore</p>
+            <h2 class="mt-2 text-2xl font-black tracking-tight">Worldbuilding, Factions, And Legends</h2>
+          </div>
+          <div class="grid gap-x-8 md:grid-cols-2">
+            <SiteWebzineArticleCard v-for="article in landing?.sections?.lore || []" :key="article.slug" :article="article" />
+          </div>
+        </section>
+
+        <section>
+          <div class="mb-5">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-gold/80">Dev Blogs</p>
+            <h2 class="mt-2 text-2xl font-black tracking-tight">Notes From The Team</h2>
+          </div>
+          <div class="grid gap-x-8 md:grid-cols-2">
+            <SiteWebzineArticleCard v-for="article in landing?.sections?.devBlogs || []" :key="article.slug" :article="article" />
+          </div>
+        </section>
+
+        <section>
+          <div class="mb-5">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-gold/80">Live Calendar</p>
+            <h2 class="mt-2 text-2xl font-black tracking-tight">Active And Upcoming Events</h2>
+          </div>
+          <div class="grid gap-4 md:grid-cols-2">
+            <article
+              v-for="event in landing?.activeEvents || []"
+              :key="event.id"
+              class="rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-5 shadow-[0_20px_50px_rgba(0,0,0,0.22)]"
+            >
+              <p class="text-xs font-bold uppercase tracking-[0.24em] text-gold/80">{{ event.status }}</p>
+              <h3 class="mt-3 text-xl font-black tracking-tight">{{ event.titleEn }}</h3>
+              <p class="mt-2 text-sm text-white/58">{{ formatEventRange(event.startsAt, event.endsAt) }}</p>
+            </article>
+          </div>
+        </section>
       </div>
 
       <aside class="space-y-8 lg:sticky lg:top-24 lg:self-start">
@@ -74,6 +112,10 @@
         </section>
       </aside>
     </section>
+
+    <section class="mx-6 pb-12 md:mx-auto md:max-w-7xl">
+      <SiteMarketingBannerSlot placement="footer_strip" :banner="banners?.footer_strip || null" />
+    </section>
   </main>
 </template>
 
@@ -85,4 +127,14 @@ usePageSeo({
 
 const { data: landing } = await useFetch('/api/public/webzine/landing')
 const { data: banners } = await useResolvedBanners({ routeType: 'news_index' })
+
+function formatEventRange(startsAt: string | null | undefined, endsAt: string | null | undefined) {
+  if (!startsAt) return 'Schedule to be announced'
+
+  const startLabel = new Date(startsAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  if (!endsAt) return startLabel
+
+  const endLabel = new Date(endsAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  return `${startLabel} - ${endLabel}`
+}
 </script>

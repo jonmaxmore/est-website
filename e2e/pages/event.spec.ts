@@ -6,6 +6,16 @@ test.describe('Event / Pre-Registration Page', () => {
     await page.locator('[data-testid="event-registration-form"][data-ready="true"]').waitFor({ state: 'attached', timeout: 30000 })
   })
 
+  test('should render seeded event marketing banners across release 1 placements', async ({ page }) => {
+    await expect(page.locator('[data-testid="marketing-banner-announcement_bar"]')).toContainText(/ETS Beginner Guide/i)
+
+    const popupBanner = page.locator('[data-testid="marketing-banner-popup"]')
+    await expect(popupBanner).toContainText(/Pre-Register Before Launch/i, { timeout: 7000 })
+
+    await expect(page.locator('[data-testid="marketing-banner-floating"]')).toContainText(/Invite Squadmates, Stack Rewards/i)
+    await expect(page.locator('[data-testid="marketing-banner-footer_strip"]')).toContainText(/Launch rewards overview/i)
+  })
+
   test('should render the event page with countdown timer', async ({ page }) => {
     await expect(page).toHaveTitle(/Eternal Tower Saga/)
 

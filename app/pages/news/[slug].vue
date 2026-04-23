@@ -42,6 +42,10 @@
         <SiteMarketingBannerSlot placement="sidebar" :banner="banners?.sidebar || null" />
       </aside>
     </section>
+
+    <section class="mx-auto max-w-7xl px-6 pb-16">
+      <SiteMarketingBannerSlot placement="footer_strip" :banner="banners?.footer_strip || null" />
+    </section>
   </main>
 </template>
 
