@@ -64,29 +64,43 @@ enum Region {
 // ══════════ NEWS ══════════
 
 model NewsArticle {
-  id            Int           @id @default(autoincrement())
-  slug          String        @unique
-  titleEn       String
-  titleTh       String
-  excerptEn     String?
-  excerptTh     String?
-  contentEn     String?       @db.Text
-  contentTh     String?       @db.Text
-  category      NewsCategory
-  status        ContentStatus @default(DRAFT)
-  featuredImage String?
-  publishedAt   DateTime?
-  featureOnHome Boolean       @default(false)
-  homePriority  Int           @default(0)
-  externalUrl   String?
-  openInNewTab  Boolean       @default(false)
-  seoTitle      String?
-  seoDesc       String?
-  ogImage       String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id                 Int                @id @default(autoincrement())
+  slug               String             @unique
+  titleEn            String
+  titleTh            String
+  excerptEn          String?
+  excerptTh          String?
+  contentEn          String?            @db.Text
+  contentTh          String?            @db.Text
+  category           NewsCategory
+  contentType        WebzineContentType @default(ANNOUNCEMENT)
+  primaryTopicKey    String?
+  campaignCode       String?
+  linkedEventId      String?
+  pinned             Boolean            @default(false)
+  isEvergreen        Boolean            @default(false)
+  readingTimeMinutes Int?
+  status             ContentStatus      @default(DRAFT)
+  featuredImage      String?
+  publishedAt        DateTime?
+  featureOnHome      Boolean            @default(false)
+  homePriority       Int                @default(0)
+  externalUrl        String?
+  openInNewTab       Boolean            @default(false)
+  seoTitle           String?
+  seoDesc            String?
+  ogImage            String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  linkedEvent        GameEvent?         @relation("ArticleLinkedEvent", fields: [linkedEventId], references: [id])
+  featuredForEvents  GameEvent[]        @relation("EventLinkedArticle")
+  targetedBanners    MarketingBanner[]  @relation("BannerTargetArticle")
 
   @@index([status, publishedAt(sort: Desc)])
+  @@index([contentType, status, publishedAt(sort: Desc)])
+  @@index([primaryTopicKey, status, publishedAt(sort: Desc)])
+  @@index([campaignCode])
+  @@index([linkedEventId])
   @@map("news_articles")
 }
 
@@ -102,6 +116,50 @@ enum ContentStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
+}
+
+enum WebzineContentType {
+  ANNOUNCEMENT
+  EVENT
+  PATCH_NOTES
+  GUIDE
+  LORE
+  DEV_BLOG
+}
+
+enum MarketingBannerPlacement {
+  popup
+  floating
+  announcement_bar
+  homepage_inline
+  sidebar
+  article_inline
+  footer_strip
+}
+
+enum MarketingBannerStatus {
+  DRAFT
+  SCHEDULED
+  LIVE
+  EXPIRED
+}
+
+enum MarketingBannerScope {
+  global
+  homepage
+  news_index
+  article_detail
+  topic_page
+  event_page
+  specific_article
+  specific_topic
+}
+
+enum MarketingBannerTargetType {
+  article
+  page
+  event
+  url
 }
 
 // ══════════ MEDIA ══════════
@@ -227,26 +285,27 @@ model ActivityLog {
 // ══════════ PAGE CONTENT (CMS-editable static pages) ══════════
 
 model PageContent {
-  key          String        @id // faq, terms, privacy, support, story, game-guide, gallery, download
-  slug         String?       @unique
-  titleEn      String        @default("")
-  titleTh      String        @default("")
-  description  String?
-  template     String        @default("default")
-  seoTitle     String?
-  seoTitleTh   String?
-  seoDesc      String?
-  seoDescTh    String?
-  contentEn    String?       @db.Text
-  contentTh    String?       @db.Text
-  icon         String?
-  status       ContentStatus @default(PUBLISHED)
-  showInHeader Boolean       @default(false)
-  showInFooter Boolean       @default(false)
-  headerOrder  Int           @default(0)
-  footerOrder  Int           @default(0)
-  isSystemPage Boolean       @default(false)
-  updatedAt    DateTime      @updatedAt
+  key             String             @id // faq, terms, privacy, support, story, game-guide, gallery, download
+  slug            String?            @unique
+  titleEn         String             @default("")
+  titleTh         String             @default("")
+  description     String?
+  template        String             @default("default")
+  seoTitle        String?
+  seoTitleTh      String?
+  seoDesc         String?
+  seoDescTh       String?
+  contentEn       String?            @db.Text
+  contentTh       String?            @db.Text
+  icon            String?
+  status          ContentStatus      @default(PUBLISHED)
+  showInHeader    Boolean            @default(false)
+  showInFooter    Boolean            @default(false)
+  headerOrder     Int                @default(0)
+  footerOrder     Int                @default(0)
+  isSystemPage    Boolean            @default(false)
+  updatedAt       DateTime           @updatedAt
+  targetedBanners MarketingBanner[]  @relation("BannerTargetPage")
 
   @@map("page_contents")
 }
@@ -296,32 +355,38 @@ model Highlight {
 // ══════════ EVENTS & HOT TIME ══════════
 
 model GameEvent {
-  id            String      @id @default(cuid())
-  titleEn       String
-  titleTh       String
-  descriptionEn String?     @db.Text
-  descriptionTh String?     @db.Text
-  type          EventType
-  status        EventStatus @default(SCHEDULED)
-  startsAt      DateTime
-  endsAt        DateTime
-  timezone      String      @default("Asia/Bangkok")
+  id              String            @id @default(cuid())
+  titleEn         String
+  titleTh         String
+  descriptionEn   String?           @db.Text
+  descriptionTh   String?           @db.Text
+  type            EventType
+  status          EventStatus       @default(SCHEDULED)
+  startsAt        DateTime
+  endsAt          DateTime
+  timezone        String            @default("Asia/Bangkok")
+  campaignCode    String?
+  linkedArticleId Int?              @unique
 
   // Hot Time specific
-  multiplier    Float?      // e.g., 2.0 for "2x EXP"
-  bonusType     String?     // EXP, GOLD, DROP_RATE, etc.
+  multiplier      Float?             // e.g., 2.0 for "2x EXP"
+  bonusType       String?            // EXP, GOLD, DROP_RATE, etc.
 
   // Display
-  bannerImage   String?
-  icon          String?
-  color         String?     // hex color for event badge
-  visible       Boolean     @default(true)
+  bannerImage     String?
+  icon            String?
+  color           String?           // hex color for event badge
+  visible         Boolean           @default(true)
 
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  linkedArticle   NewsArticle?      @relation("EventLinkedArticle", fields: [linkedArticleId], references: [id])
+  relatedArticles NewsArticle[]     @relation("ArticleLinkedEvent")
+  targetedBanners MarketingBanner[] @relation("BannerTargetEvent")
 
   @@index([startsAt, endsAt])
   @@index([status])
+  @@index([campaignCode])
   @@map("game_events")
 }
 
@@ -338,4 +403,45 @@ enum EventStatus {
   ACTIVE
   ENDED
   CANCELLED
+}
+
+model MarketingBanner {
+  id              String                    @id @default(cuid())
+  placement       MarketingBannerPlacement
+  status          MarketingBannerStatus     @default(DRAFT)
+  scope           MarketingBannerScope
+  priority        Int                       @default(0)
+  campaignCode    String?
+  startsAt        DateTime?
+  endsAt          DateTime?
+  badgeEn         String?
+  badgeTh         String?
+  titleEn         String
+  titleTh         String
+  bodyEn          String?                   @db.Text
+  bodyTh          String?                   @db.Text
+  desktopImage    String?
+  mobileImage     String?
+  targetType      MarketingBannerTargetType
+  targetArticleId Int?
+  targetPageKey   String?
+  targetEventId   String?
+  targetUrl       String?
+  targetNewTab    Boolean                   @default(false)
+  dismissible     Boolean                   @default(true)
+  isActive        Boolean                   @default(true)
+  config          Json
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+  article         NewsArticle?              @relation("BannerTargetArticle", fields: [targetArticleId], references: [id])
+  page            PageContent?              @relation("BannerTargetPage", fields: [targetPageKey], references: [key])
+  event           GameEvent?                @relation("BannerTargetEvent", fields: [targetEventId], references: [id])
+
+  @@index([placement, isActive, status])
+  @@index([scope, placement])
+  @@index([campaignCode])
+  @@index([targetArticleId])
+  @@index([targetPageKey])
+  @@index([targetEventId])
+  @@map("marketing_banners")
 }
