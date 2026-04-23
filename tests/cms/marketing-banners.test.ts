@@ -46,4 +46,8 @@ describe('marketing banner helpers', () => {
       insertAfterParagraph: 2,
     })
   })
+
+  it('leaves passthrough placements unchanged when no placement-specific config exists', () => {
+    assert.equal(normalizeBannerConfig('homepage_inline', null), null)
+  })
 })

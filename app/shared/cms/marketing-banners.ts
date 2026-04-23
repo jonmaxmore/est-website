@@ -25,10 +25,9 @@ export type BannerScope = (typeof BANNER_SCOPES)[number]
 type BannerConfigValue = Record<string, unknown> | null | undefined
 
 export function normalizeBannerConfig(placement: BannerPlacement, value: BannerConfigValue) {
-  const config = value && typeof value === 'object' ? value : {}
-
   switch (placement) {
     case 'popup': {
+      const config = value && typeof value === 'object' ? value : {}
       const delaySeconds = typeof config.delaySeconds === 'number' ? Math.max(3, Math.floor(config.delaySeconds)) : 3
 
       return {
@@ -38,23 +37,28 @@ export function normalizeBannerConfig(placement: BannerPlacement, value: BannerC
       }
     }
     case 'article_inline': {
+      const config = value && typeof value === 'object' ? value : {}
       const insertAfterParagraph = typeof config.insertAfterParagraph === 'number'
         ? Math.max(2, Math.floor(config.insertAfterParagraph))
         : 2
 
       return { insertAfterParagraph }
     }
-    case 'floating':
+    case 'floating': {
+      const config = value && typeof value === 'object' ? value : {}
       return {
         corner: config.corner === 'bottom_left' ? 'bottom_left' : 'bottom_right',
         compact: Boolean(config.compact),
       }
-    case 'announcement_bar':
+    }
+    case 'announcement_bar': {
+      const config = value && typeof value === 'object' ? value : {}
       return {
         tone: config.tone === 'warning' ? 'warning' : 'default',
         sticky: typeof config.sticky === 'boolean' ? config.sticky : true,
       }
+    }
     default:
-      return config
+      return value
   }
 }

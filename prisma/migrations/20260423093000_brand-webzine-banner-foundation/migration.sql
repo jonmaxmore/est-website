@@ -48,6 +48,7 @@ CREATE TABLE "marketing_banners" (
     "targetArticleId" INTEGER,
     "targetPageKey" TEXT,
     "targetEventId" TEXT,
+    "targetTopicKey" TEXT,
     "targetUrl" TEXT,
     "targetNewTab" BOOLEAN NOT NULL DEFAULT false,
     "dismissible" BOOLEAN NOT NULL DEFAULT true,
@@ -76,6 +77,9 @@ CREATE INDEX "marketing_banners_targetPageKey_idx" ON "marketing_banners"("targe
 
 -- CreateIndex
 CREATE INDEX "marketing_banners_targetEventId_idx" ON "marketing_banners"("targetEventId");
+
+-- CreateIndex
+CREATE INDEX "marketing_banners_targetTopicKey_idx" ON "marketing_banners"("targetTopicKey");
 
 -- CreateIndex
 CREATE INDEX "news_articles_contentType_status_publishedAt_idx" ON "news_articles"("contentType", "status", "publishedAt" DESC);

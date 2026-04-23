@@ -426,6 +426,7 @@ model MarketingBanner {
   targetArticleId Int?
   targetPageKey   String?
   targetEventId   String?
+  targetTopicKey  String?
   targetUrl       String?
   targetNewTab    Boolean                   @default(false)
   dismissible     Boolean                   @default(true)
@@ -443,5 +444,6 @@ model MarketingBanner {
   @@index([targetArticleId])
   @@index([targetPageKey])
   @@index([targetEventId])
+  @@index([targetTopicKey])
   @@map("marketing_banners")
 }
