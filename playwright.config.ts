@@ -5,13 +5,18 @@ import dotenv from 'dotenv'
 dotenv.config({ path: '.env.test' })
 
 const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:3000'
+const configuredWorkers = Number.parseInt(process.env.E2E_WORKERS || '', 10)
+const workers = Number.isFinite(configuredWorkers) && configuredWorkers > 0
+  ? configuredWorkers
+  : process.platform === 'win32' ? 1 : process.env.CI ? 2 : undefined
 
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1,
-  workers: process.env.CI ? 2 : undefined,
+  // Chromium context teardown is flaky on Windows when the full suite fans out.
+  workers,
   reporter: [
     ['html', { open: 'never' }],
     ['list'],

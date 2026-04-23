@@ -64,7 +64,12 @@
             <p class="mt-1 text-xs text-white/30">{{ localized('formDescription') }}</p>
           </div>
           <!-- Form Body -->
-          <form @submit.prevent="handleSubmit" class="flex flex-col gap-4 p-8">
+          <form
+            data-testid="event-registration-form"
+            :data-ready="hydrated ? 'true' : 'false'"
+            @submit.prevent="handleSubmit"
+            class="flex flex-col gap-4 p-8"
+          >
             <UFormField label="Email *">
               <UInput v-model="form.email" type="email" placeholder="your@email.com" size="lg" required />
             </UFormField>
@@ -261,6 +266,7 @@ function localized(field: 'badge' | 'title' | 'subtitle' | 'countdownLabel' | 'r
 const form = reactive({ email: '', platform: 'ANDROID', region: 'TH', referredBy: '' })
 const regionItems = [{ label: 'Thailand', value: 'TH' }, { label: 'Southeast Asia', value: 'SEA' }, { label: 'Global', value: 'GLOBAL' }]
 const loading = ref(false); const error = ref(''); const submitted = ref(false); const referralCode = ref(''); const copied = ref(false)
+const hydrated = ref(false)
 
 async function handleSubmit() {
   loading.value = true; error.value = ''
@@ -318,6 +324,7 @@ function updateCountdown() {
 
 let countdownTimer: ReturnType<typeof window.setInterval> | undefined
 onMounted(() => {
+  hydrated.value = true
   updateCountdown()
   countdownTimer = window.setInterval(updateCountdown, 1000)
 })

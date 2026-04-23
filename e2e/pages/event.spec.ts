@@ -2,7 +2,8 @@ import { test, expect } from '@playwright/test'
 
 test.describe('Event / Pre-Registration Page', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/event', { waitUntil: 'domcontentloaded' })
+    await page.goto('/event', { waitUntil: 'load' })
+    await page.locator('[data-testid="event-registration-form"][data-ready="true"]').waitFor({ state: 'attached' })
   })
 
   test('should render the event page with countdown timer', async ({ page }) => {
@@ -43,23 +44,18 @@ test.describe('Event / Pre-Registration Page', () => {
 
     // Fill the form
     const emailInput = page.locator('input[type="email"]')
+    await emailInput.scrollIntoViewIfNeeded()
     await emailInput.fill(testEmail)
 
     // Submit
     const submitButton = page.locator('button[type="submit"]')
+    await submitButton.scrollIntoViewIfNeeded()
     await submitButton.click()
 
-    // Wait for either success or error response
+    // Wait for either success or a surfaced server response such as rate limit.
     const successText = page.getByText('Registration Successful')
     const errorText = page.locator('.text-red-400')
-
-    // Use Promise.race pattern with a generous timeout
-    try {
-      await expect(successText.or(errorText)).toBeVisible({ timeout: 15_000 })
-    } catch {
-      // If neither appears, the form might still be loading — that's OK for a smoke test
-      test.skip(true, 'Registration response timed out — server may be slow')
-    }
+    await expect(successText.or(errorText)).toBeVisible({ timeout: 15_000 })
   })
 
   test('should show total registration count', async ({ page }) => {
