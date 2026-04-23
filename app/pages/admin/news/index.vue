@@ -13,6 +13,9 @@
       <UInput v-model="search" placeholder="Search articles..." class="min-w-[200px] flex-1" @input="debounceLoad" />
       <USelect v-model="filterStatus" :items="[{ label: 'All Status', value: '' }, { label: 'Draft', value: 'DRAFT' }, { label: 'Published', value: 'PUBLISHED' }, { label: 'Archived', value: 'ARCHIVED' }]" value-key="value" class="w-36" @update:model-value="loadArticles" />
       <USelect v-model="filterCategory" :items="[{ label: 'All Categories', value: '' }, { label: 'Announcement', value: 'ANNOUNCEMENT' }, { label: 'Event', value: 'EVENT' }, { label: 'Update', value: 'UPDATE' }, { label: 'Media', value: 'MEDIA' }]" value-key="value" class="w-40" @update:model-value="loadArticles" />
+      <USelect v-model="filterContentType" :items="contentTypeFilterOptions" value-key="value" class="w-44" @update:model-value="loadArticles" />
+      <USelect v-model="filterTopic" :items="topicFilterOptions" value-key="value" class="w-44" @update:model-value="loadArticles" />
+      <UInput v-model="filterCampaignCode" placeholder="Campaign code" class="w-44" @input="debounceLoad" />
     </div>
 
     <!-- Table -->
@@ -24,6 +27,7 @@
               <th class="w-10 px-4 py-3"><input type="checkbox" @change="toggleAllChecked" /></th>
               <th class="th-cell">Title</th>
               <th class="th-cell">Category</th>
+              <th class="th-cell">Webzine</th>
               <th class="th-cell">Status</th>
               <th class="th-cell">Published</th>
               <th class="th-cell w-[120px]">Actions</th>
@@ -42,6 +46,10 @@
                 </div>
               </td>
               <td class="px-4 py-3"><AdminStatusBadge :status="article.category" /></td>
+              <td class="px-4 py-3">
+                <p class="text-xs font-semibold text-white/60">{{ article.contentType?.replaceAll('_', ' ') || 'ANNOUNCEMENT' }}</p>
+                <p class="text-[0.625rem] text-white/25">{{ article.primaryTopicKey || 'No topic' }}</p>
+              </td>
               <td class="px-4 py-3"><AdminStatusBadge :status="article.status" /></td>
               <td class="px-4 py-3 text-white/30 whitespace-nowrap">{{ article.publishedAt ? formatDate(article.publishedAt) : '—' }}</td>
               <td class="px-4 py-3">
@@ -168,6 +176,27 @@
               <UFormField label="Publish Date" class="mt-3">
                 <UInput v-model="form.publishedAt" type="datetime-local" />
               </UFormField>
+              <label class="mt-3 flex items-center gap-3 text-sm text-white/60">
+                <input v-model="form.pinned" type="checkbox" class="h-4 w-4 accent-[#d4a843]" />
+                Pin in webzine
+              </label>
+            </div>
+
+            <div class="sidebar-card">
+              <h4 class="sidebar-card-title">Webzine</h4>
+              <UFormField label="Content Type">
+                <USelect v-model="form.contentType" :items="contentTypeOptions" />
+              </UFormField>
+              <UFormField label="Primary Topic" class="mt-3">
+                <USelect v-model="form.primaryTopicKey" :items="topicOptions" value-key="value" />
+              </UFormField>
+              <UFormField label="Campaign Code" class="mt-3">
+                <UInput v-model="form.campaignCode" placeholder="launch-week" />
+              </UFormField>
+              <label class="mt-3 flex items-center gap-3 text-sm text-white/60">
+                <input v-model="form.isEvergreen" type="checkbox" class="h-4 w-4 accent-[#d4a843]" />
+                Evergreen guide
+              </label>
             </div>
 
             <!-- Featured Image -->
@@ -270,9 +299,18 @@ interface Article {
   excerptEn?: string | null; excerptTh?: string | null
   contentEn?: string | null; contentTh?: string | null
   category: string; status: string; featuredImage?: string | null
+  contentType?: string; primaryTopicKey?: string | null; campaignCode?: string | null
+  linkedEventId?: string | null; pinned?: boolean; isEvergreen?: boolean
+  readingTimeMinutes?: number | null
   publishedAt?: string | null; featureOnHome: boolean; homePriority: number
   externalUrl?: string | null; openInNewTab: boolean
   seoTitle?: string | null; seoDesc?: string | null; ogImage?: string | null; createdAt: string
+}
+
+interface TopicOption {
+  key: string
+  labelEn: string
+  visible: boolean
 }
 
 const articles = ref<Article[]>([])
@@ -282,6 +320,9 @@ const page = ref(1)
 const search = ref('')
 const filterStatus = ref('')
 const filterCategory = ref('')
+const filterContentType = ref('')
+const filterTopic = ref('')
+const filterCampaignCode = ref('')
 const selectedIds = ref(new Set<number>())
 const editorOpen = ref(false)
 const editorMode = ref<'create' | 'edit'>('create')
@@ -292,6 +333,7 @@ const deleteTarget = ref<Article | null>(null)
 const deleteModalOpen = ref(false)
 const autosaveStatus = ref<'idle' | 'saving' | 'saved'>('idle')
 const previewMode = ref(false)
+const topics = ref<TopicOption[]>([])
 const previewLang = ref<'th' | 'en'>('th')
 let debounceTimer: ReturnType<typeof setTimeout>
 let autosaveTimer: ReturnType<typeof setTimeout>
@@ -299,7 +341,14 @@ const langTabsRef = ref<{ focusFirstError: () => void } | null>(null)
 
 const form = reactive({
   titleEn: '', titleTh: '', slug: '', excerptEn: '', excerptTh: '',
-  contentEn: '', contentTh: '', category: 'ANNOUNCEMENT', status: 'DRAFT',
+  contentEn: '', contentTh: '', category: 'ANNOUNCEMENT',
+  contentType: 'ANNOUNCEMENT',
+  primaryTopicKey: '',
+  campaignCode: '',
+  linkedEventId: null as string | null,
+  pinned: false,
+  isEvergreen: false,
+  status: 'DRAFT',
   featuredImage: '', publishedAt: '', featureOnHome: false, homePriority: 0,
   externalUrl: '', openInNewTab: false, seoTitle: '', seoDesc: '',
 })
@@ -331,10 +380,43 @@ const previewExcerpt = computed(() => previewLang.value === 'th' ? form.excerptT
 
 const { toast, showToast } = useAdminToast()
 
+const contentTypeOptions = ['ANNOUNCEMENT', 'EVENT', 'PATCH_NOTES', 'GUIDE', 'LORE', 'DEV_BLOG']
+const contentTypeFilterOptions = computed(() => [
+  { label: 'All Types', value: '' },
+  ...contentTypeOptions.map((value) => ({ label: value.replaceAll('_', ' '), value })),
+])
+const topicOptions = computed(() => [
+  { label: 'No topic', value: '' },
+  ...topics.value
+    .filter((topic) => topic.visible !== false)
+    .map((topic) => ({ label: topic.labelEn || topic.key, value: topic.key })),
+])
+const topicFilterOptions = computed(() => [
+  { label: 'All Topics', value: '' },
+  ...topicOptions.value.filter((topic) => topic.value),
+])
+
+async function loadTopics() {
+  try {
+    const data = await $fetch<TopicOption[]>('/api/admin/config?key=webzine_topics')
+    topics.value = Array.isArray(data) ? data : []
+  } catch {
+    topics.value = []
+  }
+}
+
 async function loadArticles() {
   try {
     const res = await $fetch<{ data: Article[]; meta: { total: number; totalPages: number } }>('/api/admin/news', {
-      query: { page: page.value, search: search.value, status: filterStatus.value, category: filterCategory.value },
+      query: {
+        page: page.value,
+        search: search.value,
+        status: filterStatus.value,
+        category: filterCategory.value,
+        contentType: filterContentType.value,
+        primaryTopicKey: filterTopic.value,
+        campaignCode: filterCampaignCode.value,
+      },
     })
     articles.value = res.data
     total.value = res.meta.total
@@ -374,7 +456,14 @@ function openEditor(article: Article | null) {
       titleEn: article.titleEn, titleTh: article.titleTh, slug: article.slug,
       excerptEn: article.excerptEn || '', excerptTh: article.excerptTh || '',
       contentEn: article.contentEn || '', contentTh: article.contentTh || '',
-      category: article.category, status: article.status,
+      category: article.category,
+      contentType: article.contentType || 'ANNOUNCEMENT',
+      primaryTopicKey: article.primaryTopicKey || '',
+      campaignCode: article.campaignCode || '',
+      linkedEventId: article.linkedEventId || null,
+      pinned: article.pinned || false,
+      isEvergreen: article.isEvergreen || false,
+      status: article.status,
       featuredImage: article.featuredImage || '',
       publishedAt: article.publishedAt ? new Date(article.publishedAt).toISOString().slice(0, 16) : '',
       featureOnHome: article.featureOnHome, homePriority: article.homePriority,
@@ -386,7 +475,14 @@ function openEditor(article: Article | null) {
     editingId.value = null
     Object.assign(form, {
       titleEn: '', titleTh: '', slug: '', excerptEn: '', excerptTh: '',
-      contentEn: '', contentTh: '', category: 'ANNOUNCEMENT', status: 'DRAFT',
+      contentEn: '', contentTh: '', category: 'ANNOUNCEMENT',
+      contentType: 'ANNOUNCEMENT',
+      primaryTopicKey: '',
+      campaignCode: '',
+      linkedEventId: null,
+      pinned: false,
+      isEvergreen: false,
+      status: 'DRAFT',
       featuredImage: '', publishedAt: '', featureOnHome: false, homePriority: 0,
       externalUrl: '', openInNewTab: false, seoTitle: '', seoDesc: '',
     })
@@ -462,6 +558,9 @@ async function saveArticle() {
     const payload = {
       ...form,
       publishedAt: form.publishedAt || null,
+      primaryTopicKey: form.primaryTopicKey || null,
+      campaignCode: form.campaignCode || null,
+      linkedEventId: form.linkedEventId || null,
       featuredImage: form.featuredImage || null,
       externalUrl: form.externalUrl || null,
       seoTitle: form.seoTitle || null,
@@ -521,7 +620,7 @@ function formatDate(d: string) {
 }
 
 onBeforeUnmount(() => clearInterval(autosaveTimer))
-await loadArticles()
+await Promise.all([loadArticles(), loadTopics()])
 </script>
 
 <style scoped>

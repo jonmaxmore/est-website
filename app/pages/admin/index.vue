@@ -189,10 +189,10 @@ const todayFormatted = new Date().toLocaleDateString('en-US', { weekday: 'long',
 
 const quickActions = [
   { icon: 'i-lucide-file-plus', label: 'New CMS Page', to: '/admin/pages' },
-  { icon: 'i-lucide-upload', label: 'Upload Media', to: '/admin/media' },
-  { icon: 'i-lucide-menu', label: 'Manage Menus', to: '/admin/menus' },
-  { icon: 'i-lucide-home', label: 'Edit Homepage', to: '/admin/homepage' },
-  { icon: 'i-lucide-newspaper', label: 'News Workflow', to: '/admin/news' },
+  { icon: 'i-lucide-newspaper', label: 'Webzine Articles', to: '/admin/news' },
+  { icon: 'i-lucide-tags', label: 'Topics', to: '/admin/topics' },
+  { icon: 'i-lucide-flag', label: 'Banner Control', to: '/admin/banners' },
+  { icon: 'i-lucide-calendar', label: 'Events', to: '/admin/events' },
   { icon: 'i-lucide-external-link', label: 'View Site', to: '/' },
 ]
 

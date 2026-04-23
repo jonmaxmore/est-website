@@ -148,7 +148,9 @@ const navGroups = [
     title: 'Content',
     items: [
       { to: '/admin/homepage', icon: 'i-lucide-home', label: 'Homepage' },
-      { to: '/admin/news', icon: 'i-lucide-newspaper', label: 'News' },
+      { to: '/admin/news', icon: 'i-lucide-newspaper', label: 'Webzine Articles' },
+      { to: '/admin/topics', icon: 'i-lucide-tags', label: 'Topics' },
+      { to: '/admin/banners', icon: 'i-lucide-flag', label: 'Banner Control' },
       { to: '/admin/weapons', icon: 'i-lucide-swords', label: 'Weapons' },
       { to: '/admin/features', icon: 'i-lucide-sparkles', label: 'Features' },
       { to: '/admin/highlights', icon: 'i-lucide-star', label: 'Highlights' },
