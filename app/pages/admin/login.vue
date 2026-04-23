@@ -7,7 +7,12 @@
           <h1 class="text-xl font-bold">Admin Login</h1>
           <p class="mt-1 text-sm text-white/40">Eternal Tower Saga — Control Panel</p>
         </div>
-        <form @submit.prevent="handleLogin" class="flex flex-col gap-5">
+        <form
+          data-testid="admin-login-form"
+          :data-ready="hydrated ? 'true' : 'false'"
+          @submit.prevent="handleLogin"
+          class="flex flex-col gap-5"
+        >
           <UFormField label="Email">
             <UInput v-model="form.email" type="email" placeholder="admin@eternaltowersaga.com" size="lg" required icon="i-heroicons-envelope" />
           </UFormField>
@@ -15,7 +20,14 @@
             <UInput v-model="form.password" type="password" placeholder="••••••••" size="lg" required icon="i-heroicons-lock-closed" />
           </UFormField>
           <p v-if="error" class="text-center text-sm text-red-400">{{ error }}</p>
-          <UButton type="submit" size="lg" block :loading="loading" class="bg-gradient-to-br from-gold to-gold-light font-bold text-black">
+          <UButton
+            type="submit"
+            size="lg"
+            block
+            :loading="loading"
+            :disabled="!hydrated || loading"
+            class="bg-gradient-to-br from-gold to-gold-light font-bold text-black"
+          >
             Sign In
           </UButton>
         </form>
@@ -29,6 +41,7 @@ const route = useRoute()
 const { fetch: fetchUserSession } = useUserSession()
 const form = reactive({ email: '', password: '' })
 const loading = ref(false); const error = ref('')
+const hydrated = ref(false)
 
 function getRedirectTarget() {
   const redirect = route.query.redirect
@@ -46,4 +59,8 @@ async function handleLogin() {
   } catch (e: unknown) { const err = e as { data?: { message?: string } }; error.value = err?.data?.message || 'Login failed' }
   finally { loading.value = false }
 }
+
+onMounted(() => {
+  hydrated.value = true
+})
 </script>

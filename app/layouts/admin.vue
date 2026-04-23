@@ -1,5 +1,10 @@
 <template>
-  <div class="admin-root" :class="{ 'sidebar-collapsed': sidebarCollapsed, 'sidebar-mobile-open': mobileMenuOpen }">
+  <div
+    data-testid="admin-layout"
+    :data-ready="hydrated ? 'true' : 'false'"
+    class="admin-root"
+    :class="{ 'sidebar-collapsed': sidebarCollapsed, 'sidebar-mobile-open': mobileMenuOpen }"
+  >
     <!-- Mobile Overlay -->
     <Transition name="fade">
       <div v-if="mobileMenuOpen" class="mobile-overlay" @click="mobileMenuOpen = false" />
@@ -135,6 +140,7 @@ const sidebarCollapsed = ref(false)
 const mobileMenuOpen = ref(false)
 const adminLang = ref<'TH' | 'EN'>('EN')
 const commandPalette = ref<InstanceType<typeof AdminCommandPalette> | null>(null)
+const hydrated = ref(false)
 
 const navGroups = [
   {
@@ -210,6 +216,7 @@ watch(() => route.path, () => { mobileMenuOpen.value = false })
 
 // Close mobile menu on resize to desktop
 onMounted(() => {
+  hydrated.value = true
   const handler = () => { if (window.innerWidth > 1024) mobileMenuOpen.value = false }
   window.addEventListener('resize', handler)
   onBeforeUnmount(() => window.removeEventListener('resize', handler))

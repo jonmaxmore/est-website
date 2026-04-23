@@ -272,12 +272,20 @@ function targetLabel(banner: Banner) {
 }
 
 async function loadBanners() {
-  banners.value = await $fetch<Banner[]>('/api/admin/banners', { query: filters })
+  try {
+    banners.value = await $fetch<Banner[]>('/api/admin/banners', { query: filters })
+  } catch {
+    banners.value = []
+  }
 }
 
 async function loadArticles() {
-  const result = await $fetch<{ data: ArticleOption[] }>('/api/admin/news', { query: { limit: 100 } })
-  articles.value = result.data
+  try {
+    const result = await $fetch<{ data: ArticleOption[] }>('/api/admin/news', { query: { limit: 100 } })
+    articles.value = result.data
+  } catch {
+    articles.value = []
+  }
 }
 
 function openNewBanner() {
@@ -372,7 +380,9 @@ async function deleteBanner(banner: Banner) {
   await loadBanners()
 }
 
-await Promise.all([loadBanners(), loadArticles()])
+onMounted(() => {
+  void Promise.all([loadBanners(), loadArticles()])
+})
 </script>
 
 <style scoped>
