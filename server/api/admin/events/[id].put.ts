@@ -24,6 +24,8 @@ export default defineEventHandler(async (event) => {
   if (body.icon !== undefined) data.icon = body.icon
   if (body.color !== undefined) data.color = body.color
   if (body.visible !== undefined) data.visible = body.visible
+  if (body.campaignCode !== undefined) data.campaignCode = body.campaignCode || null
+  if (body.linkedArticleId !== undefined) data.linkedArticleId = body.linkedArticleId ? Number(body.linkedArticleId) : null
 
   const gameEvent = await prisma.gameEvent.update({ where: { id }, data })
 

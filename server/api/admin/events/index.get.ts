@@ -6,14 +6,21 @@ export default defineEventHandler(async (event) => {
   const skip = (page - 1) * limit
   const type = (query.type as string) || ''
   const status = (query.status as string) || ''
+  const campaignCode = (query.campaignCode as string) || ''
 
   const where: Record<string, unknown> = {}
   if (type) where.type = type
   if (status) where.status = status
+  if (campaignCode) where.campaignCode = campaignCode
 
   const [rows, total] = await Promise.all([
     prisma.gameEvent.findMany({
       where,
+      include: {
+        linkedArticle: {
+          select: { id: true, slug: true, titleEn: true, titleTh: true },
+        },
+      },
       orderBy: { startsAt: 'desc' },
       take: limit,
       skip,

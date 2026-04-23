@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import { isSupportedHomepageSectionType } from '../../app/shared/cms/homepage'
 import { normalizeNavigationConfig } from '../../app/shared/cms/navigation'
+import { normalizeWebzineTopics } from '../../app/shared/cms/webzine'
 
 const homepageSectionSchema = z.object({
   id: z.string().min(1),
@@ -15,6 +16,20 @@ const homepageSectionSchema = z.object({
 const homepageSectionsSchema = z.object({
   sections: z.array(homepageSectionSchema),
 })
+
+const webzineTopicSchema = z.object({
+  key: z.string().min(1),
+  slug: z.string().optional().default(''),
+  labelEn: z.string().min(1),
+  labelTh: z.string().optional().default(''),
+  descriptionEn: z.string().optional().default(''),
+  descriptionTh: z.string().optional().default(''),
+  icon: z.string().optional().default(''),
+  color: z.string().optional().default(''),
+  visible: z.boolean().optional().default(true),
+})
+
+const webzineTopicsSchema = z.array(webzineTopicSchema)
 
 const heroButtonVariantSchema = z.enum(['primary', 'secondary', 'ghost'])
 const heroButtonTargetSchema = z.enum(['_self', '_blank'])
@@ -404,6 +419,7 @@ const configParsers = {
   integrations: (value: unknown) => normalizeIntegrationsConfig(value),
   event_page: (value: unknown) => normalizeEventPageConfig(value),
   download_page: (value: unknown) => normalizeDownloadPageConfig(value),
+  webzine_topics: (value: unknown) => normalizeWebzineTopics(webzineTopicsSchema.parse(value)),
   faq: (value: unknown) => faqSchema.parse(value),
 } satisfies Record<string, (value: unknown) => unknown>
 
@@ -438,6 +454,11 @@ export function readAdminConfigValue(key: string, value: unknown) {
 
   if (key === 'download_page') {
     return normalizeDownloadPageConfig(value)
+  }
+
+  if (key === 'webzine_topics') {
+    const parsed = webzineTopicsSchema.safeParse(Array.isArray(value) ? value : [])
+    return parsed.success ? normalizeWebzineTopics(parsed.data) : []
   }
 
   return value

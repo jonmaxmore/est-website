@@ -1,24 +1,35 @@
 import { z } from 'zod'
 
+import { WEBZINE_CONTENT_TYPES, estimateReadingTimeMinutes } from '../../../../app/shared/cms/webzine'
+
+const emptyToNull = (value: unknown) => (value === '' ? null : value)
+const nullableStringSchema = z.preprocess(emptyToNull, z.string().optional().nullable())
+
 const updateSchema = z.object({
   titleEn: z.string().min(1).optional(),
   titleTh: z.string().min(1).optional(),
   slug: z.string().min(1).optional(),
-  excerptEn: z.string().optional().nullable(),
-  excerptTh: z.string().optional().nullable(),
-  contentEn: z.string().optional().nullable(),
-  contentTh: z.string().optional().nullable(),
+  excerptEn: nullableStringSchema,
+  excerptTh: nullableStringSchema,
+  contentEn: nullableStringSchema,
+  contentTh: nullableStringSchema,
   category: z.enum(['ANNOUNCEMENT', 'EVENT', 'UPDATE', 'MEDIA', 'MAINTENANCE']).optional(),
+  contentType: z.enum(WEBZINE_CONTENT_TYPES).optional(),
+  primaryTopicKey: nullableStringSchema,
+  campaignCode: nullableStringSchema,
+  linkedEventId: nullableStringSchema,
+  pinned: z.boolean().optional(),
+  isEvergreen: z.boolean().optional(),
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional(),
-  featuredImage: z.string().optional().nullable(),
-  publishedAt: z.string().optional().nullable(),
+  featuredImage: nullableStringSchema,
+  publishedAt: nullableStringSchema,
   featureOnHome: z.boolean().optional(),
   homePriority: z.number().optional(),
-  externalUrl: z.string().optional().nullable(),
+  externalUrl: nullableStringSchema,
   openInNewTab: z.boolean().optional(),
-  seoTitle: z.string().optional().nullable(),
-  seoDesc: z.string().optional().nullable(),
-  ogImage: z.string().optional().nullable(),
+  seoTitle: nullableStringSchema,
+  seoDesc: nullableStringSchema,
+  ogImage: nullableStringSchema,
 })
 
 export default defineEventHandler(async (event) => {
@@ -32,10 +43,14 @@ export default defineEventHandler(async (event) => {
   }
 
   const data = parsed.data
+  const shouldUpdateReadingTime = data.contentEn !== undefined || data.contentTh !== undefined
   const article = await prisma.newsArticle.update({
     where: { id },
     data: {
       ...data,
+      readingTimeMinutes: shouldUpdateReadingTime
+        ? estimateReadingTimeMinutes(data.contentEn || data.contentTh || '')
+        : undefined,
       publishedAt: data.publishedAt !== undefined ? (data.publishedAt ? new Date(data.publishedAt) : null) : undefined,
     },
   })
