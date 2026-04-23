@@ -144,7 +144,7 @@ async function main() {
       primaryTopicKey: 'getting-started',
       status: 'PUBLISHED' as const,
       featuredImage: '/images/news-3.png',
-      publishedAt: new Date('2026-04-23T09:00:00.000Z'),
+      publishedAt: new Date('2026-04-22T09:00:00.000Z'),
       featureOnHome: true,
       homePriority: 4,
       pinned: true,
@@ -165,7 +165,7 @@ async function main() {
       campaignCode: 'launch-week',
       status: 'PUBLISHED' as const,
       featuredImage: '/images/news-1.png',
-      publishedAt: new Date('2026-04-23T10:00:00.000Z'),
+      publishedAt: new Date('2026-04-22T10:00:00.000Z'),
       featureOnHome: false,
       homePriority: 0,
       pinned: false,
@@ -182,6 +182,53 @@ async function main() {
     })
   }
   console.log(`  ✅ ${news.length} news articles seeded`)
+
+  const beginnerGuide = await prisma.newsArticle.findUnique({ where: { slug: 'ets-beginner-guide' } })
+  if (beginnerGuide) {
+    await prisma.marketingBanner.upsert({
+      where: { id: 'seed-launch-week-announcement' },
+      update: {
+        placement: 'announcement_bar',
+        status: 'LIVE',
+        scope: 'global',
+        priority: 100,
+        campaignCode: 'launch-week',
+        badgeEn: 'Launch Week',
+        badgeTh: 'Launch Week',
+        titleEn: 'Read the ETS Beginner Guide',
+        titleTh: 'Read the ETS Beginner Guide',
+        bodyEn: 'Start strong with the launch-week checklist.',
+        bodyTh: 'Start strong with the launch-week checklist.',
+        targetType: 'article',
+        targetArticleId: beginnerGuide.id,
+        targetNewTab: false,
+        dismissible: true,
+        isActive: true,
+        config: { tone: 'default', sticky: true },
+      },
+      create: {
+        id: 'seed-launch-week-announcement',
+        placement: 'announcement_bar',
+        status: 'LIVE',
+        scope: 'global',
+        priority: 100,
+        campaignCode: 'launch-week',
+        badgeEn: 'Launch Week',
+        badgeTh: 'Launch Week',
+        titleEn: 'Read the ETS Beginner Guide',
+        titleTh: 'Read the ETS Beginner Guide',
+        bodyEn: 'Start strong with the launch-week checklist.',
+        bodyTh: 'Start strong with the launch-week checklist.',
+        targetType: 'article',
+        targetArticleId: beginnerGuide.id,
+        targetNewTab: false,
+        dismissible: true,
+        isActive: true,
+        config: { tone: 'default', sticky: true },
+      },
+    })
+    console.log('  ✅ Launch-week announcement banner seeded')
+  }
 
   // ── Site Config ──
   const configs = [
