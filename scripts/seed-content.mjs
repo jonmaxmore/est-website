@@ -4,14 +4,20 @@
  * This tests the full backend CRUD pipeline (admin-auth → handler → Prisma → PostgreSQL)
  */
 
-const BASE = 'http://localhost:3000'
+const BASE = process.env.SEED_BASE_URL || 'http://127.0.0.1:3000'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@eternaltowersaga.com'
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 let cookie = ''
 
 async function login() {
+  if (!ADMIN_PASSWORD) {
+    console.error('ERROR: Set ADMIN_PASSWORD environment variable before running this script.')
+    process.exit(1)
+  }
   const res = await fetch(`${BASE}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'admin@eternaltowersaga.com', password: 'wErew@lf17john' }),
+    body: JSON.stringify({ email: ADMIN_EMAIL, password: ADMIN_PASSWORD }),
   })
   const setCookie = res.headers.get('set-cookie')
   if (setCookie) cookie = setCookie.split(';')[0]
@@ -41,8 +47,10 @@ async function createWeapons() {
     { name: 'โล่อมตะ', nameEn: 'Immortal Shield', descriptionEn: 'The unbreakable wall that protects allies. Guardians absorb tremendous damage while disrupting enemy formations.', descriptionTh: 'กำแพงที่ไม่อาจทำลายได้ซึ่งปกป้องพันธมิตร ผู้พิทักษ์รับดาเมจมหาศาลพร้อมทำลายรูปแบบของศัตรู', statSTR: 60, statINT: 40, statAGI: 25, statDEX: 30, statHP: 95, sortOrder: 4 },
   ]
   for (const w of weapons) {
-    const result = await adminFetch('/api/admin/weapons', 'POST', { ...w, visible: true, videoType: 'NONE' })
-    console.log(`  ✓ Weapon: ${w.nameEn} (ID: ${result.id})`)
+    try {
+      const result = await adminFetch('/api/admin/weapons', 'POST', w)
+      console.log(`  ✓ Weapon: ${w.nameEn} (ID: ${result.id})`)
+    } catch (e) { console.log(`  ✗ Weapon ${w.nameEn}: ${e.message}`) }
   }
 }
 
@@ -57,8 +65,10 @@ async function createFeatures() {
     { key: 'petSystem', titleEn: 'Companion Pet System', titleTh: 'ระบบสัตว์เลี้ยงคู่ใจ', descriptionEn: 'Collect, raise, and evolve over 100 unique pets that fight alongside you in battle.', descriptionTh: 'สะสม เลี้ยงดู และวิวัฒนาการสัตว์เลี้ยงที่ไม่ซ้ำกันกว่า 100 ตัวที่ต่อสู้เคียงข้างคุณในสนามรบ', detailEn: 'Discover pets across the world — from fire drakes to crystal golems. Each pet has unique abilities, evolution paths, and gear slots. Max-level pets unlock powerful Ultimate skills.', detailTh: 'ค้นพบสัตว์เลี้ยงทั่วโลก ตั้งแต่มังกรไฟไปจนถึงโกเลมคริสตัล สัตว์เลี้ยงแต่ละตัวมีความสามารถพิเศษ เส้นทางวิวัฒนาการ และช่องอุปกรณ์ สัตว์เลี้ยงเลเวลสูงสุดปลดล็อกทักษะ Ultimate ที่ทรงพลัง', icon: '🦊' },
   ]
   for (const f of features) {
-    const result = await adminFetch('/api/admin/features', 'POST', { ...f, visible: true, sortOrder: features.indexOf(f) })
-    console.log(`  ✓ Feature: ${f.titleEn} (ID: ${result.id})`)
+    try {
+      const result = await adminFetch('/api/admin/features', 'POST', { ...f, visible: true, sortOrder: features.indexOf(f) })
+      console.log(`  ✓ Feature: ${f.titleEn} (ID: ${result.id})`)
+    } catch (e) { console.log(`  ✗ Feature ${f.titleEn}: ${e.message}`) }
   }
 }
 
@@ -70,8 +80,10 @@ async function createHighlights() {
     { key: 'communityEvents', titleEn: 'Live Community Events', titleTh: 'อีเวนต์ชุมชนสด', descriptionEn: 'Weekly world events, seasonal festivals, and community-driven content updates.', descriptionTh: 'อีเวนต์โลกประจำสัปดาห์ เทศกาลประจำฤดูกาล และอัปเดตเนื้อหาจากชุมชน', detailEn: 'Join thousands of players in massive world events like Dragon Invasions, Tower Ascension races, and seasonal celebrations. Community polls decide future content direction.', detailTh: 'ร่วมกับผู้เล่นนับพันในอีเวนต์โลกขนาดใหญ่ เช่น การรุกรานมังกร แข่งขันปีนหอคอย และการเฉลิมฉลองประจำฤดูกาล โพลชุมชนตัดสินทิศทางเนื้อหาในอนาคต', icon: '🎉' },
   ]
   for (const h of highlights) {
-    const result = await adminFetch('/api/admin/highlights', 'POST', { ...h, visible: true, sortOrder: highlights.indexOf(h) })
-    console.log(`  ✓ Highlight: ${h.titleEn} (ID: ${result.id})`)
+    try {
+      const result = await adminFetch('/api/admin/highlights', 'POST', { ...h, visible: true, sortOrder: highlights.indexOf(h) })
+      console.log(`  ✓ Highlight: ${h.titleEn} (ID: ${result.id})`)
+    } catch (e) { console.log(`  ✗ Highlight ${h.titleEn}: ${e.message}`) }
   }
 }
 
@@ -122,8 +134,10 @@ async function createNews() {
     },
   ]
   for (const n of news) {
-    const result = await adminFetch('/api/admin/news', 'POST', n)
-    console.log(`  ✓ News: ${n.titleEn} (ID: ${result.id})`)
+    try {
+      const result = await adminFetch('/api/admin/news', 'POST', n)
+      console.log(`  ✓ News: ${n.titleEn} (ID: ${result.id})`)
+    } catch (e) { console.log(`  ✗ News ${n.slug}: ${e.message}`) }
   }
 }
 
@@ -151,8 +165,10 @@ async function createEvents() {
     },
   ]
   for (const e of events) {
-    const result = await adminFetch('/api/admin/events', 'POST', e)
-    console.log(`  ✓ Event: ${e.titleEn} (ID: ${result.id})`)
+    try {
+      const result = await adminFetch('/api/admin/events', 'POST', e)
+      console.log(`  ✓ Event: ${e.titleEn} (ID: ${result.id})`)
+    } catch (err) { console.log(`  ✗ Event ${e.titleEn}: ${err.message}`) }
   }
 }
 
