@@ -3,17 +3,23 @@ export default defineEventHandler(async (event) => {
   const limit = Math.min(Number(query.limit) || 12, 50)
   const page = Math.max(Number(query.page) || 1, 1)
   const skip = (page - 1) * limit
+  const contentType = (query.contentType as string) || ''
+  const topicKey = (query.topicKey as string) || ''
+
+  const where: Record<string, unknown> = {
+    status: 'PUBLISHED',
+    OR: [
+      { publishedAt: { lte: new Date() } },
+      { publishedAt: null },
+    ],
+  }
+  if (contentType) where.contentType = contentType
+  if (topicKey) where.primaryTopicKey = topicKey
 
   const [articles, total] = await Promise.all([
     prisma.newsArticle.findMany({
-      where: {
-        status: 'PUBLISHED',
-        OR: [
-          { publishedAt: { lte: new Date() } },
-          { publishedAt: null },
-        ],
-      },
-      orderBy: { publishedAt: 'desc' },
+      where,
+      orderBy: [{ pinned: 'desc' }, { publishedAt: 'desc' }, { createdAt: 'desc' }],
       take: limit,
       skip,
       select: {
@@ -24,15 +30,18 @@ export default defineEventHandler(async (event) => {
         excerptEn: true,
         excerptTh: true,
         category: true,
+        contentType: true,
+        primaryTopicKey: true,
         featuredImage: true,
         publishedAt: true,
+        readingTimeMinutes: true,
         externalUrl: true,
         openInNewTab: true,
         featureOnHome: true,
         homePriority: true,
       },
     }),
-    prisma.newsArticle.count({ where: { status: 'PUBLISHED' } }),
+    prisma.newsArticle.count({ where }),
   ])
 
   return {

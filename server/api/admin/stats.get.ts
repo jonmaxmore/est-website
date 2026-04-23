@@ -1,4 +1,6 @@
-/** Dashboard stats — aggregated counts + recent activity + system health */
+import { buildWebzineDashboardSummary } from '../../../app/shared/cms/admin-dashboard'
+
+/** Dashboard stats: aggregated counts, recent activity, and CMS queues. */
 export default defineEventHandler(async () => {
   const [
     newsCount,
@@ -10,6 +12,8 @@ export default defineEventHandler(async () => {
     mediaCount,
     recentRegistrations,
     recentNews,
+    banners,
+    articleAudit,
   ] = await Promise.all([
     prisma.newsArticle.count(),
     prisma.newsArticle.count({ where: { status: 'PUBLISHED' } }),
@@ -28,21 +32,20 @@ export default defineEventHandler(async () => {
       take: 5,
       select: { id: true, titleEn: true, status: true, category: true, createdAt: true },
     }),
+    prisma.marketingBanner.findMany({ select: { status: true, placement: true } }),
+    prisma.newsArticle.findMany({ select: { status: true, primaryTopicKey: true, featuredImage: true } }),
   ])
 
-  // Registration stats by platform
   const platformStats = await prisma.preRegistration.groupBy({
     by: ['platform'],
     _count: { id: true },
   })
 
-  // Registration stats by region
   const regionStats = await prisma.preRegistration.groupBy({
     by: ['region'],
     _count: { id: true },
   })
 
-  // Registrations per day (last 14 days)
   const fourteenDaysAgo = new Date()
   fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14)
 
@@ -51,7 +54,6 @@ export default defineEventHandler(async () => {
     fourteenDaysAgo,
   )
 
-  // Recent activity
   let recentActivity: Array<{ action: string; resource: string; userName: string; createdAt: Date }> = []
   try {
     recentActivity = await prisma.activityLog.findMany({
@@ -59,15 +61,18 @@ export default defineEventHandler(async () => {
       take: 5,
       select: { action: true, resource: true, userName: true, createdAt: true },
     })
-  } catch { /* table may not exist yet */ }
+  } catch {
+    // Some development databases may not have the optional audit table yet.
+  }
 
-  // Page view count (today)
   let todayPageViews = 0
   try {
     const todayStart = new Date()
     todayStart.setHours(0, 0, 0, 0)
     todayPageViews = await prisma.pageView.count({ where: { createdAt: { gte: todayStart } } })
-  } catch { /* ignore */ }
+  } catch {
+    // Analytics tables are optional during early CMS setup.
+  }
 
   return {
     counts: {
@@ -89,5 +94,6 @@ export default defineEventHandler(async () => {
     recentRegistrations,
     recentNews,
     recentActivity,
+    webzineSummary: buildWebzineDashboardSummary({ banners, articles: articleAudit }),
   }
 })

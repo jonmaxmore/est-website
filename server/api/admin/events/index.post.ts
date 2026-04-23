@@ -33,6 +33,8 @@ export default defineEventHandler(async (event) => {
       icon: body.icon || null,
       color: body.color || null,
       visible: body.visible !== false,
+      campaignCode: body.campaignCode || null,
+      linkedArticleId: body.linkedArticleId ? Number(body.linkedArticleId) : null,
     },
   })
 

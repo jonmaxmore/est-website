@@ -3,6 +3,11 @@ import { test, expect, type Page } from '@playwright/test'
 const ADMIN_EMAIL = process.env.TEST_ADMIN_EMAIL || 'admin@eternaltowersaga.com'
 const ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD || 'change-me'
 
+async function gotoAdminLogin(page: Page, waitUntil: 'domcontentloaded' | 'networkidle' = 'domcontentloaded') {
+  await page.goto('/admin/login', { waitUntil })
+  await page.locator('[data-testid="admin-login-form"][data-ready="true"]').waitFor({ state: 'attached', timeout: 15_000 })
+}
+
 async function fillLoginForm(page: Page, email: string, password: string) {
   const emailInput = page.locator('input[type="email"]')
   const passwordInput = page.locator('input[type="password"]')
@@ -19,7 +24,7 @@ async function fillLoginForm(page: Page, email: string, password: string) {
 
 test.describe('Admin Authentication', () => {
   test('should render the admin login page', async ({ page }) => {
-    await page.goto('/admin/login', { waitUntil: 'domcontentloaded' })
+    await gotoAdminLogin(page)
 
     const heading = page.getByRole('heading', { name: /Admin Login/i })
     await expect(heading).toBeVisible()
@@ -35,7 +40,7 @@ test.describe('Admin Authentication', () => {
   })
 
   test('should show error for invalid credentials', async ({ page }) => {
-    await page.goto('/admin/login', { waitUntil: 'networkidle' })
+    await gotoAdminLogin(page, 'networkidle')
 
     await fillLoginForm(page, 'wrong@example.com', 'wrong-password')
     await page.getByRole('button', { name: /Sign In/i }).click()
@@ -46,7 +51,7 @@ test.describe('Admin Authentication', () => {
 
   test('should protect admin dashboard from unauthenticated access', async ({ page }) => {
     // Go to admin login directly — this is the entry point for unauthenticated users
-    await page.goto('/admin/login', { waitUntil: 'networkidle' })
+    await gotoAdminLogin(page, 'networkidle')
 
     // The login page should be accessible and render a login form
     const passwordField = page.locator('input[type="password"]')
@@ -74,7 +79,7 @@ test.describe('Admin Authentication', () => {
       'Set TEST_ADMIN_PASSWORD in .env.test to run this test',
     )
 
-    await page.goto('/admin/login', { waitUntil: 'domcontentloaded' })
+    await gotoAdminLogin(page)
 
     await fillLoginForm(page, ADMIN_EMAIL, ADMIN_PASSWORD)
     await page.getByRole('button', { name: /Sign In/i }).click()

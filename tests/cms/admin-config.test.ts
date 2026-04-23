@@ -32,6 +32,33 @@ describe('admin config validation', () => {
     )
   })
 
+  it('accepts the controlled webzine topic registry', () => {
+    const result = parseAdminConfigWrite({
+      key: 'webzine_topics',
+      value: [
+        {
+          key: 'getting-started',
+          slug: 'getting-started',
+          labelEn: 'Getting Started',
+          labelTh: 'Getting Started',
+          visible: true,
+        },
+      ],
+    })
+
+    assert.equal(result.key, 'webzine_topics')
+    assert.equal(Array.isArray(result.value), true)
+  })
+
+  it('rejects topic records without a key', () => {
+    assert.throws(() =>
+      parseAdminConfigWrite({
+        key: 'webzine_topics',
+        value: [{ slug: 'broken', labelEn: 'Broken', labelTh: 'Broken', visible: true }],
+      }),
+    )
+  })
+
   it('rejects page-backed navigation items without a page key', () => {
     assert.throws(() =>
       parseAdminConfigWrite({

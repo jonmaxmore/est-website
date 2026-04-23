@@ -1,5 +1,8 @@
 <template>
   <div>
+    <SiteMarketingBannerSlot class="mx-6 pt-24 md:mx-auto md:max-w-7xl" placement="announcement_bar" :banner="banners?.announcement_bar || null" />
+    <SiteMarketingBannerSlot placement="popup" :banner="banners?.popup || null" />
+    <SiteMarketingBannerSlot placement="floating" :banner="banners?.floating || null" />
     <!-- ═══ HERO — Full-bleed with game art ═══ -->
     <section class="relative flex min-h-[70vh] items-center justify-center overflow-hidden text-center">
       <!-- Background Art -->
@@ -175,12 +178,17 @@
         </div>
       </div>
     </section>
+
+    <section class="mx-6 pb-10 md:mx-auto md:max-w-7xl">
+      <SiteMarketingBannerSlot placement="footer_strip" :banner="banners?.footer_strip || null" />
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
 const { t, locale } = useI18n()
 const { trackPreRegister, trackPreRegisterSuccess, trackReferralCopy } = useTracking()
+const { data: banners } = await useResolvedBanners({ routeType: 'event_page' })
 
 interface EventReward {
   id: string

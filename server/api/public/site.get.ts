@@ -1,4 +1,5 @@
 import { normalizeNavigationConfig, resolveNavigationHref } from '../../../app/shared/cms/navigation'
+import { normalizeWebzineTopics } from '../../../app/shared/cms/webzine'
 import { normalizeIntegrationsConfig } from '../../utils/admin-config'
 
 /** Enhanced public site config â€” returns navigation, social, appearance, FAQ in one call */
@@ -6,7 +7,7 @@ export default defineEventHandler(async () => {
   const configs = await prisma.siteConfig.findMany({
     where: {
       key: {
-        in: ['navigation', 'social', 'appearance', 'seo', 'faq', 'maintenance', 'integrations'],
+          in: ['navigation', 'social', 'appearance', 'seo', 'faq', 'maintenance', 'integrations', 'webzine_topics'],
       },
     },
   })
@@ -18,6 +19,7 @@ export default defineEventHandler(async () => {
 
   const navigation = normalizeNavigationConfig(configMap.get('navigation'))
   const integrations = normalizeIntegrationsConfig(configMap.get('integrations'))
+  const webzineTopicConfig = configMap.get('webzine_topics')
   let mainNav = navigation.main
   const footerNav = navigation.footer
 
@@ -60,6 +62,7 @@ export default defineEventHandler(async () => {
       main: resolveVisibleItems(mainNav),
       footer: resolveVisibleItems(footerNav),
     },
+    webzineTopics: normalizeWebzineTopics(Array.isArray(webzineTopicConfig) ? webzineTopicConfig : []),
     social: (configMap.get('social') || {}) as Record<string, string>,
     appearance: (configMap.get('appearance') || {}) as Record<string, string>,
     seo: (configMap.get('seo') || {}) as Record<string, string>,

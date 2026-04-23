@@ -1,87 +1,140 @@
 <template>
-  <div>
-    <!-- Hero -->
-    <section class="relative flex min-h-[50vh] items-center justify-center text-center">
-      <div class="absolute inset-0 bg-gradient-to-br from-[rgba(15,10,30,1)] to-[rgba(10,10,15,1)]" />
-      <div class="relative z-[1] px-6 pt-24 pb-12" v-motion :initial="{ opacity: 0, y: 30 }" :enter="{ opacity: 1, y: 0 }">
-        <span class="mb-4 inline-block rounded-full border border-gold/20 bg-gold/8 px-5 py-1.5 text-xs font-semibold uppercase tracking-widest text-gold">{{ t('nav.news') }}</span>
-        <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-extrabold tracking-tight">{{ t('news.latestNews') }}</h1>
+  <main class="min-h-screen bg-[#08070b] text-white">
+    <SiteMarketingBannerSlot class="mx-6 pt-24 md:mx-auto md:max-w-7xl" placement="announcement_bar" :banner="banners?.announcement_bar || null" />
+
+    <section class="relative isolate overflow-hidden px-6 pt-24 pb-16 md:pt-28">
+      <div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_12%,rgba(212,168,67,0.22),transparent_30%),radial-gradient(circle_at_80%_10%,rgba(87,68,146,0.22),transparent_28%),linear-gradient(180deg,#110d17,#08070b_72%)]" />
+      <div class="absolute inset-x-0 bottom-0 -z-10 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+
+      <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(360px,0.55fr)] lg:items-end">
+        <div v-motion :initial="{ opacity: 0, y: 24 }" :enter="{ opacity: 1, y: 0 }">
+          <p class="mb-5 text-xs font-black uppercase tracking-[0.36em] text-gold">Official Webzine</p>
+          <h1 class="max-w-4xl text-[clamp(2.5rem,7vw,6.4rem)] font-black leading-[0.92] tracking-[-0.06em]">
+            Eternal Tower Saga Chronicle
+          </h1>
+          <p class="mt-7 max-w-2xl text-base leading-8 text-white/62">
+            Announcements, campaign intel, patch notes, guides, lore, and behind-the-scenes dispatches from the tower.
+          </p>
+        </div>
+
+        <SiteWebzineArticleCard v-if="landing?.featured" :article="landing.featured" class="lg:translate-y-8" />
       </div>
     </section>
 
-    <section class="mx-auto max-w-7xl px-6 py-12">
-      <!-- Filters -->
-      <div class="mb-10 flex flex-wrap justify-center gap-2">
-        <button
-          v-for="cat in categories"
-          :key="cat.value"
-          class="cursor-pointer rounded-full border px-5 py-2 text-xs font-medium transition-all duration-300"
-          :class="activeCategory === cat.value
-            ? 'border-gold/30 bg-gold/10 text-gold'
-            : 'border-white/8 bg-transparent text-white/50 hover:border-white/20 hover:text-white'"
-          @click="activeCategory = cat.value"
-        >
-          {{ cat.label }}
-        </button>
-      </div>
-
-      <!-- Grid -->
-      <div class="grid gap-6" style="grid-template-columns: repeat(auto-fill, minmax(340px, 1fr))">
-        <NuxtLink
-          v-for="(article, i) in filteredNews"
-          :key="article.slug"
-          :to="`/news/${article.slug}`"
-          class="group overflow-hidden rounded-2xl border border-white/6 bg-white/4 no-underline transition-all duration-400 hover:-translate-y-1.5 hover:border-white/15 hover:shadow-[0_20px_60px_rgba(0,0,0,0.4)]"
-          v-motion
-          :initial="{ opacity: 0, y: 30 }"
-          :visibleOnce="{ opacity: 1, y: 0, transition: { delay: i * 80 } }"
-        >
-          <div class="h-[200px] overflow-hidden">
-            <img
-              v-if="article.featuredImage"
-              :src="article.featuredImage"
-              :alt="article.titleEn"
-              class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              loading="lazy"
-            />
-            <div v-else class="flex h-full items-center justify-center bg-surface-elevated text-5xl">📰</div>
-          </div>
-          <div class="p-5">
-            <div class="mb-3 flex items-center justify-between">
-              <span class="text-[0.6875rem] font-semibold uppercase tracking-wider text-gold">{{ article.category }}</span>
-              <time class="text-xs text-white/30">{{ formatDate(article.publishedAt) }}</time>
+    <section class="mx-auto grid max-w-7xl gap-10 px-6 py-12 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div class="space-y-14">
+        <section>
+          <div class="mb-5 flex items-end justify-between gap-4">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-[0.24em] text-gold/80">Latest Signals</p>
+              <h2 class="mt-2 text-2xl font-black tracking-tight">Fresh From The Tower</h2>
             </div>
-            <h3 class="mb-2 text-base font-semibold leading-snug">{{ article.titleEn }}</h3>
-            <p v-if="article.excerptEn" class="line-clamp-2 text-sm leading-relaxed text-white/50">{{ article.excerptEn }}</p>
+            <NuxtLink to="/news/type/GUIDE" class="hidden text-sm font-semibold text-white/50 no-underline hover:text-gold sm:block">Browse guides</NuxtLink>
           </div>
-        </NuxtLink>
+          <div class="grid gap-x-8 md:grid-cols-2">
+            <SiteWebzineArticleCard v-for="article in landing?.latest || []" :key="article.slug" :article="article" />
+          </div>
+        </section>
+
+        <section>
+          <div class="mb-5">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-gold/80">Patch Notes</p>
+            <h2 class="mt-2 text-2xl font-black tracking-tight">Balance, Fixes, And Launch Updates</h2>
+          </div>
+          <div class="grid gap-x-8 md:grid-cols-2">
+            <SiteWebzineArticleCard v-for="article in landing?.sections?.patchNotes || []" :key="article.slug" :article="article" />
+          </div>
+        </section>
+
+        <section>
+          <div class="mb-5">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-gold/80">Field Guides</p>
+            <h2 class="mt-2 text-2xl font-black tracking-tight">Start Strong, Climb Higher</h2>
+          </div>
+          <div class="grid gap-x-8 md:grid-cols-2">
+            <SiteWebzineArticleCard v-for="article in landing?.sections?.guides || []" :key="article.slug" :article="article" />
+          </div>
+        </section>
+
+        <section>
+          <div class="mb-5">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-gold/80">Lore</p>
+            <h2 class="mt-2 text-2xl font-black tracking-tight">Worldbuilding, Factions, And Legends</h2>
+          </div>
+          <div class="grid gap-x-8 md:grid-cols-2">
+            <SiteWebzineArticleCard v-for="article in landing?.sections?.lore || []" :key="article.slug" :article="article" />
+          </div>
+        </section>
+
+        <section>
+          <div class="mb-5">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-gold/80">Dev Blogs</p>
+            <h2 class="mt-2 text-2xl font-black tracking-tight">Notes From The Team</h2>
+          </div>
+          <div class="grid gap-x-8 md:grid-cols-2">
+            <SiteWebzineArticleCard v-for="article in landing?.sections?.devBlogs || []" :key="article.slug" :article="article" />
+          </div>
+        </section>
+
+        <section>
+          <div class="mb-5">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-gold/80">Live Calendar</p>
+            <h2 class="mt-2 text-2xl font-black tracking-tight">Active And Upcoming Events</h2>
+          </div>
+          <div class="grid gap-4 md:grid-cols-2">
+            <article
+              v-for="event in landing?.activeEvents || []"
+              :key="event.id"
+              class="rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-5 shadow-[0_20px_50px_rgba(0,0,0,0.22)]"
+            >
+              <p class="text-xs font-bold uppercase tracking-[0.24em] text-gold/80">{{ event.status }}</p>
+              <h3 class="mt-3 text-xl font-black tracking-tight">{{ event.titleEn }}</h3>
+              <p class="mt-2 text-sm text-white/58">{{ formatEventRange(event.startsAt, event.endsAt) }}</p>
+            </article>
+          </div>
+        </section>
       </div>
 
-      <p v-if="filteredNews.length === 0" class="py-16 text-center text-white/30">No articles found.</p>
+      <aside class="space-y-8 lg:sticky lg:top-24 lg:self-start">
+        <SiteMarketingBannerSlot placement="sidebar" :banner="banners?.sidebar || null" />
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-5">
+          <p class="mb-4 text-xs font-bold uppercase tracking-[0.24em] text-gold/80">Topics</p>
+          <div class="space-y-2">
+            <NuxtLink
+              v-for="topic in landing?.topics || []"
+              :key="topic.key"
+              :to="`/news/topic/${topic.key}`"
+              class="block rounded-xl px-3 py-2 text-sm text-white/65 no-underline transition-colors hover:bg-white/7 hover:text-gold"
+            >
+              {{ topic.labelEn }}
+            </NuxtLink>
+          </div>
+        </section>
+      </aside>
     </section>
-  </div>
+
+    <section class="mx-6 pb-12 md:mx-auto md:max-w-7xl">
+      <SiteMarketingBannerSlot placement="footer_strip" :banner="banners?.footer_strip || null" />
+    </section>
+  </main>
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n()
 usePageSeo({
-  title: `${t('nav.news')} | Eternal Tower Saga`,
-  description: 'Stay up-to-date with the latest announcements, events, and updates from Eternal Tower Saga.',
+  title: 'Eternal Tower Saga Chronicle | Official Webzine',
+  description: 'Announcements, patch notes, guides, lore, and developer updates from Eternal Tower Saga.',
 })
-const activeCategory = ref('ALL')
-const categories = [
-  { value: 'ALL', label: 'All' },
-  { value: 'ANNOUNCEMENT', label: 'Announcement' },
-  { value: 'EVENT', label: 'Event' },
-  { value: 'UPDATE', label: 'Update' },
-  { value: 'MEDIA', label: 'Media' },
-]
-interface NewsItem { slug: string; titleEn: string; excerptEn?: string | null; category: string; featuredImage?: string | null; publishedAt?: string | null }
-const { data: newsData } = await useFetch<{ data: NewsItem[] }>('/api/public/news', { query: { limit: 50 }, default: () => ({ data: [] }) })
-const filteredNews = computed(() => {
-  const articles = newsData.value?.data || []
-  if (activeCategory.value === 'ALL') return articles
-  return articles.filter((a) => a.category === activeCategory.value)
-})
-function formatDate(d: string | null | undefined): string { if (!d) return ''; return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) }
+
+const { data: landing } = await useFetch('/api/public/webzine/landing')
+const { data: banners } = await useResolvedBanners({ routeType: 'news_index' })
+
+function formatEventRange(startsAt: string | null | undefined, endsAt: string | null | undefined) {
+  if (!startsAt) return 'Schedule to be announced'
+
+  const startLabel = new Date(startsAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  if (!endsAt) return startLabel
+
+  const endLabel = new Date(endsAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  return `${startLabel} - ${endLabel}`
+}
 </script>

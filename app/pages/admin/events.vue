@@ -273,6 +273,18 @@
             <AdminMediaPicker v-model="form.bannerImage" label="Banner" />
           </div>
 
+          <div class="rounded-xl border border-white/6 bg-white/3 p-4">
+            <h4 class="mb-3 text-sm font-bold text-white/70">Campaign Link</h4>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <UFormField label="Campaign Code">
+                <UInput v-model="form.campaignCode" placeholder="launch-week" />
+              </UFormField>
+              <UFormField label="Linked Article">
+                <USelect v-model="form.linkedArticleId" :items="articleSelectOptions" value-key="value" />
+              </UFormField>
+            </div>
+          </div>
+
           <p v-if="formGlobalError" class="text-center text-sm text-red-400">{{ formGlobalError }}</p>
         </div>
       </template>
@@ -304,7 +316,14 @@ interface GameEventItem {
   startsAt: string; endsAt: string; timezone: string
   multiplier?: number | null; bonusType?: string | null
   bannerImage?: string | null; icon?: string | null; color?: string | null
+  campaignCode?: string | null; linkedArticleId?: number | null
   visible: boolean; createdAt: string
+}
+
+interface ArticleOption {
+  id: number
+  titleEn: string
+  titleTh: string
 }
 
 interface EventReward {
@@ -352,6 +371,7 @@ const page = ref(1)
 const totalPages = ref(1)
 const filterType = ref('')
 const filterStatus = ref('')
+const articleOptions = ref<ArticleOption[]>([])
 const editorOpen = ref(false)
 const editorMode = ref<'create' | 'edit'>('create')
 const editingId = ref<string | null>(null)
@@ -417,6 +437,8 @@ const form = reactive({
   titleEn: '', titleTh: '', descriptionEn: '', descriptionTh: '',
   type: 'EVENT', status: 'SCHEDULED', startsAt: '', endsAt: '',
   multiplier: 2, bonusType: 'EXP', bannerImage: '', icon: '', color: '#d4a843',
+  campaignCode: '',
+  linkedArticleId: null as number | null,
   visible: true,
 })
 const formErrors = reactive<Record<string, string>>({
@@ -431,6 +453,10 @@ const todayEvents = computed(() => {
     return start <= now && end >= now && ev.status !== 'CANCELLED'
   })
 })
+const articleSelectOptions = computed(() => [
+  { label: 'No linked article', value: null },
+  ...articleOptions.value.map((article) => ({ label: article.titleEn || article.titleTh, value: article.id })),
+])
 
 async function loadEvents() {
   try {
@@ -440,6 +466,15 @@ async function loadEvents() {
     events.value = res.data
     totalPages.value = res.meta.totalPages
   } catch { events.value = [] }
+}
+
+async function loadArticleOptions() {
+  try {
+    const result = await $fetch<{ data: ArticleOption[] }>('/api/admin/news', { query: { limit: 100 } })
+    articleOptions.value = result.data
+  } catch {
+    articleOptions.value = []
+  }
 }
 
 async function loadEventPage() {
@@ -479,6 +514,8 @@ function openEditor(ev: GameEventItem | null) {
       startsAt: ev.startsAt, endsAt: ev.endsAt,
       multiplier: ev.multiplier ?? 2, bonusType: ev.bonusType || 'EXP',
       bannerImage: ev.bannerImage || '', icon: ev.icon || '',
+      campaignCode: ev.campaignCode || '',
+      linkedArticleId: ev.linkedArticleId || null,
       color: ev.color || '#d4a843', visible: ev.visible,
     })
   } else {
@@ -487,6 +524,8 @@ function openEditor(ev: GameEventItem | null) {
       titleEn: '', titleTh: '', descriptionEn: '', descriptionTh: '',
       type: 'EVENT', status: 'SCHEDULED', startsAt: '', endsAt: '',
       multiplier: 2, bonusType: 'EXP', bannerImage: '', icon: '',
+      campaignCode: '',
+      linkedArticleId: null,
       color: '#d4a843', visible: true,
     })
   }
@@ -528,7 +567,12 @@ async function saveEvent() {
   saving.value = true; formGlobalError.value = ''
 
   try {
-    const payload = { ...form, bannerImage: form.bannerImage || null }
+    const payload = {
+      ...form,
+      bannerImage: form.bannerImage || null,
+      campaignCode: form.campaignCode || null,
+      linkedArticleId: form.linkedArticleId || null,
+    }
     if (editorMode.value === 'create') {
       await $fetch('/api/admin/events', { method: 'POST', body: payload })
     } else {
@@ -588,7 +632,7 @@ function formatTime(d: string) {
   return new Date(d).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
 }
 
-await Promise.all([loadEvents(), loadEventPage()])
+await Promise.all([loadEvents(), loadEventPage(), loadArticleOptions()])
 </script>
 
 <style scoped>

@@ -3,9 +3,11 @@ import { unlink } from 'node:fs/promises'
 import { join } from 'node:path'
 import pg from 'pg'
 
+import { resolvePgConnectionString } from '../../server/utils/database-url'
+
 const ADMIN_EMAIL = process.env.TEST_ADMIN_EMAIL || 'admin@eternaltowersaga.com'
 const ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD || 'change-me'
-const DATABASE_URL = process.env.DATABASE_URL || ''
+const DATABASE_URL = resolvePgConnectionString(process.env.DATABASE_URL)
 const TEST_IMAGE_BASE64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO7Zk1gAAAAASUVORK5CYII='
 
 async function deleteUploadedMediaByOriginalName(fileName: string) {
