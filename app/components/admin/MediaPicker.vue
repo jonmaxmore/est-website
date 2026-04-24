@@ -3,7 +3,8 @@
     <label v-if="label" class="mp-label">{{ label }}</label>
     <div class="mp-preview-row">
       <div v-if="modelValue" class="mp-thumb" @click="openModal">
-        <img :src="modelValue" :alt="label || 'Selected image'" />
+        <video v-if="isCurrentVideo" :src="modelValue" muted class="mp-thumb-media" />
+        <img v-else :src="modelValue" :alt="label || 'Selected image'" class="mp-thumb-media" />
         <button type="button" class="mp-clear" title="Remove" @click.stop="emit('update:modelValue', '')">
           <UIcon name="i-lucide-x" class="h-3 w-3" />
         </button>
@@ -19,6 +20,16 @@
           <div class="mp-modal">
             <div class="mp-modal-header">
               <h3>Select Media</h3>
+              <div class="mp-filter-tabs">
+                <button
+                  v-for="tab in filterTabs"
+                  :key="tab.value"
+                  type="button"
+                  class="mp-filter-tab"
+                  :class="{ active: activeFilter === tab.value }"
+                  @click="activeFilter = tab.value"
+                >{{ tab.label }}</button>
+              </div>
               <button type="button" class="mp-close" @click="closeModal">
                 <UIcon name="i-lucide-x" class="h-4 w-4" />
               </button>
@@ -35,8 +46,9 @@
               <span v-else>
                 Drop files here or
                 <label for="mp-file-input" class="mp-upload-link">browse</label>
+                <span class="mp-upload-hint">(max 100 MB)</span>
               </span>
-              <input id="mp-file-input" type="file" accept="image/*" class="mp-hidden" @change="handleFileSelect" />
+              <input id="mp-file-input" type="file" :accept="inputAccept" class="mp-hidden" @change="handleFileSelect" />
             </div>
 
             <div class="mp-search">
@@ -51,8 +63,11 @@
                 :class="{ selected: selectedUrl === asset.url }"
                 @click="selectedUrl = asset.url"
               >
-                <img :src="asset.thumbnailUrl || asset.url" :alt="asset.altText || asset.originalName" loading="lazy" />
+                <div v-if="asset.mimeType.startsWith('video/')" class="mp-video-badge">VIDEO</div>
+                <video v-if="asset.mimeType.startsWith('video/')" :src="asset.url" muted preload="metadata" class="mp-item-media" />
+                <img v-else :src="asset.thumbnailUrl || asset.url" :alt="asset.altText || asset.originalName" loading="lazy" class="mp-item-media" />
                 <div class="mp-item-name">{{ asset.originalName }}</div>
+                <div v-if="asset.sizeBytes" class="mp-item-size">{{ formatSize(asset.sizeBytes) }}</div>
                 <div v-if="selectedUrl === asset.url" class="mp-check">
                   <UIcon name="i-lucide-check" class="h-3 w-3" />
                 </div>
@@ -79,6 +94,9 @@
 </template>
 
 <script setup lang="ts">
+import type { MediaPickerAccept } from '../../shared/cms/media'
+import { matchesMediaPickerAccept, resolveMediaInputAccept } from '../../shared/cms/media'
+
 interface MediaAssetItem {
   id: string
   filename: string
@@ -94,8 +112,10 @@ interface MediaAssetItem {
 const props = withDefaults(defineProps<{
   modelValue?: string
   label?: string
+  accept?: MediaPickerAccept
 }>(), {
   modelValue: '',
+  accept: 'image',
 })
 
 const emit = defineEmits<{
@@ -112,20 +132,52 @@ const dragActive = ref(false)
 const uploading = ref(false)
 const uploadProgress = ref('')
 const loading = ref(false)
+const activeFilter = ref<'all' | 'image' | 'video'>('all')
 
 const { showToast } = useAdminToast()
 const { uploadFile } = useAdminMediaUpload()
 
+const inputAccept = computed(() => resolveMediaInputAccept(props.accept))
+
+const isCurrentVideo = computed(() => {
+  if (!props.modelValue) return false
+  return props.modelValue.endsWith('.mp4') || props.modelValue.endsWith('.webm')
+})
+
+const filterTabs = computed(() => {
+  const tabs = [{ value: 'all' as const, label: 'All' }]
+  if (props.accept === 'all' || props.accept === 'image') {
+    tabs.push({ value: 'image' as const, label: 'Images' })
+  }
+  if (props.accept === 'all' || props.accept === 'video') {
+    tabs.push({ value: 'video' as const, label: 'Videos' })
+  }
+  return tabs
+})
+
 const filteredAssets = computed(() => {
   const query = searchQuery.value.toLowerCase()
-  const images = assets.value.filter((asset) => asset.mimeType.startsWith('image/'))
 
-  if (!query) {
-    return images
+  let filtered = assets.value.filter((asset) => matchesMediaPickerAccept(asset.mimeType, props.accept))
+
+  if (activeFilter.value === 'image') {
+    filtered = filtered.filter((a) => a.mimeType.startsWith('image/'))
+  } else if (activeFilter.value === 'video') {
+    filtered = filtered.filter((a) => a.mimeType.startsWith('video/'))
   }
 
-  return images.filter((asset) => asset.originalName.toLowerCase().includes(query))
+  if (!query) {
+    return filtered
+  }
+
+  return filtered.filter((asset) => asset.originalName.toLowerCase().includes(query))
 })
+
+function formatSize(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
 
 async function loadAssets() {
   loading.value = true
@@ -142,6 +194,7 @@ async function loadAssets() {
 
 async function openModal() {
   selectedUrl.value = props.modelValue || ''
+  activeFilter.value = 'all'
   modalOpen.value = true
   await loadAssets()
 }
@@ -222,7 +275,7 @@ function handleFileSelect(event: Event) {
   cursor: pointer;
   flex-shrink: 0;
 }
-.mp-thumb img {
+.mp-thumb-media {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -289,11 +342,35 @@ function handleFileSelect(event: Event) {
   justify-content: space-between;
   padding: 16px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 12px;
 }
 .mp-modal-header h3 {
   font-size: 1rem;
   font-weight: 700;
   margin: 0;
+  white-space: nowrap;
+}
+.mp-filter-tabs {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+  justify-content: center;
+}
+.mp-filter-tab {
+  padding: 4px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.mp-filter-tab:hover { color: rgba(255, 255, 255, 0.7); border-color: rgba(255, 255, 255, 0.15); }
+.mp-filter-tab.active {
+  background: rgba(212, 168, 67, 0.15);
+  border-color: rgba(212, 168, 67, 0.4);
+  color: #d4a843;
 }
 .mp-close {
   width: 32px;
@@ -325,6 +402,7 @@ function handleFileSelect(event: Event) {
   background: rgba(212, 168, 67, 0.05);
 }
 .mp-upload-link { color: #d4a843; cursor: pointer; text-decoration: underline; }
+.mp-upload-hint { color: rgba(255, 255, 255, 0.25); font-size: 0.75rem; margin-left: 4px; }
 .mp-hidden { display: none; }
 .mp-search { padding: 8px 20px; }
 .mp-search-input {
@@ -357,19 +435,37 @@ function handleFileSelect(event: Event) {
 }
 .mp-item:hover { border-color: rgba(255, 255, 255, 0.15); }
 .mp-item.selected { border-color: #d4a843; }
-.mp-item img {
+.mp-item-media {
   width: 100%;
   height: 90px;
   object-fit: cover;
   display: block;
 }
+.mp-video-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(59, 130, 246, 0.85);
+  color: white;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  z-index: 1;
+}
 .mp-item-name {
-  padding: 4px 6px;
+  padding: 4px 6px 0;
   font-size: 0.625rem;
   color: rgba(255, 255, 255, 0.4);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.mp-item-size {
+  padding: 0 6px 4px;
+  font-size: 0.5625rem;
+  color: rgba(255, 255, 255, 0.2);
 }
 .mp-check {
   position: absolute;

@@ -172,6 +172,7 @@ model MediaAsset {
   sizeBytes    Int
   width        Int?
   height       Int?
+  duration     Float?
   altText      String?
   url          String
   thumbnailUrl String?

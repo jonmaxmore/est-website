@@ -43,8 +43,8 @@ export default defineEventHandler(async (event) => {
     if (part.data.length > MAX_MEDIA_UPLOAD_BYTES) {
       throw createError({
         statusCode: 400,
-        message: 'File too large. Max 10MB',
-        data: buildMediaUploadError('FILE_TOO_LARGE', 'File too large. Max 10MB', 'file'),
+        message: 'File too large. Max 100MB',
+        data: buildMediaUploadError('FILE_TOO_LARGE', 'File too large. Max 100MB', 'file'),
       })
     }
 
@@ -79,6 +79,7 @@ export default defineEventHandler(async (event) => {
           sizeBytes: part.data.length,
           width,
           height,
+          duration: part.type?.startsWith('video/') ? null : undefined,
           url: `/uploads/${filename}`,
         },
       })

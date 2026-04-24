@@ -65,8 +65,8 @@
           </div>
 
           <div class="mb-4">
-            <label class="mb-1 block text-sm font-medium text-white/60">Background Image URL</label>
-            <input v-model="editingSection.background" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="/images/section-bg.webp" />
+            <label class="mb-1 block text-sm font-medium text-white/60">Background Image URL (poster)</label>
+            <AdminMediaPicker v-model="editingSection.background" label="" accept="image" />
             <!-- Preview -->
             <div v-if="editingSection.background" class="mt-2 h-24 overflow-hidden rounded-lg border border-white/10">
               <img :src="editingSection.background" class="h-full w-full object-cover" />
@@ -93,6 +93,21 @@
               <input v-model="editingSection.config.showSocialLinks" type="checkbox" class="accent-gold" />
               Show social icons from Site Settings
             </label>
+
+            <div class="mt-4 rounded-lg border border-white/6 bg-black/20 p-3">
+              <h4 class="mb-2 text-xs font-semibold uppercase tracking-widest text-white/40">Video Background</h4>
+              <div class="mb-3">
+                <label class="mb-1 block text-sm font-medium text-white/60">Background Mode</label>
+                <select v-model="editingSection.config.backgroundMode" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50">
+                  <option value="image">Image</option>
+                  <option value="video">Video (MP4)</option>
+                </select>
+              </div>
+              <div v-if="editingSection.config.backgroundMode === 'video'" class="mb-2">
+                <AdminMediaPicker v-model="editingSection.config.backgroundVideo" label="Video File" accept="video" />
+                <p class="mt-1 text-xs text-white/30">Upload MP4 (max 100 MB). Background Image above becomes the poster.</p>
+              </div>
+            </div>
 
             <div class="mt-5 flex items-center justify-between">
               <h4 class="text-xs font-semibold uppercase tracking-widest text-white/40">Hero Buttons</h4>
@@ -203,6 +218,8 @@ function defaultHeroConfig() {
     subtitleEn: '',
     subtitleTh: '',
     showSocialLinks: true,
+    backgroundMode: 'image' as const,
+    backgroundVideo: '',
     buttons: [
       { id: 'pre-register', labelEn: 'Pre-register', labelTh: 'Pre-register', href: '/event', variant: 'primary', visible: true, order: 0, target: '_self' },
       { id: 'download', labelEn: 'Download', labelTh: 'Download', href: '/download', variant: 'secondary', visible: true, order: 1, target: '_self' },

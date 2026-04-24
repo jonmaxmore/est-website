@@ -1,4 +1,4 @@
-export const MAX_MEDIA_UPLOAD_BYTES = 10 * 1024 * 1024
+export const MAX_MEDIA_UPLOAD_BYTES = 100 * 1024 * 1024
 
 export const ALLOWED_MEDIA_MIME_TYPES = [
   'image/jpeg',
@@ -10,6 +10,10 @@ export const ALLOWED_MEDIA_MIME_TYPES = [
 ] as const
 
 export const ALLOWED_MEDIA_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.avif', '.gif', '.mp4'] as const
+export const MEDIA_PICKER_ACCEPT_VALUES = ['image', 'video', 'all'] as const
+
+export type MediaPickerAccept = (typeof MEDIA_PICKER_ACCEPT_VALUES)[number]
+export type MediaAssetKind = 'image' | 'video'
 
 export type MediaUploadErrorCode =
   | 'FILE_TOO_LARGE'
@@ -17,6 +21,26 @@ export type MediaUploadErrorCode =
   | 'NO_FILE'
   | 'UPLOAD_WRITE_FAILED'
   | 'INVALID_METADATA'
+
+export function getMediaAssetKind(mimeType: string): MediaAssetKind {
+  return mimeType.startsWith('video/') ? 'video' : 'image'
+}
+
+export function matchesMediaPickerAccept(mimeType: string, accept: MediaPickerAccept = 'image') {
+  if (accept === 'all') {
+    return true
+  }
+
+  return getMediaAssetKind(mimeType) === accept
+}
+
+export function resolveMediaInputAccept(accept: MediaPickerAccept = 'image') {
+  if (accept === 'all') {
+    return 'image/*,video/*'
+  }
+
+  return accept === 'video' ? 'video/*' : 'image/*'
+}
 
 export function isAllowedMediaMimeType(mimeType: string) {
   return (ALLOWED_MEDIA_MIME_TYPES as readonly string[]).includes(mimeType)

@@ -2,7 +2,20 @@
   <section ref="heroRef" class="relative flex min-h-dvh w-full items-center justify-center overflow-hidden">
     <!-- Background -->
     <div class="absolute inset-0 z-0">
-      <img :src="heroBackground" alt="" class="h-full w-full object-cover object-[center_30%]" loading="eager" />
+      <!-- Video background -->
+      <video
+        v-if="isVideoMode && heroVideoUrl"
+        ref="videoRef"
+        :src="heroVideoUrl"
+        :poster="heroBackground"
+        autoplay
+        loop
+        muted
+        playsinline
+        class="h-full w-full object-cover object-[center_30%]"
+      />
+      <!-- Image background (fallback) -->
+      <img v-else :src="heroBackground" alt="" class="h-full w-full object-cover object-[center_30%]" loading="eager" />
       <div class="absolute inset-x-0 top-0 h-[30%] bg-gradient-to-b from-[rgba(10,10,15,0.8)] to-transparent" />
       <div class="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-surface-primary to-transparent" />
     </div>
@@ -82,6 +95,8 @@ interface HeroConfig {
   subtitleEn: string
   subtitleTh: string
   showSocialLinks: boolean
+  backgroundMode: 'image' | 'video'
+  backgroundVideo: string
   buttons: HeroButtonConfig[]
 }
 
@@ -93,11 +108,15 @@ const props = defineProps<{
 const { t, locale } = useI18n()
 const { trackDownload, trackPreRegister, trackSocial } = useTracking()
 
+const videoRef = ref<HTMLVideoElement | null>(null)
+
 const defaultHeroConfig: HeroConfig = {
   logo: '/images/logo.webp',
   subtitleEn: '',
   subtitleTh: '',
   showSocialLinks: true,
+  backgroundMode: 'image',
+  backgroundVideo: '',
   buttons: [
     { id: 'pre-register', labelEn: 'Pre-register', labelTh: 'Pre-register', href: '/event', variant: 'primary', visible: true, order: 0, target: '_self' },
     { id: 'download', labelEn: 'Download', labelTh: 'Download', href: '/download', variant: 'secondary', visible: true, order: 1, target: '_self' },
@@ -111,6 +130,9 @@ const heroConfig = computed<HeroConfig>(() => ({
 }))
 
 const heroBackground = computed(() => props.background || '/images/hero-bg.webp')
+const isVideoMode = computed(() => heroConfig.value.backgroundMode === 'video')
+const heroVideoUrl = computed(() => heroConfig.value.backgroundVideo || '')
+
 const localizedSubtitle = computed(() => {
   const subtitle = locale.value === 'th' ? heroConfig.value.subtitleTh : heroConfig.value.subtitleEn
   return subtitle || t('hero.tagline')

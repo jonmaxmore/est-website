@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { isSupportedHomepageSectionType } from '../../app/shared/cms/homepage'
+import { HERO_BACKGROUND_MODES, isSupportedHomepageSectionType, normalizeHeroBackgroundMode } from '../../app/shared/cms/homepage'
 import { normalizeNavigationConfig } from '../../app/shared/cms/navigation'
 import { normalizeWebzineTopics } from '../../app/shared/cms/webzine'
 
@@ -49,6 +49,8 @@ const heroSectionConfigSchema = z.object({
   subtitleEn: z.string().optional().default(''),
   subtitleTh: z.string().optional().default(''),
   showSocialLinks: z.boolean().optional().default(false),
+  backgroundMode: z.enum(HERO_BACKGROUND_MODES).optional().default('image'),
+  backgroundVideo: z.string().optional().default(''),
   buttons: z.array(heroButtonSchema).optional().default([]),
 })
 
@@ -208,6 +210,8 @@ export const DEFAULT_HERO_SECTION_CONFIG = {
   subtitleEn: '',
   subtitleTh: '',
   showSocialLinks: true,
+  backgroundMode: 'image' as const,
+  backgroundVideo: '',
   buttons: [
     { id: 'pre-register', labelEn: 'Pre-register', labelTh: 'Pre-register', href: '/event', variant: 'primary' as const, visible: true, order: 0, target: '_self' as const },
     { id: 'download', labelEn: 'Download', labelTh: 'Download', href: '/download', variant: 'secondary' as const, visible: true, order: 1, target: '_self' as const },
@@ -308,11 +312,36 @@ export function normalizeHeroSectionConfig(value: unknown) {
   return {
     ...DEFAULT_HERO_SECTION_CONFIG,
     ...config,
+    backgroundMode: normalizeHeroBackgroundMode(config.backgroundMode),
+    backgroundVideo: String(config.backgroundVideo || '').trim(),
     buttons: normalizeOrderedItems(buttons, 'hero-button').map((button) => ({
       ...button,
       labelEn: button.labelEn || button.labelTh,
       labelTh: button.labelTh || button.labelEn,
     })).filter((button) => button.href.trim() && (button.labelEn.trim() || button.labelTh.trim())),
+  }
+}
+
+function validateHomepageSectionsForWrite(
+  sections: Array<z.infer<typeof homepageSectionSchema> & { config: ReturnType<typeof normalizeHeroSectionConfig> | Record<string, unknown> }>,
+) {
+  for (const section of sections) {
+    if (section.type !== 'hero') {
+      continue
+    }
+
+    const config = normalizeHeroSectionConfig(section.config)
+    if (config.backgroundMode !== 'video') {
+      continue
+    }
+
+    if (!section.background.trim()) {
+      throw new Error('Hero video background requires a poster image')
+    }
+
+    if (!config.backgroundVideo.trim()) {
+      throw new Error('Hero video background requires a video URL')
+    }
   }
 }
 
@@ -410,11 +439,13 @@ const configParsers = {
       throw parsed.error
     }
 
-    return {
-      sections: [...parsed.data.sections]
-        .map(normalizeHomepageSectionConfig)
-        .sort((left, right) => left.order - right.order),
-    }
+    const sections = [...parsed.data.sections]
+      .map(normalizeHomepageSectionConfig)
+      .sort((left, right) => left.order - right.order)
+
+    validateHomepageSectionsForWrite(sections)
+
+    return { sections }
   },
   integrations: (value: unknown) => normalizeIntegrationsConfig(value),
   event_page: (value: unknown) => normalizeEventPageConfig(value),
