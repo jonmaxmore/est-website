@@ -42,3 +42,8 @@ certbot/
 
 # User uploads (persisted via Docker volume)
 public/uploads/
+
+# TypeScript build info
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+next-env.d.ts
