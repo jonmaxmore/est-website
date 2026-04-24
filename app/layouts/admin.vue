@@ -43,7 +43,7 @@
             <Transition name="nav-label">
               <span v-if="!sidebarCollapsed" class="nav-label">{{ item.label }}</span>
             </Transition>
-            <span v-if="item.badge && !sidebarCollapsed" class="nav-badge">{{ item.badge }}</span>
+            <span v-if="(item as any).badge && !sidebarCollapsed" class="nav-badge">{{ (item as any).badge }}</span>
           </NuxtLink>
         </template>
       </nav>
@@ -103,10 +103,10 @@
 
           <!-- User Info -->
           <div class="topbar-user">
-            <div class="user-avatar">{{ (user?.displayName || 'A').charAt(0).toUpperCase() }}</div>
+            <div class="user-avatar">{{ ((user as any)?.displayName || 'A').charAt(0).toUpperCase() }}</div>
             <div class="user-info">
-              <span class="user-name">{{ user?.displayName || 'Admin' }}</span>
-              <span class="user-role-badge">{{ user?.role || 'ADMIN' }}</span>
+              <span class="user-name">{{ (user as any)?.displayName || 'Admin' }}</span>
+              <span class="user-role-badge">{{ (user as any)?.role || 'ADMIN' }}</span>
             </div>
           </div>
         </div>
@@ -139,7 +139,7 @@ const route = useRoute()
 const sidebarCollapsed = ref(false)
 const mobileMenuOpen = ref(false)
 const adminLang = ref<'TH' | 'EN'>('EN')
-const commandPalette = ref<InstanceType<typeof AdminCommandPalette> | null>(null)
+const commandPalette = ref<{ open: () => void } | null>(null)
 const hydrated = ref(false)
 
 const navGroups = [

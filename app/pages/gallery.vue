@@ -1,9 +1,11 @@
 <template>
-  <SiteCmsPageRenderer :page="page" />
+  <SiteCmsPageRenderer v-if="page" :page="page" />
 </template>
 
 <script setup lang="ts">
-const { data: page } = await useFetch('/api/public/pages/gallery')
+import type { CmsPageData } from '../shared/types/cms-page'
+
+const { data: page } = await useFetch<CmsPageData>('/api/public/pages/gallery')
 
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found' })

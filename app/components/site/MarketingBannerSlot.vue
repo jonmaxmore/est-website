@@ -60,7 +60,7 @@ const props = defineProps<{
 const { locale } = useI18n()
 
 const popupVisible = ref(false)
-let popupTimer: ReturnType<typeof window.setTimeout> | null = null
+let popupTimer: ReturnType<typeof setTimeout> | null = null
 
 const currentTitle = computed(() =>
   locale.value === 'th'
@@ -176,7 +176,7 @@ function schedulePopup() {
     return
   }
 
-  popupTimer = window.setTimeout(() => {
+  popupTimer = setTimeout(() => {
     popupVisible.value = true
   }, remainingDelaySeconds * 1000)
 }

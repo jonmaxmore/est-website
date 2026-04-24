@@ -145,7 +145,7 @@ const isCurrentVideo = computed(() => {
 })
 
 const filterTabs = computed(() => {
-  const tabs = [{ value: 'all' as const, label: 'All' }]
+  const tabs: { value: 'all' | 'image' | 'video'; label: string }[] = [{ value: 'all', label: 'All' }]
   if (props.accept === 'all' || props.accept === 'image') {
     tabs.push({ value: 'image' as const, label: 'Images' })
   }
@@ -222,7 +222,7 @@ async function uploadFiles(files: FileList | File[]) {
   try {
     for (let index = 0; index < fileList.length; index += 1) {
       uploadProgress.value = `${index + 1}/${fileList.length}`
-      await uploadFile(fileList[index])
+      await uploadFile(fileList[index]!)
     }
 
     await loadAssets()

@@ -154,7 +154,8 @@ function removePlatform(index: number) {
 function movePlatform(index: number, direction: -1 | 1) {
   const next = index + direction
   if (next < 0 || next >= form.platforms.length) return
-  ;[form.platforms[index], form.platforms[next]] = [form.platforms[next], form.platforms[index]]
+  const a = form.platforms[index]; const b = form.platforms[next]
+  if (a && b) { form.platforms[index] = b; form.platforms[next] = a }
   normalizeOrder()
 }
 

@@ -198,7 +198,9 @@ function selectDay(date: Date) {
 
 function onStartTimeChange(e: Event) {
   const val = (e.target as HTMLInputElement).value
-  const [h, m] = val.split(':').map(Number)
+  const parts = val.split(':').map(Number)
+  const h = parts[0] ?? 0
+  const m = parts[1] ?? 0
   const d = startDate.value ? new Date(startDate.value) : new Date()
   d.setHours(h, m, 0, 0)
   emit('update:start', d.toISOString())
@@ -206,7 +208,9 @@ function onStartTimeChange(e: Event) {
 
 function onEndTimeChange(e: Event) {
   const val = (e.target as HTMLInputElement).value
-  const [h, m] = val.split(':').map(Number)
+  const parts = val.split(':').map(Number)
+  const h = parts[0] ?? 0
+  const m = parts[1] ?? 0
   const d = endDate.value ? new Date(endDate.value) : new Date()
   d.setHours(h, m, 0, 0)
   emit('update:end', d.toISOString())

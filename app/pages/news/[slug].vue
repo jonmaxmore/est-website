@@ -52,9 +52,25 @@
 <script setup lang="ts">
 import { sanitizeRichHtml } from '../../shared/cms/sanitize-html'
 
+interface NewsArticle {
+  slug: string; titleEn: string; titleTh?: string | null
+  excerptEn?: string | null; excerptTh?: string | null
+  contentType?: string | null; featuredImage?: string | null
+  readingTimeMinutes?: number | null; category?: string | null
+  id?: number; publishedAt?: string | null
+  seoTitle?: string | null; seoDesc?: string | null; ogImage?: string | null
+  contentEn?: string | null
+  [key: string]: unknown
+}
+
+interface NewsResponse {
+  article: NewsArticle
+  related: NewsArticle[]
+}
+
 const route = useRoute()
 const slug = route.params.slug as string
-const { data } = await useFetch(`/api/public/news/${slug}`)
+const { data } = await useFetch<NewsResponse>(`/api/public/news/${slug}`)
 const article = computed(() => data.value?.article || null)
 const related = computed(() => data.value?.related || [])
 const { data: banners } = await useResolvedBanners({ routeType: 'article_detail', articleId: article.value?.id || null })

@@ -244,7 +244,8 @@ function moveNav(target: NavTarget, index: number, direction: -1 | 1) {
     return
   }
 
-  ;[list[index], list[nextIndex]] = [list[nextIndex], list[index]]
+  const a = list[index]; const b = list[nextIndex]
+  if (a && b) { list[index] = b; list[nextIndex] = a }
 }
 
 function navPageTitle(item: NavigationItem) {

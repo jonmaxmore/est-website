@@ -3,7 +3,7 @@
     <!-- Welcome header -->
     <div class="mb-6 flex items-start justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Welcome back, {{ user?.displayName || 'Admin' }}</h2>
+        <h2 class="text-2xl font-bold">Welcome back, {{ (user as any)?.displayName || 'Admin' }}</h2>
         <p class="mt-1 text-sm text-white/50">Here's what's happening with your portal today.</p>
       </div>
       <div class="text-sm text-white/30 whitespace-nowrap">{{ todayFormatted }}</div>

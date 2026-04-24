@@ -1,5 +1,5 @@
 <template>
-  <SiteCmsPageRenderer :page="page" />
+  <SiteCmsPageRenderer v-if="page" :page="page as any" />
 </template>
 
 <script setup lang="ts">

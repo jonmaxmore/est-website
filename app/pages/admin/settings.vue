@@ -157,7 +157,7 @@ function assignRecord(target: Record<string, unknown>, value: unknown) {
 
 async function loadConfigs() {
   try {
-    const configs: ConfigEntry[] = await $fetch('/api/admin/config')
+    const configs = await $fetch<ConfigEntry[]>('/api/admin/config')
     for (const config of configs) {
       if (config.key === 'seo') assignRecord(seo, config.value)
       if (config.key === 'social') assignRecord(social, config.value)

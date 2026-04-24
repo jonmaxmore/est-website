@@ -177,7 +177,7 @@ interface HeroButtonConfig {
   target: '_self' | '_blank'
 }
 
-const defaultTypes = [...SUPPORTED_HOMEPAGE_SECTION_TYPES]
+const defaultTypes: string[] = [...SUPPORTED_HOMEPAGE_SECTION_TYPES]
 const defaultSections: SectionConfig[] = [
   { id: 'hero', type: 'hero', visible: true, order: 0, background: '/images/hero-bg.webp', config: defaultHeroConfig() },
   { id: 'weapons', type: 'weapons', visible: true, order: 1, background: '', config: {} },
@@ -241,14 +241,16 @@ function ensureHeroConfig(section: SectionConfig) {
 function moveUp(index: number) {
   if (index === 0) return
   const items = [...sections.value]
-  ;[items[index - 1], items[index]] = [items[index], items[index - 1]]
+  const a = items[index]; const b = items[index - 1]
+  if (a && b) { items[index - 1] = a; items[index] = b }
   items.forEach((s, i) => s.order = i)
   sections.value = items
 }
 function moveDown(index: number) {
   if (index >= sections.value.length - 1) return
   const items = [...sections.value]
-  ;[items[index], items[index + 1]] = [items[index + 1], items[index]]
+  const a = items[index]; const b = items[index + 1]
+  if (a && b) { items[index] = b; items[index + 1] = a }
   items.forEach((s, i) => s.order = i)
   sections.value = items
 }

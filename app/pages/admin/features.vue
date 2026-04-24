@@ -212,9 +212,10 @@ async function toggleVisibility(item: FeatureItem) {
 async function reorder(index: number, dir: -1 | 1) {
   const newIndex = index + dir
   const arr = [...items.value]
-  ;[arr[index], arr[newIndex]] = [arr[newIndex], arr[index]]
+  const a = arr[index]; const b = arr[newIndex]
+  if (a && b) { arr[index] = b; arr[newIndex] = a }
   for (let i = 0; i < arr.length; i++) {
-    await $fetch(`/api/admin/features/${arr[i].id}`, { method: 'PUT', body: { sortOrder: i } })
+    await $fetch(`/api/admin/features/${arr[i]!.id}`, { method: 'PUT', body: { sortOrder: i } })
   }
   await loadItems()
 }

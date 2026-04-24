@@ -113,7 +113,7 @@ async function saveItem() {
   saving.value = true; formError.value = ''
   try {
     if (editingIndex.value !== null) {
-      items.value[editingIndex.value] = { ...form, visible: items.value[editingIndex.value].visible }
+      items.value[editingIndex.value] = { ...form, visible: items.value[editingIndex.value]!.visible }
     } else {
       items.value.push({ ...form, visible: true })
     }
@@ -124,14 +124,15 @@ async function saveItem() {
 }
 
 async function toggleVisibility(index: number) {
-  items.value[index].visible = !items.value[index].visible
+  items.value[index]!.visible = !items.value[index]!.visible
   await saveAll()
-  showToast(`FAQ ${items.value[index].visible ? 'shown' : 'hidden'}`)
+  showToast(`FAQ ${items.value[index]!.visible ? 'shown' : 'hidden'}`)
 }
 
 async function reorder(index: number, dir: -1 | 1) {
   const newIndex = index + dir
-  ;[items.value[index], items.value[newIndex]] = [items.value[newIndex], items.value[index]]
+  const a = items.value[index]; const b = items.value[newIndex]
+  if (a && b) { items.value[index] = b; items.value[newIndex] = a }
   await saveAll()
 }
 

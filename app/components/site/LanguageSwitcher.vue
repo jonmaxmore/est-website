@@ -24,11 +24,11 @@ const availableLocales = [
 ]
 
 function switchTo(code: string) {
-  const path = switchLocalePath(code)
+  const path = switchLocalePath(code as 'th' | 'en')
   if (path) {
     router.push(path)
   } else {
-    setLocale(code)
+    setLocale(code as 'th' | 'en')
   }
 }
 </script>

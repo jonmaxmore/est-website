@@ -130,7 +130,15 @@ const statFields = [
   { key: 'statAGI', label: 'AGI' }, { key: 'statDEX', label: 'DEX' }, { key: 'statHP', label: 'HP' },
 ]
 
-const form = reactive<Record<string, unknown>>({
+interface WeaponForm {
+  name: string; nameEn: string; descriptionEn: string; descriptionTh: string
+  portrait: string; infoImage: string; backgroundImage: string
+  videoType: string; videoUrl: string
+  statSTR: number; statINT: number; statAGI: number; statDEX: number; statHP: number
+  [key: string]: string | number
+}
+
+const form = reactive<WeaponForm>({
   name: '', nameEn: '', descriptionEn: '', descriptionTh: '',
   portrait: '', infoImage: '', backgroundImage: '',
   videoType: 'NONE', videoUrl: '',
@@ -184,8 +192,9 @@ async function toggleVisibility(item: Weapon) {
 
 async function reorder(index: number, dir: -1 | 1) {
   const newIndex = index + dir; const arr = [...weapons.value]
-  ;[arr[index], arr[newIndex]] = [arr[newIndex], arr[index]]
-  for (let i = 0; i < arr.length; i++) { await $fetch(`/api/admin/weapons/${arr[i].id}`, { method: 'PUT', body: { sortOrder: i } }) }
+  const a = arr[index]; const b = arr[newIndex]
+  if (a && b) { arr[index] = b; arr[newIndex] = a }
+  for (let i = 0; i < arr.length; i++) { await $fetch(`/api/admin/weapons/${arr[i]!.id}`, { method: 'PUT', body: { sortOrder: i } }) }
   await loadWeapons()
 }
 

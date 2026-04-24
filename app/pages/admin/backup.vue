@@ -147,11 +147,11 @@ async function importData() {
   try {
     const text = await importFile.value.text()
     const parsed = JSON.parse(text)
-    const result = await $fetch<typeof importResult.value>('/api/admin/backup/import', {
+    const result = await $fetch<{ success: boolean; imported: Record<string, number>; errors: string[] }>('/api/admin/backup/import', {
       method: 'POST', body: parsed,
     })
     importResult.value = result
-    showToast(result?.success ? 'Data imported successfully!' : 'Import completed with some errors', result?.success ? 'success' : 'error')
+    showToast(result.success ? 'Data imported successfully!' : 'Import completed with some errors', result.success ? 'success' : 'error')
   } catch {
     showToast('Import failed — invalid file or server error', 'error')
   } finally {
