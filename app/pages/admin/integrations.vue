@@ -170,7 +170,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 const config = useRuntimeConfig()
-const siteUrl = config.public.siteUrl || 'http://178.128.127.161'
+const siteUrl = config.public.siteUrl || 'https://eternaltowersaga.com'
 
 const integrations = ref({
   webhookSecret: '',

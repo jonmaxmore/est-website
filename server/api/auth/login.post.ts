@@ -4,8 +4,16 @@ const loginSchema = z.object({
   email: z.string().email().max(255),
   password: z.string().min(1).max(255),
 })
+const LOGIN_LIMIT_PER_5_MINUTES = 10
 
 export default defineEventHandler(async (event) => {
+  // Rate limit login attempts
+  const ip = getRequestIP(event, { xForwardedFor: true }) || 'unknown'
+  const { allowed } = await checkRateLimit(`login:${ip}`, LOGIN_LIMIT_PER_5_MINUTES, 300)
+  if (!allowed) {
+    throw createError({ statusCode: 429, message: 'Too many login attempts. Please try again later.' })
+  }
+
   let body: unknown
   try {
     body = await readBody(event)

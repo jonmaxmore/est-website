@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto'
 import { z } from 'zod'
 
 const REGISTRATION_LIMIT_PER_HOUR = 5
@@ -64,7 +65,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Generate referral code
-  const referralCode = `ETS-${Date.now().toString(36).toUpperCase()}`
+  const referralCode = `ETS-${randomBytes(6).toString('hex').toUpperCase()}`
 
   // Parse UTM params
   const query = getQuery(event)

@@ -1,7 +1,21 @@
 import { buildPagePath } from '../../app/shared/cms/pages'
 
+const SITEMAP_CACHE_KEY = 'cache:sitemap-xml'
+const SITEMAP_TTL_SECONDS = 600 // 10 minutes
+
 export default defineEventHandler(async (event) => {
-  const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'http://178.128.127.161'
+  setResponseHeader(event, 'content-type', 'application/xml')
+
+  // Try cache first
+  try {
+    const redis = getRedis()
+    const cached = await redis.get(SITEMAP_CACHE_KEY)
+    if (cached) return cached
+  } catch {
+    // Redis unavailable, generate fresh
+  }
+
+  const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com'
   const staticPages = [
     { loc: '/', priority: '1.0', changefreq: 'daily', lastmod: new Date().toISOString() },
     { loc: '/weapons', priority: '0.8', changefreq: 'weekly', lastmod: new Date().toISOString() },
@@ -54,6 +68,13 @@ export default defineEventHandler(async (event) => {
 
   xml += '</urlset>'
 
-  setResponseHeader(event, 'content-type', 'application/xml')
+  // Cache for next time
+  try {
+    const redis = getRedis()
+    await redis.set(SITEMAP_CACHE_KEY, xml, 'EX', SITEMAP_TTL_SECONDS)
+  } catch {
+    // Redis unavailable, skip caching
+  }
+
   return xml
 })

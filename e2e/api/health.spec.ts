@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-const BASE = process.env.BASE_URL || 'http://178.128.127.161'
+const BASE = process.env.BASE_URL || 'http://127.0.0.1:3000'
 
 test.describe('API Health Checks', () => {
   const publicEndpoints = [

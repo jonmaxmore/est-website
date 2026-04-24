@@ -24,6 +24,6 @@ export default defineEventHandler(async (event) => {
     routeType,
     articleId,
     topicKey,
-    banners,
+    banners: banners as unknown as BannerRecord[],
   })
 })

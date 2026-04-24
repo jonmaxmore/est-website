@@ -49,10 +49,7 @@ export default defineEventHandler(async () => {
   const fourteenDaysAgo = new Date()
   fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14)
 
-  const dailyRegistrations = await prisma.$queryRawUnsafe<Array<{ date: string; count: bigint }>>(
-    `SELECT DATE("createdAt") as date, COUNT(*) as count FROM pre_registrations WHERE "createdAt" >= $1 GROUP BY DATE("createdAt") ORDER BY date`,
-    fourteenDaysAgo,
-  )
+  const dailyRegistrations = await prisma.$queryRaw<Array<{ date: string; count: bigint }>>`SELECT DATE("createdAt") as date, COUNT(*) as count FROM pre_registrations WHERE "createdAt" >= ${fourteenDaysAgo} GROUP BY DATE("createdAt") ORDER BY date`
 
   let recentActivity: Array<{ action: string; resource: string; userName: string; createdAt: Date }> = []
   try {
@@ -61,8 +58,9 @@ export default defineEventHandler(async () => {
       take: 5,
       select: { action: true, resource: true, userName: true, createdAt: true },
     })
-  } catch {
+  } catch (err) {
     // Some development databases may not have the optional audit table yet.
+    console.warn('[Stats] activityLog query failed:', (err as Error).message)
   }
 
   let todayPageViews = 0
@@ -70,8 +68,9 @@ export default defineEventHandler(async () => {
     const todayStart = new Date()
     todayStart.setHours(0, 0, 0, 0)
     todayPageViews = await prisma.pageView.count({ where: { createdAt: { gte: todayStart } } })
-  } catch {
+  } catch (err) {
     // Analytics tables are optional during early CMS setup.
+    console.warn('[Stats] pageView query failed:', (err as Error).message)
   }
 
   return {

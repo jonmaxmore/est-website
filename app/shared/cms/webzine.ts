@@ -25,8 +25,8 @@ function slugifyTopicValue(value: string) {
     .replace(/^-+|-+$/g, '')
 }
 
-export function normalizeWebzineTopics(value: WebzineTopic[] | null | undefined) {
-  return (value ?? []).map((topic) => {
+export function normalizeWebzineTopics(value: unknown[] | null | undefined) {
+  return ((value ?? []) as WebzineTopic[]).map((topic) => {
     const labelEn = topic.labelEn.trim()
     const key = slugifyTopicValue(topic.key || topic.slug || labelEn)
     const slug = slugifyTopicValue(topic.slug || topic.key || labelEn)

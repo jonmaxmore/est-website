@@ -46,7 +46,7 @@ const renderedHtml = computed(() => sanitizeRichHtml(isThai.value ? props.page.c
 
 useHead(() => ({
   title: localizedSeoTitle.value.includes('Eternal Tower Saga') ? localizedSeoTitle.value : `${localizedSeoTitle.value} | Eternal Tower Saga`,
-  link: [{ rel: 'canonical', href: `http://178.128.127.161${route.path}` }],
+  link: [{ rel: 'canonical', href: `${String(useRuntimeConfig().public.siteUrl || 'https://eternaltowersaga.com').replace(/\/$/, '')}${route.path}` }],
   meta: [
     { name: 'description', content: localizedDescription.value },
     { property: 'og:title', content: localizedSeoTitle.value },

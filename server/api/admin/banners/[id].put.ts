@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
   const banner = await prisma.marketingBanner.update({
     where: { id },
-    data: payload,
+    data: payload as Parameters<typeof prisma.marketingBanner.update>[0]['data'],
   })
 
   await logActivity(event, 'UPDATE', 'marketing_banners', `Updated banner: ${banner.titleEn}`, banner.id)

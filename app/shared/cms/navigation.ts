@@ -43,10 +43,11 @@ export function normalizeNavigationConfig(value: unknown): { main: NavigationIte
 
 export function resolveNavigationHref(
   item: NavigationItem,
-  page?: { key: string; slug: string; isSystemPage: boolean },
+  page?: { key: string; slug: string | null; isSystemPage: boolean },
 ) {
   if (item.type === 'page' && page) {
-    return page.slug === '' ? '/' : `/${page.slug}`
+    const slug = page.slug ?? ''
+    return slug === '' ? '/' : `/${slug}`
   }
 
   if (item.type === 'page') {

@@ -45,8 +45,9 @@ export function useAdminMediaUpload() {
     const formData = new FormData()
     formData.append('file', file)
 
-    return await new Promise<any>((resolve, reject) => {
+    return await new Promise<{ id: string; url: string; filename: string; mimeType: string; sizeBytes: number }>((resolve, reject) => {
       const xhr = new XMLHttpRequest()
+      xhr.timeout = 120_000 // 2 minutes
 
       xhr.upload.addEventListener('progress', (event) => {
         if (event.lengthComputable && onProgress) {
@@ -66,6 +67,10 @@ export function useAdminMediaUpload() {
 
       xhr.addEventListener('error', () => {
         reject(buildMediaUploadError('UPLOAD_WRITE_FAILED', 'Network error during upload', 'file'))
+      })
+
+      xhr.addEventListener('timeout', () => {
+        reject(buildMediaUploadError('UPLOAD_WRITE_FAILED', 'Upload timed out after 2 minutes', 'file'))
       })
 
       xhr.open('POST', '/api/admin/media/upload')

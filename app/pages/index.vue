@@ -207,7 +207,7 @@
               v-if="highlightItems.length > 0"
               class="group relative overflow-hidden rounded-2xl border border-white/8 lg:row-span-2 min-h-[300px] lg:min-h-0 cursor-pointer transition-all duration-500 hover:border-gold/30"
               v-motion :initial="{ opacity: 0, x: -30 }" :visibleOnce="{ opacity: 1, x: 0 }"
-              @click="openHighlightDetail(highlightItems[0])"
+              @click="highlightItems[0] && openHighlightDetail(highlightItems[0])"
             >
               <img :src="highlightItems[0]?.image || '/images/og-cover.png'" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -407,7 +407,7 @@ interface WeaponData {
 const { data: weaponsRaw } = await useFetch<WeaponData[]>('/api/public/weapons', { default: () => [] })
 const weapons = computed(() => weaponsRaw.value || [])
 const selectedWeapon = ref<WeaponData | null>(null)
-watch(weapons, (val) => { if (val.length && !selectedWeapon.value) selectedWeapon.value = val[0] }, { immediate: true })
+watch(weapons, (val) => { if (val.length && !selectedWeapon.value) selectedWeapon.value = val[0] ?? null }, { immediate: true })
 
 function selectWeapon(weapon: WeaponData) {
   selectedWeapon.value = weapon

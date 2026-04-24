@@ -1,5 +1,5 @@
 export default defineEventHandler((event) => {
-  const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'http://178.128.127.161'
+  const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com'
   const robots = `User-agent: *
 Allow: /
 Disallow: /admin/

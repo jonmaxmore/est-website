@@ -36,3 +36,9 @@ playwright-report/
 _reuse/
 *.tar
 .worktrees/
+
+# SSL Certificates (generated on server)
+certbot/
+
+# User uploads (persisted via Docker volume)
+public/uploads/

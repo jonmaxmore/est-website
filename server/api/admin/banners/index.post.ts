@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: (error as Error).message })
   }
 
-  const banner = await prisma.marketingBanner.create({ data: payload })
+  const banner = await prisma.marketingBanner.create({ data: payload as Parameters<typeof prisma.marketingBanner.create>[0]['data'] })
 
   await logActivity(event, 'CREATE', 'marketing_banners', `Created banner: ${banner.titleEn}`, banner.id)
 

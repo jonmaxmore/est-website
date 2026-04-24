@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
   ]
 
   const isSuperAdminRoute = superAdminOnly.some((route) => path.startsWith(route))
-  const isDestructiveMethod = ['POST', 'DELETE'].includes(event.method)
+  const isDestructiveMethod = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(event.method)
 
   // Allow GET on user list for editors, but block create/delete
   if (isSuperAdminRoute && isDestructiveMethod && user.role !== 'SUPER_ADMIN') {
