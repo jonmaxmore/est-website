@@ -28,7 +28,7 @@ export function useAdminMediaUpload() {
     if (file.size > MAX_MEDIA_UPLOAD_BYTES) {
       return buildMediaUploadError(
         'FILE_TOO_LARGE',
-        `File too large. Max 10MB (${file.name})`,
+        `File too large. Max 100MB (${file.name})`,
         'file',
       )
     }

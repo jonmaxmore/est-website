@@ -29,7 +29,7 @@
       <p v-if="uploadQueue.length === 0" class="text-sm text-white/50">
         Drag and drop files here, or click to <span class="font-medium text-[#d4a843]">browse</span>
       </p>
-      <p class="mt-1 text-xs text-white/25">PNG, JPG, WebP, AVIF, GIF, MP4 | Max 10MB each</p>
+      <p class="mt-1 text-xs text-white/25">PNG, JPG, WebP, AVIF, GIF, MP4 | Max 100MB each</p>
     </div>
 
     <div v-if="uploadQueue.length > 0" class="mb-4 flex flex-col gap-2">
