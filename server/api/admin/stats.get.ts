@@ -1,7 +1,20 @@
+/**
+ * ═══ Admin Dashboard Stats API ═══
+ * GET /api/admin/stats
+ *
+ * รวบรวมสถิติทั้งหมดสำหรับหน้า Dashboard ในครั้งเดียว:
+ * - นับข่าว, อาวุธ, ลงทะเบียน, สื่อ, highlight
+ * - กราฟลงทะเบียนรายวัน (14 วัน)
+ * - แบ่งตาม platform + region
+ * - activity log + page views วันนี้
+ *
+ * ⚠️ บาง table (activityLog, pageView) เป็น optional
+ *    ถ้า DB ยังไม่มี → คืน 0 แทนการ crash
+ */
 import { buildWebzineDashboardSummary } from '../../../app/shared/cms/admin-dashboard'
 
-/** Dashboard stats: aggregated counts, recent activity, and CMS queues. */
 export default defineEventHandler(async () => {
+  // ── ดึงข้อมูล 11 อย่างพร้อมกัน (เร็วกว่าทำทีละอย่าง) ──
   const [
     newsCount,
     publishedNewsCount,
@@ -49,6 +62,7 @@ export default defineEventHandler(async () => {
   const fourteenDaysAgo = new Date()
   fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14)
 
+  // ── กราฟลงทะเบียนรายวัน 14 วันย้อนหลัง (raw SQL เพื่อ GROUP BY DATE) ──
   const dailyRegistrations = await prisma.$queryRaw<Array<{ date: string; count: bigint }>>`SELECT DATE("createdAt") as date, COUNT(*) as count FROM pre_registrations WHERE "createdAt" >= ${fourteenDaysAgo} GROUP BY DATE("createdAt") ORDER BY date`
 
   let recentActivity: Array<{ action: string; resource: string; userName: string; createdAt: Date }> = []

@@ -1,3 +1,19 @@
+<!--
+  ═══ MediaPicker Component ═══
+  เลือกรูป/วีดีโอจาก media library สำหรับ admin forms
+
+  ฟีเจอร์:
+  - ดู thumbnail + Browse → เปิด modal เลือกจาก library
+  - อัปโหลดใหม่: drag-drop หรือ browse
+  - Filter: all/images/videos
+  - Search
+  - Clear: ลบรูปที่เลือก
+
+  Props: modelValue (URL), label, accept
+  Emits: update:modelValue
+
+  ⚠️ ใช้ Teleport เพื่อ render modal ที่ body (หลีกเลี่ยง z-index issues)
+-->
 <template>
   <div class="media-picker-field">
     <label v-if="label" class="mp-label">{{ label }}</label>

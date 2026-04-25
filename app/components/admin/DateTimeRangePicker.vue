@@ -66,6 +66,21 @@
   </div>
 </template>
 
+<!--
+  ═══ DateTimeRangePicker ═══
+  เลือกช่วงเวลาเริ่ม-สิ้นสุด สำหรับ marketing banners
+
+  ฟีเจอร์:
+  - ปฏิทินแบบ custom (42 ช่อง = 6 สัปดาห์)
+  - เลือก start ก่อน แล้วเลือก end (สลับครั้ง)
+  - ถ้า end < start → สลับอัตโนมัติ
+  - แสดง range highlight บนปฏิทิน
+  - Timezone: GMT+7 (server time)
+  - คำนวณ duration อัตโนมัติ
+
+  Props: start, end (ISO string), allowPast
+  Emits: update:start, update:end
+-->
 <script setup lang="ts">
 const props = defineProps<{
   start?: string | null
@@ -117,6 +132,7 @@ const durationText = computed(() => {
 })
 
 // -- Calendar generation --
+// ── สร้างตารางปฏิทิน 42 ช่อง (รวมวันเดือนก่อน+หลัง) ──
 const calendarDays = computed(() => {
   const year = viewDate.value.getFullYear()
   const month = viewDate.value.getMonth()
@@ -169,6 +185,12 @@ function makeCell(d: Date, currentMonth: boolean, today: Date) {
   }
 }
 
+/**
+ * เลือกวันบนปฏิทิน:
+ * - คลิกแรก → ตั้ง start
+ * - คลิกที่สอง → ตั้ง end
+ * - ถ้า end < start → สลับอัตโนมัติ
+ */
 function selectDay(date: Date) {
   if (!selectingEnd.value || !startDate.value) {
     // Set start date, keep existing time

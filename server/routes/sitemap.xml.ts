@@ -1,21 +1,37 @@
+/**
+ * ═══ Sitemap XML Generator ═══
+ * GET /sitemap.xml
+ *
+ * สร้าง sitemap อัตโนมัติจากข้อมูลใน DB สำหรับ Google Search Console
+ *
+ * โครงสร้าง:
+ * 1. หน้าคงที่ (homepage, weapons, news, event)
+ * 2. หน้า CMS (สร้างจาก admin)
+ * 3. บทความข่าว (PUBLISHED)
+ *
+ * Cache: เก็บใน Redis 10 นาที → ลดโหลด DB
+ * ถ้า Redis ล่ม → สร้างใหม่ทุกครั้ง (ไม่พัง)
+ */
 import { buildPagePath } from '../../app/shared/cms/pages'
 
 const SITEMAP_CACHE_KEY = 'cache:sitemap-xml'
-const SITEMAP_TTL_SECONDS = 600 // 10 minutes
+const SITEMAP_TTL_SECONDS = 600 // 10 นาที
 
 export default defineEventHandler(async (event) => {
   setResponseHeader(event, 'content-type', 'application/xml')
 
-  // Try cache first
+  // ── ลอง cache ก่อน ──
   try {
     const redis = getRedis()
     const cached = await redis.get(SITEMAP_CACHE_KEY)
     if (cached) return cached
   } catch {
-    // Redis unavailable, generate fresh
+    // Redis ใช้ไม่ได้ → สร้างใหม่
   }
 
   const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com'
+
+  // ── หน้าคงที่ (static pages) ──
   const staticPages = [
     { loc: '/', priority: '1.0', changefreq: 'daily', lastmod: new Date().toISOString() },
     { loc: '/weapons', priority: '0.8', changefreq: 'weekly', lastmod: new Date().toISOString() },
@@ -23,6 +39,7 @@ export default defineEventHandler(async (event) => {
     { loc: '/event', priority: '0.8', changefreq: 'weekly', lastmod: new Date().toISOString() },
   ]
 
+  // ── ดึงข้อมูลจาก DB พร้อมกัน (บทความ + หน้า CMS) ──
   const [articles, pages] = await Promise.all([
     prisma.newsArticle.findMany({
       where: { status: 'PUBLISHED' },
@@ -36,6 +53,7 @@ export default defineEventHandler(async (event) => {
     }),
   ])
 
+  // ── แปลงหน้า CMS เป็น sitemap entries ──
   const pageEntries = pages
     .map((page) => ({
       loc: buildPagePath(page),
@@ -43,8 +61,9 @@ export default defineEventHandler(async (event) => {
       changefreq: page.isSystemPage ? 'monthly' : 'weekly',
       lastmod: page.updatedAt.toISOString(),
     }))
-    .filter((page) => page.loc !== '/')
+    .filter((page) => page.loc !== '/') // ไม่ใส่ซ้ำกับ homepage
 
+  // ── สร้าง XML ──
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 
@@ -68,12 +87,12 @@ export default defineEventHandler(async (event) => {
 
   xml += '</urlset>'
 
-  // Cache for next time
+  // ── เก็บ cache สำหรับครั้งต่อไป ──
   try {
     const redis = getRedis()
     await redis.set(SITEMAP_CACHE_KEY, xml, 'EX', SITEMAP_TTL_SECONDS)
   } catch {
-    // Redis unavailable, skip caching
+    // Redis ใช้ไม่ได้ → ข้าม cache
   }
 
   return xml

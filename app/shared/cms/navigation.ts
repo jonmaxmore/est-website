@@ -1,10 +1,18 @@
+/**
+ * ═══ Navigation Types & Normalizer ═══
+ * โครงสร้างเมนูที่จัดการได้ผ่าน admin CMS
+ *
+ * ประเภท link:
+ * - 'page' → ลิงก์ไปหน้าภายในเว็บ (resolve จาก pageKey)
+ * - 'custom' → ลิงก์ไป URL ภายนอก (หรือ URL แบบกำหนดเอง)
+ */
 export type NavigationItem = {
   id: string
-  type: 'page' | 'custom'
+  type: 'page' | 'custom'      // page = หน้าภายใน, custom = URL กำหนดเอง
   labelEn: string
   labelTh: string
-  pageKey?: string
-  href?: string
+  pageKey?: string             // ใช้เมื่อ type='page' — อ้างอิงจาก CMS pages
+  href?: string                // ใช้เมื่อ type='custom'
   target?: '_self' | '_blank'
   visible: boolean
 }
@@ -24,6 +32,10 @@ function toNavigationItem(item: unknown, index: number): NavigationItem {
   }
 }
 
+/**
+ * แปลงข้อมูล navigation จาก DB ให้อยู่ในรูปแบบที่ต้องการ
+ * รองรับทั้งรูปแบบ array เก่า (เมนูเดียว) และ { main, footer } ใหม่
+ */
 export function normalizeNavigationConfig(value: unknown): { main: NavigationItem[]; footer: NavigationItem[] } {
   if (Array.isArray(value)) {
     return {
@@ -41,6 +53,12 @@ export function normalizeNavigationConfig(value: unknown): { main: NavigationIte
   return { main, footer }
 }
 
+/**
+ * แปลง navigation item เป็น URL ที่ใช้ได้
+ * - type='page' + มี page data → ใช้ slug ของ page
+ * - type='page' + ไม่มี page → null (ซ่อน link)
+ * - type='custom' → ใช้ href ตรงๆ
+ */
 export function resolveNavigationHref(
   item: NavigationItem,
   page?: { key: string; slug: string | null; isSystemPage: boolean },

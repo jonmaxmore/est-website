@@ -160,6 +160,20 @@
   </div>
 </template>
 
+<!--
+  ═══ Admin Dashboard ═══
+  หน้าแรกของ admin panel — แสดงภาพรวมทั้งหมดในที่เดียว
+
+  ส่วนประกอบ:
+  - Quick Actions: ทางลัดไป CMS pages, Webzine, Events
+  - Stat Cards: นับข่าว, อาวุธ, ลงทะเบียน, media, page views
+  - กราฟลงทะเบียนรายวัน (14 วัน) — bar chart
+  - Platform/Region distribution — progress bars
+  - Content Status: live banners, draft articles, missing assets
+  - Recent: ลงทะเบียน, activity log, บทความ
+
+  ข้อมูลมาจาก: GET /api/admin/stats (ดู stats.get.ts)
+-->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 const { user } = useUserSession()
@@ -204,6 +218,7 @@ const quickActions = [
   { icon: 'i-lucide-external-link', label: 'View Site', to: '/' },
 ]
 
+// ── Stat Cards: แปลงตัวเลขจาก API เป็น UI cards ──
 const statCards = computed(() => [
   { icon: 'i-lucide-users', label: 'Registrations', value: stats.value.counts.registrations.toLocaleString(), bg: 'rgba(59,130,246,0.12)' },
   { icon: 'i-lucide-newspaper', label: 'News', value: stats.value.counts.news.toString(), bg: 'rgba(16,185,129,0.12)' },

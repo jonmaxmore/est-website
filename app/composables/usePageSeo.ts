@@ -1,9 +1,12 @@
-// ═══════════════════════════════════════
-// useSeoMeta — Composable for consistent SEO tags
-// ═══════════════════════════════════════
-// Provides canonical URL, OG tags, Twitter cards, and
-// meta description to all pages automatically.
-
+/**
+ * ═══ Page SEO Composable ═══
+ * ตั้งค่า SEO แบบรวมศูนย์สำหรับทุกหน้า
+ *
+ * ครอบคลุม: canonical URL, Open Graph, Twitter Card, meta description
+ *
+ * วิธีใช้:
+ * usePageSeo({ title: 'หน้าแรก', description: 'คำอธิบาย...' })
+ */
 interface SeoOptions {
   title: string
   description: string

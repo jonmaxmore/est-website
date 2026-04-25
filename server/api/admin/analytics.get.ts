@@ -1,4 +1,16 @@
-/** Analytics dashboard stats */
+/**
+ * ═══ Analytics Dashboard API ═══
+ * GET /api/admin/analytics
+ *
+ * รวบรวมสถิติการใช้งานเว็บไซต์:
+ * - Total/Today page views, unique visitors
+ * - กราฟรายวัน (30 วัน) พร้อมเติมวันที่ไม่มีข้อมูล = 0
+ * - Top 10 หน้าที่เข้าชมมากที่สุด
+ * - Conversion events: pre_register, download, social, news
+ * - Conversion rate: ลงทะเบียน / page views
+ *
+ * ⚠️ ทุก query มี try/catch — ถ้า table ไม่มีจะคืน 0 แทน crash
+ */
 export default defineEventHandler(async () => {
   const now = new Date()
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
@@ -59,6 +71,7 @@ export default defineEventHandler(async () => {
     conversions = rawConv.map((c) => ({ name: c.eventName, count: c._count._all }))
   } catch (err) { console.warn('[Analytics] conversions query failed:', (err as Error).message); conversions = [] }
 
+  // ── Conversion rate: ลงทะเบียน / จำนวนเข้าชมทั้งหมด (เปอร์เซ็นต์) ──
   const conversionRate = totalViews > 0 ? (totalRegs / totalViews) * 100 : 0
 
   let registrationsByPlatform: { platform: string; count: number }[] = []

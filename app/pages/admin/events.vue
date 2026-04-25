@@ -306,6 +306,24 @@
   </div>
 </template>
 
+<!--
+  ═══ Admin Events & Hot Time ═══
+  จัดการกิจกรรมเกม, บำรุงรักษา, Hot Time, แคมเปญ
+
+  ส่วนประกอบ:
+  1. Event Landing Page: ตั้งค่า countdown, pre-registration display, background
+     - registrationDisplayMode: actual | manual | actual_plus_manual
+     - เก็บใน siteConfig key='event_page'
+  2. Event CRUD: สร้าง/แก้/ลบกิจกรรม
+     - Type: EVENT, HOT_TIME, MAINTENANCE, CAMPAIGN
+     - Status: DRAFT → SCHEDULED → ACTIVE → ENDED/CANCELLED
+     - HOT_TIME มี multiplier + bonusType (EXP, GOLD, DROP_RATE, etc.)
+     - เชื่อมบทความผ่าน linkedArticleId
+  3. Today's Timeline: แสดง event ที่ active อยู่ตอนนี้
+
+  ⚠️ ตรวจสอบ: สร้าง event ใหม่ startsAt ต้องไม่เป็นอดีต
+  ⚠️ ใช้ DateTimeRangePicker สำหรับเลือกช่วงเวลา
+-->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 

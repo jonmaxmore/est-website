@@ -1,3 +1,11 @@
+/**
+ * ═══ Media Upload Composable (Client-side) ═══
+ * ใช้ในหน้า admin สำหรับ upload ไฟล์รูปภาพ/วิดีโอ
+ *
+ * ทำไมใช้ XMLHttpRequest แทน fetch:
+ * - XHR รองรับ upload progress event (แสดง % การ upload)
+ * - fetch API ยังไม่รองรับ upload progress เต็มตัว
+ */
 import {
   MAX_MEDIA_UPLOAD_BYTES,
   buildMediaUploadError,
@@ -45,9 +53,11 @@ export function useAdminMediaUpload() {
     const formData = new FormData()
     formData.append('file', file)
 
+    // ใช้ XHR เพราะรองรับ upload.progress event
+    // timeout 2 นาที — วิดีโอใหญ่อาจใช้เวลานาน
     return await new Promise<{ id: string; url: string; filename: string; mimeType: string; sizeBytes: number }>((resolve, reject) => {
       const xhr = new XMLHttpRequest()
-      xhr.timeout = 120_000 // 2 minutes
+      xhr.timeout = 120_000 // 2 นาที
 
       xhr.upload.addEventListener('progress', (event) => {
         if (event.lengthComputable && onProgress) {

@@ -1,5 +1,11 @@
+# ═══ Docker Compose — EST Website Production Stack ═══
+# รัน: docker compose up -d
+# ประกอบด้วย 4 services: app (Nuxt), nginx (reverse proxy), postgres (DB), redis (cache)
+
 services:
-  # ── Nuxt 4 App ──
+  # ── แอป Nuxt (SSR) ──
+  # build จาก docker/Dockerfile → รันที่ port 3000
+  # ต้อง postgres + redis พร้อมก่อนถึงจะ start
   app:
     build:
       context: .
@@ -14,9 +20,11 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - media_uploads:/app/public/uploads
+      - media_uploads:/app/public/uploads  # ไฟล์ที่ upload เก็บถาวรใน volume
 
-  # ── PostgreSQL 16 ──
+  # ── PostgreSQL 16 (ฐานข้อมูลหลัก) ──
+  # ข้อมูลเก็บใน volume 'pgdata' → ลบ container ไม่เสียข้อมูล
+  # ⚠️ POSTGRES_PASSWORD ต้องตั้งใน .env (ห้ามเว้นว่าง)
   postgres:
     image: postgres:16-alpine
     restart: unless-stopped
@@ -34,7 +42,9 @@ services:
       timeout: 5s
       retries: 5
 
-  # ── Redis 7 ──
+  # ── Redis 7 (Cache + Rate Limit) ──
+  # จำกัด memory 128MB, ลบ key เก่าอัตโนมัติ (allkeys-lru)
+  # ⚠️ ถ้า Redis ล่ม แอปยังทำงานได้ (graceful degradation)
   redis:
     image: redis:7-alpine
     restart: unless-stopped
@@ -47,7 +57,10 @@ services:
       timeout: 3s
       retries: 5
 
-  # ── Nginx Reverse Proxy ──
+  # ── Nginx (Reverse Proxy + SSL) ──
+  # ทำหน้าที่: รับ request จากข้างนอก → ส่งต่อไป app:3000
+  # SSL cert เก็บใน ./certbot/conf (จาก Let's Encrypt)
+  # config อยู่ที่ docker/nginx/default.conf
   nginx:
     image: nginx:alpine
     restart: unless-stopped
@@ -61,6 +74,9 @@ services:
     depends_on:
       - app
 
+# ── Volumes (ข้อมูลถาวร) ──
+# pgdata: ฐานข้อมูล PostgreSQL
+# media_uploads: ไฟล์รูปภาพ/วิดีโอที่ upload
 volumes:
   pgdata:
   media_uploads:

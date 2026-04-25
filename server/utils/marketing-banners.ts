@@ -1,3 +1,12 @@
+/**
+ * ═══ Marketing Banner Payload Validator ═══
+ * ตรวจสอบข้อมูล banner ที่ส่งมาจาก admin CMS
+ *
+ * กฎ:
+ * - target type แต่ละประเภทต้องมี field คู่กัน (เช่น article ต้องมี articleId)
+ * - วันสิ้นสุดต้องหลังวันเริ่มต้น
+ * - config จะถูก normalize ตามประเภท placement
+ */
 import { z } from 'zod'
 
 import { BANNER_PLACEMENTS, BANNER_SCOPES, normalizeBannerConfig } from '../../app/shared/cms/marketing-banners'
@@ -51,6 +60,7 @@ function parseDate(value: string | null | undefined, field: string) {
   return date
 }
 
+/** validate + normalize ข้อมูล banner ที่ส่งมาจาก admin form */
 export function parseMarketingBannerPayload(input: unknown) {
   const parsed = bannerPayloadSchema.parse(input)
   const startsAt = parseDate(parsed.startsAt, 'startsAt')

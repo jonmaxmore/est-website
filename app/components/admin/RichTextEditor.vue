@@ -1,3 +1,23 @@
+<!--
+  ═══ RichTextEditor Component ═══
+  WYSIWYG editor สำหรับ CMS content (ใช้ TipTap/ProseMirror)
+
+  ฟีเจอร์:
+  - Format: Bold, Italic, Underline, Strikethrough
+  - Heading: H1-H4, Paragraph
+  - List: Bullet, Ordered, Blockquote
+  - Align: Left, Center, Right
+  - Link: เพิ่ม/แก้ URL
+  - Image: แทรกจาก MediaPicker
+  - Table: เพิ่ม/ลบ row, column
+  - Undo/Redo + Fullscreen
+  - Character/Word count
+
+  Props: modelValue (HTML string), placeholder
+  Emits: update:modelValue
+
+  ⚠️ ใช้ sanitizeRichHtml() ก่อนแสดงบนหน้า public
+-->
 <template>
   <div class="rte-wrapper" :class="{ 'rte-fullscreen': isFullscreen }">
     <!-- Toolbar -->

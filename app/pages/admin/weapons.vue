@@ -104,6 +104,19 @@
   </div>
 </template>
 
+<!--
+  ═══ Admin Weapons Manager ═══
+  จัดการข้อมูลอาวุธในเกม
+
+  ฟีเจอร์:
+  - CRUD: สร้าง/แก้ไข/ลบอาวุธ
+  - RPG Stats: ค่าพลัง 5 ตัว (STR, INT, AGI, DEX, HP) ด้วย slider
+  - รูปภาพ 3 แบบ: portrait, info image, background
+  - วีดีโอ: YouTube หรืออัปโหลด
+  - 2 ภาษา: TH/EN พร้อม copy ข้ามภาษา
+
+  ⚠️ Pattern CRUD เหมือน highlights.vue
+-->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 
@@ -145,6 +158,7 @@ const form = reactive<WeaponForm>({
   statSTR: 50, statINT: 50, statAGI: 50, statDEX: 50, statHP: 50,
 })
 
+// ── โหลดอาวุธทั้งหมด ──
 async function loadWeapons() {
   try { weapons.value = await $fetch<Weapon[]>('/api/admin/weapons') } catch { weapons.value = [] }
 }
@@ -172,6 +186,7 @@ function handleCopy(from: 'th' | 'en') {
   showToast(`Copied ${from.toUpperCase()} content`)
 }
 
+// ── บันทึก: POST (สร้าง) หรือ PUT (แก้ไข) ──
 async function saveItem() {
   if (!form.name) { formError.value = 'Name is required.'; return }
   saving.value = true; formError.value = ''
@@ -190,6 +205,7 @@ async function toggleVisibility(item: Weapon) {
   catch { showToast('Failed to update visibility', 'error') }
 }
 
+// ── สลับลำดับ: PUT sortOrder ใหม่ทุกตัว ──
 async function reorder(index: number, dir: -1 | 1) {
   const newIndex = index + dir; const arr = [...weapons.value]
   const a = arr[index]; const b = arr[newIndex]

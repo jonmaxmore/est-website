@@ -1,3 +1,19 @@
+/**
+ * ═══ Media Upload API ═══
+ * POST /api/admin/media/upload
+ *
+ * ขั้นตอน:
+ * 1. รับ multipart form data (รองรับหลายไฟล์พร้อมกัน)
+ * 2. validate ประเภทไฟล์ + ขนาด (สูงสุด 100MB)
+ * 3. เขียนไฟล์ลง disk (ชื่อ UUID ป้องกันชื่อซ้ำ)
+ * 4. อ่านขนาดรูปด้วย sharp (ถ้ามี)
+ * 5. บันทึกลง DB (MediaAsset)
+ *
+ * ⚗️ ตั้งค่า Nginx ที่เกี่ยวข้อง: docker/nginx/default.conf
+ *    - proxy_request_buffering off (สตรีมไฟล์ตรงไป backend)
+ *    - client_max_body_size 110M
+ *    - timeout 300s
+ */
 import { randomUUID } from 'crypto'
 import { mkdir, unlink, writeFile } from 'fs/promises'
 import { extname, join } from 'path'
@@ -10,7 +26,6 @@ import {
 
 const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads')
 
-/** Admin - upload a media file */
 export default defineEventHandler(async (event) => {
   await mkdir(UPLOAD_DIR, { recursive: true })
 
@@ -57,6 +72,7 @@ export default defineEventHandler(async (event) => {
     let width: number | null = null
     let height: number | null = null
 
+    // อ่านขนาดรูปภาพด้วย sharp (ถ้า sharp ไม่มีก็ข้ามไป — ไม่บังคับ)
     if (part.type?.startsWith('image/')) {
       try {
         const sharpModule = await import('sharp').catch(() => null)
@@ -66,7 +82,7 @@ export default defineEventHandler(async (event) => {
           height = metadata.height || null
         }
       } catch {
-        // Skip dimension extraction when sharp is unavailable.
+        // sharp ไม่ได้ติดตั้งใน Alpine Linux บางครั้ง — ข้ามไปได้
       }
     }
 
@@ -86,10 +102,11 @@ export default defineEventHandler(async (event) => {
 
       results.push(asset)
     } catch (error) {
+      // ถ้าบันทึก DB พัง → ลบไฟล์ที่เขียนไปแล้วทิ้ง (cleanup)
       try {
         await unlink(filePath)
       } catch {
-        // Ignore cleanup failures and surface the original error.
+        // cleanup ล้มเหลวไม่เป็นไร — ส่ง error ต้นทางกลับไป
       }
 
       throw error

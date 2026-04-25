@@ -193,6 +193,22 @@
   </div>
 </template>
 
+<!--
+  ═══ Admin Media Library ═══
+  จัดการไฟล์รูปภาพและวีดีโอทั้งหมด
+
+  ฟีเจอร์:
+  - Upload: drag-drop หรือ file input (รองรับหลายไฟล์พร้อมกัน)
+  - Upload Queue: แสดง progress bar ทีละไฟล์
+  - View Mode: grid (thumbnail) / list (table)
+  - Search: ค้นหาตามชื่อไฟล์
+  - Select: เลือกหลายไฟล์เพื่อ bulk delete
+  - Detail: ดูข้อมูล + แก้ alt text + copy URL
+  - Bulk Delete: ลบหลายไฟล์พร้อมกัน
+
+  ⚠️ ใช้ useAdminMediaUpload composable สำหรับ XHR upload
+  ⚠️ ไฟล์สูงสุด 100MB (ดู media.ts)
+-->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 

@@ -87,6 +87,20 @@
   </div>
 </template>
 
+<!--
+  ═══ Admin Highlights Manager ═══
+  จัดการ highlight cards บนหน้าแรก
+
+  ฟีเจอร์:
+  - CRUD: สร้าง/แก้ไข/ลบ highlight
+  - Reorder: เลื่อนลำดับขึ้น/ลง
+  - Visibility toggle: ซ่อน/แสดง
+  - 2 ภาษา: TH/EN พร้อม copy ข้ามภาษา
+  - MediaPicker: เลือกรูปจาก media library
+
+  ⚠️ Pattern นี้ใช้กับหลายหน้า (weapons, features, milestones)
+     ถ้าแก้ pattern ให้แก้ทุกหน้าที่คล้ายกัน
+-->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 
@@ -123,6 +137,7 @@ const tabErrors = computed(() => {
   return { th, en }
 })
 
+// ── โหลดข้อมูล highlight ทั้งหมด (เรียกตอนเปิดหน้า + หลังบันทึก/ลบ) ──
 async function loadItems() {
   try { items.value = await $fetch<HighlightItem[]>('/api/admin/highlights') } catch { items.value = [] }
 }
@@ -161,6 +176,7 @@ function validate(): boolean {
   return valid
 }
 
+// ── บันทึก: POST (สร้างใหม่) หรือ PUT (แก้ไข) ──
 async function saveItem() {
   if (!validate()) { formError.value = 'Please fix the errors above.'; return }
   saving.value = true; formError.value = ''
@@ -179,6 +195,7 @@ async function toggleVisibility(item: HighlightItem) {
   catch { showToast('Failed to update', 'error') }
 }
 
+// ── สลับลำดับ: อัปเดต sortOrder ทุกตัวพร้อมกัน ──
 async function reorder(index: number, dir: -1 | 1) {
   const newIndex = index + dir; const arr = [...items.value]
   const a = arr[index]; const b = arr[newIndex]

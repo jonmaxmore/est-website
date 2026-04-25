@@ -1,5 +1,13 @@
+/**
+ * ═══ Media Upload Constants & Validators ═══
+ * ใช้ร่วมกันทั้ง client (ตรวจสอบก่อน upload) และ server (ตรวจสอบหลังรับ)
+ * ไฟล์นี้อยู่ใน shared/ เพื่อให้ทั้ง 2 ฝั่งใช้ logic เดียวกัน
+ */
+
+// ขนาดไฟล์สูงสุด 100MB (ต้องตรงกับ Nginx client_max_body_size 110M)
 export const MAX_MEDIA_UPLOAD_BYTES = 100 * 1024 * 1024
 
+// ประเภทไฟล์ที่อนุญาต: รูปภาพ (JPEG, PNG, WebP, AVIF, GIF) + วิดีโอ (MP4)
 export const ALLOWED_MEDIA_MIME_TYPES = [
   'image/jpeg',
   'image/png',

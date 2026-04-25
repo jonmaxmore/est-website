@@ -1,8 +1,19 @@
-import { normalizeNavigationConfig, resolveNavigationHref } from '../../../app/shared/cms/navigation'
+﻿import { normalizeNavigationConfig, resolveNavigationHref } from '../../../app/shared/cms/navigation'
 import { normalizeWebzineTopics } from '../../../app/shared/cms/webzine'
 import { normalizeIntegrationsConfig } from '../../utils/admin-config'
 
-/** Enhanced public site config â€” returns navigation, social, appearance, FAQ in one call */
+/**
+ * ═══ Public Site Config API ═══
+ * GET /api/public/site
+ *
+ * โหลด config ทั้งหมดในครั้งเดียว สำหรับหน้า public:
+ * - Navigation (เมนูหลัก + footer)
+ * - Social links, Appearance (theme), SEO defaults
+ * - FAQ, Maintenance mode, Tracking IDs
+ *
+ * ⚠️ ไม่ต้อง login — เป็น API สาธารณะ
+ * ⚠️ ถ้ายังไม่มี config → ใช้ default navigation
+ */
 export default defineEventHandler(async () => {
   const configs = await prisma.siteConfig.findMany({
     where: {
@@ -47,6 +58,7 @@ export default defineEventHandler(async () => {
       })
     : []
 
+  // ── แปลง page key → href สำหรับ nav items ที่ชี้ไปหน้า CMS ──
   const pageMap = new Map(pageRecords.map((page) => [page.key, page]))
   const resolveVisibleItems = (items: typeof mainNav) =>
     items

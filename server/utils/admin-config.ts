@@ -1,9 +1,24 @@
+/**
+ * ═══ Admin Configuration Validator & Normalizer ═══
+ * ไฟล์หลักสำหรับจัดการการตั้งค่าเว็บไซต์ทั้งหมดผ่าน Admin CMS
+ *
+ * หน้าที่:
+ * 1. ตรวจสอบข้อมูลที่ admin ส่งมา (Zod schema)
+ * 2. Normalize ข้อมูลให้อยู่ในรูปแบบเดียวกัน (เติมค่า default, เรียงลำดับ)
+ * 3. ให้ค่า default สำหรับกรณียังไม่ได้ตั้งค่า
+ *
+ * config keys ที่รองรับ:
+ * navigation, seo, social, appearance, maintenance,
+ * homepage_sections, integrations, event_page, download_page,
+ * webzine_topics, faq
+ */
 import { z } from 'zod'
 
 import { HERO_BACKGROUND_MODES, isSupportedHomepageSectionType, normalizeHeroBackgroundMode } from '../../app/shared/cms/homepage'
 import { normalizeNavigationConfig } from '../../app/shared/cms/navigation'
 import { normalizeWebzineTopics } from '../../app/shared/cms/webzine'
 
+// ── Zod Schemas: ตรวจสอบโครงสร้างข้อมูลก่อนบันทึก ──
 const homepageSectionSchema = z.object({
   id: z.string().min(1),
   type: z.string().refine(isSupportedHomepageSectionType, 'Unsupported homepage section type'),
@@ -196,6 +211,7 @@ function parseNavigationConfig(value: unknown) {
   return navigation
 }
 
+// ── ค่า Default: ใช้เมื่อยังไม่ได้ตั้งค่าผ่าน admin ──
 export const DEFAULT_HOMEPAGE_SECTIONS = [
   { id: 'hero', type: 'hero', visible: true, order: 0, background: '/images/hero-bg.webp', config: {} },
   { id: 'weapons', type: 'weapons', visible: true, order: 1, background: '', config: {} },
@@ -290,6 +306,7 @@ export const DEFAULT_INTEGRATIONS_CONFIG = {
   },
 }
 
+/** เรียงลำดับและเติม id ให้ ordered items (ปุ่ม, ของรางวัล, แพลตฟอร์ม ฯลฯ) */
 function normalizeOrderedItems<T extends { id?: string; order: number }>(
   items: T[],
   prefix: string,
@@ -303,6 +320,7 @@ function normalizeOrderedItems<T extends { id?: string; order: number }>(
     .sort((left, right) => left.order - right.order)
 }
 
+/** Normalize hero section: เติม default, เรียงปุ่ม, fallback ชื่อภาษาข้าม */
 export function normalizeHeroSectionConfig(value: unknown) {
   const parsed = heroSectionConfigSchema.safeParse(value)
   const config = parsed.success ? parsed.data : DEFAULT_HERO_SECTION_CONFIG
@@ -454,6 +472,10 @@ const configParsers = {
   faq: (value: unknown) => faqSchema.parse(value),
 } satisfies Record<string, (value: unknown) => unknown>
 
+/**
+ * ── Config Parsers: แต่ละ key ใช้ parser เฉพาะ ──
+ * เรียกจาก parseAdminConfigWrite() ตอนบันทึก
+ */
 export function parseAdminConfigWrite(input: { key: string; value: unknown }) {
   const parser = configParsers[input.key as keyof typeof configParsers]
   if (!parser) {
@@ -466,6 +488,7 @@ export function parseAdminConfigWrite(input: { key: string; value: unknown }) {
   }
 }
 
+/** อ่านค่า config จาก DB + normalize ให้พร้อมใช้งาน */
 export function readAdminConfigValue(key: string, value: unknown) {
   if (key === 'homepage_sections') {
     return { sections: normalizeHomepageSections(value) }

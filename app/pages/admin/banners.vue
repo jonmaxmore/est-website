@@ -187,6 +187,22 @@
   </div>
 </template>
 
+<!--
+  ═══ Admin Banner Control ═══
+  จัดการ marketing banners ทั้งระบบ
+
+  ฟีเจอร์:
+  - CRUD: สร้าง/แก้ไข/ลบ banner
+  - Placement: announcement_bar, popup, sidebar, article_inline, footer_strip
+  - Scope: global, specific_topic
+  - Status: DRAFT → SCHEDULED → LIVE → EXPIRED
+  - Targeting: เชื่อมบทความ, หน้า CMS, Event, URL
+  - Scheduling: ผ่าน DateTimeRangePicker
+  - Filter: กรองตาม placement, status, scope
+
+  ⚠️ ดู banner-resolver.ts สำหรับ logic การเลือก banner
+  ⚠️ ดู marketing-banners.ts สำหรับ Zod validation
+-->
 <script setup lang="ts">
 import { BANNER_PLACEMENTS, BANNER_SCOPES } from '../../shared/cms/marketing-banners'
 
@@ -324,6 +340,11 @@ function openEditBanner(banner: Banner) {
   editorOpen.value = true
 }
 
+/**
+ * แปลง form → API payload
+ * ⚠️ ต้อง null ค่าที่ไม่ใช้ตาม targetType/scope
+ *    ไม่งั้น DB จะเก็บค่าเก่าค้าง
+ */
 function toPayload() {
   return {
     placement: form.placement,

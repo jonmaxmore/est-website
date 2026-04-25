@@ -119,6 +119,19 @@
   </div>
 </template>
 
+<!--
+  ═══ Admin Site Settings ═══
+  ตั้งค่าทั่วไปของเว็บไซต์ (3 กลุ่ม)
+
+  1. SEO Defaults: Title/Description ภาษาไทย+อังกฤษ → siteConfig key='seo'
+  2. Social Links: FB, IG, Twitter, YT, TikTok, Discord, Line
+     → siteConfig key='social'
+  3. Maintenance Mode: เปิด/ปิด + ข้อความ 2 ภาษา
+     → siteConfig key='maintenance'
+
+  แต่ละกลุ่มบันทึกแยกกัน — กด Save ทีละอัน
+  ⚠️ Navigation ย้ายไปหน้า menus.vue แทน
+-->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 

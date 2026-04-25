@@ -1,5 +1,15 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+/**
+ * ═══ Nuxt Configuration ═══
+ * ไฟล์ตั้งค่าหลักของแอป — ทุกอย่างเริ่มจากที่นี่
+ * - modules: ปลั๊กอินที่ใช้ (UI, i18n, auth, motion)
+ * - runtimeConfig: ค่า secret ที่อ่านจาก .env (ห้ามเขียนตรง)
+ * - i18n: ระบบภาษา ไทย/อังกฤษ
+ * - nitro: ตั้งค่า server (ใช้ node-server สำหรับ Docker)
+ */
 const publicSiteUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com'
+// ── ตั้งค่า Cookie ปลอดภัย ──
+// production + HTTPS → secure cookie อัตโนมัติ
+// ถ้ายังไม่มี SSL ให้ set NUXT_SESSION_COOKIE_SECURE=false ใน .env
 const sessionCookieSecureOverride = process.env.NUXT_SESSION_COOKIE_SECURE?.toLowerCase()
 const sessionCookieSecure =
   sessionCookieSecureOverride === 'true'
@@ -24,7 +34,10 @@ export default defineNuxtConfig({
   // ── CSS ──
   css: ['~/assets/css/main.css'],
 
-  // ── i18n ──
+  // ── ระบบภาษา (i18n) ──
+  // ภาษาไทยเป็น default → URL ไม่มี prefix เช่น /download
+  // ภาษาอังกฤษ → /en/download
+  // ไฟล์แปลอยู่ที่ i18n/locales/th.json, en.json
   i18n: {
     locales: [
       { code: 'th', name: 'ไทย', file: 'th.json' },
@@ -40,8 +53,12 @@ export default defineNuxtConfig({
     },
   },
 
-  // ── Auth Session ──
+  // ── ค่า Runtime (อ่านจาก .env) ──
+  // ⚠️ ห้าม hardcode ค่า secret ใดๆ ในไฟล์นี้
+  // ค่าใน public → เปิดเผยได้ (ส่งไป client)
+  // ค่าที่ไม่อยู่ใน public → server-only (ลับ)
   runtimeConfig: {
+    // รหัสเข้ารหัส session cookie (ต้อง 32+ ตัวอักษร)
     session: {
       password: process.env.NUXT_SESSION_PASSWORD || '',
       cookie: {
@@ -49,10 +66,10 @@ export default defineNuxtConfig({
         secure: sessionCookieSecure,
       },
     },
-    databaseUrl: process.env.DATABASE_URL || '',
-    redisUrl: process.env.REDIS_URL || '',
+    databaseUrl: process.env.DATABASE_URL || '',         // PostgreSQL connection string
+    redisUrl: process.env.REDIS_URL || '',               // Redis สำหรับ cache + rate limit
     recaptchaSecretKey: process.env.NUXT_RECAPTCHA_SECRET_KEY || '',
-    adminSeedEmail: process.env.ADMIN_SEED_EMAIL || '',
+    adminSeedEmail: process.env.ADMIN_SEED_EMAIL || '',  // admin คนแรกที่สร้างอัตโนมัติ
     adminSeedPassword: process.env.ADMIN_SEED_PASSWORD || '',
     public: {
       siteUrl: publicSiteUrl,
@@ -92,6 +109,8 @@ export default defineNuxtConfig({
   },
 
   // ── Nitro Server ──
+  // ใช้ node-server preset สำหรับรันใน Docker container
+  // ถ้าต้องการ deploy แบบ serverless ให้เปลี่ยนเป็น 'vercel' หรือ 'cloudflare'
   nitro: {
     preset: 'node-server',
   },

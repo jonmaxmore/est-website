@@ -1,9 +1,14 @@
+/**
+ * ═══ Activity Logger ═══
+ * บันทึกประวัติการทำงานของ admin ทุกคน (audit trail)
+ *
+ * ใช้ตอน: สร้าง/แก้/ลบเนื้อหา, login, upload ไฟล์ ฯลฯ
+ * เก็บ: ใคร (userId), ทำอะไร (action), กับอะไร (resource), เมื่อไหร่, IP
+ *
+ * ⚠️ ห้ามให้ log error ทำให้ operation หลักล้มเหลว (try-catch ครอบไว้)
+ */
 import type { H3Event } from 'h3'
 
-/**
- * Log an admin activity for audit trail.
- * Called from all admin CRUD operations.
- */
 export async function logActivity(
   event: H3Event,
   action: string,
@@ -28,7 +33,7 @@ export async function logActivity(
       },
     })
   } catch (err) {
-    // Never let activity logging break the main operation
+    // ห้ามให้ activity log ทำให้ operation หลักพัง
     console.error('[ActivityLog] Failed to log:', err)
   }
 }

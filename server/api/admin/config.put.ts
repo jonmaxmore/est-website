@@ -1,3 +1,15 @@
+/**
+ * ═══ Site Config Upsert API ═══
+ * PUT /api/admin/config
+ *
+ * บันทึกการตั้งค่าเว็บไซต์ (navigation, SEO, appearance ฯลฯ)
+ *
+ * Flow:
+ * 1. Validate body ด้วย Zod (key + value)
+ * 2. Normalize value ด้วย parseAdminConfigWrite (admin-config.ts)
+ * 3. Upsert ลง DB (siteConfig)
+ * 4. บันทึก activity log
+ */
 import { z } from 'zod'
 
 import { parseAdminConfigWrite } from '../../utils/admin-config'
@@ -7,7 +19,6 @@ const configSchema = z.object({
   value: z.unknown(),
 })
 
-/** Upsert a site config entry */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const parsed = configSchema.safeParse(body)
@@ -23,6 +34,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: (error as Error).message })
   }
 
+  // ── Upsert: สร้างถ้าไม่มี, อัปเดทถ้ามีแล้ว ──
   const config = await prisma.siteConfig.upsert({
     where: { key: configInput.key },
     update: { value: configInput.value as object },

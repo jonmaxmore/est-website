@@ -1,3 +1,12 @@
+/**
+ * ═══ Event Tracking Composable ═══
+ * ส่ง event ไป 3 ที่พร้อมกัน:
+ * 1. Google Analytics / GTM (gtag)
+ * 2. Meta Pixel (fbq)
+ * 3. Server-side ผ่าน POST /api/track
+ *
+ * ใช้งาน: const { trackEvent, trackDownload } = useTracking()
+ */
 import {
   type TrackingEventData,
   type TrackingEventName,
@@ -5,6 +14,8 @@ import {
   toMetaPixelEvent,
 } from '../shared/tracking/events'
 
+// ── ข้อมูล tracking config ถูก inject ผ่าน window.__etsTracking ──
+// (set โดย plugin ตอน app เริ่มทำงาน)
 declare global {
   interface Window {
     dataLayer?: unknown[]
@@ -48,6 +59,8 @@ export function useTracking() {
 
     sendBrowserTracking(eventName, payload)
 
+    // ── Server-side tracking (fire-and-forget) ──
+    // ไม่บล็อก UI ถ้า tracking ล้มเหลว
     try {
       await $fetch('/api/track', {
         method: 'POST',
@@ -57,7 +70,7 @@ export function useTracking() {
         },
       })
     } catch {
-      // Tracking should never block core user actions.
+      // tracking ห้ามทำให้ user action หลักพังเด็ดขาด
     }
   }
 

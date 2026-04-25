@@ -105,6 +105,22 @@
   </div>
 </template>
 
+<!--
+  ═══ Admin Navigation Menu ═══
+  จัดการเมนูหลัก + footer ของหน้าเว็บ
+
+  ฟีเจอร์:
+  - 2 ส่วน: Main Navigation + Footer Links
+  - ประเภทลิงก์:
+    • page: เชื่อมกับ CMS page ผ่าน pageKey (เปลี่ยน route ตาม page)
+    • custom: URL อิสระ (ไม่ผูกกับ CMS)
+  - Reorder: เลื่อนขึ้น/ลง
+  - Visibility toggle
+  - Save: PUT ทั้ง array ไป siteConfig key='navigation'
+
+  ⚠️ ค่า default จะใช้เมื่อยังไม่มี config ใน DB
+  ⚠️ ดู navigation.ts สำหรับ normalizer
+-->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 

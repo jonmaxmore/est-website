@@ -61,6 +61,20 @@
   </div>
 </template>
 
+<!--
+  ═══ Admin FAQ Manager ═══
+  จัดการคำถามที่พบบ่อย (2 ภาษา)
+
+  ⚠️ เก็บข้อมูลแบบ config-based (ไม่มี table แยก)
+     ทุกการแก้ไขจะ PUT ทั้ง array ลง siteConfig key='faq'
+     ต่างจาก highlights/weapons ที่เก็บทีละตัวใน DB
+
+  ฟีเจอร์:
+  - CRUD: สร้าง/แก้ไข/ลบ FAQ
+  - Reorder: เลื่อนลำดับ
+  - Visibility toggle
+  - RichTextEditor สำหรับคำตอบ
+-->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 
@@ -102,6 +116,10 @@ function handleCopy(from: 'th' | 'en') {
   showToast(`Copied ${from.toUpperCase()} content`)
 }
 
+/**
+ * บันทึก FAQ ทั้ง array ลง siteConfig key='faq' พร้อมกัน
+ * (ไม่เหมือน CRUD แยกทีละตัว — ส่งทั้งหมดทุกครั้ง)
+ */
 async function saveAll() {
   await $fetch('/api/admin/config', { method: 'PUT', body: { key: 'faq', value: items.value } })
 }

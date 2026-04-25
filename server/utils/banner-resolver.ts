@@ -1,3 +1,12 @@
+/**
+ * ═══ Marketing Banner Resolver ═══
+ * เลือกแบนเนอร์ที่เหมาะสมที่สุดสำหรับแต่ละหน้าและตำแหน่ง
+ *
+ * หลักการทำงาน:
+ * 1. กรอง banner ที่ scope ตรงกับหน้าปัจจุบัน + status=LIVE + อยู่ในช่วงเวลา
+ * 2. ถ้ามีหลายตัวชิงตำแหน่งเดียวกัน → เลือกตาม priority > updatedAt > id
+ * 3. คืน map ของ placement → banner
+ */
 import { BANNER_PLACEMENTS, type BannerPlacement } from '../../app/shared/cms/marketing-banners'
 
 type BannerScope =
@@ -41,6 +50,7 @@ function createEmptyResult<T extends BannerRecord>() {
   return Object.fromEntries(BANNER_PLACEMENTS.map((placement) => [placement, null])) as ResolvedBannerMap<T>
 }
 
+/** ตรวจว่า banner ตรงเงื่อนไขกับหน้าปัจจุบันหรือไม่ */
 function bannerMatches(input: ResolveInput, banner: BannerRecord) {
   if (!banner.isActive || banner.status !== 'LIVE') return false
   if (banner.startsAt && banner.startsAt > input.now) return false
@@ -59,6 +69,10 @@ function bannerMatches(input: ResolveInput, banner: BannerRecord) {
   return false
 }
 
+/**
+ * เปรียบเทียบ 2 banner ว่าตัวไหนชนะ (แสดงก่อน)
+ * ลำดับ: priority สูงกว่า > อัปเดทล่าสุด > id ตัวเล็กกว่า (เพื่อความเสถียร)
+ */
 function bannerWins(candidate: BannerRecord, current: BannerRecord | null) {
   if (!current) return true
   if (candidate.priority !== current.priority) return candidate.priority > current.priority
@@ -66,6 +80,7 @@ function bannerWins(candidate: BannerRecord, current: BannerRecord | null) {
   return candidate.id < current.id
 }
 
+/** เลือก banner ที่ดีที่สุดสำหรับแต่ละตำแหน่งในหน้าปัจจุบัน */
 export function resolveMarketingBanners<T extends BannerRecord>(input: ResolveInput & { banners: T[] }) {
   const resolved = createEmptyResult<T>()
 

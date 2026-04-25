@@ -1,6 +1,22 @@
+/**
+ * ═══ Pre-Registration API ═══
+ * POST /api/register
+ *
+ * ลงทะเบียนล่วงหน้าเพื่อรับของรางวัลตอนเปิดเกม
+ *
+ * Flow:
+ * 1. Rate limit ตาม IP (5 ครั้ง/ชั่วโมง)
+ * 2. Validate body (email, platform, region)
+ * 3. เช็คอีเมลซ้ำ → 409
+ * 4. ตรวจ referral code (ถ้ามี)
+ * 5. สร้าง referral code ใหม่ (ETS-XXXXXX)
+ * 6. เก็บ UTM params สำหรับ marketing tracking
+ * 7. บันทึก DB + คืน referralCode
+ */
 import { randomBytes } from 'node:crypto'
 import { z } from 'zod'
 
+/** จำกัด 5 ครั้งต่อ IP ต่อชั่วโมง — ป้องกัน spam registration */
 const REGISTRATION_LIMIT_PER_HOUR = 5
 
 const registerSchema = z.object({
@@ -64,10 +80,10 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // Generate referral code
+  // ── สร้าง referral code แบบสุ่ม (ETS-XXXXXXXXXXXX) ──
   const referralCode = `ETS-${randomBytes(6).toString('hex').toUpperCase()}`
 
-  // Parse UTM params
+  // ── เก็บ UTM params สำหรับวัดผลแคมเปญ ──
   const query = getQuery(event)
 
   const registration = await prisma.preRegistration.create({

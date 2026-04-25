@@ -117,6 +117,20 @@
   </div>
 </template>
 
+<!--
+  ═══ Admin User Management ═══
+  จัดการผู้ใช้ admin (SUPER_ADMIN เท่านั้นเข้าถึงได้)
+
+  ฟีเจอร์:
+  - CRUD: สร้าง/แก้ไข/ลบ admin user
+  - Role: EDITOR vs SUPER_ADMIN (ดู admin-auth.ts)
+  - Password strength meter: Weak → Fair → Good → Strong
+  - Field-level validation: ชื่อ, อีเมล, รหัสผ่าน
+  - Last login tracking
+
+  ⚠️ แก้รหัสผ่าน: ปล่อยว่างถ้าไม่ต้องการเปลี่ยน
+  ⚠️ ห้ามลบตัวเอง (API จะ reject)
+-->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 interface AdminUser { id: string; email: string; displayName: string; role: string; lastLoginAt: string | null }
@@ -140,6 +154,7 @@ const roles = [
 ]
 
 // Password strength
+// ── วัดความแข็งแรงรหัสผ่าน: ≥6, ≥10, ตัวใหญ่+เล็ก, อักขระพิเศษ ──
 const passwordStrength = computed(() => {
   const p = form.password
   if (!p) return 0

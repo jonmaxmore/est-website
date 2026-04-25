@@ -160,6 +160,27 @@
   </div>
 </template>
 
+<!--
+  ═══ Admin Homepage Builder ═══
+  จัดเรียง section หน้าแรกของเว็บไซต์
+
+  Sections ที่รองรับ:
+  - hero: แบนเนอร์หลัก (วีดีโอ/รูปภาพ background, subtitle, CTA buttons, social links)
+  - weapons: อาวุธ/คลาส
+  - features: ฟีเจอร์เกม
+  - highlights: ไฮไลท์
+  - news: ข่าวล่าสุด
+  - cta: Call-to-Action
+
+  ฟีเจอร์:
+  - Reorder: เลื่อน section ขึ้น/ลง
+  - Visibility: ซ่อน/แสดงแต่ละ section
+  - Hero Config: logo, subtitle TH/EN, background mode (image/video/youtube)
+  - Hero CTA Buttons: หลายปุ่ม, เรียงลำดับได้
+  - Save: บันทึกทั้ง array ไป siteConfig key='homepage'
+
+  ⚠️ ดู homepage.ts สำหรับ type และ constants
+-->
 <script setup lang="ts">
 import { SUPPORTED_HOMEPAGE_SECTION_TYPES } from '../../shared/cms/homepage'
 
