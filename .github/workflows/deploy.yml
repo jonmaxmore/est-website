@@ -1,0 +1,67 @@
+# ═══════════════════════════════════════
+# Deploy to Production — EST Website
+# ═══════════════════════════════════════
+#
+# Deploys main branch to production server (DigitalOcean).
+# Triggers manually or on push to main.
+#
+# Required secrets:
+#   DO_SSH_KEY          — SSH private key for DigitalOcean
+#   DO_HOST             — Server IP (178.128.127.161)
+#   DO_USER             — Server user (root)
+#   DATABASE_URL        — PostgreSQL connection string
+#   NUXT_SESSION_PASSWORD — Session encryption key
+
+name: Deploy Production
+
+on:
+  workflow_dispatch:   # Manual trigger
+  push:
+    branches: [main]
+    paths-ignore:
+      - '*.md'
+      - '.github/workflows/e2e.yml'
+      - 'tests/**'
+      - 'e2e/**'
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          script: |
+            set -e
+            cd /root/est-website
+
+            echo "═══ Pulling latest code ═══"
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "═══ Building Docker images ═══"
+            docker compose build --no-cache app
+
+            echo "═══ Running database migrations ═══"
+            docker compose run --rm app npx prisma migrate deploy
+
+            echo "═══ Restarting services ═══"
+            docker compose up -d --force-recreate app
+
+            echo "═══ Waiting for app startup ═══"
+            sleep 10
+
+            echo "═══ Health check ═══"
+            curl -sf http://localhost:3000/api/public/site > /dev/null && echo "✅ App is healthy" || echo "❌ Health check failed"
+
+            echo "═══ Cleaning up old images ═══"
+            docker image prune -f
+
+            echo "✅ Deployment complete!"
