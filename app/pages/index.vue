@@ -1,61 +1,74 @@
 <template>
-  <div data-testid="homepage-shell" :data-ready="hydrated ? 'true' : 'false'" class="relative min-h-dvh bg-bg-0 text-ink">
-    <SiteNavigation />
-
+  <div data-testid="homepage-shell" :data-ready="hydrated ? 'true' : 'false'">
     <!-- Sitewide announcement bar (above hero) -->
     <SiteMarketingBannerSlot
       class="mx-6 pt-24 md:mx-auto md:max-w-7xl"
       placement="announcement_bar"
-      :banner="banners?.announcement_bar || null"
+      :banner="bannerMap.announcement_bar"
     />
 
-    <main>
-      <!-- ════════════════════════════════════════════════
-           Dynamic CMS-driven sections
-           Each section type maps to one organism component.
-      ════════════════════════════════════════════════ -->
-      <template v-if="sections.length > 0">
-        <component
-          :is="sectionComponent(section.type)"
-          v-for="section in sections"
-          :key="section.id"
-          v-bind="sectionProps(section)"
+    <!-- ════════════════════════════════════════════════
+         CMS-driven sections — explicit type → component
+         (avoids `<component :is="STRING">` resolution failure)
+    ════════════════════════════════════════════════ -->
+    <template v-if="sections.length > 0">
+      <template v-for="section in sections" :key="section.id">
+        <OrganismsHeroSection
+          v-if="section.type === 'hero'"
+          :background="section.background || heroBackground"
+          :config="(section.config as Record<string, unknown>) || heroConfig"
+        />
+        <OrganismsWeaponSelector
+          v-else-if="section.type === 'weapons'"
+          :items="getSectionItems(section, 'items', weaponsFallback)"
+        />
+        <OrganismsGameGuildSection
+          v-else-if="section.type === 'features'"
+          :items="getSectionItems(section, 'items', featuresFallback)"
+        />
+        <OrganismsHighlightReel
+          v-else-if="section.type === 'highlight' || section.type === 'highlights'"
+          :slides="getSectionItems(section, 'slides', highlightSlidesFallback)"
+        />
+        <OrganismsNewsSection
+          v-else-if="section.type === 'news'"
+          :articles="getSectionItems(section, 'articles', newsArticlesFallback)"
+        />
+        <OrganismsCTASection
+          v-else-if="section.type === 'cta'"
+          :background="section.background || ctaBackground"
+          :stats="getSectionItems(section, 'stats', ctaStats)"
         />
       </template>
+    </template>
 
-      <!-- ════════════════════════════════════════════════
-           Fallback (default order) when CMS is empty
-      ════════════════════════════════════════════════ -->
-      <template v-else>
-        <OrganismsHeroSection :background="heroBackground" :config="heroConfig" />
-        <OrganismsWeaponSelector :items="weaponsFallback" />
-
-        <!-- Inline marketing banner mid-page (after weapons, before features) -->
-        <SiteMarketingBannerSlot
-          class="mx-auto my-12 max-w-7xl px-6"
-          placement="homepage_inline"
-          :banner="banners?.homepage_inline || null"
-        />
-
-        <OrganismsGameGuildSection :items="featuresFallback" />
-        <OrganismsHighlightReel :slides="highlightSlidesFallback" />
-        <OrganismsNewsSection :articles="newsArticlesFallback" />
-        <OrganismsCTASection :background="ctaBackground" :stats="ctaStats" />
-      </template>
-
-      <!-- Footer strip (auto-hidden by orchestrator if announcement_bar is showing) -->
+    <!-- ════════════════════════════════════════════════
+         Fallback when CMS returns 0 sections
+    ════════════════════════════════════════════════ -->
+    <template v-else>
+      <OrganismsHeroSection :background="heroBackground" :config="heroConfig" />
+      <OrganismsWeaponSelector :items="weaponsFallback" />
       <SiteMarketingBannerSlot
-        class="mx-auto mb-8 max-w-7xl px-6"
-        placement="footer_strip"
-        :banner="banners?.footer_strip || null"
+        class="mx-auto my-12 max-w-7xl px-6"
+        placement="homepage_inline"
+        :banner="bannerMap.homepage_inline"
       />
-    </main>
+      <OrganismsGameGuildSection :items="featuresFallback" />
+      <OrganismsHighlightReel :slides="highlightSlidesFallback" />
+      <OrganismsNewsSection :articles="newsArticlesFallback" />
+      <OrganismsCTASection :background="ctaBackground" :stats="ctaStats" />
+    </template>
 
-    <SiteFooter />
+    <!-- Footer strip (auto-hidden by orchestrator if announcement_bar is showing) -->
+    <SiteMarketingBannerSlot
+      class="mx-auto mb-8 max-w-7xl px-6"
+      placement="footer_strip"
+      :banner="bannerMap.footer_strip"
+    />
 
     <!-- Floating + popup overlays (mutex via orchestrator: popup wins) -->
-    <SiteMarketingBannerSlot placement="popup" :banner="banners?.popup || null" />
-    <SiteMarketingBannerSlot placement="floating" :banner="banners?.floating || null" />
+    <SiteMarketingBannerSlot placement="popup" :banner="bannerMap.popup" />
+    <SiteMarketingBannerSlot placement="floating" :banner="bannerMap.floating" />
   </div>
 </template>
 
@@ -63,16 +76,16 @@
 /**
  * app/pages/index.vue — Eternal Tower Saga landing
  *
- * Two render modes:
- *  1. CMS mode — sections come from /api/public/sections; each `type` maps
- *     to a component below (component map). Order is preserved.
+ * Render strategy:
+ *  1. CMS mode — sections come from /api/public/sections; explicit
+ *     v-if chain for each type (compile-time resolved, no string lookup).
  *  2. Fallback — if CMS returns no sections, renders the default order
  *     using static fixtures so the page is never empty.
  *
- * Banner slots use useBannerOrchestrator (popup⇄floating mutex,
- * announcement⇄footer_strip mutex) to prevent visual chaos.
+ * Layout: default.vue handles SiteNavigation + SiteFooter + outer <main>.
  *
- * Activate cursor glow + magnetic buttons globally on this page.
+ * Banners use useBannerOrchestrator (popup⇄floating + announcement⇄footer
+ * mutex) to prevent visual chaos.
  */
 
 useCursorGlow()
@@ -81,48 +94,44 @@ interface PublicSection {
   id: string
   type: string
   order: number
-  data: Record<string, unknown>
+  visible?: boolean
+  background?: string
+  config?: unknown
 }
 
 const hydrated = ref(false)
 onMounted(() => { hydrated.value = true })
 
+/**
+ * เลือก data จาก section.config ก่อน (CMS fill ได้) ถ้าว่างใช้ fallback
+ * รองรับทั้ง section.config.items และ section[key] โดยตรง
+ */
+function getSectionItems<T>(section: PublicSection, key: string, fallback: T[]): T[] {
+  const cfg = section.config as Record<string, unknown> | undefined
+  const fromConfig = cfg && Array.isArray(cfg[key]) ? (cfg[key] as T[]) : null
+  if (fromConfig && fromConfig.length > 0) return fromConfig
+  return fallback
+}
+
 // ── Sections from CMS ──
 const { data: sectionsData } = await useFetch<{ sections: PublicSection[] }>(
   '/api/public/sections',
-  { default: () => ({ sections: [] }) }
+  { default: () => ({ sections: [] }) },
 )
 
 const sections = computed(() =>
-  [...(sectionsData.value?.sections ?? [])].sort((a, b) => a.order - b.order)
+  [...(sectionsData.value?.sections ?? [])].sort((a, b) => a.order - b.order),
 )
 
 // ── Marketing banners (orchestrated) ──
-const { data: banners } = useBannerOrchestrator({ routeType: 'homepage' })
-
-/**
- * Map a CMS section.type to a global component name.
- * Components are auto-imported by Nuxt from app/components/organisms/*.vue
- * with the prefix `Organisms`.
- */
-function sectionComponent(type: string) {
-  const map: Record<string, string> = {
-    hero: 'OrganismsHeroSection',
-    weapons: 'OrganismsWeaponSelector',
-    features: 'OrganismsGameGuildSection',
-    highlight: 'OrganismsHighlightReel',
-    news: 'OrganismsNewsSection',
-    cta: 'OrganismsCTASection',
-  }
-  return map[type] || 'div'
-}
-
-function sectionProps(section: PublicSection) {
-  return section.data || {}
-}
+const { data: bannersData } = useBannerOrchestrator({ routeType: 'homepage' })
+const bannerMap = computed(() => bannersData.value || {
+  announcement_bar: null, popup: null, floating: null,
+  homepage_inline: null, sidebar: null, article_inline: null, footer_strip: null,
+})
 
 /* ──────────────────────────────────────────────────────────
-   Fallback fixtures (used only when CMS returns 0 sections)
+   Fallback fixtures (used when CMS returns 0 sections)
    ────────────────────────────────────────────────────────── */
 const heroBackground = '/images/hero-bg.webp'
 const heroConfig = {
