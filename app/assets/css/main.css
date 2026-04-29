@@ -1,241 +1,240 @@
+/* ================================================================
+   Eternal Tower Saga — Design Tokens
+   Stylized anime/action × Korean dark fantasy
+   ================================================================ */
+
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-/* ═══════════════════════════════════════
- * EST Design Tokens — K-MMORPG Aesthetic
- * Inspired by: Lost Ark, Black Desert, Throne and Liberty
- * ═══════════════════════════════════════ */
 @theme {
-  /* ── Brand: Gold (Royal/Light) ── */
-  --color-gold: #D4A843;
-  --color-gold-light: #E5B954;
-  --color-gold-dark: #B8922F;
-  --color-gold-deep: #8C6D1E;
+  /* ── Background scale (deep ink) ──────────────────────────── */
+  --color-bg-0: #07050C;          /* deepest — page bg */
+  --color-bg-1: #0E0A18;          /* card bg */
+  --color-bg-2: #181024;          /* elevated surface */
+  --color-bg-3: #251830;          /* hover/active */
 
-  /* ── Brand: Crimson (Action/Power) ── */
-  --color-crimson: #A63B47;
-  --color-crimson-light: #D14A54;
-  --color-crimson-dark: #6B1C24;
+  /* ── Ink (text) scale ─────────────────────────────────────── */
+  --color-ink: #F4ECDF;            /* primary text */
+  --color-ink-soft: #B8AC97;       /* secondary */
+  --color-ink-mute: #6B6354;       /* tertiary / mono labels */
 
-  /* ── Brand: Jade (Healing/Nature) ── */
-  --color-jade: #3D7A6E;
-  --color-jade-light: #5BA89D;
-  --color-jade-dark: #1F4841;
+  /* ── Gold accent ──────────────────────────────────────────── */
+  --color-gold: #E8B547;           /* primary gold */
+  --color-gold-bright: #F4D076;    /* highlight */
+  --color-gold-deep: #A87E2A;      /* shadow / deep */
+  --color-gold-glow: rgba(232, 181, 71, 0.45);
 
-  /* ── Brand: Arcane (Magic/Cool accent) ── */
-  --color-arcane: #7B5BD6;
-  --color-arcane-light: #9B7EE5;
-  --color-arcane-dark: #4F3B9B;
+  /* ── Semantic ─────────────────────────────────────────────── */
+  --color-success: #6BCF7F;
+  --color-warning: #F4B942;
+  --color-danger: #E84D5F;
 
-  /* ── Surfaces (deeper than before) ── */
-  --color-surface-primary: #07070C;     /* Pitch dark */
-  --color-surface-secondary: #0F0F18;   /* Elevated bg */
-  --color-surface-elevated: #161623;    /* Card bg */
-  --color-surface-overlay: #1F1F30;     /* Modal bg */
+  /* ── Type families ────────────────────────────────────────── */
+  --font-display: 'Cinzel', 'Noto Serif KR', serif;
+  --font-serif-kr: 'Noto Serif KR', 'Cinzel', serif;
+  --font-body: 'Inter', 'Noto Sans Thai', system-ui, sans-serif;
+  --font-sans: 'Inter', 'Noto Sans Thai', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* ── Legacy aliases (back-compat ตอน migrate components) ──── */
+  --color-surface-primary: var(--color-bg-0);
+  --color-surface-secondary: var(--color-bg-1);
+  --color-surface-tertiary: var(--color-bg-2);
+  --color-surface-elevated: var(--color-bg-2);
+  --color-text-primary: var(--color-ink);
+  --color-text-secondary: var(--color-ink-soft);
+  --color-text-muted: var(--color-ink-mute);
+  --color-gold-light: var(--color-gold-bright);
+  --color-gold-dark: var(--color-gold-deep);
 
   /* Glass */
   --color-glass-bg: oklch(1 0 0 / 0.04);
   --color-glass-border: oklch(1 0 0 / 0.08);
-
-  /* ── Borders & ornaments ── */
-  --color-border-subtle: rgba(255, 255, 255, 0.06);
-  --color-border-default: rgba(255, 255, 255, 0.1);
-  --color-border-strong: rgba(212, 168, 67, 0.3);
-  --color-border-accent: rgba(212, 168, 67, 0.5);
-
-  /* ── Typography ── */
-  --font-display: 'Cinzel', 'Noto Serif Thai', 'Georgia', serif;
-  --font-sans: 'Inter', 'Noto Sans Thai', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Menlo', monospace;
-
-  /* Display sizes (heroic scale) */
-  --text-hero: clamp(3rem, 8vw, 6rem);          /* H1 hero */
-  --text-display: clamp(2rem, 6vw, 4rem);       /* H1 section */
-  --text-title: clamp(1.5rem, 4vw, 2.5rem);     /* H2 */
-  --text-heading: clamp(1.25rem, 3vw, 1.75rem); /* H3 */
-
-  /* ── Border radius — sharper than rounded ── */
-  --radius-sharp: 2px;
-  --radius-edge: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 20px;
-
-  /* ── Animations ── */
-  --animate-glow-sweep: glow-sweep 3s ease-in-out infinite;
-  --animate-particle-drift: particle-drift 20s linear infinite;
-  --animate-slow-zoom: slow-zoom 24s ease-in-out infinite alternate;
-  --animate-shine: shine 2.5s ease-in-out infinite;
-  --animate-glow-pulse: glow-pulse 2s ease-in-out infinite;
-
-  /* Easings */
-  --ease-sharp: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --ease-cinematic: cubic-bezier(0.2, 0.6, 0.8, 0.4);
 }
 
-/* ── Keyframes ── */
+/* ================================================================
+   Base
+   ================================================================ */
+html {
+  scroll-behavior: smooth;
+  background: var(--color-bg-0);
+}
+
+body {
+  font-family: var(--font-body);
+  font-feature-settings: "ss01", "cv01";
+  background: var(--color-bg-0);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Headings: Cinzel display ─────────────────────────────────── */
+.display-title,
+h1.display-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  background: linear-gradient(180deg, var(--color-gold-bright) 0%, var(--color-gold) 50%, var(--color-gold-deep) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 60px rgba(232, 181, 71, 0.25);
+}
+
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.875rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+.section-eyebrow .num {
+  color: var(--color-gold-bright);
+  font-variant-numeric: tabular-nums;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+
+/* ================================================================
+   Cinematic frame corners (decorative)
+   ================================================================ */
+.cinematic-corners::before,
+.cinematic-corners::after {
+  content: "";
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--color-gold);
+  opacity: 0.4;
+}
+.cinematic-corners::before {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+.cinematic-corners::after {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
+
+/* ================================================================
+   Magnetic button (paired with useMagneticHover composable)
+   ================================================================ */
+.btn-magnetic {
+  transform: translate3d(var(--mx, 0px), var(--my, 0px), 0) scale(var(--ms, 1));
+  transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.4),
+              box-shadow 0.4s ease,
+              background-color 0.4s ease,
+              border-color 0.4s ease,
+              color 0.4s ease;
+  will-change: transform;
+}
+.btn-magnetic:hover { --ms: 1.03; }
+
+/* ================================================================
+   Animations
+   ================================================================ */
 @keyframes glow-sweep {
-  0%, 100% { transform: translateX(-100%); }
-  50% { transform: translateX(200%); }
+  0%   { left: -100%; }
+  60%  { left: 200%; }
+  100% { left: 200%; }
 }
 
 @keyframes particle-drift {
-  0% { transform: translateY(0) translateX(0); opacity: 0; }
-  10%, 90% { opacity: 0.7; }
-  100% { transform: translateY(-40px) translateX(20px); opacity: 0; }
+  0%   { transform: translate3d(0, 0, 0); opacity: 0.6; }
+  50%  { opacity: 1; }
+  100% { transform: translate3d(-40px, -60px, 0); opacity: 0.6; }
 }
 
-@keyframes slow-zoom {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.08); }
+@keyframes ring-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
-@keyframes shine {
-  0% { transform: translateX(-150%) skewX(-20deg); }
-  100% { transform: translateX(250%) skewX(-20deg); }
+@keyframes ring-rotate-rev {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
 }
 
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(212, 168, 67, 0.25); }
-  50% { box-shadow: 0 0 32px rgba(212, 168, 67, 0.5); }
+@keyframes stat-fill {
+  from { width: 0%; }
 }
 
-/* ── Base layer ── */
-@layer base {
-  html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+/* ================================================================
+   Cursor glow (paired with useCursorGlow composable)
+   ================================================================ */
+.cursor-glow {
+  position: fixed;
+  top: 0; left: 0;
+  width: 480px;
+  height: 480px;
+  pointer-events: none;
+  z-index: 1;
+  transform: translate3d(var(--cx, -50vw), var(--cy, -50vh), 0) translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(232, 181, 71, 0.12) 0%, transparent 60%);
+  mix-blend-mode: screen;
+  transition: opacity 0.4s ease;
+  opacity: 0;
+}
+.cursor-glow.is-active { opacity: 1; }
 
-  body {
-    @apply bg-surface-primary text-white overflow-x-hidden leading-relaxed;
-    font-family: var(--font-sans);
-    background-image:
-      radial-gradient(ellipse 80% 40% at 50% -10%, rgba(212, 168, 67, 0.06), transparent 60%),
-      radial-gradient(ellipse 60% 30% at 50% 110%, rgba(166, 59, 71, 0.05), transparent 60%);
-  }
+/* ================================================================
+   Section transitions / reveal helpers
+   ================================================================ */
+.reveal-enter-from,
+.reveal-leave-to { opacity: 0; transform: translateY(24px); }
+.reveal-enter-active,
+.reveal-leave-active { transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
 
-  /* Headings use display font */
-  h1, h2, h3 {
-    font-family: var(--font-display);
-    letter-spacing: 0.02em;
-  }
+.slide-down-enter-from,
+.slide-down-leave-to { opacity: 0; transform: translateY(-12px); }
+.slide-down-enter-active,
+.slide-down-leave-active { transition: opacity 0.35s ease, transform 0.35s ease; }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { @apply bg-surface-primary; }
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--color-gold-dark), var(--color-gold-deep));
-    border-radius: 9999px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, var(--color-gold), var(--color-gold-dark));
-  }
+/* ================================================================
+   Scrollbar (subtle gold)
+   ================================================================ */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--color-bg-0); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-gold-deep), var(--color-bg-2));
+  border-radius: 999px;
+  border: 2px solid var(--color-bg-0);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-gold); }
 
-  /* Selection */
-  ::selection { background: var(--color-gold); color: black; }
-
-  /* Focus ring */
-  :focus-visible {
-    outline: 2px solid var(--color-gold);
-    outline-offset: 2px;
-  }
-
-  /* Media */
-  img, video { @apply max-w-full h-auto block; }
-
-  /* Reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
+/* ================================================================
+   Selection
+   ================================================================ */
+::selection {
+  background: var(--color-gold);
+  color: var(--color-bg-0);
 }
 
-/* ═══════════════════════════════════════
- * Utility: K-game UI patterns
- * ═══════════════════════════════════════ */
-@layer utilities {
-  /* Glow effects */
-  .glow-gold {
-    box-shadow:
-      0 0 20px rgba(212, 168, 67, 0.4),
-      0 0 40px rgba(212, 168, 67, 0.15);
+/* ================================================================
+   Reduced motion
+   ================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-  .glow-gold-soft {
-    box-shadow: 0 0 16px rgba(212, 168, 67, 0.25);
-  }
-  .glow-crimson {
-    box-shadow:
-      0 0 20px rgba(166, 59, 71, 0.4),
-      0 0 40px rgba(166, 59, 71, 0.15);
-  }
-  .glow-jade {
-    box-shadow: 0 0 20px rgba(61, 122, 110, 0.4), 0 0 40px rgba(61, 122, 110, 0.15);
-  }
-  .glow-inset-gold {
-    box-shadow: inset 0 0 30px rgba(212, 168, 67, 0.08);
-  }
-
-  /* Text effects */
-  .text-glow-gold {
-    text-shadow: 0 0 12px rgba(212, 168, 67, 0.6), 0 0 24px rgba(212, 168, 67, 0.3);
-  }
-  .text-gradient-gold {
-    background: linear-gradient(180deg, var(--color-gold-light) 0%, var(--color-gold-dark) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  /* Ornate frame — corner accents */
-  .frame-ornate {
-    position: relative;
-    border: 1px solid var(--color-border-strong);
-  }
-  .frame-ornate::before,
-  .frame-ornate::after {
-    content: '';
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    border: 1px solid var(--color-gold);
-  }
-  .frame-ornate::before {
-    top: -1px;
-    left: -1px;
-    border-right: none;
-    border-bottom: none;
-  }
-  .frame-ornate::after {
-    bottom: -1px;
-    right: -1px;
-    border-left: none;
-    border-top: none;
-  }
-
-  /* Cinematic image hover (slow zoom) */
-  .img-cinematic { transition: transform 1.6s var(--ease-cinematic); }
-  .img-cinematic:hover { transform: scale(1.05); }
-
-  /* Button shine sweep */
-  .btn-shine {
-    position: relative;
-    overflow: hidden;
-  }
-  .btn-shine::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(120deg, transparent 35%, rgba(255, 255, 255, 0.25) 50%, transparent 65%);
-    transform: translateX(-150%);
-    pointer-events: none;
-  }
-  .btn-shine:hover::after { animation: shine 0.8s ease-out; }
 }
