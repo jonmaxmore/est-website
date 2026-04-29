@@ -148,17 +148,17 @@ const heroConfig = {
 }
 
 const weaponsFallback = [
-  { id: 'crimson-blade', nameEn: 'Crimson Blade', nameTh: 'ดาบโลหิตทมิฬ', kr: '검', roleEn: 'Vanguard', roleTh: 'แนวหน้า',
+  { id: 'crimson-blade', nameEn: 'Crimson Blade', nameTh: 'ดาบโลหิตทมิฬ', roleEn: 'Vanguard', roleTh: 'แนวหน้า',
     descriptionEn: 'A blade forged in the blood of fallen kings. Strikes faster than thought.',
     descriptionTh: 'ดาบที่หล่อขึ้นจากเลือดของกษัตริย์ที่ล้มลง รวดเร็วกว่าความคิด',
     image: '/images/weapons/crimson-blade.webp',
     stats: [{ label: 'Power', value: 92 }, { label: 'Speed', value: 78 }, { label: 'Range', value: 45 }, { label: 'Mastery', value: 68 }] },
-  { id: 'void-bow', nameEn: 'Void Bow', nameTh: 'ธนูแห่งห้วงเหว', kr: '궁', roleEn: 'Marksman', roleTh: 'นักล่า',
+  { id: 'void-bow', nameEn: 'Void Bow', nameTh: 'ธนูแห่งห้วงเหว', roleEn: 'Marksman', roleTh: 'นักล่า',
     descriptionEn: 'Arrows that pierce dimensions. Distance is no longer a barrier.',
     descriptionTh: 'ลูกธนูทะลุมิติ ระยะทางไม่ใช่อุปสรรคอีกต่อไป',
     image: '/images/weapons/void-bow.webp',
     stats: [{ label: 'Power', value: 76 }, { label: 'Speed', value: 88 }, { label: 'Range', value: 96 }, { label: 'Mastery', value: 72 }] },
-  { id: 'storm-staff', nameEn: 'Storm Staff', nameTh: 'ไม้เท้าพายุ', kr: '장', roleEn: 'Mage', roleTh: 'ผู้ใช้เวทย์',
+  { id: 'storm-staff', nameEn: 'Storm Staff', nameTh: 'ไม้เท้าพายุ', roleEn: 'Mage', roleTh: 'ผู้ใช้เวทย์',
     descriptionEn: 'Channel the wrath of seven storms in a single incantation.',
     descriptionTh: 'รวบรวมพลังพายุทั้งเจ็ดในคาถาเดียว',
     image: '/images/weapons/storm-staff.webp',
@@ -232,7 +232,7 @@ const ctaStats = [
 ]
 
 useHead({
-  title: 'Eternal Tower Saga — 영원한 탑의 전설',
+  title: 'Eternal Tower Saga — An Eternal Saga',
   meta: [
     { name: 'description', content: 'Climb the eternal tower. Forge your saga. A stylized action MMORPG inspired by Korean dark fantasy.' },
     { property: 'og:title', content: 'Eternal Tower Saga' },
