@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx nuxt *)",
+      "Bash(npx vue-tsc *)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(git add *)",
+      "Bash(git reset *)",
+      "Bash(git commit -m ' *)",
+      "Bash(ssh -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=accept-new root@178.128.127.161 \"echo CONNECTED; whoami; pwd; ls /root/est-website/.env 2>/dev/null && echo ENV_EXISTS || echo NO_ENV\")",
+      "Bash(ssh -i ~/.ssh/id_rsa_openclaw -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=accept-new root@178.128.127.161 \"echo CONNECTED; whoami; pwd\")",
+      "Bash(ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=accept-new root@178.128.127.161 \"echo CONNECTED\")",
+      "Bash(git push *)",
+      "Bash(gh pr create --base main --head claude/epic-swartz-ec581a --title 'security/ops: comprehensive audit remediation \\(Sprint 1-4\\)' --body ' *)",
+      "PowerShell(gh --version 2>&1)",
+      "Read(//c/Users/USER/Documents/GitHub/est-website/.claude/worktrees/*/**)",
+      "Read(//c/Users/USER/**)",
+      "Bash(git config *)",
+      "Bash(git credential *)"
+    ]
+  }
+}

@@ -9,7 +9,13 @@
  */
 import { z } from 'zod'
 
-import { BANNER_PLACEMENTS, BANNER_SCOPES, normalizeBannerConfig } from '../../app/shared/cms/marketing-banners'
+import {
+  BANNER_PLACEMENTS,
+  BANNER_SCOPES,
+  PLACEMENT_ALLOWED_SCOPES,
+  isAllowedPlacementScope,
+  normalizeBannerConfig,
+} from '../../app/shared/cms/marketing-banners'
 
 const emptyToNull = (value: unknown) => (value === '' ? null : value)
 const nullableStringSchema = z.preprocess(emptyToNull, z.string().trim().optional().nullable())
@@ -88,6 +94,15 @@ export function parseMarketingBannerPayload(input: unknown) {
 
   if (parsed.scope === 'specific_topic' && !parsed.targetTopicKey) {
     throw new Error('specific_topic scope requires targetTopicKey')
+  }
+
+  // ── Reject nonsensical placement+scope combos ──
+  // (เช่น sidebar+homepage ไม่มีจุด render, article_inline+homepage ไม่มี article body)
+  if (!isAllowedPlacementScope(parsed.placement, parsed.scope)) {
+    const allowed = PLACEMENT_ALLOWED_SCOPES[parsed.placement]
+    throw new Error(
+      `placement="${parsed.placement}" cannot use scope="${parsed.scope}". Allowed scopes: ${allowed.join(', ')}`,
+    )
   }
 
   if (startsAt && endsAt && endsAt <= startsAt) {
