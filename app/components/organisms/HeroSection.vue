@@ -27,33 +27,42 @@
       <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_60%,transparent,rgba(7,5,12,0.6))]" />
     </div>
 
-    <!-- ── Layer 2: Particles (medium parallax) ── -->
+    <!-- ── Layer 2: Petals/particles (medium parallax) ── -->
     <div
       ref="midLayer"
       class="pointer-events-none absolute inset-0 z-[1] will-change-transform"
       style="background-image:
-        radial-gradient(1px 1px at 12% 22%, rgba(244,208,118,0.5), transparent 60%),
-        radial-gradient(1.5px 1.5px at 67% 78%, rgba(232,181,71,0.4), transparent 60%),
-        radial-gradient(1px 1px at 82% 18%, rgba(244,236,223,0.3), transparent 60%),
-        radial-gradient(2px 2px at 35% 65%, rgba(232,181,71,0.25), transparent 60%);
-        animation: particle-drift 22s linear infinite;"
+        radial-gradient(2px 2px at 12% 28%, rgba(255,200,230,0.6), transparent),
+        radial-gradient(2px 2px at 78% 18%, rgba(232,181,71,0.5), transparent),
+        radial-gradient(1px 1px at 42% 72%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1.5px 1.5px at 88% 58%, rgba(180,200,255,0.5), transparent),
+        radial-gradient(1px 1px at 22% 82%, rgba(232,181,71,0.4), transparent),
+        radial-gradient(2px 2px at 62% 42%, rgba(255,255,255,0.3), transparent);
+        animation: particle-drift 28s linear infinite;"
     />
 
-    <!-- ── Layer 3: Korean rune glyphs (subtle, decorative) ── -->
+    <!-- ── Layer 3: Floating diamond sigils (replaces KR runes per design source) ── -->
     <div
       ref="fgLayer"
-      class="pointer-events-none absolute inset-0 z-[2] will-change-transform"
+      class="pointer-events-none absolute inset-0 z-[2] opacity-50 will-change-transform"
       aria-hidden="true"
     >
-      <span class="absolute right-[8%] top-[18%] font-serif-kr text-[120px] font-bold text-gold/[0.06] leading-none select-none">永</span>
-      <span class="absolute left-[6%] bottom-[28%] font-serif-kr text-[90px] font-bold text-gold/[0.05] leading-none select-none">塔</span>
+      <span class="ets-sigil" style="top:20%; left:9%;" />
+      <span class="ets-sigil" style="top:64%; left:14%; width:32px; height:32px;" />
+      <span class="ets-sigil" style="top:26%; right:13%; width:28px; height:28px;" />
+      <span class="ets-sigil" style="top:74%; right:18%;" />
+      <span class="ets-sigil" style="top:46%; right:7%; width:14px; height:14px;" />
     </div>
 
-    <!-- ── Cinematic frame corners ── -->
-    <div class="pointer-events-none absolute inset-6 z-[3] cinematic-corners hidden md:block" />
+    <!-- ── Cinematic vignette + corners ── -->
+    <div class="pointer-events-none absolute inset-0 z-[3] hidden md:block" style="box-shadow: inset 0 0 200px 40px rgba(7,5,12,0.7);" />
+    <div class="pointer-events-none absolute inset-8 z-[4] hidden md:block">
+      <span class="absolute left-0 top-0 h-8 w-8 border-l border-t border-gold/40" />
+      <span class="absolute bottom-0 right-0 h-8 w-8 border-b border-r border-gold/40" />
+    </div>
 
-    <!-- ── Layer 4: Content (foreground, no parallax) ── -->
-    <div class="relative z-[5] flex flex-col items-center gap-6 px-6 text-center max-w-[920px]">
+    <!-- ── Layer 4: Content (foreground) ── -->
+    <div class="relative z-[10] flex flex-col items-center gap-6 px-6 text-center max-w-[920px]">
       <div
         class="section-eyebrow"
         v-motion
@@ -61,41 +70,22 @@
         :enter="{ opacity: 1, y: 0, transition: { duration: 800 } }"
       >
         <span class="h-px w-10 bg-gradient-to-r from-transparent to-gold/60" />
-        <span><span class="num">01</span>&nbsp;&nbsp;CHAPTER&nbsp;ZERO</span>
+        <span>{{ heroEyebrow }}</span>
         <span class="h-px w-10 bg-gradient-to-l from-transparent to-gold/60" />
       </div>
 
-      <div
-        v-motion
-        :initial="{ opacity: 0, y: 40 }"
-        :enter="{ opacity: 1, y: 0, transition: { duration: 1100, delay: 100 } }"
-        class="w-[clamp(180px,32vw,340px)]"
-      >
-        <img
-          :src="heroConfig.logo"
-          :alt="SITE.name"
-          class="w-full drop-shadow-[0_0_60px_rgba(232,181,71,0.4)]"
-        />
-      </div>
-
       <h1
-        class="display-title text-[clamp(2.75rem,7vw,5.5rem)] max-w-[820px]"
+        class="hero-title"
         v-motion
         :initial="{ opacity: 0, y: 30 }"
-        :enter="{ opacity: 1, y: 0, transition: { duration: 1100, delay: 250 } }"
+        :enter="{ opacity: 1, y: 0, transition: { duration: 1100, delay: 200 } }"
       >
-        Eternal Tower Saga
+        ETERNAL<br>TOWER
+        <span class="hero-title-accent">{{ titleAccent }}</span>
       </h1>
 
       <p
-        class="font-serif-kr text-gold/70 text-[clamp(0.95rem,1.5vw,1.125rem)] tracking-[0.4em] uppercase"
-        v-motion
-        :initial="{ opacity: 0 }"
-        :enter="{ opacity: 1, transition: { duration: 1200, delay: 450 } }"
-      >영원한 탑의 전설</p>
-
-      <p
-        class="text-ink-soft text-[clamp(0.95rem,1.4vw,1.125rem)] max-w-[560px] leading-relaxed"
+        class="text-ink-soft text-[clamp(0.95rem,1.4vw,1.125rem)] max-w-[560px] leading-relaxed mt-2"
         v-motion
         :initial="{ opacity: 0, y: 20 }"
         :enter="{ opacity: 1, y: 0, transition: { duration: 1100, delay: 600 } }"
@@ -105,7 +95,7 @@
 
       <div
         v-if="visibleButtons.length > 0"
-        class="mt-6 flex max-w-[min(92vw,720px)] flex-wrap items-center justify-center gap-4"
+        class="mt-8 flex max-w-[min(92vw,720px)] flex-wrap items-center justify-center gap-4"
         v-motion
         :initial="{ opacity: 0, y: 20 }"
         :enter="{ opacity: 1, y: 0, transition: { duration: 1000, delay: 800 } }"
@@ -131,7 +121,7 @@
 
       <!-- Platform pills -->
       <div
-        class="mt-4 flex flex-wrap items-center justify-center gap-2 text-[10px] font-mono uppercase tracking-[0.25em] text-ink-mute"
+        class="mt-4 flex flex-wrap items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-ink-mute"
         v-motion
         :initial="{ opacity: 0 }"
         :enter="{ opacity: 1, transition: { duration: 1000, delay: 1000 } }"
@@ -161,15 +151,15 @@
       </div>
     </div>
 
-    <!-- ── Scroll cue ── -->
-    <div
-      class="absolute bottom-8 left-1/2 z-[5] flex -translate-x-1/2 flex-col items-center gap-2 text-[10px] font-mono uppercase tracking-[0.3em] text-ink-mute"
-      v-motion
-      :initial="{ opacity: 0, y: 10 }"
-      :enter="{ opacity: 1, y: 0, transition: { duration: 1000, delay: 1400 } }"
-    >
-      <span>Scroll</span>
-      <span class="h-12 w-px bg-gradient-to-b from-gold/60 to-transparent" />
+    <!-- ── Bottom meta row (left chapter; right scroll cue) per design source ── -->
+    <div class="absolute bottom-8 left-8 right-8 z-[10] hidden items-end justify-between font-mono text-[10px] uppercase tracking-[0.3em] text-ink-mute md:flex">
+      <span>{{ metaLeft }}</span>
+      <div class="flex items-center gap-3">
+        <span>Scroll</span>
+        <span class="block h-12 w-px overflow-hidden bg-gradient-to-b from-gold/60 to-transparent">
+          <span class="block h-3 w-full bg-gold-bright" style="animation: scroll-down 2.4s ease-in-out infinite;" />
+        </span>
+      </div>
     </div>
   </section>
 </template>
@@ -203,19 +193,18 @@ const props = defineProps<{
   config?: Partial<HeroConfig>
 }>()
 
-const { t, locale } = useI18n()
+const { locale } = useI18n()
 const { trackDownload, trackPreRegister, trackSocial } = useTracking()
 
-// Parallax layer refs
 const heroRef = ref<HTMLElement>()
 const bgLayer = ref<HTMLElement>()
 const midLayer = ref<HTMLElement>()
 const fgLayer = ref<HTMLElement>()
 
 useParallax([
-  { el: bgLayer, factor: 0.35 },
-  { el: midLayer, factor: 0.18 },
-  { el: fgLayer, factor: 0.08 },
+  { el: bgLayer, factor: 0.3 },
+  { el: midLayer, factor: 0.55 },
+  { el: fgLayer, factor: 0.7 },
 ])
 
 const defaultHeroConfig: HeroConfig = {
@@ -241,15 +230,30 @@ const heroBackground = computed(() => props.background || '/images/hero-bg.webp'
 const isVideoMode = computed(() => heroConfig.value.backgroundMode === 'video')
 const heroVideoUrl = computed(() => heroConfig.value.backgroundVideo || '')
 
+const heroEyebrow = computed(() =>
+  locale.value === 'th' ? 'บทศูนย์ · ตื่นจากนิทรา' : 'CHAPTER ZERO · AWAKEN',
+)
+
+const titleAccent = computed(() =>
+  locale.value === 'th' ? 'ตำนานไร้กาลเวลา' : 'an eternal saga',
+)
+
+const metaLeft = computed(() =>
+  locale.value === 'th' ? 'ETS · เปิดบริการ พ.ศ. 2569' : 'ETS · Launching 2026',
+)
+
 const localizedSubtitle = computed(() => {
   const subtitle = locale.value === 'th' ? heroConfig.value.subtitleTh : heroConfig.value.subtitleEn
-  return subtitle || t('hero.tagline')
+  if (subtitle) return subtitle
+  return locale.value === 'th'
+    ? 'ปีนหอคอยนิรันดร์ ปลอมตำนานของคุณ — เกม MMORPG บนทุกแพลตฟอร์ม'
+    : 'Climb the eternal tower. Forge your saga. A stylized action MMORPG, everywhere you play.'
 })
 
 const visibleButtons = computed(() =>
   heroConfig.value.buttons
     .filter((b) => b.visible !== false && b.href && (b.labelEn || b.labelTh))
-    .sort((a, b) => a.order - b.order)
+    .sort((a, b) => a.order - b.order),
 )
 
 const { data: siteConfig } = await useFetch<{ social: Record<string, string> }>('/api/public/site', {
@@ -260,7 +264,7 @@ const { data: siteConfig } = await useFetch<{ social: Record<string, string> }>(
 const socialItems = computed(() =>
   Object.entries(siteConfig.value?.social || {})
     .filter(([, url]) => typeof url === 'string' && url.trim())
-    .map(([platform, url]) => ({ platform, url }))
+    .map(([platform, url]) => ({ platform, url })),
 )
 
 function localizedButtonLabel(button: HeroButtonConfig) {
@@ -297,4 +301,58 @@ function trackHeroButton(button: HeroButtonConfig) {
   if (href.includes('/download')) { trackDownload('hero', label); return }
   if (href.includes('/event')) { trackPreRegister() }
 }
+
+void SITE
 </script>
+
+<style scoped>
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(48px, 9vw, 132px);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  margin: 0;
+  background: linear-gradient(180deg, #FFF8E7 0%, var(--color-gold-bright) 50%, var(--color-gold-deep) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 80px rgba(232, 181, 71, 0.25);
+}
+
+.hero-title-accent {
+  display: block;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.32em;
+  letter-spacing: 0.04em;
+  background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.6) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-top: 12px;
+}
+
+.ets-sigil {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--color-gold);
+  transform: rotate(45deg);
+  opacity: 0.18;
+  box-shadow: 0 0 22px rgba(232, 181, 71, 0.35);
+}
+.ets-sigil::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid var(--color-gold);
+  opacity: 0.5;
+}
+
+@keyframes scroll-down {
+  0% { transform: translateY(-12px); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(40px); opacity: 0; }
+}
+</style>

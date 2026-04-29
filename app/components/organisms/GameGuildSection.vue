@@ -9,9 +9,9 @@
     <div class="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-bg-0 to-transparent" />
 
     <span
-      class="pointer-events-none absolute left-[2%] top-[10%] font-serif-kr text-[clamp(220px,30vw,420px)] font-black leading-none text-gold/[0.03] select-none"
+      class="pointer-events-none absolute left-[2%] top-[10%] font-display text-[clamp(220px,30vw,420px)] font-black italic leading-none text-gold/[0.03] select-none"
       aria-hidden="true"
-    >世</span>
+    >IV</span>
 
     <div class="relative mx-auto max-w-7xl px-6">
       <!-- ── Section header ──────────────────────────── -->
@@ -27,7 +27,6 @@
             <span class="h-px w-12 bg-gradient-to-r from-gold/60 to-transparent" />
           </div>
           <h2 class="section-title max-w-[12ch]">{{ t('features.title') }}</h2>
-          <p class="font-serif-kr text-gold/60 text-sm tracking-[0.4em] uppercase">세계관</p>
         </div>
         <p class="text-ink-soft max-w-md leading-relaxed lg:text-right">{{ t('features.subtitle') }}</p>
       </header>

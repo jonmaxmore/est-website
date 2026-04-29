@@ -19,7 +19,7 @@
         </span>
         <div class="flex flex-col leading-tight">
           <span class="font-display text-[13px] font-bold uppercase tracking-[0.32em] text-gold">Eternal Tower Saga</span>
-          <span class="font-serif-kr text-[10px] uppercase tracking-[0.2em] text-ink-mute">영원한 탑의 전설</span>
+          <span class="font-mono text-[9px] uppercase tracking-[0.4em] text-ink-mute">An Eternal Saga</span>
         </div>
       </NuxtLink>
 

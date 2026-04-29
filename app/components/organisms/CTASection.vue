@@ -16,11 +16,11 @@
       <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,transparent,rgba(7,5,12,0.7))]" />
     </div>
 
-    <!-- KR watermark -->
+    <!-- Decorative numeric watermark -->
     <span
-      class="pointer-events-none absolute left-1/2 top-[10%] -translate-x-1/2 font-serif-kr text-[clamp(280px,40vw,560px)] font-black leading-none text-gold/[0.04] select-none"
+      class="pointer-events-none absolute left-1/2 top-[10%] -translate-x-1/2 font-display text-[clamp(280px,40vw,560px)] font-black italic leading-none text-gold/[0.04] select-none"
       aria-hidden="true"
-    >塔</span>
+    >∞</span>
 
     <!-- Particles -->
     <div
@@ -53,13 +53,6 @@
       >
         {{ t('cta.title') }}
       </h2>
-
-      <p
-        class="font-serif-kr text-gold/70 text-[clamp(0.95rem,1.5vw,1.125rem)] tracking-[0.4em] uppercase"
-        v-motion
-        :initial="{ opacity: 0 }"
-        :visible-once="{ opacity: 1, transition: { duration: 1100, delay: 350 } }"
-      >탑을 오르라</p>
 
       <p
         class="text-ink-soft max-w-[600px] text-[clamp(0.95rem,1.4vw,1.125rem)] leading-relaxed"
