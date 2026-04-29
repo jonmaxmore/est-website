@@ -8,7 +8,7 @@
  *  - ถ้าโต ค่อย swap เป็น pino โดยไม่ต้องแก้ caller (interface เดียวกัน)
  *
  * ใช้:
- *   import { logger } from '~/server/utils/logger'
+ *   import { logger } from '../utils/logger'  // or auto-import (Nuxt server auto-imports utils/)
  *   logger.info('login.attempt', { email: 'a@b.com' })
  *   logger.error('webhook.failed', { reason: err.message })
  *

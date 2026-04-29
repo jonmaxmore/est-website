@@ -7,7 +7,7 @@
  * - ตรวจ enum role ผ่าน zod (กัน privilege escalation ผ่าน body injection)
  */
 import { z } from 'zod'
-import { toDuplicateConflictError } from '~/server/utils/prisma-errors'
+import { toDuplicateConflictError } from '../../../utils/prisma-errors'
 
 const updateUserSchema = z
   .object({
