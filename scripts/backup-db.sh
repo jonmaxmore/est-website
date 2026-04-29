@@ -32,8 +32,9 @@ BACKUP_FILE="${BACKUP_DIR}/est-${TIMESTAMP}.sql.gz"
 echo "[Backup] Starting pg_dump → ${BACKUP_FILE}"
 
 # stream pg_dump ผ่าน gzip โดยตรง (ไม่เก็บ uncompressed บน disk)
+# ⚠️ ต้องระบุ -d (ไม่งั้น pg_dump default ใช้ username เป็นชื่อ DB)
 docker compose exec -T postgres \
-  pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" --no-owner --no-acl \
+  pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" --no-owner --no-acl --clean --if-exists \
   | gzip -9 > "$BACKUP_FILE"
 
 # ตรวจ size — ถ้าน้อยกว่า 1KB แปลว่าผิดพลาด
