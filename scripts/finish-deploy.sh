@@ -108,9 +108,18 @@ echo ""
 echo "═══ [6/7] Health check polling (max 60s) ═══"
 sleep 15
 HEALTH_OK=false
+# Probe สองทาง: ผ่าน nginx (port 80, public path) + container health (Docker internal)
+# Compose ใหม่ไม่ expose 3000 → ต้อง probe ผ่าน nginx หรือ docker exec
 for i in $(seq 1 30); do
-  if curl -sf -m 3 http://localhost:3000/api/public/site > /dev/null 2>&1; then
-    echo "  ✅ Healthy after ${i} attempts"
+  # path 1: ผ่าน nginx (ทดสอบทั้ง stack)
+  if curl -sf -m 3 http://localhost/api/public/site > /dev/null 2>&1; then
+    echo "  ✅ Healthy via nginx after ${i} attempts"
+    HEALTH_OK=true
+    break
+  fi
+  # path 2: probe app container โดยตรง (กรณี nginx ยังไม่ ready)
+  if docker compose exec -T app wget --quiet --tries=1 --spider http://localhost:3000/api/public/site 2>/dev/null; then
+    echo "  ✅ Healthy via app container after ${i} attempts"
     HEALTH_OK=true
     break
   fi
