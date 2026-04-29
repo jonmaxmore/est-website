@@ -21,7 +21,6 @@
             <span class="h-px w-12 bg-gradient-to-r from-gold/60 to-transparent" />
           </div>
           <h2 class="section-title">{{ t('news.title') }}</h2>
-          <p class="font-serif-kr text-gold/60 text-sm tracking-[0.4em] uppercase">소식</p>
         </div>
         <NuxtLink
           to="/news"
