@@ -14,22 +14,39 @@ async function main() {
   console.log('🌱 Seeding database...')
 
   // ── Admin User ──
-  const email = process.env.ADMIN_SEED_EMAIL || 'admin@eternaltowersaga.com'
-  const password = process.env.ADMIN_SEED_PASSWORD || 'admin2026'
+  // Production: ต้องตั้ง ADMIN_SEED_EMAIL + ADMIN_SEED_PASSWORD ใน env เท่านั้น
+  // Development: ถ้าไม่ตั้งจะใช้ค่า fallback (ปลอดภัย เพราะ NODE_ENV !== production)
+  const email = process.env.ADMIN_SEED_EMAIL
+  const password = process.env.ADMIN_SEED_PASSWORD
 
-  const existingAdmin = await prisma.adminUser.findUnique({ where: { email } })
+  if (process.env.NODE_ENV === 'production') {
+    if (!email || !password) {
+      throw new Error(
+        '[Seed] ADMIN_SEED_EMAIL and ADMIN_SEED_PASSWORD must be set in production. ' +
+          'Refusing to seed default credentials.',
+      )
+    }
+    if (password.length < 12) {
+      throw new Error('[Seed] ADMIN_SEED_PASSWORD must be at least 12 characters in production.')
+    }
+  }
+
+  const seedEmail = email || 'admin@eternaltowersaga.dev'
+  const seedPassword = password || 'devOnly_changeMe!'
+
+  const existingAdmin = await prisma.adminUser.findUnique({ where: { email: seedEmail } })
   if (!existingAdmin) {
     await prisma.adminUser.create({
       data: {
-        email,
-        passwordHash: await hashAdminPassword(password),
+        email: seedEmail,
+        passwordHash: await hashAdminPassword(seedPassword),
         displayName: 'Super Admin',
         role: 'SUPER_ADMIN',
       },
     })
-    console.log(`  ✅ Admin user created: ${email}`)
+    console.log(`  ✅ Admin user created: ${seedEmail}`)
   } else {
-    console.log(`  ⏭️  Admin user already exists: ${email}`)
+    console.log(`  ⏭️  Admin user already exists: ${seedEmail}`)
   }
 
   // ── Weapons ──

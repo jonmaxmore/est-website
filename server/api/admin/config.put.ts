@@ -13,6 +13,7 @@
 import { z } from 'zod'
 
 import { parseAdminConfigWrite } from '../../utils/admin-config'
+import { cacheInvalidate } from '../../utils/redis'
 
 const configSchema = z.object({
   key: z.string().min(1),
@@ -23,7 +24,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const parsed = configSchema.safeParse(body)
   if (!parsed.success) {
-    throw createError({ statusCode: 400, message: 'Validation error', data: parsed.error.flatten() })
+    throw createError({ statusCode: 422, message: 'Validation error', data: parsed.error.flatten() })
   }
 
   let configInput: ReturnType<typeof parseAdminConfigWrite>
@@ -31,18 +32,31 @@ export default defineEventHandler(async (event) => {
   try {
     configInput = parseAdminConfigWrite(parsed.data)
   } catch (error) {
-    throw createError({ statusCode: 400, message: (error as Error).message })
+    throw createError({ statusCode: 422, message: (error as Error).message })
   }
 
-  // ── Upsert: สร้างถ้าไม่มี, อัปเดทถ้ามีแล้ว ──
-  const config = await prisma.siteConfig.upsert({
-    where: { key: configInput.key },
-    update: { value: configInput.value as object },
-    create: { key: configInput.key, value: configInput.value as object },
-  })
+  try {
+    const config = await prisma.siteConfig.upsert({
+      where: { key: configInput.key },
+      update: { value: configInput.value as object },
+      create: { key: configInput.key, value: configInput.value as object },
+    })
 
-  await logActivity(event, 'UPDATE', 'config', `Updated config: ${configInput.key}`, configInput.key)
+    // ── Invalidate cache ของ config ──
+    await cacheInvalidate(`config:${configInput.key}*`)
+    await cacheInvalidate('site:*')
 
-  return config
+    await logActivity(
+      event,
+      'UPDATE',
+      'config',
+      `Updated config: ${configInput.key}`,
+      configInput.key,
+    )
+
+    return config
+  } catch (err) {
+    throw err
+  }
 })
 

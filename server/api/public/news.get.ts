@@ -1,11 +1,13 @@
+import { paginated, parsePagination } from '../../utils/response'
+
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
-  const limit = Math.min(Number(query.limit) || 12, 50)
-  const page = Math.max(Number(query.page) || 1, 1)
-  const skip = (page - 1) * limit
+  const { page, limit, skip, take } = parsePagination(query, { defaultLimit: 12, maxLimit: 50 })
   const contentType = (query.contentType as string) || ''
   const topicKey = (query.topicKey as string) || ''
 
+  // Note: รับเฉพาะ articles ที่ publishedAt <= now หรือ publishedAt = null
+  // โดยตั้งใจ — null = ตั้งเวลาแบบเปิดตลอด
   const where: Record<string, unknown> = {
     status: 'PUBLISHED',
     OR: [
@@ -20,7 +22,7 @@ export default defineEventHandler(async (event) => {
     prisma.newsArticle.findMany({
       where,
       orderBy: [{ pinned: 'desc' }, { publishedAt: 'desc' }, { createdAt: 'desc' }],
-      take: limit,
+      take,
       skip,
       select: {
         id: true,
@@ -44,8 +46,8 @@ export default defineEventHandler(async (event) => {
     prisma.newsArticle.count({ where }),
   ])
 
-  return {
-    data: articles,
-    meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
-  }
+  // ── HTTP cache: 60s shared cache (CDN/nginx) ──
+  setResponseHeader(event, 'Cache-Control', 'public, max-age=30, s-maxage=60, stale-while-revalidate=300')
+
+  return paginated(articles, { total, page, limit })
 })

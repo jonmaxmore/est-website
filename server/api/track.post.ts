@@ -1,4 +1,5 @@
 import { toStoredTrackingPayload } from '../../app/shared/tracking/events'
+import { redactReferrer, truncateUserAgent } from '../utils/privacy'
 
 const TRACKING_EVENT_LIMIT_PER_MINUTE = 120
 
@@ -38,13 +39,17 @@ export default defineEventHandler(async (event) => {
     setCookie(event, '__ets_sid', sessionId, { maxAge: 1800, httpOnly: true, sameSite: 'lax' })
   }
 
+  // ── PDPA: ตัด PII ก่อนเก็บลง DB ──
+  const safeReferrer = redactReferrer(getRequestHeader(event, 'referer'))
+  const safeUserAgent = truncateUserAgent(getRequestHeader(event, 'user-agent'))
+
   await prisma.conversionEvent.create({
     data: {
       eventName: payload.eventName,
       eventData: {
         ...payload.eventData,
-        referrer: getRequestHeader(event, 'referer') || null,
-        userAgent: (getRequestHeader(event, 'user-agent') || '').slice(0, 512) || null,
+        referrer: safeReferrer,
+        userAgent: safeUserAgent,
       },
       sessionId,
       validated: true,

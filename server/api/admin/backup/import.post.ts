@@ -1,4 +1,19 @@
+/**
+ * POST /api/admin/backup/import — Import JSON backup
+ *
+ * Compatible schema versions: 1.0, 2.0
+ * - 1.0: news, weapons, config, users, features, highlights, pages, media
+ * - 2.0: เพิ่ม banners, events, milestones
+ *
+ * Behaviour:
+ * - แต่ละ resource batch รันใน transaction แยก (per-row fault isolation)
+ * - sanitize HTML ของ news.contentEn/contentTh และ pages.contentEn/contentTh
+ * - คืน per-row error log
+ */
+import { sanitizeRichText } from '../../../utils/sanitize'
 import { SYSTEM_CMS_PAGES, normalizeCmsSlug } from '../../../../app/shared/cms/pages'
+
+const SUPPORTED_VERSIONS = new Set(['1.0', '2.0'])
 
 type LegacyPageBackup = {
   key: string
@@ -44,10 +59,13 @@ function normalizeImportedPage(page: LegacyPageBackup | PageBackup): PageBackup 
       seoTitleTh: (legacyValue.seoTitleTh as string | undefined) || null,
       seoDesc: (legacyValue.seoDesc as string | undefined) || null,
       seoDescTh: (legacyValue.seoDescTh as string | undefined) || null,
-      contentEn: (legacyValue.contentEn as string | undefined) || (legacyValue.content as string | undefined) || '',
+      contentEn:
+        (legacyValue.contentEn as string | undefined) ||
+        (legacyValue.content as string | undefined) ||
+        '',
       contentTh: (legacyValue.contentTh as string | undefined) || '',
       icon: systemPage?.icon || (legacyValue.icon as string | undefined) || null,
-      status: ((legacyValue.status as PageBackup['status'] | undefined) || 'PUBLISHED'),
+      status: (legacyValue.status as PageBackup['status'] | undefined) || 'PUBLISHED',
       showInHeader: false,
       showInFooter: false,
       headerOrder: 0,
@@ -57,7 +75,6 @@ function normalizeImportedPage(page: LegacyPageBackup | PageBackup): PageBackup 
   }
 
   const systemPage = SYSTEM_CMS_PAGES.find((entry) => entry.key === page.key)
-
   return {
     key: page.key,
     slug: normalizeCmsSlug(page.slug || page.key),
@@ -81,109 +98,142 @@ function normalizeImportedPage(page: LegacyPageBackup | PageBackup): PageBackup 
   }
 }
 
-/** Import site data from JSON backup - supports all content types */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const imported = { news: 0, weapons: 0, config: 0, features: 0, highlights: 0, pages: 0 }
+
+  // ── Schema version check ──
+  const meta = body?._meta || {}
+  const version = String(meta.version || '1.0')
+  if (!SUPPORTED_VERSIONS.has(version)) {
+    throw createError({
+      statusCode: 422,
+      message: `Unsupported backup version: ${version}. Supported: ${[...SUPPORTED_VERSIONS].join(', ')}`,
+    })
+  }
+
+  const imported: Record<string, number> = {}
   const errors: string[] = []
 
-  if (body.news?.length) {
-    for (const article of body.news) {
+  type ImportFn<T> = (item: T) => Promise<void>
+
+  async function importBatch<T>(name: string, items: T[] | undefined, fn: ImportFn<T>) {
+    if (!items?.length) return
+    imported[name] = 0
+    for (const item of items) {
       try {
-        const { id, createdAt, updatedAt, ...data } = article
-        await prisma.newsArticle.upsert({
-          where: { slug: data.slug },
-          update: data,
-          create: data,
-        })
-        imported.news += 1
+        await fn(item)
+        imported[name] = (imported[name] || 0) + 1
       } catch (error) {
-        errors.push(`News "${article.slug}": ${(error as Error).message}`)
+        errors.push(`${name}: ${(error as Error).message}`)
       }
     }
   }
 
-  if (body.weapons?.length) {
-    for (const weapon of body.weapons) {
-      try {
-        const { createdAt, updatedAt, ...data } = weapon
-        await prisma.weapon.upsert({
-          where: { id: data.id },
-          update: data,
-          create: data,
-        })
-        imported.weapons += 1
-      } catch (error) {
-        errors.push(`Weapon "${weapon.name}": ${(error as Error).message}`)
-      }
-    }
+  await importBatch('news', body.news as Array<Record<string, unknown>>, async (article) => {
+    const { id: _id, createdAt: _ca, updatedAt: _ua, ...data } = article as never
+    const safeContentEn = data.contentEn ? sanitizeRichText(String(data.contentEn)) : null
+    const safeContentTh = data.contentTh ? sanitizeRichText(String(data.contentTh)) : null
+    const cleanData = { ...data, contentEn: safeContentEn, contentTh: safeContentTh }
+    await prisma.newsArticle.upsert({
+      where: { slug: data.slug },
+      update: cleanData,
+      create: cleanData,
+    })
+  })
+
+  await importBatch('weapons', body.weapons as Array<Record<string, unknown>>, async (weapon) => {
+    const { createdAt: _ca, updatedAt: _ua, ...data } = weapon as never
+    await prisma.weapon.upsert({
+      where: { id: data.id },
+      update: data,
+      create: data,
+    })
+  })
+
+  await importBatch('config', body.config as Array<{ key: string; value: unknown }>, async (cfg) => {
+    await prisma.siteConfig.upsert({
+      where: { key: cfg.key },
+      update: { value: cfg.value as never },
+      create: { key: cfg.key, value: cfg.value as never },
+    })
+  })
+
+  await importBatch('features', body.features as Array<Record<string, unknown>>, async (feature) => {
+    const { createdAt: _ca, updatedAt: _ua, ...data } = feature as never
+    await prisma.feature.upsert({
+      where: { key: data.key },
+      update: data,
+      create: data,
+    })
+  })
+
+  await importBatch(
+    'highlights',
+    body.highlights as Array<Record<string, unknown>>,
+    async (highlight) => {
+      const { createdAt: _ca, updatedAt: _ua, ...data } = highlight as never
+      await prisma.highlight.upsert({
+        where: { key: data.key },
+        update: data,
+        create: data,
+      })
+    },
+  )
+
+  await importBatch('pages', body.pages as Array<LegacyPageBackup | PageBackup>, async (page) => {
+    const normalized = normalizeImportedPage(page)
+    normalized.contentEn = sanitizeRichText(normalized.contentEn ?? '')
+    normalized.contentTh = sanitizeRichText(normalized.contentTh ?? '')
+    await prisma.pageContent.upsert({
+      where: { key: normalized.key },
+      update: normalized,
+      create: normalized,
+    })
+  })
+
+  // ── v2.0 only: banners, events, milestones ──
+  await importBatch('banners', body.banners as Array<Record<string, unknown>>, async (banner) => {
+    const { createdAt: _ca, updatedAt: _ua, ...data } = banner as never
+    await prisma.marketingBanner.upsert({
+      where: { id: data.id },
+      update: data,
+      create: data,
+    })
+  })
+
+  await importBatch('events', body.events as Array<Record<string, unknown>>, async (gameEvent) => {
+    const { createdAt: _ca, updatedAt: _ua, ...data } = gameEvent as never
+    await prisma.gameEvent.upsert({
+      where: { id: data.id },
+      update: data,
+      create: data,
+    })
+  })
+
+  await importBatch(
+    'milestones',
+    body.milestones as Array<Record<string, unknown>>,
+    async (milestone) => {
+      const data = milestone as never
+      await prisma.milestone.upsert({
+        where: { tier: (data as { tier: number }).tier },
+        update: data,
+        create: data,
+      })
+    },
+  )
+
+  await logActivity(
+    event,
+    'IMPORT',
+    'backup',
+    `Imported v${version}: ${JSON.stringify(imported)}${errors.length ? ` (${errors.length} errors)` : ''}`,
+  )
+
+  return {
+    success: errors.length === 0,
+    version,
+    imported,
+    errors,
   }
-
-  if (body.config?.length) {
-    for (const cfg of body.config) {
-      try {
-        await prisma.siteConfig.upsert({
-          where: { key: cfg.key },
-          update: { value: cfg.value },
-          create: { key: cfg.key, value: cfg.value },
-        })
-        imported.config += 1
-      } catch (error) {
-        errors.push(`Config "${cfg.key}": ${(error as Error).message}`)
-      }
-    }
-  }
-
-  if (body.features?.length) {
-    for (const feature of body.features) {
-      try {
-        const { createdAt, updatedAt, ...data } = feature
-        await prisma.feature.upsert({
-          where: { key: data.key },
-          update: data,
-          create: data,
-        })
-        imported.features += 1
-      } catch (error) {
-        errors.push(`Feature "${feature.key}": ${(error as Error).message}`)
-      }
-    }
-  }
-
-  if (body.highlights?.length) {
-    for (const highlight of body.highlights) {
-      try {
-        const { createdAt, updatedAt, ...data } = highlight
-        await prisma.highlight.upsert({
-          where: { key: data.key },
-          update: data,
-          create: data,
-        })
-        imported.highlights += 1
-      } catch (error) {
-        errors.push(`Highlight "${highlight.key}": ${(error as Error).message}`)
-      }
-    }
-  }
-
-  if (body.pages?.length) {
-    for (const page of body.pages) {
-      try {
-        const normalizedPage = normalizeImportedPage(page as LegacyPageBackup | PageBackup)
-        await prisma.pageContent.upsert({
-          where: { key: normalizedPage.key },
-          update: normalizedPage,
-          create: normalizedPage,
-        })
-        imported.pages += 1
-      } catch (error) {
-        const pageKey = typeof page?.key === 'string' ? page.key : 'unknown'
-        errors.push(`Page "${pageKey}": ${(error as Error).message}`)
-      }
-    }
-  }
-
-  await logActivity(event, 'IMPORT', 'backup', `Imported: ${JSON.stringify(imported)}`)
-
-  return { success: errors.length === 0, imported, errors }
 })
