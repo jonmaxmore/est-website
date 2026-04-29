@@ -30,8 +30,7 @@
   --color-danger: #E84D5F;
 
   /* ── Type families ────────────────────────────────────────── */
-  --font-display: 'Cinzel', 'Noto Serif KR', serif;
-  --font-serif-kr: 'Noto Serif KR', 'Cinzel', serif;
+  --font-display: 'Cinzel', 'Georgia', serif;
   --font-body: 'Inter', 'Noto Sans Thai', system-ui, sans-serif;
   --font-sans: 'Inter', 'Noto Sans Thai', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'Courier New', monospace;
