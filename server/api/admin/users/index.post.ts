@@ -3,7 +3,7 @@
  * เฉพาะ SUPER_ADMIN เท่านั้น (บังคับใน middleware/admin-auth.ts)
  */
 import { z } from 'zod'
-import { toDuplicateConflictError } from '~/server/utils/prisma-errors'
+import { toDuplicateConflictError } from '../../../utils/prisma-errors'
 
 const createUserSchema = z.object({
   displayName: z.string().trim().min(1).max(100),
