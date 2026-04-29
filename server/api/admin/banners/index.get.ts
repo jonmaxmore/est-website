@@ -14,9 +14,18 @@ export default defineEventHandler(async (event) => {
 
   const where: Record<string, unknown> = {}
   if (query.placement) where.placement = query.placement
-  if (query.status) where.status = query.status
   if (query.scope) where.scope = query.scope
   if (query.campaignCode) where.campaignCode = query.campaignCode
+
+  // Default: hide EXPIRED unless explicitly requested
+  // ?status=EXPIRED → see only expired
+  // ?status=all → see everything
+  // (ไม่ส่ง status) → ซ่อน EXPIRED
+  if (query.status && query.status !== 'all') {
+    where.status = query.status
+  } else if (!query.status) {
+    where.status = { not: 'EXPIRED' }
+  }
 
   return prisma.marketingBanner.findMany({
     where,
