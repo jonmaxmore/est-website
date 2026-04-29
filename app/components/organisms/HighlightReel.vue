@@ -5,9 +5,9 @@
     data-screen-label="05 Highlight Reel"
   >
     <span
-      class="pointer-events-none absolute right-[5%] top-[8%] font-serif-kr text-[clamp(220px,30vw,420px)] font-black leading-none text-gold/[0.025] select-none"
+      class="pointer-events-none absolute right-[5%] top-[8%] font-display text-[clamp(220px,30vw,420px)] font-black italic leading-none text-gold/[0.025] select-none"
       aria-hidden="true"
-    >影</span>
+    >V</span>
 
     <div class="relative mx-auto max-w-7xl px-6">
       <!-- ── Header ─────────────────────────────────── -->
@@ -23,7 +23,6 @@
           <span class="h-px w-10 bg-gradient-to-l from-transparent to-gold/60" />
         </div>
         <h2 class="section-title">{{ t('highlight.title') }}</h2>
-        <p class="font-serif-kr text-gold/60 text-sm tracking-[0.4em] uppercase">하이라이트</p>
       </header>
 
       <!-- ── 21:9 Reel ──────────────────────────────── -->
