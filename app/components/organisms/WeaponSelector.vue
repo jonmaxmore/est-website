@@ -4,16 +4,16 @@
     class="relative overflow-hidden bg-bg-0 py-32"
     data-screen-label="03 Weapons"
   >
-    <!-- Decorative KR watermark -->
+    <!-- Decorative numeric watermark (replaces KR rune per design source) -->
     <span
-      class="pointer-events-none absolute right-[3%] top-[15%] font-serif-kr text-[clamp(280px,38vw,520px)] font-black leading-none text-gold/[0.025] select-none"
+      class="pointer-events-none absolute right-[3%] top-[12%] font-display text-[clamp(280px,38vw,520px)] font-black italic leading-none text-gold/[0.025] select-none"
       aria-hidden="true"
-    >武</span>
+    >III</span>
 
     <div class="mx-auto max-w-7xl px-6">
       <!-- ── Section header ──────────────────────────── -->
       <header
-        class="mb-20 flex flex-col items-center gap-5 text-center"
+        class="mb-20 flex flex-col items-center gap-4 text-center"
         v-motion
         :initial="{ opacity: 0, y: 24 }"
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 800 } }"
@@ -24,7 +24,6 @@
           <span class="h-px w-10 bg-gradient-to-l from-transparent to-gold/60" />
         </div>
         <h2 class="section-title">{{ t('weapons.title') }}</h2>
-        <p class="font-serif-kr text-gold/60 text-sm tracking-[0.4em] uppercase">무기 선택</p>
         <p class="text-ink-soft max-w-[640px] leading-relaxed">{{ t('weapons.subtitle') }}</p>
       </header>
 
@@ -59,14 +58,13 @@
         class="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-20"
         :key="activeIdx"
       >
-        <!-- ▼ Left: Character / weapon image with rings + KR watermark -->
+        <!-- ▼ Left: Character / weapon image with rotating rings -->
         <div class="relative aspect-[4/5] w-full max-w-[560px] mx-auto">
-          <!-- Watermark KR character behind image -->
+          <!-- Decorative numeric index behind image -->
           <span
-            v-if="activeWeapon.kr"
-            class="pointer-events-none absolute inset-0 flex items-center justify-center font-serif-kr text-[clamp(180px,26vw,340px)] font-black leading-none text-gold/[0.06] select-none"
+            class="pointer-events-none absolute inset-0 flex items-center justify-center font-display text-[clamp(180px,26vw,340px)] font-black italic leading-none text-gold/[0.06] select-none"
             aria-hidden="true"
-          >{{ activeWeapon.kr }}</span>
+          >{{ String(activeIdx + 1).padStart(2, '0') }}</span>
 
           <!-- 3 concentric rings -->
           <div class="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden="true">
@@ -111,11 +109,11 @@
               </div>
 
               <div class="flex flex-col gap-2">
-                <h3 class="font-display text-[clamp(2rem,4vw,3rem)] font-bold leading-tight text-ink">
+                <h3 class="font-display text-[clamp(2rem,4vw,3rem)] font-bold italic leading-tight text-ink">
                   {{ localizedName(activeWeapon) }}
                 </h3>
-                <span v-if="activeWeapon.kr" class="font-serif-kr text-gold/60 text-lg tracking-[0.3em]">
-                  {{ activeWeapon.kr }}
+                <span class="font-mono text-gold/60 text-xs tracking-[0.4em] uppercase">
+                  {{ localizedRole(activeWeapon) }}
                 </span>
               </div>
 
@@ -154,7 +152,6 @@ interface WeaponItem {
   id: string
   nameEn: string
   nameTh: string
-  kr?: string
   roleEn: string
   roleTh: string
   descriptionEn: string
@@ -169,13 +166,11 @@ const props = defineProps<{
 
 const { t, locale } = useI18n()
 
-// Default fallback weapons if CMS returns empty
 const fallbackWeapons: WeaponItem[] = [
   {
     id: 'crimson-blade',
     nameEn: 'Crimson Blade',
     nameTh: 'ดาบโลหิตทมิฬ',
-    kr: '검',
     roleEn: 'Vanguard',
     roleTh: 'แนวหน้า',
     descriptionEn: 'A blade forged in the blood of fallen kings. Strikes faster than thought.',
@@ -192,7 +187,6 @@ const fallbackWeapons: WeaponItem[] = [
     id: 'void-bow',
     nameEn: 'Void Bow',
     nameTh: 'ธนูแห่งห้วงเหว',
-    kr: '궁',
     roleEn: 'Marksman',
     roleTh: 'นักล่า',
     descriptionEn: 'Arrows that pierce dimensions. Distance is no longer a barrier.',
@@ -209,7 +203,6 @@ const fallbackWeapons: WeaponItem[] = [
     id: 'storm-staff',
     nameEn: 'Storm Staff',
     nameTh: 'ไม้เท้าพายุ',
-    kr: '장',
     roleEn: 'Mage',
     roleTh: 'ผู้ใช้เวทย์',
     descriptionEn: 'Channel the wrath of seven storms in a single incantation.',
