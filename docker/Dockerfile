@@ -8,7 +8,8 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY prisma ./prisma/
 COPY prisma.config.ts ./
-RUN npm install --frozen-lockfile 2>/dev/null || npm install && npx prisma generate
+RUN npm install --frozen-lockfile 2>/dev/null || npm install
+RUN npx prisma generate
 
 # ── Stage 2: Build ──
 FROM node:22-alpine AS builder
@@ -18,7 +19,7 @@ COPY . .
 
 ENV NODE_ENV=production
 
-RUN npx prisma generate && npm run build
+RUN npm run build
 
 # ── Stage 3: Production Runner ──
 FROM node:22-alpine AS runner
@@ -26,14 +27,14 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-RUN addgroup --system --gid 1001 nuxt
-RUN adduser --system --uid 1001 nuxt
+# wget สำหรับ HEALTHCHECK (alpine มีอยู่แล้ว)
+RUN addgroup --system --gid 1001 nuxt \
+ && adduser --system --uid 1001 nuxt
 
-# Copy build output
+# Copy build output (ทุกอย่างที่จำเป็น compiled แล้วใน .output)
 COPY --from=builder --chown=nuxt:nuxt /app/.output ./.output
 COPY --from=builder --chown=nuxt:nuxt /app/prisma ./prisma
 COPY --from=builder --chown=nuxt:nuxt /app/prisma.config.ts ./prisma.config.ts
-COPY --from=builder --chown=nuxt:nuxt /app/server/utils/password.ts ./server/utils/password.ts
 COPY --from=builder --chown=nuxt:nuxt /app/node_modules ./node_modules
 COPY --from=builder --chown=nuxt:nuxt /app/package.json ./package.json
 
@@ -45,5 +46,10 @@ EXPOSE 3000
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+
+# ── Healthcheck ──
+# ใช้ public endpoint ที่ไม่ต้อง auth + เร็ว
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:3000/api/public/site || exit 1
 
 CMD ["node", ".output/server/index.mjs"]

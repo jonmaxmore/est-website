@@ -1,4 +1,5 @@
 import { parseMarketingBannerPayload } from '../../../utils/marketing-banners'
+import { toDuplicateConflictError } from '../../../utils/prisma-errors'
 
 export default defineEventHandler(async (event) => {
   let payload: ReturnType<typeof parseMarketingBannerPayload>
@@ -6,12 +7,26 @@ export default defineEventHandler(async (event) => {
   try {
     payload = parseMarketingBannerPayload(await readBody(event))
   } catch (error) {
-    throw createError({ statusCode: 400, message: (error as Error).message })
+    throw createError({ statusCode: 422, message: (error as Error).message })
   }
 
-  const banner = await prisma.marketingBanner.create({ data: payload as Parameters<typeof prisma.marketingBanner.create>[0]['data'] })
+  try {
+    const banner = await prisma.marketingBanner.create({
+      data: payload as Parameters<typeof prisma.marketingBanner.create>[0]['data'],
+    })
 
-  await logActivity(event, 'CREATE', 'marketing_banners', `Created banner: ${banner.titleEn}`, banner.id)
+    await logActivity(
+      event,
+      'CREATE',
+      'marketing_banners',
+      `Created banner: ${banner.titleEn}`,
+      banner.id,
+    )
 
-  return banner
+    return banner
+  } catch (err) {
+    const conflict = toDuplicateConflictError(err as never, { resource: 'MarketingBanner' })
+    if (conflict) throw conflict
+    throw err
+  }
 })

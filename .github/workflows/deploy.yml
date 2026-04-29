@@ -6,16 +6,18 @@
 # Triggers manually or on push to main.
 #
 # Required secrets:
-#   DO_SSH_KEY          — SSH private key for DigitalOcean
-#   DO_HOST             — Server IP (178.128.127.161)
-#   DO_USER             — Server user (root)
-#   DATABASE_URL        — PostgreSQL connection string
-#   NUXT_SESSION_PASSWORD — Session encryption key
+#   DO_SSH_KEY  — SSH private key for DigitalOcean
+#   DO_HOST     — Server IP
+#   DO_USER     — Server user (e.g. root)
+#
+# Server-side .env must already contain:
+#   DATABASE_URL, NUXT_SESSION_PASSWORD, REDIS_PASSWORD,
+#   POSTGRES_PASSWORD, ADMIN_SEED_PASSWORD, ANALYTICS_IP_SALT, WEBHOOK_SECRET
 
 name: Deploy Production
 
 on:
-  workflow_dispatch:   # Manual trigger
+  workflow_dispatch:
   push:
     branches: [main]
     paths-ignore:
@@ -23,12 +25,17 @@ on:
       - '.github/workflows/e2e.yml'
       - 'tests/**'
       - 'e2e/**'
+      - 'docs/**'
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
 
 jobs:
   deploy:
     name: Deploy to Production
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     environment: production
 
     steps:
@@ -38,16 +45,35 @@ jobs:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
+          envs: GITHUB_SHA
           script: |
-            set -e
+            set -euo pipefail
             cd /root/est-website
+
+            COMMIT_SHA="${GITHUB_SHA:-$(git rev-parse HEAD)}"
+            COMMIT_SHORT="${COMMIT_SHA:0:7}"
+
+            echo "═══ Backing up database before migrate ═══"
+            mkdir -p /var/backups/est-website
+            BACKUP_FILE="/var/backups/est-website/pre-deploy-${COMMIT_SHORT}-$(date -u +%Y%m%dT%H%M%SZ).sql.gz"
+            docker compose exec -T postgres pg_dump -U "${POSTGRES_USER:-est_admin}" --no-owner --no-acl \
+              | gzip -9 > "$BACKUP_FILE" || {
+                echo "❌ Pre-deploy backup failed — aborting"
+                exit 1
+              }
+            echo "  Backup: $BACKUP_FILE"
+
+            echo "═══ Tagging current image as previous ═══"
+            docker tag est-website-app:current est-website-app:previous 2>/dev/null || true
 
             echo "═══ Pulling latest code ═══"
             git fetch origin main
             git reset --hard origin/main
 
-            echo "═══ Building Docker images ═══"
-            docker compose build --no-cache app
+            echo "═══ Building Docker image (commit ${COMMIT_SHORT}) ═══"
+            docker compose build app
+            docker tag est-website-app:latest est-website-app:current
+            docker tag est-website-app:latest "est-website-app:${COMMIT_SHORT}"
 
             echo "═══ Running database migrations ═══"
             docker compose run --rm app npx prisma migrate deploy
@@ -55,13 +81,33 @@ jobs:
             echo "═══ Restarting services ═══"
             docker compose up -d --force-recreate app
 
-            echo "═══ Waiting for app startup ═══"
-            sleep 10
+            echo "═══ Health check (polling) ═══"
+            HEALTH_OK=false
+            for i in $(seq 1 30); do
+              if curl -sf -m 3 http://localhost:3000/api/public/site > /dev/null 2>&1; then
+                echo "  ✅ Healthy after ${i} attempts"
+                HEALTH_OK=true
+                break
+              fi
+              sleep 2
+            done
 
-            echo "═══ Health check ═══"
-            curl -sf http://localhost:3000/api/public/site > /dev/null && echo "✅ App is healthy" || echo "❌ Health check failed"
+            if [ "$HEALTH_OK" = false ]; then
+              echo "❌ Health check failed — rolling back"
+              docker tag est-website-app:previous est-website-app:current 2>/dev/null || {
+                echo "❌ No previous image to roll back to"
+                exit 2
+              }
+              docker compose up -d --force-recreate app
+              echo "Restored previous image — manual investigation required"
+              exit 3
+            fi
 
-            echo "═══ Cleaning up old images ═══"
-            docker image prune -f
+            echo "═══ Cleaning up old images (keep last 5) ═══"
+            docker images est-website-app --format "{{.Tag}}\t{{.ID}}" \
+              | awk '/^[a-f0-9]{7}\t/ {print $1}' \
+              | sort -r | tail -n +6 \
+              | while read tag; do docker rmi "est-website-app:$tag" 2>/dev/null || true; done
+            docker image prune -f >/dev/null
 
-            echo "✅ Deployment complete!"
+            echo "✅ Deployment complete (${COMMIT_SHORT})"

@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import { WEBZINE_CONTENT_TYPES, estimateReadingTimeMinutes } from '../../../../app/shared/cms/webzine'
 import { toDuplicateConflictError } from '../../../utils/prisma-errors'
+import { sanitizeRichTextOptional } from '../../../utils/sanitize'
 
 const emptyToNull = (value: unknown) => (value === '' ? null : value)
 const nullableStringSchema = z.preprocess(emptyToNull, z.string().optional().nullable())
@@ -41,14 +42,32 @@ export default defineEventHandler(async (event) => {
   }
 
   const data = parsed.data
+  // ── Sanitize rich-text content ก่อนเขียน DB (defense-in-depth XSS) ──
+  const safeContentEn = sanitizeRichTextOptional(data.contentEn ?? null)
+  const safeContentTh = sanitizeRichTextOptional(data.contentTh ?? null)
+
   try {
     const article = await prisma.newsArticle.create({
       data: {
         ...data,
-        readingTimeMinutes: estimateReadingTimeMinutes(data.contentEn || data.contentTh || ''),
-        publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
+        contentEn: safeContentEn,
+        contentTh: safeContentTh,
+        readingTimeMinutes: estimateReadingTimeMinutes(safeContentEn || safeContentTh || ''),
+        publishedAt: data.publishedAt
+          ? new Date(data.publishedAt)
+          : data.status === 'PUBLISHED'
+            ? new Date()
+            : null,
       },
     })
+
+    await logActivity(
+      event,
+      'CREATE',
+      'news',
+      `Created article: ${article.titleEn} (${article.slug})`,
+      String(article.id),
+    )
 
     return article
   } catch (error) {

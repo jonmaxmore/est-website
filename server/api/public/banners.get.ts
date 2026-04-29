@@ -1,6 +1,13 @@
-import { resolveMarketingBanners, type BannerRouteType } from '../../utils/banner-resolver'
+import { reconcileBannerStatuses } from '../../utils/banner-expiry'
+import { resolveMarketingBanners, type BannerRouteType, type BannerRecord } from '../../utils/banner-resolver'
 
-const routeTypes = new Set<BannerRouteType>(['homepage', 'news_index', 'article_detail', 'topic_page', 'event_page'])
+const routeTypes = new Set<BannerRouteType>([
+  'homepage',
+  'news_index',
+  'article_detail',
+  'topic_page',
+  'event_page',
+])
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -9,12 +16,17 @@ export default defineEventHandler(async (event) => {
   const articleId = query.articleId ? Number(query.articleId) : null
   const topicKey = query.topicKey ? String(query.topicKey) : null
 
+  // Auto-transition statuses ก่อนอ่าน (throttled — runs at most once per 60s)
+  await reconcileBannerStatuses()
+
   const banners = await prisma.marketingBanner.findMany({
-    where: { isActive: true },
+    where: { isActive: true, status: 'LIVE' },
     include: {
       article: { select: { id: true, slug: true, titleEn: true, titleTh: true } },
       page: { select: { key: true, slug: true, titleEn: true, titleTh: true } },
-      event: { select: { id: true, titleEn: true, titleTh: true, startsAt: true, endsAt: true } },
+      event: {
+        select: { id: true, titleEn: true, titleTh: true, startsAt: true, endsAt: true },
+      },
     },
     orderBy: [{ placement: 'asc' }, { priority: 'desc' }, { updatedAt: 'desc' }],
   })

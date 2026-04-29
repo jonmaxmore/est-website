@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { SYSTEM_CMS_PAGES, isReservedCmsSlug, normalizeCmsSlug } from '../../../../app/shared/cms/pages'
+import { sanitizeRichText } from '../../../utils/sanitize'
 
 const pageWriteSchema = z.object({
   titleEn: z.string().trim().optional(),
@@ -59,6 +60,11 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = parsedBody.data
+
+  // ── Sanitize rich-text content (defense-in-depth XSS) ──
+  const safeContentEn = sanitizeRichText(body.contentEn ?? body.content ?? existingPage?.contentEn ?? '')
+  const safeContentTh = sanitizeRichText(body.contentTh ?? existingPage?.contentTh ?? '')
+
   const page = await prisma.pageContent.upsert({
     where: { key },
     update: {
@@ -71,8 +77,8 @@ export default defineEventHandler(async (event) => {
       seoTitleTh: body.seoTitleTh ?? existingPage?.seoTitleTh ?? null,
       seoDesc: body.seoDesc ?? existingPage?.seoDesc ?? null,
       seoDescTh: body.seoDescTh ?? existingPage?.seoDescTh ?? null,
-      contentEn: body.contentEn ?? body.content ?? existingPage?.contentEn ?? '',
-      contentTh: body.contentTh ?? existingPage?.contentTh ?? '',
+      contentEn: safeContentEn,
+      contentTh: safeContentTh,
       icon: body.icon ?? existingPage?.icon ?? systemPage?.icon ?? null,
       status: body.status ?? existingPage?.status ?? 'PUBLISHED',
       showInHeader: body.showInHeader ?? existingPage?.showInHeader ?? false,
@@ -92,8 +98,8 @@ export default defineEventHandler(async (event) => {
       seoTitleTh: body.seoTitleTh ?? null,
       seoDesc: body.seoDesc ?? null,
       seoDescTh: body.seoDescTh ?? null,
-      contentEn: body.contentEn ?? body.content ?? '',
-      contentTh: body.contentTh ?? '',
+      contentEn: safeContentEn,
+      contentTh: safeContentTh,
       icon: body.icon ?? systemPage?.icon ?? null,
       status: body.status ?? 'PUBLISHED',
       showInHeader: body.showInHeader ?? false,

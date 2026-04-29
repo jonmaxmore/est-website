@@ -1,11 +1,14 @@
 # ═══ Docker Compose — EST Website Production Stack ═══
 # รัน: docker compose up -d
 # ประกอบด้วย 4 services: app (Nuxt), nginx (reverse proxy), postgres (DB), redis (cache)
+#
+# Network policy:
+# - postgres + redis อยู่ใน internal network เท่านั้น (ไม่เปิด port ออกข้างนอก)
+# - app + nginx เข้าถึงได้ ผ่าน hostname ภายใน Docker network
+# - ถ้าต้องเข้า DB จากเครื่อง dev ให้ใช้ SSH tunnel: ssh -L 5432:localhost:5432 user@host
 
 services:
   # ── แอป Nuxt (SSR) ──
-  # build จาก docker/Dockerfile → รันที่ port 3000
-  # ต้อง postgres + redis พร้อมก่อนถึงจะ start
   app:
     build:
       context: .
@@ -17,14 +20,32 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    ports:
-      - "3000:3000"
     volumes:
-      - media_uploads:/app/public/uploads  # ไฟล์ที่ upload เก็บถาวรใน volume
+      - media_uploads:/app/public/uploads
+    networks:
+      - est_internal
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/public/site"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
 
   # ── PostgreSQL 16 (ฐานข้อมูลหลัก) ──
-  # ข้อมูลเก็บใน volume 'pgdata' → ลบ container ไม่เสียข้อมูล
-  # ⚠️ POSTGRES_PASSWORD ต้องตั้งใน .env (ห้ามเว้นว่าง)
+  # ⚠️ ไม่เปิด port สาธารณะ — เข้าถึงผ่าน Docker network เท่านั้น
   postgres:
     image: postgres:16-alpine
     restart: unless-stopped
@@ -34,33 +55,55 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
     volumes:
       - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    networks:
+      - est_internal
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-est_admin}"]
       interval: 5s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
 
   # ── Redis 7 (Cache + Rate Limit) ──
-  # จำกัด memory 128MB, ลบ key เก่าอัตโนมัติ (allkeys-lru)
-  # ⚠️ ถ้า Redis ล่ม แอปยังทำงานได้ (graceful degradation)
+  # ⚠️ ไม่เปิด port สาธารณะ + ตั้งรหัสผ่านผ่าน REDIS_PASSWORD
   redis:
     image: redis:7-alpine
     restart: unless-stopped
-    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
-    ports:
-      - "6379:6379"
+    command: >
+      redis-server
+      --maxmemory 128mb
+      --maxmemory-policy allkeys-lru
+      --requirepass ${REDIS_PASSWORD:?REDIS_PASSWORD is required}
+    networks:
+      - est_internal
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 5s
       timeout: 3s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 64M
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"
 
   # ── Nginx (Reverse Proxy + SSL) ──
-  # ทำหน้าที่: รับ request จากข้างนอก → ส่งต่อไป app:3000
-  # SSL cert เก็บใน ./certbot/conf (จาก Let's Encrypt)
-  # config อยู่ที่ docker/nginx/default.conf
   nginx:
     image: nginx:alpine
     restart: unless-stopped
@@ -73,10 +116,27 @@ services:
       - ./certbot/www:/var/www/certbot:ro
     depends_on:
       - app
+    networks:
+      - est_internal
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 64M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
 
 # ── Volumes (ข้อมูลถาวร) ──
-# pgdata: ฐานข้อมูล PostgreSQL
-# media_uploads: ไฟล์รูปภาพ/วิดีโอที่ upload
 volumes:
   pgdata:
   media_uploads:
+
+# ── Internal-only network ──
+# postgres + redis เข้าถึงได้เฉพาะใน network นี้
+networks:
+  est_internal:
+    driver: bridge
