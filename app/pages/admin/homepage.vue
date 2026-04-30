@@ -141,6 +141,30 @@
                 </div>
               </div>
             </div>
+
+            <!-- ── Platform Download Cards (App Store / Google Play / PC / Mac) ── -->
+            <div class="mt-5 rounded-lg border border-white/6 bg-black/20 p-3">
+              <h4 class="mb-3 text-xs font-semibold uppercase tracking-widest text-white/40">Platform Download Cards</h4>
+              <p class="mb-3 text-xs text-white/40">URL ของหน้า store แต่ละ platform — ปล่อยว่างเพื่อซ่อน</p>
+              <div class="flex flex-col gap-2">
+                <div
+                  v-for="platform in heroPlatforms"
+                  :key="platform.id"
+                  class="flex items-center gap-3 rounded-lg border border-white/8 bg-white/3 p-3"
+                >
+                  <span class="font-mono text-xs uppercase tracking-widest text-gold w-16 flex-shrink-0">{{ platform.id }}</span>
+                  <input
+                    v-model="platform.url"
+                    placeholder="https://apps.apple.com/..."
+                    class="flex-1 rounded-md border border-white/10 bg-white/4 px-3 py-1.5 text-xs text-white outline-none focus:border-gold/50 font-mono"
+                  />
+                  <label class="flex items-center gap-1.5 text-xs text-white/50 flex-shrink-0">
+                    <input v-model="platform.visible" type="checkbox" class="accent-gold" />
+                    Show
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="mb-4 flex items-center gap-3">
@@ -243,21 +267,37 @@ function defaultHeroConfig() {
     backgroundVideo: '',
     buttons: [
       { id: 'pre-register', labelEn: 'Pre-register', labelTh: 'Pre-register', href: '/event', variant: 'primary', visible: true, order: 0, target: '_self' },
-      { id: 'download', labelEn: 'Download', labelTh: 'Download', href: '/download', variant: 'secondary', visible: true, order: 1, target: '_self' },
+      { id: 'trailer', labelEn: 'Watch Trailer', labelTh: 'Watch Trailer', href: '#trailer', variant: 'ghost', visible: true, order: 1, target: '_self' },
+    ],
+    platforms: [
+      { id: 'ios', url: '/download', visible: true },
+      { id: 'android', url: '/download', visible: true },
+      { id: 'pc', url: '/download', visible: true },
+      { id: 'mac', url: '', visible: false },
     ],
   }
 }
 
 function ensureHeroConfig(section: SectionConfig) {
   if (section.type !== 'hero') return
+  const existing = section.config || {}
   section.config = {
     ...defaultHeroConfig(),
-    ...(section.config || {}),
-    buttons: Array.isArray(section.config?.buttons) && section.config.buttons.length
-      ? section.config.buttons
+    ...existing,
+    buttons: Array.isArray(existing.buttons) && existing.buttons.length
+      ? existing.buttons
       : defaultHeroConfig().buttons,
+    platforms: Array.isArray(existing.platforms) && existing.platforms.length
+      ? existing.platforms
+      : defaultHeroConfig().platforms,
   }
 }
+
+interface HeroPlatformConfig { id: string; url: string; visible: boolean }
+const heroPlatforms = computed<HeroPlatformConfig[]>(() => {
+  const platforms = editingSection.value?.config?.platforms
+  return Array.isArray(platforms) ? platforms : []
+})
 
 function moveUp(index: number) {
   if (index === 0) return
