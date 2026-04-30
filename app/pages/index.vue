@@ -241,9 +241,9 @@ const ctaStats = [
 useHead({
   title: 'Eternal Tower Saga — An Eternal Saga',
   meta: [
-    { name: 'description', content: 'Climb the eternal tower. Forge your saga. A stylized action MMORPG inspired by Korean dark fantasy.' },
+    { name: 'description', content: 'Eternal Tower Saga — climb the eternal tower, forge your saga. A stylized action MMORPG inspired by Korean dark fantasy.' },
     { property: 'og:title', content: 'Eternal Tower Saga' },
-    { property: 'og:description', content: 'Climb the eternal tower. Forge your saga.' },
+    { property: 'og:description', content: 'Eternal Tower Saga — climb the eternal tower, forge your saga.' },
   ],
 })
 </script>
