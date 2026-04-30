@@ -53,7 +53,7 @@
       <div class="mb-14 text-center" v-motion :initial="{ opacity: 0, scale: 0.9 }" :enter="{ opacity: 1, scale: 1 }">
         <p class="mb-2 text-[0.65rem] font-bold uppercase tracking-[0.25em] text-white/25">{{ localized('registrationLabel') }}</p>
         <div class="text-[clamp(3.5rem,10vw,6rem)] font-extrabold tabular-nums bg-gradient-to-b from-gold via-gold-light to-gold/50 bg-clip-text text-transparent drop-shadow-[0_4px_40px_rgba(212,168,67,0.3)]">
-          {{ displayRegistrations.toLocaleString() }}
+          {{ displayRegistrations.toLocaleString('en-US') }}
         </div>
       </div>
 
@@ -141,7 +141,7 @@
             <h3 class="mb-1 text-sm font-bold" :class="ms.reached ? 'text-gold' : 'text-white/80'">
               {{ locale === 'th' ? ms.rewardTh : ms.rewardEn }}
             </h3>
-            <p class="mb-3 text-[0.7rem] text-white/25">{{ ms.targetCount.toLocaleString() }} registrations</p>
+            <p class="mb-3 text-[0.7rem] text-white/25">{{ ms.targetCount.toLocaleString('en-US') }} registrations</p>
             <span v-if="ms.reached" class="mb-3 inline-block rounded-full bg-emerald-500/15 px-3 py-1 text-[0.6rem] font-bold uppercase tracking-wider text-emerald-400">
               ✓ Unlocked
             </span>

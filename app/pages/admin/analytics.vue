@@ -93,12 +93,12 @@ const weeklyChange = computed(() => {
   return `${Number(change) >= 0 ? '+' : ''}${change}% vs last week`
 })
 const statCards = computed(() => [
-  { label: 'Total Page Views', value: data.value.totalViews.toLocaleString(), change: weeklyChange.value },
-  { label: 'Today', value: data.value.todayViews.toLocaleString(), change: 'Last 24 hours' },
-  { label: 'Unique Visitors', value: data.value.uniqueVisitors.toLocaleString(), change: 'All time' },
-  { label: 'Registrations', value: data.value.totalRegistrations.toLocaleString(), change: `${data.value.conversionRate.toFixed(1)}% view conversion` },
-  { label: 'Downloads', value: data.value.downloadClicks.toLocaleString(), change: 'Tracked clicks' },
-  { label: 'Social Clicks', value: data.value.socialClicks.toLocaleString(), change: 'Community outbound' },
+  { label: 'Total Page Views', value: data.value.totalViews.toLocaleString('en-US'), change: weeklyChange.value },
+  { label: 'Today', value: data.value.todayViews.toLocaleString('en-US'), change: 'Last 24 hours' },
+  { label: 'Unique Visitors', value: data.value.uniqueVisitors.toLocaleString('en-US'), change: 'All time' },
+  { label: 'Registrations', value: data.value.totalRegistrations.toLocaleString('en-US'), change: `${data.value.conversionRate.toFixed(1)}% view conversion` },
+  { label: 'Downloads', value: data.value.downloadClicks.toLocaleString('en-US'), change: 'Tracked clicks' },
+  { label: 'Social Clicks', value: data.value.socialClicks.toLocaleString('en-US'), change: 'Community outbound' },
 ])
 const chartData = computed(() => data.value.dailyViews || [])
 const maxViews = computed(() => Math.max(1, ...chartData.value.map((d) => d.views)))
