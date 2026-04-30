@@ -2,7 +2,7 @@
   <section
     id="features"
     class="relative overflow-hidden bg-bg-1 py-32"
-    data-screen-label="04 Game Guild"
+    data-screen-label="02 Game Guild"
   >
     <!-- Top gradient seam -->
     <div class="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bg-0 to-transparent" />
@@ -11,7 +11,7 @@
     <span
       class="pointer-events-none absolute left-[2%] top-[10%] font-display text-[clamp(220px,30vw,420px)] font-black italic leading-none text-gold/[0.03] select-none"
       aria-hidden="true"
-    >IV</span>
+    >II</span>
 
     <div class="relative mx-auto max-w-7xl px-6">
       <!-- ── Section header ──────────────────────────── -->
@@ -23,7 +23,7 @@
       >
         <div class="flex flex-col gap-5">
           <div class="section-eyebrow">
-            <span><span class="num">04</span>&nbsp;&nbsp;THE WORLD</span>
+            <span><span class="num">02</span>&nbsp;&nbsp;THE WORLD</span>
             <span class="h-px w-12 bg-gradient-to-r from-gold/60 to-transparent" />
           </div>
           <h2 class="section-title max-w-[12ch]">{{ t('features.title') }}</h2>

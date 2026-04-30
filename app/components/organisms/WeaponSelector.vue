@@ -2,13 +2,13 @@
   <section
     id="weapons"
     class="relative overflow-hidden bg-bg-0 py-32"
-    data-screen-label="03 Weapons"
+    data-screen-label="01 Weapons"
   >
     <!-- Decorative numeric watermark (replaces KR rune per design source) -->
     <span
       class="pointer-events-none absolute right-[3%] top-[12%] font-display text-[clamp(280px,38vw,520px)] font-black italic leading-none text-gold/[0.025] select-none"
       aria-hidden="true"
-    >III</span>
+    >I</span>
 
     <div class="mx-auto max-w-7xl px-6">
       <!-- ── Section header ──────────────────────────── -->
@@ -20,7 +20,7 @@
       >
         <div class="section-eyebrow">
           <span class="h-px w-10 bg-gradient-to-r from-transparent to-gold/60" />
-          <span><span class="num">03</span>&nbsp;&nbsp;ARSENAL</span>
+          <span><span class="num">01</span>&nbsp;&nbsp;ARSENAL</span>
           <span class="h-px w-10 bg-gradient-to-l from-transparent to-gold/60" />
         </div>
         <h2 class="section-title">{{ t('weapons.title') }}</h2>
