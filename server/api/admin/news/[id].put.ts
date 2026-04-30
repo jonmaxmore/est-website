@@ -1,60 +1,28 @@
-import { z } from 'zod'
-
-import { WEBZINE_CONTENT_TYPES, estimateReadingTimeMinutes } from '../../../../app/shared/cms/webzine'
+import { estimateReadingTimeMinutes } from '../../../../app/shared/cms/webzine'
 import { toDuplicateConflictError } from '../../../utils/prisma-errors'
 import { sanitizeRichTextOptional } from '../../../utils/sanitize'
-
-const emptyToNull = (value: unknown) => (value === '' ? null : value)
-// Zod 4: chain .optional() AFTER preprocess so a missing field is accepted.
-const nullableStringSchema = z.preprocess(emptyToNull, z.string().nullable()).optional()
-
-const updateSchema = z.object({
-  titleEn: z.string().min(1).optional(),
-  titleTh: z.string().min(1).optional(),
-  slug: z.string().min(1).optional(),
-  excerptEn: nullableStringSchema,
-  excerptTh: nullableStringSchema,
-  contentEn: nullableStringSchema,
-  contentTh: nullableStringSchema,
-  category: z.enum(['ANNOUNCEMENT', 'EVENT', 'UPDATE', 'MEDIA', 'MAINTENANCE']).optional(),
-  contentType: z.enum(WEBZINE_CONTENT_TYPES).optional(),
-  primaryTopicKey: nullableStringSchema,
-  campaignCode: nullableStringSchema,
-  linkedEventId: nullableStringSchema,
-  pinned: z.boolean().optional(),
-  isEvergreen: z.boolean().optional(),
-  status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional(),
-  featuredImage: nullableStringSchema,
-  publishedAt: nullableStringSchema,
-  featureOnHome: z.boolean().optional(),
-  homePriority: z.number().optional(),
-  externalUrl: nullableStringSchema,
-  openInNewTab: z.boolean().optional(),
-  seoTitle: nullableStringSchema,
-  seoDesc: nullableStringSchema,
-  ogImage: nullableStringSchema,
-})
+import { newsUpdateSchema } from '../../../utils/schemas-news'
 
 export default defineEventHandler(async (event) => {
   const id = Number(getRouterParam(event, 'id'))
   if (!id) throw createError({ statusCode: 400, message: 'Invalid ID' })
 
   const body = await readBody(event)
-  const parsed = updateSchema.safeParse(body)
+  const parsed = newsUpdateSchema.safeParse(body)
   if (!parsed.success) {
     throw createError({ statusCode: 422, message: 'Validation error', data: parsed.error.flatten() })
   }
 
   const data = parsed.data
 
-  // ── Sanitize content (only when explicitly provided) ──
+  // Sanitize content (only when explicitly provided)
   const sanitizedContentEn =
     data.contentEn !== undefined ? sanitizeRichTextOptional(data.contentEn) : undefined
   const sanitizedContentTh =
     data.contentTh !== undefined ? sanitizeRichTextOptional(data.contentTh) : undefined
   const shouldUpdateReadingTime = data.contentEn !== undefined || data.contentTh !== undefined
 
-  // ── Auto-set publishedAt เมื่อเปลี่ยนสถานะเป็น PUBLISHED ครั้งแรก ──
+  // Auto-set publishedAt when status flips to PUBLISHED for the first time
   let publishedAtUpdate: Date | null | undefined = undefined
   if (data.publishedAt !== undefined) {
     publishedAtUpdate = data.publishedAt ? new Date(data.publishedAt) : null
