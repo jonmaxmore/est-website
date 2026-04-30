@@ -42,5 +42,6 @@ let debounceTimer: ReturnType<typeof setTimeout>
 async function loadData() { try { const res = await $fetch<{ data: Registration[]; meta: { total: number; totalPages: number } }>('/api/admin/registrations', { query: { page: page.value, search: search.value, platform: filterPlatform.value === 'all' ? '' : filterPlatform.value, region: filterRegion.value === 'all' ? '' : filterRegion.value } }); rows.value = res.data; total.value = res.meta.total; totalPages.value = res.meta.totalPages } catch { rows.value = [] } }
 function debounceLoad() { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => loadData(), 300) }
 function formatDate(d: string) { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }
-await loadData()
+// SSR-safe: admin auth is client-cookie based, so fetch on client only
+onMounted(loadData)
 </script>
