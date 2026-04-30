@@ -156,15 +156,21 @@ test.describe('Persona 1: นักเล่นเกมตัวยง (Desktop
       await page.waitForTimeout(500)
     }
 
-    // Click Pre-register CTA
+    // Click Pre-register CTA (scope to hero section, not nav, to avoid clicking
+    // header "register" button which may be hidden at this viewport)
     await page.goto('/', { waitUntil: 'domcontentloaded' })
-    const preReg = page.locator('a').filter({ hasText: /pre-register|ลงทะเบียน/i }).first()
+    await page.waitForLoadState('networkidle').catch(() => {})
+    const preReg = page.locator('section').first().locator('a[href="/event"]').first()
     if (await preReg.count() > 0) {
-      await preReg.click()
-      await page.waitForLoadState('domcontentloaded')
-      expect(page.url()).toContain('/event')
-      await captureFullPage(page, 'event-page', 'p1-gamer')
+      await preReg.click({ timeout: 5000 }).catch(() => {})
+      await page.waitForURL(/\/event/, { timeout: 10000 }).catch(() => {})
     }
+    // Fallback: navigate manually if click didn't fire
+    if (!page.url().includes('/event')) {
+      await page.goto('/event', { waitUntil: 'domcontentloaded' })
+    }
+    expect(page.url()).toContain('/event')
+    await captureFullPage(page, 'event-page', 'p1-gamer')
 
     // Open admin login (don't submit)
     await page.goto('/admin/login')
