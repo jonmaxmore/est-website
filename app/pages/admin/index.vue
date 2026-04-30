@@ -228,14 +228,14 @@ const quickActions = [
 
 // ── Stat Cards: แปลงตัวเลขจาก API เป็น UI cards ──
 const statCards = computed(() => [
-  { icon: 'i-lucide-users', label: 'Registrations', value: stats.value.counts.registrations.toLocaleString(), bg: 'rgba(59,130,246,0.12)' },
+  { icon: 'i-lucide-users', label: 'Registrations', value: stats.value.counts.registrations.toLocaleString('en-US'), bg: 'rgba(59,130,246,0.12)' },
   { icon: 'i-lucide-newspaper', label: 'News', value: stats.value.counts.news.toString(), bg: 'rgba(16,185,129,0.12)' },
   { icon: 'i-lucide-check-circle', label: 'Published', value: stats.value.counts.publishedNews.toString(), bg: 'rgba(245,158,11,0.12)' },
   { icon: 'i-lucide-swords', label: 'Weapons', value: stats.value.counts.weapons.toString(), bg: 'rgba(139,92,246,0.12)' },
   { icon: 'i-lucide-sparkles', label: 'Features', value: stats.value.counts.features.toString(), bg: 'rgba(236,72,153,0.12)' },
   { icon: 'i-lucide-star', label: 'Highlights', value: stats.value.counts.highlights.toString(), bg: 'rgba(14,165,233,0.12)' },
   { icon: 'i-lucide-image', label: 'Media', value: stats.value.counts.media.toString(), bg: 'rgba(168,85,247,0.12)' },
-  { icon: 'i-lucide-eye', label: 'Views Today', value: stats.value.counts.todayPageViews.toLocaleString(), bg: 'rgba(251,146,60,0.12)' },
+  { icon: 'i-lucide-eye', label: 'Views Today', value: stats.value.counts.todayPageViews.toLocaleString('en-US'), bg: 'rgba(251,146,60,0.12)' },
 ])
 
 const contentStatus = computed(() => [
