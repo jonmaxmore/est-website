@@ -3,11 +3,7 @@ import { z } from 'zod'
 import { WEBZINE_CONTENT_TYPES, estimateReadingTimeMinutes } from '../../../../app/shared/cms/webzine'
 import { toDuplicateConflictError } from '../../../utils/prisma-errors'
 import { sanitizeRichTextOptional } from '../../../utils/sanitize'
-
-const emptyToNull = (value: unknown) => (value === '' ? null : value)
-// Zod 4: the preprocess wrapper itself is required by default; chain .optional()
-// AFTER preprocess so a missing field is accepted (not just '' or null).
-const nullableStringSchema = z.preprocess(emptyToNull, z.string().nullable()).optional()
+import { nullableStringSchemaNoTrim as nullableStringSchema } from '../../../utils/zod-schemas'
 
 const newsSchema = z.object({
   titleEn: z.string().min(1),
