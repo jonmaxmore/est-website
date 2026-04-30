@@ -27,9 +27,17 @@ function toApiError(err: unknown): AdminApiError {
   }
 }
 
-async function request<T>(url: string, init?: Parameters<typeof $fetch>[1]): Promise<T> {
+// $fetch on dynamic-string routes triggers Nitro's typed-routes inference
+// which can recursively expand the union and blow the type-checker stack.
+// We bypass it via a loosely-typed local helper; runtime behavior is
+// unchanged. Each caller's <T> generic still guarantees the return shape.
+type FetchInit = { method?: string; body?: unknown; query?: Record<string, unknown> }
+type AnyFetch = (url: string, init?: FetchInit) => Promise<unknown>
+const fetchAny = $fetch as unknown as AnyFetch
+
+async function request<T>(url: string, init?: FetchInit): Promise<T> {
   try {
-    return await $fetch<T>(url, init)
+    return (await fetchAny(url, init)) as T
   } catch (err) {
     throw toApiError(err)
   }

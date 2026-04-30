@@ -98,9 +98,16 @@ export function useAdminCRUD<T extends Identifiable>(opts: CrudOptions): AdminCr
     }
   }
 
+  // $fetch on dynamic-string routes triggers Nitro's typed-routes inference
+  // which can recursively expand the union and blow the type-checker stack.
+  // We bypass it via a loosely-typed local helper; runtime behavior is
+  // unchanged. Each caller still asserts the return type.
+  type AnyFetch = (url: string, init?: { method?: string; body?: unknown }) => Promise<unknown>
+  const fetchAny = $fetch as unknown as AnyFetch
+
   async function get(id: string | number): Promise<T | null> {
     try {
-      return await $fetch<T>(`${endpoint}/${id}`)
+      return (await fetchAny(`${endpoint}/${id}`)) as T
     } catch (err) {
       showToast(`Failed to fetch ${resourceName}: ${extractMessage(err)}`, 'error')
       return null
@@ -111,7 +118,7 @@ export function useAdminCRUD<T extends Identifiable>(opts: CrudOptions): AdminCr
     saving.value = true
     error.value = null
     try {
-      const created = await $fetch<T>(endpoint, { method: 'POST', body: data })
+      const created = (await fetchAny(endpoint, { method: 'POST', body: data })) as T
       if (isIdentifiable(created)) items.value = [created, ...items.value]
       showToast(`${resourceName} created`, 'success')
       return created
@@ -128,7 +135,7 @@ export function useAdminCRUD<T extends Identifiable>(opts: CrudOptions): AdminCr
     saving.value = true
     error.value = null
     try {
-      const updated = await $fetch<T>(`${endpoint}/${id}`, { method: 'PUT', body: data })
+      const updated = (await fetchAny(`${endpoint}/${id}`, { method: 'PUT', body: data })) as T
       const idx = items.value.findIndex((i) => i.id === id)
       if (idx >= 0 && isIdentifiable(updated)) {
         items.value.splice(idx, 1, updated)
