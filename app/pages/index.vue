@@ -13,57 +13,16 @@
          when admin has populated their respective tables. Hero & CTA
          always render because they are structural/branding, not content.
     ════════════════════════════════════════════════ -->
-    <template v-if="sections.length > 0">
-      <template v-for="section in sections" :key="section.id">
-        <OrganismsHeroSection
-          v-if="section.type === 'hero'"
-          :background="section.background || heroBackground"
-          :config="(section.config as Record<string, unknown>) || heroConfig"
-        />
-        <OrganismsWeaponSelector
-          v-else-if="section.type === 'weapons'"
-          :items="liveWeapons.length > 0 ? liveWeapons : getSectionItems(section, 'items', weaponsFallback)"
-        />
-        <!-- Inline marketing banner sits between Weapons and Features (matches fallback order) -->
-        <SiteMarketingBannerSlot
-          v-if="section.type === 'weapons' && bannerMap.homepage_inline"
-          class="mx-auto my-12 max-w-7xl px-6"
-          placement="homepage_inline"
-          :banner="bannerMap.homepage_inline"
-        />
-        <!-- Inline marketing banner sits between Weapons and Features (matches fallback order) -->
-        <SiteMarketingBannerSlot
-          v-if="section.type === 'weapons' && bannerMap.homepage_inline"
-          class="mx-auto my-12 max-w-7xl px-6"
-          placement="homepage_inline"
-          :banner="bannerMap.homepage_inline"
-        />
-        <OrganismsGameGuildSection
-          v-else-if="section.type === 'features'"
-          :items="liveFeatures.length > 0 ? liveFeatures : getSectionItems(section, 'items', featuresFallback)"
-        />
-        <OrganismsHighlightReel
-          v-else-if="section.type === 'highlight' || section.type === 'highlights'"
-          :slides="liveHighlights.length > 0 ? liveHighlights : getSectionItems(section, 'slides', highlightSlidesFallback)"
-        />
-        <OrganismsNewsSection
-          v-else-if="section.type === 'news'"
-          :articles="liveNews.length > 0 ? liveNews : getSectionItems(section, 'articles', newsArticlesFallback)"
-        />
-        <OrganismsCTASection
-          v-else-if="section.type === 'cta'"
-          :background="section.background || ctaBackground"
-          :stats="getSectionItems(section, 'stats', ctaStats)"
-        />
-      </template>
-    </template>
-
-    <!-- ════════════════════════════════════════════════
-         Fallback when CMS returns 0 sections
-    ════════════════════════════════════════════════ -->
-    <template v-else>
-      <OrganismsHeroSection :background="heroBackground" :config="heroConfig" />
-      <OrganismsWeaponSelector :items="weaponsFallback" />
+    <template v-for="section in sections" :key="section.id">
+      <OrganismsHeroSection
+        v-if="section.type === 'hero'"
+        :background="section.background || heroBackground"
+        :config="(section.config as Record<string, unknown>) || heroConfig"
+      />
+      <OrganismsWeaponSelector
+        v-else-if="section.type === 'weapons' && liveWeapons.length > 0"
+        :items="liveWeapons"
+      />
       <SiteMarketingBannerSlot
         v-if="section.type === 'weapons' && bannerMap.homepage_inline"
         class="mx-auto my-12 max-w-7xl px-6"
@@ -116,13 +75,7 @@
  *  - Hero & CTA: always render (structural, not content). Defaults below.
  *  - Weapons / Features / Highlights / News: render ONLY when admin has
  *    populated the underlying tables via /admin/{section}. No fake demo
- *    fallbacks — empty admin data means empty section (avoids the
- *    "fallback masking real state" trap from the previous design).
- *
- * Layout: default.vue handles SiteNavigation + SiteFooter + outer <main>.
- *
- * Banners use useBannerOrchestrator (popup⇄floating + announcement⇄footer
- * mutex) to prevent visual chaos.
+ *    fallbacks — empty admin data means empty section.
  */
 
 useCursorGlow()
@@ -150,9 +103,6 @@ const sections = computed(() =>
 )
 
 // ── Live CMS data: weapons, features, highlights, news ──
-// These come from admin-managed tables and are reshape-mapped to the component
-// props. If a list is empty, the per-component fallback is used so the page is
-// never blank.
 interface RawWeapon { id: number; name: string; nameEn?: string; descriptionEn?: string; descriptionTh?: string; portrait?: string; infoImage?: string; backgroundImage?: string; sortOrder?: number; visible?: boolean; statSTR?: number; statINT?: number; statAGI?: number; statDEX?: number; statHP?: number }
 interface RawFeature { id: number; key: string; titleEn: string; titleTh: string; descriptionEn?: string; descriptionTh?: string; image?: string; sortOrder?: number; visible?: boolean }
 interface RawHighlight { id: number; key: string; titleEn: string; titleTh: string; descriptionEn?: string; descriptionTh?: string; image?: string; sortOrder?: number; visible?: boolean }
@@ -175,7 +125,7 @@ const liveWeapons = computed(() =>
       roleTh: '',
       descriptionEn: w.descriptionEn || '',
       descriptionTh: w.descriptionTh || '',
-      image: w.portrait || w.backgroundImage || w.infoImage || '/images/weapons/crimson-blade.webp',
+      image: w.portrait || w.backgroundImage || w.infoImage || '',
       stats: [
         { label: 'STR', value: w.statSTR ?? 0 },
         { label: 'INT', value: w.statINT ?? 0 },
@@ -196,7 +146,7 @@ const liveFeatures = computed(() =>
       titleTh: f.titleTh,
       descriptionEn: f.descriptionEn || '',
       descriptionTh: f.descriptionTh || '',
-      image: f.image || '/images/features/tower.webp',
+      image: f.image || '',
     })),
 )
 
@@ -212,7 +162,7 @@ const liveHighlights = computed(() =>
       kickerTh: '',
       descriptionEn: h.descriptionEn || '',
       descriptionTh: h.descriptionTh || '',
-      image: h.image || '/images/highlight/reel-1.webp',
+      image: h.image || '',
     })),
 )
 
@@ -225,7 +175,7 @@ const liveNews = computed(() =>
     excerptTh: n.excerptTh || '',
     categoryEn: n.category,
     categoryTh: n.category,
-    image: n.featuredImage || '/images/news/closed-beta.webp',
+    image: n.featuredImage || '',
     date: n.publishedAt || new Date().toISOString(),
     href: `/news/${n.slug}`,
     featured: false,
@@ -239,11 +189,7 @@ const bannerMap = computed(() => bannersData.value || {
   homepage_inline: null, sidebar: null, article_inline: null, footer_strip: null,
 })
 
-/* ──────────────────────────────────────────────────────────
-   Structural defaults — used when CMS section.config is empty
-   or when sections list is empty entirely. These are NOT demo
-   content; they are branding/structural fallbacks.
-   ────────────────────────────────────────────────────────── */
+/* Structural defaults — branding/layout, not demo content */
 const heroBackground = '/images/hero-bg.webp'
 const heroConfig = {
   logo: '/images/logo.webp',
