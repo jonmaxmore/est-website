@@ -130,23 +130,23 @@ export default defineEventHandler(async (event) => {
   }
 
   await importBatch('news', body.news as Array<Record<string, unknown>>, async (article) => {
-    const { id: _id, createdAt: _ca, updatedAt: _ua, ...data } = article as never
+    const { id: _id, createdAt: _ca, updatedAt: _ua, ...data } = article as Record<string, unknown>
     const safeContentEn = data.contentEn ? sanitizeRichText(String(data.contentEn)) : null
     const safeContentTh = data.contentTh ? sanitizeRichText(String(data.contentTh)) : null
     const cleanData = { ...data, contentEn: safeContentEn, contentTh: safeContentTh }
     await prisma.newsArticle.upsert({
-      where: { slug: data.slug },
-      update: cleanData,
-      create: cleanData,
+      where: { slug: data.slug as string },
+      update: cleanData as never,
+      create: cleanData as never,
     })
   })
 
   await importBatch('weapons', body.weapons as Array<Record<string, unknown>>, async (weapon) => {
-    const { createdAt: _ca, updatedAt: _ua, ...data } = weapon as never
+    const { createdAt: _ca, updatedAt: _ua, ...data } = weapon as Record<string, unknown>
     await prisma.weapon.upsert({
-      where: { id: data.id },
-      update: data,
-      create: data,
+      where: { id: data.id as number },
+      update: data as never,
+      create: data as never,
     })
   })
 
@@ -159,11 +159,11 @@ export default defineEventHandler(async (event) => {
   })
 
   await importBatch('features', body.features as Array<Record<string, unknown>>, async (feature) => {
-    const { createdAt: _ca, updatedAt: _ua, ...data } = feature as never
+    const { createdAt: _ca, updatedAt: _ua, ...data } = feature as Record<string, unknown>
     await prisma.feature.upsert({
-      where: { key: data.key },
-      update: data,
-      create: data,
+      where: { key: data.key as string },
+      update: data as never,
+      create: data as never,
     })
   })
 
@@ -171,11 +171,11 @@ export default defineEventHandler(async (event) => {
     'highlights',
     body.highlights as Array<Record<string, unknown>>,
     async (highlight) => {
-      const { createdAt: _ca, updatedAt: _ua, ...data } = highlight as never
+      const { createdAt: _ca, updatedAt: _ua, ...data } = highlight as Record<string, unknown>
       await prisma.highlight.upsert({
-        where: { key: data.key },
-        update: data,
-        create: data,
+        where: { key: data.key as string },
+        update: data as never,
+        create: data as never,
       })
     },
   )
@@ -193,20 +193,20 @@ export default defineEventHandler(async (event) => {
 
   // ── v2.0 only: banners, events, milestones ──
   await importBatch('banners', body.banners as Array<Record<string, unknown>>, async (banner) => {
-    const { createdAt: _ca, updatedAt: _ua, ...data } = banner as never
+    const { createdAt: _ca, updatedAt: _ua, ...data } = banner as Record<string, unknown>
     await prisma.marketingBanner.upsert({
-      where: { id: data.id },
-      update: data,
-      create: data,
+      where: { id: data.id as string },
+      update: data as never,
+      create: data as never,
     })
   })
 
   await importBatch('events', body.events as Array<Record<string, unknown>>, async (gameEvent) => {
-    const { createdAt: _ca, updatedAt: _ua, ...data } = gameEvent as never
+    const { createdAt: _ca, updatedAt: _ua, ...data } = gameEvent as Record<string, unknown>
     await prisma.gameEvent.upsert({
-      where: { id: data.id },
-      update: data,
-      create: data,
+      where: { id: data.id as string },
+      update: data as never,
+      create: data as never,
     })
   })
 
