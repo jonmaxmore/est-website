@@ -5,7 +5,11 @@
  */
 
 const BASE = process.env.SEED_BASE_URL || 'http://127.0.0.1:3000'
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@eternaltowersaga.com'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL
+if (!ADMIN_EMAIL) {
+  console.error('ERROR: Set ADMIN_EMAIL environment variable before running this script.')
+  process.exit(1)
+}
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 let cookie = ''
 
@@ -179,7 +183,7 @@ async function createFAQ() {
     { questionEn: 'What platforms is Eternal Tower Saga available on?', questionTh: 'Eternal Tower Saga เล่นได้บนแพลตฟอร์มไหนบ้าง?', answerEn: 'Eternal Tower Saga is available on iOS, Android, and PC (Windows) with full cross-platform play and cross-save support.', answerTh: 'Eternal Tower Saga เล่นได้บน iOS, Android และ PC (Windows) พร้อมระบบเล่นข้ามแพลตฟอร์มและบันทึกข้ามแพลตฟอร์มเต็มรูปแบบ', visible: true },
     { questionEn: 'Is the game free to play?', questionTh: 'เกมนี้เล่นฟรีหรือไม่?', answerEn: 'Yes! Eternal Tower Saga is completely free to download and play. Optional cosmetic purchases are available but do not affect gameplay.', answerTh: 'ใช่! Eternal Tower Saga ดาวน์โหลดและเล่นฟรีทั้งหมด มีการซื้อเครื่องสำอางเสริมแต่ไม่ส่งผลต่อการเล่นเกม', visible: true },
     { questionEn: 'What are the minimum system requirements?', questionTh: 'ความต้องการระบบขั้นต่ำคืออะไร?', answerEn: 'iOS 14+ / Android 10+ with 3GB RAM. PC: Windows 10, Intel i5, 8GB RAM, GTX 1050.', answerTh: 'iOS 14+ / Android 10+ พร้อม RAM 3GB PC: Windows 10, Intel i5, RAM 8GB, GTX 1050', visible: true },
-    { questionEn: 'How do I contact support?', questionTh: 'จะติดต่อฝ่ายสนับสนุนได้อย่างไร?', answerEn: 'You can reach our support team via the in-game Help Center, email at support@eternaltowersaga.com, or through our official Discord server.', answerTh: 'คุณสามารถติดต่อทีมสนับสนุนผ่านศูนย์ช่วยเหลือในเกม อีเมลที่ support@eternaltowersaga.com หรือผ่านเซิร์ฟเวอร์ Discord อย่างเป็นทางการ', visible: true },
+    { questionEn: 'How do I contact support?', questionTh: 'จะติดต่อฝ่ายสนับสนุนได้อย่างไร?', answerEn: 'You can reach our support team via the in-game Help Center, email at support@example.com, or through our official Discord server.', answerTh: 'คุณสามารถติดต่อทีมสนับสนุนผ่านศูนย์ช่วยเหลือในเกม อีเมลที่ support@example.com หรือผ่านเซิร์ฟเวอร์ Discord อย่างเป็นทางการ', visible: true },
     { questionEn: 'When does the next season start?', questionTh: 'ฤดูกาลถัดไปเริ่มเมื่อไร?', answerEn: 'Competitive seasons run for 3 months. The next season begins at the start of each quarter with new rewards and balance changes.', answerTh: 'ฤดูกาลการแข่งขันดำเนินไป 3 เดือน ฤดูกาลถัดไปเริ่มต้นในแต่ละไตรมาสพร้อมรางวัลใหม่และการปรับสมดุล', visible: true },
   ]
   try {
