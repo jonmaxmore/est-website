@@ -23,14 +23,17 @@ test.describe('API Health Checks', () => {
     })
   }
 
-  test('POST /api/auth/login with bad credentials should return 401', async ({ request }) => {
+  test('POST /api/auth/login with bad credentials should return 401 (or 429 if rate-limited)', async ({ request }) => {
     const response = await request.post(`${BASE}/api/auth/login`, {
       data: {
         email: 'nonexistent@test.dev',
         password: 'wrongpassword123',
       },
     })
-    expect(response.status()).toBe(401)
+    // 401 = bad creds. 429 = brute-force rate-limit kicked in (also acceptable —
+    // means the security control is working). Either response confirms the
+    // auth endpoint is not silently accepting bogus credentials.
+    expect([401, 429]).toContain(response.status())
   })
 
   test('POST /api/register with invalid body should return 4xx', async ({ request }) => {

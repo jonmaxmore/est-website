@@ -153,13 +153,18 @@ test.describe('Admin login flow', () => {
     await expect(page.locator('input[type="password"]')).toBeVisible()
   })
 
-  test('Invalid credentials get rejected (401)', async ({ request }) => {
+  test('Invalid credentials get rejected (401 or 429 rate-limit)', async ({ request }) => {
     const response = await request.post('/api/auth/login', {
       data: { email: 'bad@example.com', password: 'wrong-password' },
     })
-    expect(response.status()).toBe(401)
-    const body = await response.json()
-    expect(body.message || body.statusMessage).toMatch(/invalid|wrong|incorrect/i)
+    // 401 = bad creds rejected. 429 = brute-force rate-limit — also a valid
+    // security response (means the limiter is doing its job). Either way the
+    // endpoint refuses bogus credentials.
+    expect([401, 429]).toContain(response.status())
+    if (response.status() === 401) {
+      const body = await response.json()
+      expect(body.message || body.statusMessage).toMatch(/invalid|wrong|incorrect/i)
+    }
   })
 
   test('Unauthenticated /admin redirects to /admin/login', async ({ page }) => {

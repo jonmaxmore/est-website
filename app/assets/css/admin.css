@@ -1,0 +1,315 @@
+/* ═══════════════════════════════════════════════════════════════════
+   ADMIN DESIGN SYSTEM
+   ─────────────────────────────────────────────────────────────────
+   Centralized tokens + shared component classes for /admin/* pages.
+   Inspired by macOS / Glass OS aesthetic — generous spacing,
+   refined contrast, soft elevation, gold accent for primary action.
+
+   USE THESE CLASSES instead of redefining .gold-btn / .icon-btn /
+   .th-cell / .panel inside each page <style scoped> block. This file
+   is loaded globally via nuxt.config.ts so the classes are available
+   everywhere without scoping conflicts.
+═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Color palette — gold accent + neutral ink + surface ── */
+  --adm-gold: #d4a843;
+  --adm-gold-light: #e8c468;
+  --adm-gold-deep: #b8922e;
+  --adm-gold-soft: rgba(212, 168, 67, 0.08);
+  --adm-gold-medium: rgba(212, 168, 67, 0.18);
+  --adm-gold-strong: rgba(212, 168, 67, 0.4);
+
+  --adm-ink: rgba(255, 255, 255, 0.92);
+  --adm-ink-soft: rgba(255, 255, 255, 0.62);
+  --adm-ink-mute: rgba(255, 255, 255, 0.42);
+  --adm-ink-faint: rgba(255, 255, 255, 0.22);
+  --adm-ink-ghost: rgba(255, 255, 255, 0.08);
+
+  --adm-surface-base: #0a0a0f;
+  --adm-surface-1: rgba(255, 255, 255, 0.025);
+  --adm-surface-2: rgba(255, 255, 255, 0.04);
+  --adm-surface-3: rgba(255, 255, 255, 0.06);
+
+  --adm-border-soft: rgba(255, 255, 255, 0.06);
+  --adm-border-default: rgba(255, 255, 255, 0.1);
+  --adm-border-strong: rgba(255, 255, 255, 0.16);
+
+  --adm-success: #10b981;
+  --adm-warning: #f59e0b;
+  --adm-danger: #ef4444;
+  --adm-info: #3b82f6;
+
+  /* ── Typography scale — limited to 6 sizes for hierarchy clarity ── */
+  --adm-text-xs: 0.6875rem;   /* 11px — captions, badges */
+  --adm-text-sm: 0.8125rem;   /* 13px — body small, table cells */
+  --adm-text-base: 0.875rem;  /* 14px — primary body */
+  --adm-text-md: 1rem;        /* 16px — emphasis body */
+  --adm-text-lg: 1.25rem;     /* 20px — section title */
+  --adm-text-xl: 1.625rem;    /* 26px — page title */
+  --adm-text-2xl: 2rem;       /* 32px — display number (stats) */
+
+  /* ── Spacing scale ── */
+  --adm-sp-1: 4px;
+  --adm-sp-2: 8px;
+  --adm-sp-3: 12px;
+  --adm-sp-4: 16px;
+  --adm-sp-5: 20px;
+  --adm-sp-6: 24px;
+  --adm-sp-8: 32px;
+  --adm-sp-10: 40px;
+  --adm-sp-12: 48px;
+
+  /* ── Radius ── */
+  --adm-radius-sm: 6px;
+  --adm-radius: 10px;
+  --adm-radius-lg: 14px;
+  --adm-radius-xl: 18px;
+
+  /* ── Elevation ── */
+  --adm-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --adm-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --adm-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.45);
+  --adm-shadow-gold: 0 0 24px rgba(212, 168, 67, 0.25);
+
+  /* ── Motion ── */
+  --adm-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --adm-dur-fast: 150ms;
+  --adm-dur: 200ms;
+  --adm-dur-slow: 300ms;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════════════════════════════════ */
+
+/* Primary — gold gradient, used for "Save" / "Create" / "+ New" */
+.adm-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--adm-sp-2);
+  height: 38px;
+  padding: 0 var(--adm-sp-5);
+  border: none;
+  border-radius: var(--adm-radius);
+  background: linear-gradient(135deg, var(--adm-gold-light), var(--adm-gold) 50%, var(--adm-gold-deep));
+  color: #14110a;
+  font-size: var(--adm-text-sm);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: filter var(--adm-dur) var(--adm-ease), transform var(--adm-dur) var(--adm-ease), box-shadow var(--adm-dur) var(--adm-ease);
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.18) inset, 0 6px 18px rgba(212, 168, 67, 0.18);
+}
+.adm-btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.22) inset, 0 10px 28px rgba(212, 168, 67, 0.32); }
+.adm-btn-primary:active { transform: translateY(0); }
+.adm-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; filter: none; }
+
+/* Ghost — outlined, neutral, secondary action */
+.adm-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--adm-sp-2);
+  height: 38px;
+  padding: 0 var(--adm-sp-5);
+  border: 1px solid var(--adm-border-default);
+  border-radius: var(--adm-radius);
+  background: var(--adm-surface-1);
+  color: var(--adm-ink-soft);
+  font-size: var(--adm-text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--adm-dur) var(--adm-ease);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.adm-btn-ghost:hover { border-color: var(--adm-border-strong); color: var(--adm-ink); background: var(--adm-surface-2); }
+
+/* Danger — used for destructive actions */
+.adm-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--adm-sp-2);
+  height: 38px;
+  padding: 0 var(--adm-sp-5);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--adm-radius);
+  background: rgba(239, 68, 68, 0.08);
+  color: #fca5a5;
+  font-size: var(--adm-text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--adm-dur) var(--adm-ease);
+}
+.adm-btn-danger:hover { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.5); color: #fecaca; }
+
+/* Icon button — square, single icon, used in table rows for edit/delete */
+.adm-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: var(--adm-radius-sm);
+  background: transparent;
+  color: var(--adm-ink-mute);
+  cursor: pointer;
+  transition: all var(--adm-dur-fast) var(--adm-ease);
+}
+.adm-icon-btn:hover { background: var(--adm-surface-2); color: var(--adm-ink); border-color: var(--adm-border-default); }
+.adm-icon-btn.is-danger:hover { background: rgba(239, 68, 68, 0.12); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PANELS / CARDS
+═══════════════════════════════════════════════════════════════════ */
+
+.adm-panel {
+  border-radius: var(--adm-radius-lg);
+  border: 1px solid var(--adm-border-soft);
+  background: var(--adm-surface-1);
+  padding: var(--adm-sp-6);
+  transition: border-color var(--adm-dur) var(--adm-ease);
+}
+.adm-panel-tight { padding: var(--adm-sp-5); }
+.adm-panel-flush { padding: 0; overflow: hidden; }
+
+.adm-panel-title {
+  margin: 0 0 var(--adm-sp-4);
+  font-size: var(--adm-text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--adm-ink-mute);
+}
+
+.adm-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--adm-sp-4);
+  padding: var(--adm-sp-4) var(--adm-sp-5);
+  border-bottom: 1px solid var(--adm-border-soft);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   TABLES
+═══════════════════════════════════════════════════════════════════ */
+
+.adm-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+
+.adm-th {
+  padding: var(--adm-sp-3) var(--adm-sp-5);
+  text-align: left;
+  font-size: var(--adm-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--adm-ink-mute);
+  background: var(--adm-surface-2);
+  border-bottom: 1px solid var(--adm-border-soft);
+}
+
+.adm-td {
+  padding: var(--adm-sp-4) var(--adm-sp-5);
+  font-size: var(--adm-text-sm);
+  color: var(--adm-ink);
+  border-bottom: 1px solid var(--adm-border-soft);
+}
+
+.adm-tr:hover .adm-td { background: var(--adm-surface-2); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PAGE HEADER (used at top of every admin page)
+═══════════════════════════════════════════════════════════════════ */
+
+.adm-page-header {
+  margin-bottom: var(--adm-sp-8);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--adm-sp-4);
+  flex-wrap: wrap;
+}
+.adm-page-title-block { display: flex; flex-direction: column; gap: var(--adm-sp-1); min-width: 0; }
+.adm-page-title { margin: 0; font-size: var(--adm-text-xl); font-weight: 700; color: var(--adm-ink); letter-spacing: -0.01em; }
+.adm-page-subtitle { margin: 0; font-size: var(--adm-text-sm); color: var(--adm-ink-mute); line-height: 1.5; }
+.adm-page-actions { display: flex; align-items: center; gap: var(--adm-sp-3); flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   STAT CARDS (dashboard tiles)
+═══════════════════════════════════════════════════════════════════ */
+
+.adm-stat-card {
+  display: flex;
+  align-items: center;
+  gap: var(--adm-sp-4);
+  padding: var(--adm-sp-5);
+  border-radius: var(--adm-radius-lg);
+  border: 1px solid var(--adm-border-soft);
+  background: var(--adm-surface-1);
+  transition: transform var(--adm-dur) var(--adm-ease), border-color var(--adm-dur) var(--adm-ease);
+}
+.adm-stat-card:hover { transform: translateY(-2px); border-color: var(--adm-border-default); }
+.adm-stat-icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: var(--adm-radius); flex-shrink: 0; }
+.adm-stat-value { font-size: var(--adm-text-2xl); font-weight: 800; line-height: 1.1; color: var(--adm-ink); letter-spacing: -0.02em; }
+.adm-stat-label { font-size: var(--adm-text-xs); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--adm-ink-mute); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   STATUS BADGES
+═══════════════════════════════════════════════════════════════════ */
+
+.adm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--adm-sp-1);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: var(--adm-text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--adm-surface-2);
+  color: var(--adm-ink-soft);
+  border: 1px solid var(--adm-border-soft);
+}
+.adm-badge-success { background: rgba(16, 185, 129, 0.1); color: #34d399; border-color: rgba(16, 185, 129, 0.2); }
+.adm-badge-warning { background: rgba(245, 158, 11, 0.1); color: #fbbf24; border-color: rgba(245, 158, 11, 0.2); }
+.adm-badge-danger  { background: rgba(239, 68, 68, 0.1);  color: #f87171; border-color: rgba(239, 68, 68, 0.2); }
+.adm-badge-info    { background: rgba(59, 130, 246, 0.1); color: #60a5fa; border-color: rgba(59, 130, 246, 0.2); }
+.adm-badge-gold    { background: var(--adm-gold-soft);    color: var(--adm-gold-light); border-color: var(--adm-gold-medium); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   FORM FIELDS
+═══════════════════════════════════════════════════════════════════ */
+
+.adm-input,
+.adm-select,
+.adm-textarea {
+  width: 100%;
+  height: 38px;
+  padding: 0 var(--adm-sp-4);
+  border: 1px solid var(--adm-border-default);
+  border-radius: var(--adm-radius);
+  background: var(--adm-surface-1);
+  color: var(--adm-ink);
+  font-size: var(--adm-text-sm);
+  font-family: inherit;
+  transition: border-color var(--adm-dur) var(--adm-ease), background var(--adm-dur) var(--adm-ease);
+}
+.adm-input::placeholder,
+.adm-textarea::placeholder { color: var(--adm-ink-faint); }
+.adm-input:focus,
+.adm-select:focus,
+.adm-textarea:focus {
+  outline: none;
+  border-color: var(--adm-gold-strong);
+  background: var(--adm-surface-2);
+  box-shadow: 0 0 0 3px var(--adm-gold-soft);
+}
+.adm-textarea { height: auto; padding: var(--adm-sp-3) var(--adm-sp-4); line-height: 1.5; min-height: 80px; resize: vertical; }
