@@ -46,7 +46,7 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Run smoke tests + 3 personas
+      - name: Run smoke + public personas + admin personas
         env:
           BASE_URL: ${{ secrets.UAT_BASE_URL }}
           UAT_ADMIN_EMAIL: ${{ secrets.UAT_ADMIN_EMAIL }}
@@ -58,6 +58,7 @@ jobs:
           npx playwright test \
             e2e/smoke/production.spec.ts \
             e2e/uat/personas.spec.ts \
+            e2e/uat/admin-personas.spec.ts \
             --project='Desktop Chrome' \
             --reporter=list,html
 
@@ -69,10 +70,18 @@ jobs:
           path: playwright-report/
           retention-days: 14
 
-      - name: Upload UAT screenshots
+      - name: Upload UAT public personas screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: uat-screenshots
+          name: uat-public-screenshots
           path: test-results/uat-personas/
+          retention-days: 30
+
+      - name: Upload UAT admin personas screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uat-admin-screenshots
+          path: test-results/uat-admin-personas/
           retention-days: 30
