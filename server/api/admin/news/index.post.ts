@@ -1,50 +1,17 @@
-import { z } from 'zod'
-
-import { WEBZINE_CONTENT_TYPES, estimateReadingTimeMinutes } from '../../../../app/shared/cms/webzine'
+import { estimateReadingTimeMinutes } from '../../../../app/shared/cms/webzine'
 import { toDuplicateConflictError } from '../../../utils/prisma-errors'
 import { sanitizeRichTextOptional } from '../../../utils/sanitize'
-
-const emptyToNull = (value: unknown) => (value === '' ? null : value)
-// Zod 4: the preprocess wrapper itself is required by default; chain .optional()
-// AFTER preprocess so a missing field is accepted (not just '' or null).
-const nullableStringSchema = z.preprocess(emptyToNull, z.string().nullable()).optional()
-
-const newsSchema = z.object({
-  titleEn: z.string().min(1),
-  titleTh: z.string().min(1),
-  slug: z.string().min(1),
-  excerptEn: nullableStringSchema,
-  excerptTh: nullableStringSchema,
-  contentEn: nullableStringSchema,
-  contentTh: nullableStringSchema,
-  category: z.enum(['ANNOUNCEMENT', 'EVENT', 'UPDATE', 'MEDIA', 'MAINTENANCE']),
-  contentType: z.enum(WEBZINE_CONTENT_TYPES).default('ANNOUNCEMENT'),
-  primaryTopicKey: nullableStringSchema,
-  campaignCode: nullableStringSchema,
-  linkedEventId: nullableStringSchema,
-  pinned: z.boolean().default(false),
-  isEvergreen: z.boolean().default(false),
-  status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).default('DRAFT'),
-  featuredImage: nullableStringSchema,
-  publishedAt: nullableStringSchema,
-  featureOnHome: z.boolean().default(false),
-  homePriority: z.number().default(0),
-  externalUrl: nullableStringSchema,
-  openInNewTab: z.boolean().default(false),
-  seoTitle: nullableStringSchema,
-  seoDesc: nullableStringSchema,
-  ogImage: nullableStringSchema,
-})
+import { newsCreateSchema } from '../../../utils/schemas-news'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const parsed = newsSchema.safeParse(body)
+  const parsed = newsCreateSchema.safeParse(body)
   if (!parsed.success) {
     throw createError({ statusCode: 400, message: 'Validation error', data: parsed.error.flatten() })
   }
 
   const data = parsed.data
-  // ── Sanitize rich-text content ก่อนเขียน DB (defense-in-depth XSS) ──
+  // Sanitize rich-text content before writing to DB (defense-in-depth XSS)
   const safeContentEn = sanitizeRichTextOptional(data.contentEn ?? null)
   const safeContentTh = sanitizeRichTextOptional(data.contentTh ?? null)
 
