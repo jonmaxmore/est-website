@@ -161,65 +161,16 @@ interface WeaponItem {
 }
 
 const props = defineProps<{
-  items?: WeaponItem[]
+  items: WeaponItem[]
 }>()
 
 const { t, locale } = useI18n()
 
-const fallbackWeapons: WeaponItem[] = [
-  {
-    id: 'crimson-blade',
-    nameEn: 'Crimson Blade',
-    nameTh: 'ดาบโลหิตทมิฬ',
-    roleEn: 'Vanguard',
-    roleTh: 'แนวหน้า',
-    descriptionEn: 'A blade forged in the blood of fallen kings. Strikes faster than thought.',
-    descriptionTh: 'ดาบที่หล่อขึ้นจากเลือดของกษัตริย์ที่ล้มลง รวดเร็วกว่าความคิด',
-    image: '/images/weapons/crimson-blade.webp',
-    stats: [
-      { label: 'Power', value: 92 },
-      { label: 'Speed', value: 78 },
-      { label: 'Range', value: 45 },
-      { label: 'Mastery', value: 68 },
-    ],
-  },
-  {
-    id: 'void-bow',
-    nameEn: 'Void Bow',
-    nameTh: 'ธนูแห่งห้วงเหว',
-    roleEn: 'Marksman',
-    roleTh: 'นักล่า',
-    descriptionEn: 'Arrows that pierce dimensions. Distance is no longer a barrier.',
-    descriptionTh: 'ลูกธนูทะลุมิติ ระยะทางไม่ใช่อุปสรรคอีกต่อไป',
-    image: '/images/weapons/void-bow.webp',
-    stats: [
-      { label: 'Power', value: 76 },
-      { label: 'Speed', value: 88 },
-      { label: 'Range', value: 96 },
-      { label: 'Mastery', value: 72 },
-    ],
-  },
-  {
-    id: 'storm-staff',
-    nameEn: 'Storm Staff',
-    nameTh: 'ไม้เท้าพายุ',
-    roleEn: 'Mage',
-    roleTh: 'ผู้ใช้เวทย์',
-    descriptionEn: 'Channel the wrath of seven storms in a single incantation.',
-    descriptionTh: 'รวบรวมพลังพายุทั้งเจ็ดในคาถาเดียว',
-    image: '/images/weapons/storm-staff.webp',
-    stats: [
-      { label: 'Power', value: 95 },
-      { label: 'Speed', value: 52 },
-      { label: 'Range', value: 84 },
-      { label: 'Mastery', value: 89 },
-    ],
-  },
-]
-
-const weapons = computed<WeaponItem[]>(() => (props.items?.length ? props.items : fallbackWeapons))
+const weapons = computed<WeaponItem[]>(() => props.items)
 const activeIdx = ref(0)
-const activeWeapon = computed(() => weapons.value[activeIdx.value] || weapons.value[0])
+// Parent guards `items.length > 0` before rendering this component, so
+// the array is always non-empty and the [0] fallback is safe.
+const activeWeapon = computed<WeaponItem>(() => weapons.value[activeIdx.value] ?? weapons.value[0]!)
 
 function setActive(i: number) {
   activeIdx.value = i

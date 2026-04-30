@@ -134,7 +134,7 @@ interface CTAStat { label: string; value: string }
 
 const props = withDefaults(defineProps<{
   background?: string
-  stats?: CTAStat[]
+  stats: CTAStat[]
 }>(), {
   background: '/images/cta-bg.webp',
 })
@@ -142,10 +142,5 @@ const props = withDefaults(defineProps<{
 const { t } = useI18n()
 const { trackDownload, trackPreRegister } = useTracking()
 
-const fallbackStats: CTAStat[] = [
-  { label: 'Floors', value: '∞' },
-  { label: 'Classes', value: '12' },
-  { label: 'Players', value: '500K+' },
-]
-const stats = computed<CTAStat[]>(() => (props.stats?.length ? props.stats : fallbackStats))
+const stats = computed<CTAStat[]>(() => props.stats)
 </script>
