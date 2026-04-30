@@ -2,7 +2,7 @@
   <section
     id="news"
     class="relative overflow-hidden bg-bg-1 py-32"
-    data-screen-label="06 News"
+    data-screen-label="04 News"
   >
     <div class="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bg-0 to-transparent" />
     <div class="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-bg-0 to-transparent" />
@@ -17,7 +17,7 @@
       >
         <div class="flex flex-col gap-4">
           <div class="section-eyebrow">
-            <span><span class="num">06</span>&nbsp;&nbsp;LATEST&nbsp;UPDATES</span>
+            <span><span class="num">04</span>&nbsp;&nbsp;LATEST&nbsp;UPDATES</span>
             <span class="h-px w-12 bg-gradient-to-r from-gold/60 to-transparent" />
           </div>
           <h2 class="section-title">{{ t('news.title') }}</h2>

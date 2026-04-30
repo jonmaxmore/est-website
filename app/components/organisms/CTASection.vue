@@ -2,7 +2,7 @@
   <section
     id="cta"
     class="relative overflow-hidden bg-bg-0 py-32"
-    data-screen-label="07 CTA"
+    data-screen-label="05 CTA"
   >
     <!-- Background image with heavy overlay -->
     <div class="absolute inset-0">
@@ -41,7 +41,7 @@
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 800 } }"
       >
         <span class="h-px w-10 bg-gradient-to-r from-transparent to-gold/60" />
-        <span><span class="num">07</span>&nbsp;&nbsp;ASCEND</span>
+        <span><span class="num">05</span>&nbsp;&nbsp;ASCEND</span>
         <span class="h-px w-10 bg-gradient-to-l from-transparent to-gold/60" />
       </div>
 
