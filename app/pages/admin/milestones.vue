@@ -22,7 +22,7 @@
         <tbody>
           <tr v-for="milestone in milestones" :key="milestone.id" class="border-b border-white/3 hover:bg-white/2">
             <td class="px-4 py-3 font-mono text-white/60">#{{ milestone.tier }}</td>
-            <td class="px-4 py-3 font-bold text-gold">{{ milestone.targetCount.toLocaleString() }}</td>
+            <td class="px-4 py-3 font-bold text-gold">{{ milestone.targetCount.toLocaleString('en-US') }}</td>
             <td class="px-4 py-3">
               <p class="font-medium">{{ milestone.rewardEn }}</p>
               <p class="text-xs text-white/35">{{ milestone.rewardTh }}</p>
@@ -150,7 +150,7 @@ async function saveMilestone() {
 }
 
 async function deleteMilestone(milestone: Milestone) {
-  if (!confirm(`Delete milestone ${milestone.targetCount.toLocaleString()}?`)) return
+  if (!confirm(`Delete milestone ${milestone.targetCount.toLocaleString('en-US')}?`)) return
   try {
     await $fetch(`/api/admin/milestones/${milestone.id}`, { method: 'DELETE' })
     showToast('Milestone deleted')
