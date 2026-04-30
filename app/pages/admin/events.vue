@@ -387,8 +387,8 @@ interface EventPageConfig {
 const events = ref<GameEventItem[]>([])
 const page = ref(1)
 const totalPages = ref(1)
-const filterType = ref('')
-const filterStatus = ref('')
+const filterType = ref('all')
+const filterStatus = ref('all')
 const articleOptions = ref<ArticleOption[]>([])
 const editorOpen = ref(false)
 const editorMode = ref<'create' | 'edit'>('create')
@@ -428,13 +428,14 @@ const eventPage = reactive<EventPageConfig>({
   baseRewards: [],
 })
 
+// Sentinel 'all' = no filter (Nuxt UI 4 disallows '' as USelect item value)
 const typeFilterOptions = [
-  { label: 'All Types', value: '' }, { label: 'Event', value: 'EVENT' },
+  { label: 'All Types', value: 'all' }, { label: 'Event', value: 'EVENT' },
   { label: 'Hot Time', value: 'HOT_TIME' }, { label: 'Maintenance', value: 'MAINTENANCE' },
   { label: 'Campaign', value: 'CAMPAIGN' },
 ]
 const statusFilterOptions = [
-  { label: 'All Status', value: '' }, { label: 'Draft', value: 'DRAFT' },
+  { label: 'All Status', value: 'all' }, { label: 'Draft', value: 'DRAFT' },
   { label: 'Scheduled', value: 'SCHEDULED' }, { label: 'Active', value: 'ACTIVE' },
   { label: 'Ended', value: 'ENDED' }, { label: 'Cancelled', value: 'CANCELLED' },
 ]
@@ -479,7 +480,11 @@ const articleSelectOptions = computed(() => [
 async function loadEvents() {
   try {
     const res = await $fetch<{ data: GameEventItem[]; meta: { totalPages: number } }>('/api/admin/events', {
-      query: { page: page.value, type: filterType.value, status: filterStatus.value },
+      query: {
+        page: page.value,
+        type: filterType.value === 'all' ? '' : filterType.value,
+        status: filterStatus.value === 'all' ? '' : filterStatus.value,
+      },
     })
     events.value = res.data
     totalPages.value = res.meta.totalPages

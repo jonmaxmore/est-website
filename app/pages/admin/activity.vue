@@ -76,11 +76,12 @@ const total = ref(0)
 const totalPages = ref(1)
 const page = ref(1)
 const loading = ref(false)
-const filterAction = ref('')
-const filterResource = ref('')
+// Sentinel 'all' = no filter (Nuxt UI 4 disallows '' as USelect item value)
+const filterAction = ref('all')
+const filterResource = ref('all')
 
 const actionOptions = [
-  { label: 'All Actions', value: '' },
+  { label: 'All Actions', value: 'all' },
   { label: 'Create', value: 'CREATE' },
   { label: 'Update', value: 'UPDATE' },
   { label: 'Delete', value: 'DELETE' },
@@ -90,7 +91,7 @@ const actionOptions = [
 ]
 
 const resourceOptions = [
-  { label: 'All Resources', value: '' },
+  { label: 'All Resources', value: 'all' },
   { label: 'News', value: 'news' },
   { label: 'Weapons', value: 'weapons' },
   { label: 'Features', value: 'features' },
@@ -109,7 +110,11 @@ async function loadLogs() {
       data: ActivityLog[]
       meta: { total: number; totalPages: number }
     }>('/api/admin/activity', {
-      query: { page: page.value, action: filterAction.value, resource: filterResource.value },
+      query: {
+        page: page.value,
+        action: filterAction.value === 'all' ? '' : filterAction.value,
+        resource: filterResource.value === 'all' ? '' : filterResource.value,
+      },
     })
     logs.value = res.data
     total.value = res.meta.total
