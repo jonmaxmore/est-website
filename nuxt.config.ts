@@ -6,7 +6,10 @@
  * - i18n: ระบบภาษา ไทย/อังกฤษ
  * - nitro: ตั้งค่า server (ใช้ node-server สำหรับ Docker)
  */
-const publicSiteUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com'
+// ⚠️ Domain ยังไม่ได้จดทะเบียน — siteUrl ใช้ค่าจาก env เท่านั้น
+//   - dev:  http://localhost:3000
+//   - prod: ตั้งใน .env บน server (เช่น http://178.128.127.161 หรือโดเมนจริงเมื่อพร้อม)
+const publicSiteUrl = process.env.NUXT_PUBLIC_SITE_URL || ''
 // ── ตั้งค่า Cookie ปลอดภัย ──
 // production + HTTPS → secure cookie อัตโนมัติ
 // ถ้ายังไม่มี SSL ให้ set NUXT_SESSION_COOKIE_SECURE=false ใน .env
