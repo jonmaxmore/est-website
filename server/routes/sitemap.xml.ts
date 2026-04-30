@@ -29,7 +29,11 @@ export default defineEventHandler(async (event) => {
     // Redis ใช้ไม่ได้ → สร้างใหม่
   }
 
-  const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://eternaltowersaga.com'
+  const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || ''
+  if (!baseUrl) {
+    setResponseHeader(event, 'Content-Type', 'application/xml; charset=utf-8')
+    return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>'
+  }
 
   // ── หน้าคงที่ (static pages) ──
   const staticPages = [
