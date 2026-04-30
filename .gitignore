@@ -47,3 +47,6 @@ public/uploads/
 tsconfig.tsbuildinfo
 *.tsbuildinfo
 next-env.d.ts
+
+# Local-only investigation specs (don't run in CI)
+e2e/debug/

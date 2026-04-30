@@ -38,6 +38,21 @@ export default defineEventHandler(async (event) => {
 
   const existingPage = await prisma.pageContent.findUnique({ where: { key } })
   const systemPage = SYSTEM_CMS_PAGES.find((entry) => entry.key === key)
+  const isSystem = Boolean(systemPage) || existingPage?.isSystemPage === true
+
+  // System pages: lock structural fields. Content (title/desc/SEO/visibility)
+  // remains editable so admins can localize the FAQ page, etc.; but slug,
+  // key, and isSystemPage flag must stay stable so reserved-slug routing
+  // and seed reconciliation keep working.
+  if (isSystem) {
+    if (parsedBody.data.slug && normalizeCmsSlug(parsedBody.data.slug) !== (existingPage?.slug || key)) {
+      throw createError({ statusCode: 400, message: 'System page slug cannot be changed' })
+    }
+    if (parsedBody.data.isSystemPage === false) {
+      throw createError({ statusCode: 400, message: 'System page flag cannot be cleared' })
+    }
+  }
+
   const slug = normalizeCmsSlug(parsedBody.data.slug || existingPage?.slug || key)
 
   if (!slug) {

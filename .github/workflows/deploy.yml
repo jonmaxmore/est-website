@@ -32,8 +32,30 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # ─── Pre-deploy gate: typecheck + build must pass before we ship to prod ───
+  validate:
+    name: Validate (typecheck + build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Generate Prisma client
+        run: npx prisma generate
+      - name: Typecheck
+        run: npx vue-tsc --noEmit --project .nuxt/tsconfig.json || npx nuxt prepare && npx vue-tsc --noEmit --project .nuxt/tsconfig.json
+      - name: Build
+        run: npm run build
+
   deploy:
     name: Deploy to Production
+    needs: validate
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment: production

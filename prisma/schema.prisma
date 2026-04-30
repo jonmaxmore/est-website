@@ -9,14 +9,14 @@ datasource db {
 // ══════════ AUTH ══════════
 
 model AdminUser {
-  id           String   @id @default(cuid())
-  email        String   @unique
+  id           String    @id @default(cuid())
+  email        String    @unique
   passwordHash String
   displayName  String
-  role         Role     @default(EDITOR)
+  role         Role      @default(EDITOR)
   lastLoginAt  DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   @@map("admin_users")
 }
@@ -268,15 +268,15 @@ model ConversionEvent {
 // ══════════ ACTIVITY LOG ══════════
 
 model ActivityLog {
-  id        String   @id @default(cuid())
-  userId    String
-  userName  String
-  action    String   // CREATE, UPDATE, DELETE, LOGIN, EXPORT, IMPORT
-  resource  String   // news, weapons, users, config, etc.
+  id         String   @id @default(cuid())
+  userId     String
+  userName   String
+  action     String // CREATE, UPDATE, DELETE, LOGIN, EXPORT, IMPORT
+  resource   String // news, weapons, users, config, etc.
   resourceId String?
-  details   String?
-  ipAddress String?
-  createdAt DateTime @default(now())
+  details    String?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
 
   @@index([createdAt])
   @@index([userId])
@@ -286,27 +286,27 @@ model ActivityLog {
 // ══════════ PAGE CONTENT (CMS-editable static pages) ══════════
 
 model PageContent {
-  key             String             @id // faq, terms, privacy, support, story, game-guide, gallery, download
-  slug            String?            @unique
-  titleEn         String             @default("")
-  titleTh         String             @default("")
+  key             String            @id // faq, terms, privacy, support, story, game-guide, gallery, download
+  slug            String?           @unique
+  titleEn         String            @default("")
+  titleTh         String            @default("")
   description     String?
-  template        String             @default("default")
+  template        String            @default("default")
   seoTitle        String?
   seoTitleTh      String?
   seoDesc         String?
   seoDescTh       String?
-  contentEn       String?            @db.Text
-  contentTh       String?            @db.Text
+  contentEn       String?           @db.Text
+  contentTh       String?           @db.Text
   icon            String?
-  status          ContentStatus      @default(PUBLISHED)
-  showInHeader    Boolean            @default(false)
-  showInFooter    Boolean            @default(false)
-  headerOrder     Int                @default(0)
-  footerOrder     Int                @default(0)
-  isSystemPage    Boolean            @default(false)
-  updatedAt       DateTime           @updatedAt
-  targetedBanners MarketingBanner[]  @relation("BannerTargetPage")
+  status          ContentStatus     @default(PUBLISHED)
+  showInHeader    Boolean           @default(false)
+  showInFooter    Boolean           @default(false)
+  headerOrder     Int               @default(0)
+  footerOrder     Int               @default(0)
+  isSystemPage    Boolean           @default(false)
+  updatedAt       DateTime          @updatedAt
+  targetedBanners MarketingBanner[] @relation("BannerTargetPage")
 
   @@map("page_contents")
 }
@@ -356,32 +356,32 @@ model Highlight {
 // ══════════ EVENTS & HOT TIME ══════════
 
 model GameEvent {
-  id              String            @id @default(cuid())
+  id              String      @id @default(cuid())
   titleEn         String
   titleTh         String
-  descriptionEn   String?           @db.Text
-  descriptionTh   String?           @db.Text
+  descriptionEn   String?     @db.Text
+  descriptionTh   String?     @db.Text
   type            EventType
-  status          EventStatus       @default(SCHEDULED)
+  status          EventStatus @default(SCHEDULED)
   startsAt        DateTime
   endsAt          DateTime
-  timezone        String            @default("Asia/Bangkok")
+  timezone        String      @default("Asia/Bangkok")
   campaignCode    String?
-  linkedArticleId Int?              @unique
+  linkedArticleId Int?        @unique
 
   // Hot Time specific
-  multiplier      Float?             // e.g., 2.0 for "2x EXP"
-  bonusType       String?            // EXP, GOLD, DROP_RATE, etc.
+  multiplier Float? // e.g., 2.0 for "2x EXP"
+  bonusType  String? // EXP, GOLD, DROP_RATE, etc.
 
   // Display
-  bannerImage     String?
-  icon            String?
-  color           String?           // hex color for event badge
-  visible         Boolean           @default(true)
+  bannerImage String?
+  icon        String?
+  color       String? // hex color for event badge
+  visible     Boolean @default(true)
 
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
-  linkedArticle   NewsArticle?      @relation("EventLinkedArticle", fields: [linkedArticleId], references: [id])
+  linkedArticle   NewsArticle?      @relation("EventLinkedArticle", fields: [linkedArticleId], references: [id], onDelete: SetNull)
   relatedArticles NewsArticle[]     @relation("ArticleLinkedEvent")
   targetedBanners MarketingBanner[] @relation("BannerTargetEvent")
 
@@ -435,9 +435,9 @@ model MarketingBanner {
   config          Json
   createdAt       DateTime                  @default(now())
   updatedAt       DateTime                  @updatedAt
-  article         NewsArticle?              @relation("BannerTargetArticle", fields: [targetArticleId], references: [id])
-  page            PageContent?              @relation("BannerTargetPage", fields: [targetPageKey], references: [key])
-  event           GameEvent?                @relation("BannerTargetEvent", fields: [targetEventId], references: [id])
+  article         NewsArticle?              @relation("BannerTargetArticle", fields: [targetArticleId], references: [id], onDelete: SetNull)
+  page            PageContent?              @relation("BannerTargetPage", fields: [targetPageKey], references: [key], onDelete: SetNull)
+  event           GameEvent?                @relation("BannerTargetEvent", fields: [targetEventId], references: [id], onDelete: SetNull)
 
   @@index([placement, isActive, status])
   @@index([scope, placement])

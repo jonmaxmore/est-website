@@ -32,6 +32,9 @@ test('admin can manage topics and create an announcement bar banner', async ({ p
   await expect(topicRow).toBeVisible()
   await expect(topicRow.getByText(topicLabel, { exact: true })).toBeVisible()
 
+  // Use a URL-target banner so the test does not depend on any specific
+  // seeded article being present. (The previous version selected by label
+  // "ETS Beginner Guide" which broke whenever the DB was wiped.)
   await gotoAdminPage(page, '/admin/banners')
   await page.getByRole('button', { name: /new banner/i }).first().click()
   await page.locator('#banner-placement').waitFor({ state: 'visible', timeout: 15_000 })
@@ -39,8 +42,9 @@ test('admin can manage topics and create an announcement bar banner', async ({ p
   await page.getByLabel(/scope/i).selectOption('global')
   await page.getByLabel(/title \(en\)/i).fill(bannerTitle)
   await page.getByLabel(/title \(th\)/i).fill(bannerTitle)
-  await page.getByLabel(/target type/i).selectOption('article')
-  await page.getByLabel(/target article/i).selectOption({ label: 'ETS Beginner Guide' })
+  await page.getByLabel(/target type/i).selectOption('url')
+  const targetUrlField = page.getByLabel(/target url/i)
+  if (await targetUrlField.count() > 0) await targetUrlField.fill('/news')
   await page.getByRole('button', { name: /save banner/i }).click()
 
   const bannerRow = page.getByRole('row', { name: new RegExp(bannerTitle, 'i') })

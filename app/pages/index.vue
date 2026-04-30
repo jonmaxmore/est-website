@@ -8,68 +8,49 @@
     />
 
     <!-- ════════════════════════════════════════════════
-         CMS-driven sections — explicit type → component
-         (avoids `<component :is="STRING">` resolution failure)
+         CMS-driven sections — explicit type → component.
+         Content sections (weapons/features/highlights/news) only render
+         when admin has populated their respective tables. Hero & CTA
+         always render because they are structural/branding, not content.
     ════════════════════════════════════════════════ -->
-    <template v-if="sections.length > 0">
-      <template v-for="section in sections" :key="section.id">
-        <OrganismsHeroSection
-          v-if="section.type === 'hero'"
-          :background="section.background || heroBackground"
-          :config="(section.config as Record<string, unknown>) || heroConfig"
-        />
-        <OrganismsWeaponSelector
-          v-else-if="section.type === 'weapons'"
-          :items="liveWeapons.length > 0 ? liveWeapons : getSectionItems(section, 'items', weaponsFallback)"
-        />
-        <!-- Inline marketing banner sits between Weapons and Features (matches fallback order) -->
-        <SiteMarketingBannerSlot
-          v-if="section.type === 'weapons' && bannerMap.homepage_inline"
-          class="mx-auto my-12 max-w-7xl px-6"
-          placement="homepage_inline"
-          :banner="bannerMap.homepage_inline"
-        />
-        <!-- Inline marketing banner sits between Weapons and Features (matches fallback order) -->
-        <SiteMarketingBannerSlot
-          v-if="section.type === 'weapons' && bannerMap.homepage_inline"
-          class="mx-auto my-12 max-w-7xl px-6"
-          placement="homepage_inline"
-          :banner="bannerMap.homepage_inline"
-        />
-        <OrganismsGameGuildSection
-          v-else-if="section.type === 'features'"
-          :items="liveFeatures.length > 0 ? liveFeatures : getSectionItems(section, 'items', featuresFallback)"
-        />
-        <OrganismsHighlightReel
-          v-else-if="section.type === 'highlight' || section.type === 'highlights'"
-          :slides="liveHighlights.length > 0 ? liveHighlights : getSectionItems(section, 'slides', highlightSlidesFallback)"
-        />
-        <OrganismsNewsSection
-          v-else-if="section.type === 'news'"
-          :articles="liveNews.length > 0 ? liveNews : getSectionItems(section, 'articles', newsArticlesFallback)"
-        />
-        <OrganismsCTASection
-          v-else-if="section.type === 'cta'"
-          :background="section.background || ctaBackground"
-          :stats="getSectionItems(section, 'stats', ctaStats)"
-        />
-      </template>
-    </template>
-
-    <!-- ════════════════════════════════════════════════
-         Fallback when CMS returns 0 sections
-    ════════════════════════════════════════════════ -->
-    <template v-else>
-      <OrganismsHeroSection :background="heroBackground" :config="heroConfig" />
-      <OrganismsWeaponSelector :items="weaponsFallback" />
+    <template v-for="section in sections" :key="section.id">
+      <OrganismsHeroSection
+        v-if="section.type === 'hero'"
+        :background="section.background || heroBackground"
+        :config="(section.config as Record<string, unknown>) || heroConfig"
+      />
+      <OrganismsWeaponSelector
+        v-else-if="section.type === 'weapons' && liveWeapons.length > 0"
+        :items="liveWeapons"
+      />
       <SiteMarketingBannerSlot
+        v-if="section.type === 'weapons' && bannerMap.homepage_inline"
         class="mx-auto my-12 max-w-7xl px-6"
         placement="homepage_inline"
         :banner="bannerMap.homepage_inline"
       />
-      <OrganismsGameGuildSection :items="featuresFallback" />
-      <OrganismsHighlightReel :slides="highlightSlidesFallback" />
-      <OrganismsNewsSection :articles="newsArticlesFallback" />
+      <OrganismsGameGuildSection
+        v-else-if="section.type === 'features' && liveFeatures.length > 0"
+        :items="liveFeatures"
+      />
+      <OrganismsHighlightReel
+        v-else-if="(section.type === 'highlight' || section.type === 'highlights') && liveHighlights.length > 0"
+        :slides="liveHighlights"
+      />
+      <OrganismsNewsSection
+        v-else-if="section.type === 'news' && liveNews.length > 0"
+        :articles="liveNews"
+      />
+      <OrganismsCTASection
+        v-else-if="section.type === 'cta'"
+        :background="section.background || ctaBackground"
+        :stats="ctaStats"
+      />
+    </template>
+
+    <!-- Fallback when CMS returns 0 sections: render hero + cta only (no fake content) -->
+    <template v-if="sections.length === 0">
+      <OrganismsHeroSection :background="heroBackground" :config="heroConfig" />
       <OrganismsCTASection :background="ctaBackground" :stats="ctaStats" />
     </template>
 
@@ -91,15 +72,10 @@
  * app/pages/index.vue — Eternal Tower Saga landing
  *
  * Render strategy:
- *  1. CMS mode — sections come from /api/public/sections; explicit
- *     v-if chain for each type (compile-time resolved, no string lookup).
- *  2. Fallback — if CMS returns no sections, renders the default order
- *     using static fixtures so the page is never empty.
- *
- * Layout: default.vue handles SiteNavigation + SiteFooter + outer <main>.
- *
- * Banners use useBannerOrchestrator (popup⇄floating + announcement⇄footer
- * mutex) to prevent visual chaos.
+ *  - Hero & CTA: always render (structural, not content). Defaults below.
+ *  - Weapons / Features / Highlights / News: render ONLY when admin has
+ *    populated the underlying tables via /admin/{section}. No fake demo
+ *    fallbacks — empty admin data means empty section.
  */
 
 useCursorGlow()
@@ -116,18 +92,7 @@ interface PublicSection {
 const hydrated = ref(false)
 onMounted(() => { hydrated.value = true })
 
-/**
- * เลือก data จาก section.config ก่อน (CMS fill ได้) ถ้าว่างใช้ fallback
- * รองรับทั้ง section.config.items และ section[key] โดยตรง
- */
-function getSectionItems<T>(section: PublicSection, key: string, fallback: T[]): T[] {
-  const cfg = section.config as Record<string, unknown> | undefined
-  const fromConfig = cfg && Array.isArray(cfg[key]) ? (cfg[key] as T[]) : null
-  if (fromConfig && fromConfig.length > 0) return fromConfig
-  return fallback
-}
-
-// ── Sections from CMS ──
+// ── Sections from CMS (controls which sections appear on homepage) ──
 const { data: sectionsData } = await useFetch<{ sections: PublicSection[] }>(
   '/api/public/sections',
   { default: () => ({ sections: [] }) },
@@ -138,9 +103,6 @@ const sections = computed(() =>
 )
 
 // ── Live CMS data: weapons, features, highlights, news ──
-// These come from admin-managed tables and are reshape-mapped to the component
-// props. If a list is empty, the per-component fallback is used so the page is
-// never blank.
 interface RawWeapon { id: number; name: string; nameEn?: string; descriptionEn?: string; descriptionTh?: string; portrait?: string; infoImage?: string; backgroundImage?: string; sortOrder?: number; visible?: boolean; statSTR?: number; statINT?: number; statAGI?: number; statDEX?: number; statHP?: number }
 interface RawFeature { id: number; key: string; titleEn: string; titleTh: string; descriptionEn?: string; descriptionTh?: string; image?: string; sortOrder?: number; visible?: boolean }
 interface RawHighlight { id: number; key: string; titleEn: string; titleTh: string; descriptionEn?: string; descriptionTh?: string; image?: string; sortOrder?: number; visible?: boolean }
@@ -163,7 +125,7 @@ const liveWeapons = computed(() =>
       roleTh: '',
       descriptionEn: w.descriptionEn || '',
       descriptionTh: w.descriptionTh || '',
-      image: w.portrait || w.backgroundImage || w.infoImage || '/images/weapons/crimson-blade.webp',
+      image: w.portrait || w.backgroundImage || w.infoImage || '',
       stats: [
         { label: 'STR', value: w.statSTR ?? 0 },
         { label: 'INT', value: w.statINT ?? 0 },
@@ -184,7 +146,7 @@ const liveFeatures = computed(() =>
       titleTh: f.titleTh,
       descriptionEn: f.descriptionEn || '',
       descriptionTh: f.descriptionTh || '',
-      image: f.image || '/images/features/tower.webp',
+      image: f.image || '',
     })),
 )
 
@@ -200,7 +162,7 @@ const liveHighlights = computed(() =>
       kickerTh: '',
       descriptionEn: h.descriptionEn || '',
       descriptionTh: h.descriptionTh || '',
-      image: h.image || '/images/highlight/reel-1.webp',
+      image: h.image || '',
     })),
 )
 
@@ -213,7 +175,7 @@ const liveNews = computed(() =>
     excerptTh: n.excerptTh || '',
     categoryEn: n.category,
     categoryTh: n.category,
-    image: n.featuredImage || '/images/news/closed-beta.webp',
+    image: n.featuredImage || '',
     date: n.publishedAt || new Date().toISOString(),
     href: `/news/${n.slug}`,
     featured: false,
@@ -227,9 +189,7 @@ const bannerMap = computed(() => bannersData.value || {
   homepage_inline: null, sidebar: null, article_inline: null, footer_strip: null,
 })
 
-/* ──────────────────────────────────────────────────────────
-   Fallback fixtures (used when CMS returns 0 sections)
-   ────────────────────────────────────────────────────────── */
+/* Structural defaults — branding/layout, not demo content */
 const heroBackground = '/images/hero-bg.webp'
 const heroConfig = {
   logo: '/images/logo.webp',
@@ -243,83 +203,6 @@ const heroConfig = {
     { id: 'download', labelEn: 'Download', labelTh: 'ดาวน์โหลด', href: '/download', variant: 'secondary' as const, visible: true, order: 1, target: '_self' as const },
   ],
 }
-
-const weaponsFallback = [
-  { id: 'crimson-blade', nameEn: 'Crimson Blade', nameTh: 'ดาบโลหิตทมิฬ', roleEn: 'Vanguard', roleTh: 'แนวหน้า',
-    descriptionEn: 'A blade forged in the blood of fallen kings. Strikes faster than thought.',
-    descriptionTh: 'ดาบที่หล่อขึ้นจากเลือดของกษัตริย์ที่ล้มลง รวดเร็วกว่าความคิด',
-    image: '/images/weapons/crimson-blade.webp',
-    stats: [{ label: 'Power', value: 92 }, { label: 'Speed', value: 78 }, { label: 'Range', value: 45 }, { label: 'Mastery', value: 68 }] },
-  { id: 'void-bow', nameEn: 'Void Bow', nameTh: 'ธนูแห่งห้วงเหว', roleEn: 'Marksman', roleTh: 'นักล่า',
-    descriptionEn: 'Arrows that pierce dimensions. Distance is no longer a barrier.',
-    descriptionTh: 'ลูกธนูทะลุมิติ ระยะทางไม่ใช่อุปสรรคอีกต่อไป',
-    image: '/images/weapons/void-bow.webp',
-    stats: [{ label: 'Power', value: 76 }, { label: 'Speed', value: 88 }, { label: 'Range', value: 96 }, { label: 'Mastery', value: 72 }] },
-  { id: 'storm-staff', nameEn: 'Storm Staff', nameTh: 'ไม้เท้าพายุ', roleEn: 'Mage', roleTh: 'ผู้ใช้เวทย์',
-    descriptionEn: 'Channel the wrath of seven storms in a single incantation.',
-    descriptionTh: 'รวบรวมพลังพายุทั้งเจ็ดในคาถาเดียว',
-    image: '/images/weapons/storm-staff.webp',
-    stats: [{ label: 'Power', value: 95 }, { label: 'Speed', value: 52 }, { label: 'Range', value: 84 }, { label: 'Mastery', value: 89 }] },
-]
-
-const featuresFallback = [
-  { id: 'f1', titleEn: 'Endless Tower', titleTh: 'หอคอยไร้สิ้นสุด',
-    descriptionEn: 'Every floor reshapes itself. No two climbs are the same.',
-    descriptionTh: 'ทุกชั้นเปลี่ยนรูปร่าง ไม่มีการปีนใดที่เหมือนกัน',
-    image: '/images/features/tower.webp' },
-  { id: 'f2', titleEn: 'Living Guilds', titleTh: 'กิลด์ที่มีชีวิต',
-    descriptionEn: 'Build alliances that influence the world map in real time.',
-    descriptionTh: 'สร้างพันธมิตรที่ส่งผลต่อแผนที่โลกแบบเรียลไทม์',
-    image: '/images/features/guild.webp' },
-  { id: 'f3', titleEn: 'Open World', titleTh: 'โลกเปิดกว้าง',
-    descriptionEn: 'Stylish action with deep mastery systems across an open continent.',
-    descriptionTh: 'แอ็กชันที่มีสไตล์พร้อมระบบความชำนาญที่ลึกซึ้งบนทวีปเปิด',
-    image: '/images/features/open-world.webp' },
-  { id: 'f4', titleEn: 'Forge & Craft', titleTh: 'หลอมและสร้าง',
-    descriptionEn: 'Refine weapons through ancient rituals.',
-    descriptionTh: 'ปรับแต่งอาวุธผ่านพิธีกรรมโบราณ',
-    image: '/images/features/craft.webp' },
-  { id: 'f5', titleEn: 'Ranked PvP', titleTh: 'PvP จัดอันดับ',
-    descriptionEn: 'Climb the seasonal ladder for exclusive rewards.',
-    descriptionTh: 'ปีนบันไดประจำฤดูกาลเพื่อรับรางวัลพิเศษ',
-    image: '/images/features/pvp.webp' },
-  { id: 'f6', titleEn: 'Soulbound Pets', titleTh: 'สัตว์เลี้ยงผูกวิญญาณ',
-    descriptionEn: 'Companions that grow with your saga.',
-    descriptionTh: 'เพื่อนร่วมทางที่เติบโตไปกับตำนานของคุณ',
-    image: '/images/features/pets.webp' },
-]
-
-const highlightSlidesFallback = [
-  { id: 'h1', titleEn: 'The Climb Begins', titleTh: 'การปีนเริ่มต้น',
-    kickerEn: 'Chapter 01', kickerTh: 'บทที่ 01',
-    descriptionEn: 'Step into a world where every floor tests both blade and spirit.',
-    descriptionTh: 'ก้าวเข้าสู่โลกที่ทุกชั้นทดสอบทั้งดาบและจิตวิญญาณ',
-    image: '/images/highlight/reel-1.webp' },
-  { id: 'h2', titleEn: 'Forge of Heroes', titleTh: 'เตาหลอมวีรบุรุษ',
-    kickerEn: 'Chapter 02', kickerTh: 'บทที่ 02',
-    descriptionEn: 'Where legends are tempered by fire, fury, and friendship.',
-    descriptionTh: 'ที่ที่ตำนานถูกหล่อหลอมด้วยไฟ ความโกรธ และมิตรภาพ',
-    image: '/images/highlight/reel-2.webp' },
-  { id: 'h3', titleEn: 'Shadows of the Tower', titleTh: 'เงามืดแห่งหอคอย',
-    kickerEn: 'Chapter 03', kickerTh: 'บทที่ 03',
-    descriptionEn: 'Not all who climb seek the light at the summit.',
-    descriptionTh: 'ไม่ใช่ทุกคนที่ปีนแสวงหาแสงสว่างบนยอดหอคอย',
-    image: '/images/highlight/reel-3.webp' },
-]
-
-const newsArticlesFallback = [
-  { id: 'n1', titleEn: 'Closed Beta opens November 14', titleTh: 'Closed Beta เปิด 14 พฤศจิกายน',
-    excerptEn: 'Selected climbers will be the first to step into the tower. Sign-ups close midnight Friday.',
-    excerptTh: 'นักผจญภัยที่ได้รับเลือกจะได้เข้าหอคอยเป็นกลุ่มแรก ลงทะเบียนถึงเที่ยงคืนวันศุกร์',
-    categoryEn: 'Announcement', categoryTh: 'ประกาศ',
-    image: '/images/news/closed-beta.webp', date: '2026-04-14', href: '/news/closed-beta', featured: true },
-  { id: 'n2', titleEn: 'Patch 0.9: Crimson Floors', titleTh: 'แพตช์ 0.9: ชั้นโลหิต',
-    categoryEn: 'Patch', categoryTh: 'แพตช์',
-    image: '/images/news/patch-09.webp', date: '2026-04-04', href: '/news/patch-09' },
-  { id: 'n3', titleEn: 'Lore Drop: The First Climber', titleTh: 'ตำนาน: นักปีนคนแรก',
-    categoryEn: 'Lore', categoryTh: 'ตำนาน',
-    image: '/images/news/first-climber.webp', date: '2026-03-28', href: '/news/first-climber' },
-]
 
 const ctaBackground = '/images/cta-bg.webp'
 const ctaStats = [
