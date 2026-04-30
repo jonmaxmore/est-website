@@ -120,8 +120,11 @@ export default defineNuxtConfig({
   },
 
   // ── TypeScript ──
+  // typeCheck: true runs vue-tsc inline on every nuxt build/dev, catching
+  // type regressions before deploy. Safe to enable now — codebase is clean
+  // (cleared 18 pre-existing errors in commit 29cf22f).
   typescript: {
     strict: true,
-    typeCheck: false, // Enable in Sprint 4 when all types are solid
+    typeCheck: true,
   },
 })
