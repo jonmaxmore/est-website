@@ -221,7 +221,8 @@ async function doDelete() {
   catch { showToast('Delete failed', 'error') }
 }
 
-await loadWeapons()
+// SSR-safe: admin auth is client-cookie based, so fetch on client only
+onMounted(loadWeapons)
 </script>
 
 <style scoped>
