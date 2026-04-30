@@ -1,35 +1,12 @@
 /**
- * PUT /api/admin/events/[id] — แก้ไข game event
+ * PUT /api/admin/events/[id] — partial update of a game event
  *
- * Notes:
- * - linkedArticleId ถูก validate ใน transaction (ป้องกัน FK error และ orphan link)
- * - end time ต้องหลัง start time
+ * - linkedArticleId is validated inside the update transaction (avoids
+ *   FK error / orphan link to a deleted article).
+ * - end time must be after start time when both are provided.
  */
-import { z } from 'zod'
-
 import { toDuplicateConflictError } from '../../../utils/prisma-errors'
-
-const updateEventSchema = z
-  .object({
-    titleEn: z.string().trim().min(1).optional(),
-    titleTh: z.string().trim().min(1).optional(),
-    descriptionEn: z.string().nullable().optional(),
-    descriptionTh: z.string().nullable().optional(),
-    type: z.enum(['EVENT', 'HOT_TIME', 'MAINTENANCE', 'CAMPAIGN']).optional(),
-    status: z.enum(['DRAFT', 'SCHEDULED', 'ACTIVE', 'ENDED', 'CANCELLED']).optional(),
-    startsAt: z.string().datetime().optional(),
-    endsAt: z.string().datetime().optional(),
-    timezone: z.string().optional(),
-    multiplier: z.number().nullable().optional(),
-    bonusType: z.string().nullable().optional(),
-    bannerImage: z.string().nullable().optional(),
-    icon: z.string().nullable().optional(),
-    color: z.string().nullable().optional(),
-    visible: z.boolean().optional(),
-    campaignCode: z.string().nullable().optional(),
-    linkedArticleId: z.union([z.number().int().positive(), z.null()]).optional(),
-  })
-  .refine((d) => Object.keys(d).length > 0, { message: 'No fields to update' })
+import { eventUpdateSchema } from '../../../utils/schemas-events'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
@@ -37,7 +14,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Missing event id' })
   }
 
-  const parsed = updateEventSchema.safeParse(await readBody(event))
+  const parsed = eventUpdateSchema.safeParse(await readBody(event))
   if (!parsed.success) {
     throw createError({
       statusCode: 422,
@@ -51,6 +28,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'End time must be after start time.' })
   }
 
+  // Build only the fields the admin actually sent (Prisma update ignores undefined).
   const data: Record<string, unknown> = {}
   if (body.titleEn !== undefined) data.titleEn = body.titleEn
   if (body.titleTh !== undefined) data.titleTh = body.titleTh
@@ -70,7 +48,6 @@ export default defineEventHandler(async (event) => {
   if (body.campaignCode !== undefined) data.campaignCode = body.campaignCode
 
   try {
-    // ── Transaction: validate linkedArticle exists, then update event ──
     const gameEvent = await prisma.$transaction(async (tx) => {
       if (body.linkedArticleId !== undefined) {
         if (body.linkedArticleId !== null) {
