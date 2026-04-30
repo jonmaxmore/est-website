@@ -47,6 +47,7 @@
 
       <h2
         class="display-title text-[clamp(2.5rem,6vw,4.5rem)] max-w-[20ch]"
+        style="text-shadow: 0 4px 30px rgba(7, 5, 12, 0.8), 0 1px 0 rgba(255, 255, 255, 0.04);"
         v-motion
         :initial="{ opacity: 0, y: 30 }"
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 1000, delay: 150 } }"
@@ -55,7 +56,8 @@
       </h2>
 
       <p
-        class="text-ink-soft max-w-[600px] text-[clamp(0.95rem,1.4vw,1.125rem)] leading-relaxed"
+        class="text-ink max-w-[600px] text-[clamp(1rem,1.4vw,1.125rem)] leading-[1.7] opacity-80"
+        style="text-shadow: 0 2px 12px rgba(7, 5, 12, 0.6);"
         v-motion
         :initial="{ opacity: 0, y: 20 }"
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 1000, delay: 500 } }"

@@ -57,14 +57,26 @@
       <!-- Hamburger -->
       <button
         type="button"
-        class="z-51 flex h-11 w-11 cursor-pointer items-center justify-center border-none bg-transparent text-2xl text-ink lg:hidden"
+        class="z-51 flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg border border-gold/15 bg-bg-1/40 text-ink backdrop-blur-md transition-all duration-200 hover:border-gold/40 hover:bg-bg-1/60 lg:hidden"
         :aria-label="mobileOpen ? 'Close menu' : 'Open menu'"
         :aria-expanded="mobileOpen"
         aria-controls="site-mobile-menu"
         @click="mobileOpen = !mobileOpen"
       >
-        <span v-if="mobileOpen">✕</span>
-        <span v-else>☰</span>
+        <svg
+          v-if="mobileOpen"
+          xmlns="http://www.w3.org/2000/svg"
+          width="20" height="20" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round"
+        ><path d="M18 6 6 18M6 6l12 12" /></svg>
+        <svg
+          v-else
+          xmlns="http://www.w3.org/2000/svg"
+          width="20" height="20" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round"
+        ><path d="M4 6h16M4 12h16M4 18h16" /></svg>
       </button>
     </div>
 
