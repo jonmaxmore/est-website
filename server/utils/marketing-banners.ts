@@ -16,11 +16,16 @@ import {
   isAllowedPlacementScope,
   normalizeBannerConfig,
 } from '../../app/shared/cms/marketing-banners'
-import {
-  nullableDateStringSchema,
-  nullableIntSchema,
-  nullableStringSchema,
-} from './zod-schemas'
+
+const emptyToNull = (value: unknown) => (value === '' ? null : value)
+// Zod 4: the preprocess wrapper itself is required by default. Chain .optional()
+// AFTER preprocess so a missing field is accepted (not just '' or null).
+const nullableStringSchema = z.preprocess(emptyToNull, z.string().trim().nullable()).optional()
+const nullableDateStringSchema = z.preprocess(emptyToNull, z.string().trim().nullable()).optional()
+const nullableIntSchema = z.preprocess(
+  emptyToNull,
+  z.coerce.number().int().positive().nullable(),
+).optional()
 
 const bannerPayloadSchema = z.object({
   placement: z.enum(BANNER_PLACEMENTS),
