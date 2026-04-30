@@ -36,17 +36,22 @@ export function useNewsArticles() {
   const topics = ref<TopicOption[]>([])
   const selectedIds = ref(new Set<number>())
 
+  // Sentinel: 'all' means "no filter applied" — Nuxt UI 4 disallows '' as
+  // a USelect item value, so we use 'all' and strip it before sending to
+  // the API (the API treats missing/empty fields as no filter).
   const filters = reactive({
     search: '',
-    status: '',
-    category: '',
-    contentType: '',
-    topic: '',
+    status: 'all',
+    category: 'all',
+    contentType: 'all',
+    topic: 'all',
     campaignCode: '',
   })
 
   let debounceTimer: ReturnType<typeof setTimeout>
   const { showToast } = useAdminToast()
+
+  const stripAll = (v: string) => (v === 'all' ? '' : v)
 
   async function loadArticles() {
     try {
@@ -56,10 +61,10 @@ export function useNewsArticles() {
           query: {
             page: page.value,
             search: filters.search,
-            status: filters.status,
-            category: filters.category,
-            contentType: filters.contentType,
-            primaryTopicKey: filters.topic,
+            status: stripAll(filters.status),
+            category: stripAll(filters.category),
+            contentType: stripAll(filters.contentType),
+            primaryTopicKey: stripAll(filters.topic),
             campaignCode: filters.campaignCode,
           },
         },
@@ -119,11 +124,11 @@ export function useNewsArticles() {
 
   const contentTypeOptions = ['ANNOUNCEMENT', 'EVENT', 'PATCH_NOTES', 'GUIDE', 'LORE', 'DEV_BLOG']
   const contentTypeFilterOptions = computed(() => [
-    { label: 'All Types', value: '' },
+    { label: 'All Types', value: 'all' },
     ...contentTypeOptions.map((value) => ({ label: value.replaceAll('_', ' '), value })),
   ])
   const topicFilterOptions = computed(() => [
-    { label: 'All Topics', value: '' },
+    { label: 'All Topics', value: 'all' },
     ...topics.value
       .filter((topic) => topic.visible !== false)
       .map((topic) => ({ label: topic.labelEn || topic.key, value: topic.key })),
