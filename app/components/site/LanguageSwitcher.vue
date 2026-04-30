@@ -1,11 +1,13 @@
 <template>
-  <div class="lang-switcher">
+  <div class="lang-switcher" role="group" aria-label="Language selector">
     <button
       v-for="loc in availableLocales"
       :key="loc.code"
+      type="button"
       class="lang-btn"
       :class="{ active: locale === loc.code }"
-      :title="loc.name"
+      :aria-pressed="locale === loc.code"
+      :aria-label="loc.name"
       @click="switchTo(loc.code)"
     >
       {{ loc.code.toUpperCase() }}
@@ -24,6 +26,7 @@ const availableLocales = [
 ]
 
 function switchTo(code: string) {
+  if (locale.value === code) return
   const path = switchLocalePath(code as 'th' | 'en')
   if (path) {
     router.push(path)
@@ -35,37 +38,43 @@ function switchTo(code: string) {
 
 <style scoped>
 .lang-switcher {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 2px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
+  gap: 1px;
   padding: 3px;
+  border: 1px solid rgba(232, 181, 71, 0.18);
+  border-radius: 999px;
+  background: rgba(7, 5, 12, 0.4);
+  backdrop-filter: blur(8px);
 }
 
 .lang-btn {
   padding: 6px 14px;
   border: none;
-  border-radius: 7px;
+  border-radius: 999px;
   background: transparent;
-  color: rgba(255, 255, 255, 0.35);
-  font-size: 0.75rem;
+  color: var(--color-ink-mute);
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.16em;
   cursor: pointer;
-  transition: all 0.25s ease;
-  letter-spacing: 0.08em;
+  transition: color 0.25s ease, background 0.25s ease;
   line-height: 1;
 }
 
 .lang-btn:hover {
-  color: rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-ink-soft);
+}
+
+.lang-btn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
 }
 
 .lang-btn.active {
-  background: linear-gradient(135deg, rgba(212, 168, 67, 0.2), rgba(212, 168, 67, 0.1));
-  color: #d4a843;
-  box-shadow: 0 0 12px rgba(212, 168, 67, 0.1);
+  background: linear-gradient(135deg, rgba(232, 181, 71, 0.22), rgba(232, 181, 71, 0.1));
+  color: var(--color-gold);
+  box-shadow: 0 0 12px rgba(232, 181, 71, 0.18);
 }
 </style>
