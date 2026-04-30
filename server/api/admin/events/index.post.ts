@@ -1,33 +1,13 @@
 /**
- * POST /api/admin/events — สร้าง game event ใหม่
- * Validate linkedArticleId ใน transaction (กัน FK error และ orphan link)
+ * POST /api/admin/events — create a new game event
+ * Validates linkedArticleId inside the create transaction so an admin
+ * can't link to a deleted article (FK error / orphan link).
  */
-import { z } from 'zod'
-
 import { toDuplicateConflictError } from '../../../utils/prisma-errors'
-
-const createEventSchema = z.object({
-  titleEn: z.string().trim().min(1),
-  titleTh: z.string().trim().min(1),
-  descriptionEn: z.string().nullable().optional(),
-  descriptionTh: z.string().nullable().optional(),
-  type: z.enum(['EVENT', 'HOT_TIME', 'MAINTENANCE', 'CAMPAIGN']),
-  status: z.enum(['DRAFT', 'SCHEDULED', 'ACTIVE', 'ENDED', 'CANCELLED']).default('SCHEDULED'),
-  startsAt: z.string().datetime(),
-  endsAt: z.string().datetime(),
-  timezone: z.string().default('Asia/Bangkok'),
-  multiplier: z.number().nullable().optional(),
-  bonusType: z.string().nullable().optional(),
-  bannerImage: z.string().nullable().optional(),
-  icon: z.string().nullable().optional(),
-  color: z.string().nullable().optional(),
-  visible: z.boolean().default(true),
-  campaignCode: z.string().nullable().optional(),
-  linkedArticleId: z.union([z.number().int().positive(), z.null()]).optional(),
-})
+import { eventCreateSchema } from '../../../utils/schemas-events'
 
 export default defineEventHandler(async (event) => {
-  const parsed = createEventSchema.safeParse(await readBody(event))
+  const parsed = eventCreateSchema.safeParse(await readBody(event))
   if (!parsed.success) {
     throw createError({
       statusCode: 422,
