@@ -5,6 +5,9 @@
       ? 'border-b border-gold/10 bg-bg-0/90 py-3 backdrop-blur-2xl'
       : 'bg-gradient-to-b from-bg-0/85 via-bg-0/40 to-transparent py-5'"
   >
+    <!-- Skip-to-content link for keyboard / screen-reader users -->
+    <a href="#main-content" class="ets-skip-link">Skip to main content</a>
+
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6">
       <!-- Logo: Tower mark + wordmark -->
       <NuxtLink to="/" class="z-51 flex items-center gap-3 text-ink no-underline">
@@ -29,10 +32,14 @@
           v-for="link in navLinks"
           :key="link.href"
           :to="link.href"
-          class="group relative font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-ink-soft no-underline transition-colors duration-300 hover:text-gold"
+          class="group relative font-mono text-[11px] font-semibold uppercase tracking-[0.25em] no-underline transition-colors duration-300 hover:text-gold"
+          :class="isActive(link.href) ? 'text-gold' : 'text-ink-soft hover:text-ink'"
         >
           {{ currentLocale === 'th' ? link.labelTh : link.labelEn }}
-          <span class="absolute -bottom-1.5 left-0 h-px w-0 bg-gold transition-all duration-500 group-hover:w-full" />
+          <span
+            class="absolute -bottom-1.5 left-0 h-px bg-gold transition-all duration-500"
+            :class="isActive(link.href) ? 'w-full' : 'w-0 group-hover:w-full'"
+          />
         </NuxtLink>
       </nav>
 
@@ -66,13 +73,14 @@
       <div
         v-if="mobileOpen"
         id="site-mobile-menu"
-        class="fixed inset-x-0 top-[72px] bottom-0 z-49 flex flex-col items-center gap-6 bg-bg-0/97 px-6 pt-12 backdrop-blur-2xl"
+        class="fixed inset-x-0 top-[72px] bottom-0 z-49 flex flex-col items-center gap-6 bg-bg-0/97 px-6 pt-12 backdrop-blur-2xl overflow-y-auto"
       >
         <NuxtLink
           v-for="link in navLinks"
           :key="link.href"
           :to="link.href"
-          class="font-mono text-base font-semibold uppercase tracking-[0.2em] text-ink-soft no-underline transition-colors duration-300 hover:text-gold"
+          class="font-mono text-base font-semibold uppercase tracking-[0.2em] no-underline transition-colors duration-300"
+          :class="isActive(link.href) ? 'text-gold' : 'text-ink-soft hover:text-gold'"
           @click="mobileOpen = false"
         >
           {{ currentLocale === 'th' ? link.labelTh : link.labelEn }}
@@ -94,36 +102,134 @@
 
 <script setup lang="ts">
 const { t, locale } = useI18n()
+const route = useRoute()
 const currentLocale = computed(() => locale.value)
 
 const scrolled = ref(false)
 const mobileOpen = ref(false)
 
 interface NavItem { labelEn: string; labelTh: string; href: string }
+
+// Default nav links match the original Claude Design source
+// (5 links: Home / Weapon / Game Guild / Highlight / News)
 const defaultLinks: NavItem[] = [
   { labelEn: 'Home', labelTh: 'หน้าแรก', href: '/' },
   { labelEn: 'Weapon', labelTh: 'อาวุธ', href: '/weapons' },
   { labelEn: 'Game Guild', labelTh: 'กิลด์', href: '/#features' },
   { labelEn: 'Highlight', labelTh: 'ไฮไลท์', href: '/#highlight' },
   { labelEn: 'News', labelTh: 'ข่าวสาร', href: '/news' },
-  { labelEn: 'Support', labelTh: 'ช่วยเหลือ', href: '/support' },
 ]
 
 const { data: siteConfig } = await useFetch<{ navigation: { main: NavItem[]; footer: NavItem[] } }>(
   '/api/public/site',
-  { default: () => ({ navigation: { main: defaultLinks, footer: [] } }), pick: ['navigation'] }
+  { default: () => ({ navigation: { main: defaultLinks, footer: [] } }), pick: ['navigation'] },
 )
 
 const navLinks = computed(() => {
   const main = siteConfig.value?.navigation?.main
-  return main && main.length > 0 ? main : defaultLinks
+  // Filter out garbled UTF-8 (legacy data with mojibake)
+  const valid = main?.filter((l) => l.labelEn && l.labelTh && /^[฀-๿a-zA-Z0-9\s/&]+$/u.test(l.labelTh)) || []
+  return valid.length > 0 ? valid : defaultLinks
 })
 
-onMounted(() => {
-  const onScroll = () => { scrolled.value = window.scrollY > 20 }
-  window.addEventListener('scroll', onScroll, { passive: true })
-  onUnmounted(() => window.removeEventListener('scroll', onScroll))
+/**
+ * Is this nav link the active page?
+ * - Exact match for /
+ * - prefix match for /news (matches /news, /news/article-slug)
+ * - hash links (#features) match when hash matches OR currently on home + scrolled near anchor
+ *   (anchor highlight via scroll-spy is out of scope; just match path /)
+ */
+function isActive(href: string): boolean {
+  const path = route.path
+  const hash = route.hash
+  if (href === '/') return path === '/' || path === ''
+  if (href.startsWith('/#')) {
+    const anchor = href.substring(1) // "#features"
+    return path === '/' && hash === anchor
+  }
+  if (href.startsWith('#')) return hash === href
+  // path link — match exact OR any sub-path
+  return path === href || path.startsWith(href + '/')
+}
+
+// ── Scroll handler ──
+let scrollHandler: (() => void) | null = null
+function setupScroll() {
+  if (!import.meta.client) return
+  scrollHandler = () => {
+    scrolled.value = window.scrollY > 20
+  }
+  window.addEventListener('scroll', scrollHandler, { passive: true })
+}
+function teardownScroll() {
+  if (scrollHandler && import.meta.client) {
+    window.removeEventListener('scroll', scrollHandler)
+    scrollHandler = null
+  }
+}
+
+// ── Mobile menu: scroll-lock + ESC handler ──
+let escHandler: ((e: KeyboardEvent) => void) | null = null
+
+watch(mobileOpen, (open) => {
+  if (!import.meta.client) return
+  if (open) {
+    // Lock both html + body to prevent scroll on mobile
+    document.documentElement.style.overflow = 'hidden'
+    document.body.style.overflow = 'hidden'
+    // ESC closes mobile menu
+    escHandler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') mobileOpen.value = false
+    }
+    window.addEventListener('keydown', escHandler)
+  } else {
+    document.documentElement.style.overflow = ''
+    document.body.style.overflow = ''
+    if (escHandler) {
+      window.removeEventListener('keydown', escHandler)
+      escHandler = null
+    }
+  }
 })
 
-watch(mobileOpen, (open) => { document.body.style.overflow = open ? 'hidden' : '' })
+// Close mobile menu on route change
+watch(() => route.fullPath, () => { mobileOpen.value = false })
+
+onMounted(setupScroll)
+onBeforeUnmount(() => {
+  teardownScroll()
+  // Ensure scroll-lock cleared on unmount
+  if (import.meta.client) {
+    document.documentElement.style.overflow = ''
+    document.body.style.overflow = ''
+  }
+  if (escHandler && import.meta.client) {
+    window.removeEventListener('keydown', escHandler)
+    escHandler = null
+  }
+})
 </script>
+
+<style scoped>
+.ets-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 12px 20px;
+  background: var(--color-gold);
+  color: var(--color-bg-0);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 0 0 8px 0;
+}
+.ets-skip-link:focus,
+.ets-skip-link:focus-visible {
+  left: 0;
+  outline: 2px solid var(--color-gold-bright);
+  outline-offset: 2px;
+}
+</style>
