@@ -195,7 +195,8 @@ async function saveSection(key: string, value: unknown, loadingKey: LoadingKey) 
   }
 }
 
-await loadConfigs()
+// SSR-safe: admin auth is client-cookie based, so fetch on client only
+onMounted(loadConfigs)
 </script>
 
 <style scoped>
