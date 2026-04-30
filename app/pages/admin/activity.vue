@@ -155,5 +155,6 @@ function timeAgo(date: string): string {
   return `${Math.floor(seconds / 86400)}d ago`
 }
 
-await loadLogs()
+// SSR-safe: admin auth is client-cookie based, so fetch on client only
+onMounted(loadLogs)
 </script>

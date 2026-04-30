@@ -163,7 +163,8 @@ async function doDelete() {
   showToast('FAQ deleted')
 }
 
-await loadItems()
+// SSR-safe: admin auth is client-cookie based, so fetch on client only
+onMounted(loadItems)
 </script>
 
 <style scoped>

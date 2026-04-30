@@ -160,7 +160,8 @@ async function deleteMilestone(milestone: Milestone) {
   }
 }
 
-await loadMilestones()
+// SSR-safe: admin auth is client-cookie based, so fetch on client only
+onMounted(loadMilestones)
 </script>
 
 <style scoped>
