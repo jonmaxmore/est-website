@@ -5,7 +5,7 @@ test.describe('public cms rendering', () => {
     const response = await page.goto('/support', { waitUntil: 'domcontentloaded' })
     expect(response?.status()).toBe(200)
     await expect(page.locator('body')).toContainText(/support/i)
-    await expect(page.locator('body')).toContainText('support@eternaltowersaga.com')
+    await expect(page.locator('body')).toContainText('support@example.com')
   })
 
   test('unknown cms routes still return 404', async ({ page }) => {

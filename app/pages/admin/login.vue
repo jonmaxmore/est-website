@@ -14,7 +14,7 @@
           class="flex flex-col gap-5"
         >
           <UFormField label="Email">
-            <UInput v-model="form.email" type="email" placeholder="admin@eternaltowersaga.com" size="lg" required icon="i-heroicons-envelope" />
+            <UInput v-model="form.email" type="email" placeholder="admin@example.com" size="lg" required icon="i-heroicons-envelope" />
           </UFormField>
           <UFormField label="Password">
             <UInput v-model="form.password" type="password" placeholder="••••••••" size="lg" required icon="i-heroicons-lock-closed" />

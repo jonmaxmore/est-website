@@ -347,8 +347,14 @@ const baseRewards = computed(() =>
     .sort((left, right) => left.order - right.order)
 )
 
+const _runtimeConfig = useRuntimeConfig()
+const _siteUrlBase = String(_runtimeConfig.public.siteUrl || '').replace(/\/$/, '')
+
 const shareHref = computed(() => {
-  const url = import.meta.client ? `${window.location.origin}/event` : 'https://eternaltowersaga.com/event'
+  // Client → use real origin; Server → use configured siteUrl (may be empty until domain registered)
+  const url = import.meta.client
+    ? `${window.location.origin}/event`
+    : (_siteUrlBase ? `${_siteUrlBase}/event` : '/event')
   const text = `I just pre-registered for Eternal Tower Saga! Use my referral code: ${referralCode.value}`
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`
 })

@@ -40,7 +40,7 @@ const { locale } = useI18n()
 // ⚠️ All Nuxt composables MUST be called in setup, not inside reactive callbacks.
 // Calling useRuntimeConfig() inside useHead(() => ...) throws "[nuxt] instance unavailable".
 const runtimeConfig = useRuntimeConfig()
-const siteUrl = String(runtimeConfig.public.siteUrl || 'https://eternaltowersaga.com').replace(/\/$/, '')
+const siteUrl = String(runtimeConfig.public.siteUrl || '').replace(/\/$/, '')
 
 const isThai = computed(() => locale.value === 'th')
 const localizedTitle = computed(() => (isThai.value ? props.page.titleTh || props.page.titleEn : props.page.titleEn || props.page.titleTh))

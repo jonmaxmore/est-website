@@ -221,7 +221,7 @@
               <div class="mt-4 rounded-lg border border-white/6 bg-white/2 p-3">
                 <p class="text-xs font-medium text-white/30 mb-2">Google Preview</p>
                 <p class="text-sm text-blue-400 truncate">{{ form.seoTitle || form.titleEn || 'Article Title' }}</p>
-                <p class="text-xs text-emerald-400 font-mono truncate">eternaltowersaga.com/news/{{ form.slug || '...' }}</p>
+                <p class="text-xs text-emerald-400 font-mono truncate">/news/{{ form.slug || '...' }}</p>
                 <p class="mt-1 text-xs text-white/40 line-clamp-2">{{ form.seoDesc || form.excerptEn || 'Article description will appear here...' }}</p>
               </div>
             </div>

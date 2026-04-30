@@ -31,7 +31,7 @@ async function main() {
     }
   }
 
-  const seedEmail = email || 'admin@eternaltowersaga.dev'
+  const seedEmail = email || 'admin@example.dev'
   const seedPassword = password || 'devOnly_changeMe!'
 
   const existingAdmin = await prisma.adminUser.findUnique({ where: { email: seedEmail } })
@@ -642,14 +642,14 @@ async function main() {
     privacy: {
       description: 'Privacy and data policy',
       icon: 'i-lucide-shield',
-      contentEn: `<p>Last updated: April 2026</p><h2>1. Information We Collect</h2><p>We collect email addresses, platform preferences, and usage analytics to improve the game experience.</p><h2>2. How We Use Your Data</h2><p>Your data is used for account management, game improvements, and marketing communications where you opt in.</p><h2>3. Data Sharing</h2><p>We do not sell personal data. Data may be shared with analytics providers under strict data processing agreements.</p><h2>4. Data Retention</h2><p>Personal data is retained for the duration of your account. You may request deletion at any time.</p><h2>5. Your Rights</h2><p>Under applicable privacy laws, you can request access, correction, and deletion of your personal data.</p><h2>6. Contact</h2><p>For privacy inquiries, email <a href="mailto:privacy@eternaltowersaga.com">privacy@eternaltowersaga.com</a>.</p>`,
+      contentEn: `<p>Last updated: April 2026</p><h2>1. Information We Collect</h2><p>We collect email addresses, platform preferences, and usage analytics to improve the game experience.</p><h2>2. How We Use Your Data</h2><p>Your data is used for account management, game improvements, and marketing communications where you opt in.</p><h2>3. Data Sharing</h2><p>We do not sell personal data. Data may be shared with analytics providers under strict data processing agreements.</p><h2>4. Data Retention</h2><p>Personal data is retained for the duration of your account. You may request deletion at any time.</p><h2>5. Your Rights</h2><p>Under applicable privacy laws, you can request access, correction, and deletion of your personal data.</p><h2>6. Contact</h2><p>For privacy inquiries, email <a href="mailto:privacy@example.com">privacy@example.com</a>.</p>`,
       showInFooter: true,
       footerOrder: 3,
     },
     support: {
       description: 'Customer support page',
       icon: 'i-lucide-headphones',
-      contentEn: `<p>Need help with Eternal Tower Saga? Reach out to our support team and community channels below.</p><h2>Email Support</h2><p>Send us a message and our team will respond within 24 hours at <a href="mailto:support@eternaltowersaga.com">support@eternaltowersaga.com</a>.</p><h2>Discord Community</h2><p>Join our official community server for announcements, live help, and feedback: <a href="https://discord.gg/eternaltowersaga" target="_blank" rel="noreferrer">discord.gg/eternaltowersaga</a>.</p><h2>Frequently Asked Questions</h2><p>Looking for common answers first? Visit the <a href="/faq">FAQ page</a>.</p>`,
+      contentEn: `<p>Need help with Eternal Tower Saga? Reach out to our support team and community channels below.</p><h2>Email Support</h2><p>Send us a message and our team will respond within 24 hours at <a href="mailto:support@example.com">support@example.com</a>.</p><h2>Discord Community</h2><p>Join our official community server for announcements, live help, and feedback: <a href="https://discord.gg/your-server" target="_blank" rel="noreferrer">discord.gg/your-server</a>.</p><h2>Frequently Asked Questions</h2><p>Looking for common answers first? Visit the <a href="/faq">FAQ page</a>.</p>`,
       showInHeader: true,
       headerOrder: 5,
     },
@@ -731,7 +731,7 @@ async function main() {
         { labelEn: 'Is the game free to play?', labelTh: 'เกมนี้เล่นฟรีไหม?', contentEn: 'Yes! ETS is free-to-play with optional cosmetic purchases. No pay-to-win mechanics.', contentTh: 'ใช่! ETS เล่นฟรีพร้อมการซื้อเครื่องสำอางเสริม ไม่มีระบบ Pay-to-Win', visible: true },
         { labelEn: 'How do I pre-register?', labelTh: 'ลงทะเบียนล่วงหน้าได้อย่างไร?', contentEn: 'Visit the Event page and enter your email to pre-register. You will receive exclusive rewards upon launch.', contentTh: 'ไปที่หน้า Event และกรอกอีเมลเพื่อลงทะเบียนล่วงหน้า คุณจะได้รับรางวัลพิเศษเมื่อเปิดให้บริการ', visible: true },
         { labelEn: 'What languages are supported?', labelTh: 'รองรับภาษาอะไรบ้าง?', contentEn: 'ETS supports Thai and English, with more languages planned for the global release.', contentTh: 'ETS รองรับภาษาไทยและอังกฤษ โดยมีแผนเพิ่มภาษาอื่นสำหรับเวอร์ชันทั่วโลก', visible: true },
-        { labelEn: 'How do I contact support?', labelTh: 'ติดต่อฝ่ายสนับสนุนได้อย่างไร?', contentEn: 'Visit the Support page or email us at support@eternaltowersaga.com.', contentTh: 'ไปที่หน้า Support หรืออีเมลมาที่ support@eternaltowersaga.com', visible: true },
+        { labelEn: 'How do I contact support?', labelTh: 'ติดต่อฝ่ายสนับสนุนได้อย่างไร?', contentEn: 'Visit the Support page or email us at support@example.com.', contentTh: 'ไปที่หน้า Support หรืออีเมลมาที่ support@example.com', visible: true },
       ],
     },
     create: {
@@ -743,7 +743,7 @@ async function main() {
         { labelEn: 'Is the game free to play?', labelTh: 'เกมนี้เล่นฟรีไหม?', contentEn: 'Yes! ETS is free-to-play with optional cosmetic purchases. No pay-to-win mechanics.', contentTh: 'ใช่! ETS เล่นฟรีพร้อมการซื้อเครื่องสำอางเสริม ไม่มีระบบ Pay-to-Win', visible: true },
         { labelEn: 'How do I pre-register?', labelTh: 'ลงทะเบียนล่วงหน้าได้อย่างไร?', contentEn: 'Visit the Event page and enter your email to pre-register. You will receive exclusive rewards upon launch.', contentTh: 'ไปที่หน้า Event และกรอกอีเมลเพื่อลงทะเบียนล่วงหน้า คุณจะได้รับรางวัลพิเศษเมื่อเปิดให้บริการ', visible: true },
         { labelEn: 'What languages are supported?', labelTh: 'รองรับภาษาอะไรบ้าง?', contentEn: 'ETS supports Thai and English, with more languages planned for the global release.', contentTh: 'ETS รองรับภาษาไทยและอังกฤษ โดยมีแผนเพิ่มภาษาอื่นสำหรับเวอร์ชันทั่วโลก', visible: true },
-        { labelEn: 'How do I contact support?', labelTh: 'ติดต่อฝ่ายสนับสนุนได้อย่างไร?', contentEn: 'Visit the Support page or email us at support@eternaltowersaga.com.', contentTh: 'ไปที่หน้า Support หรืออีเมลมาที่ support@eternaltowersaga.com', visible: true },
+        { labelEn: 'How do I contact support?', labelTh: 'ติดต่อฝ่ายสนับสนุนได้อย่างไร?', contentEn: 'Visit the Support page or email us at support@example.com.', contentTh: 'ไปที่หน้า Support หรืออีเมลมาที่ support@example.com', visible: true },
       ],
     },
   })
