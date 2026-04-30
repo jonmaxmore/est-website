@@ -207,7 +207,15 @@ const { data: stats } = await useFetch<Stats>('/api/admin/stats', {
   }),
 })
 
-const todayFormatted = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+// ⚠️ Compute on client only — `new Date().toLocaleDateString()` produces different
+// strings on server (UTC, en-US locale) vs client (browser locale + timezone).
+// Hydration mismatch otherwise.
+const todayFormatted = ref('')
+onMounted(() => {
+  todayFormatted.value = new Date().toLocaleDateString('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+  })
+})
 
 const quickActions = [
   { icon: 'i-lucide-file-plus', label: 'New CMS Page', to: '/admin/pages' },

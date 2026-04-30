@@ -136,8 +136,19 @@ function actionClass(action: string) {
   return 'bg-gray-500/10 text-gray-400'
 }
 
-function timeAgo(date: string) {
-  const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000)
+// ⚠️ time-relative strings differ between SSR (server time) and client (browser time)
+// → wrap in computed that uses a client-only "now" tick to avoid hydration mismatch
+const nowMs = ref(0)
+onMounted(() => {
+  nowMs.value = Date.now()
+  // refresh every minute so "5m ago" updates
+  const interval = setInterval(() => { nowMs.value = Date.now() }, 60_000)
+  onBeforeUnmount(() => clearInterval(interval))
+})
+
+function timeAgo(date: string): string {
+  if (!nowMs.value) return '…'
+  const seconds = Math.floor((nowMs.value - new Date(date).getTime()) / 1000)
   if (seconds < 60) return 'Just now'
   if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`
   if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`

@@ -101,14 +101,26 @@
             </button>
           </div>
 
-          <!-- User Info -->
-          <div class="topbar-user">
-            <div class="user-avatar">{{ ((user as any)?.displayName || 'A').charAt(0).toUpperCase() }}</div>
-            <div class="user-info">
-              <span class="user-name">{{ (user as any)?.displayName || 'Admin' }}</span>
-              <span class="user-role-badge">{{ (user as any)?.role || 'ADMIN' }}</span>
+          <!-- User Info — ClientOnly: useUserSession() resolves async on client only,
+               wrapping prevents SSR/client hydration mismatch on every admin page -->
+          <ClientOnly>
+            <div class="topbar-user">
+              <div class="user-avatar">{{ ((user as { displayName?: string })?.displayName || 'A').charAt(0).toUpperCase() }}</div>
+              <div class="user-info">
+                <span class="user-name">{{ (user as { displayName?: string })?.displayName || 'Admin' }}</span>
+                <span class="user-role-badge">{{ (user as { role?: string })?.role || 'ADMIN' }}</span>
+              </div>
             </div>
-          </div>
+            <template #fallback>
+              <div class="topbar-user">
+                <div class="user-avatar">A</div>
+                <div class="user-info">
+                  <span class="user-name">Admin</span>
+                  <span class="user-role-badge">…</span>
+                </div>
+              </div>
+            </template>
+          </ClientOnly>
         </div>
       </header>
 
