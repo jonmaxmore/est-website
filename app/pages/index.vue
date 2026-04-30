@@ -20,7 +20,7 @@
         />
         <OrganismsWeaponSelector
           v-else-if="section.type === 'weapons'"
-          :items="getSectionItems(section, 'items', weaponsFallback)"
+          :items="liveWeapons.length > 0 ? liveWeapons : getSectionItems(section, 'items', weaponsFallback)"
         />
         <!-- Inline marketing banner sits between Weapons and Features (matches fallback order) -->
         <SiteMarketingBannerSlot
@@ -31,15 +31,15 @@
         />
         <OrganismsGameGuildSection
           v-else-if="section.type === 'features'"
-          :items="getSectionItems(section, 'items', featuresFallback)"
+          :items="liveFeatures.length > 0 ? liveFeatures : getSectionItems(section, 'items', featuresFallback)"
         />
         <OrganismsHighlightReel
           v-else-if="section.type === 'highlight' || section.type === 'highlights'"
-          :slides="getSectionItems(section, 'slides', highlightSlidesFallback)"
+          :slides="liveHighlights.length > 0 ? liveHighlights : getSectionItems(section, 'slides', highlightSlidesFallback)"
         />
         <OrganismsNewsSection
           v-else-if="section.type === 'news'"
-          :articles="getSectionItems(section, 'articles', newsArticlesFallback)"
+          :articles="liveNews.length > 0 ? liveNews : getSectionItems(section, 'articles', newsArticlesFallback)"
         />
         <OrganismsCTASection
           v-else-if="section.type === 'cta'"
@@ -128,6 +128,89 @@ const { data: sectionsData } = await useFetch<{ sections: PublicSection[] }>(
 
 const sections = computed(() =>
   [...(sectionsData.value?.sections ?? [])].sort((a, b) => a.order - b.order),
+)
+
+// ── Live CMS data: weapons, features, highlights, news ──
+// These come from admin-managed tables and are reshape-mapped to the component
+// props. If a list is empty, the per-component fallback is used so the page is
+// never blank.
+interface RawWeapon { id: number; name: string; nameEn?: string; descriptionEn?: string; descriptionTh?: string; portrait?: string; infoImage?: string; backgroundImage?: string; sortOrder?: number; visible?: boolean; statSTR?: number; statINT?: number; statAGI?: number; statDEX?: number; statHP?: number }
+interface RawFeature { id: number; key: string; titleEn: string; titleTh: string; descriptionEn?: string; descriptionTh?: string; image?: string; sortOrder?: number; visible?: boolean }
+interface RawHighlight { id: number; key: string; titleEn: string; titleTh: string; descriptionEn?: string; descriptionTh?: string; image?: string; sortOrder?: number; visible?: boolean }
+interface RawNews { id: number; slug: string; titleEn: string; titleTh: string; excerptEn?: string | null; excerptTh?: string | null; category: string; featuredImage?: string | null; publishedAt?: string | null }
+
+const { data: liveWeaponsRaw } = await useFetch<RawWeapon[]>('/api/public/weapons', { default: () => [] })
+const { data: liveFeaturesRaw } = await useFetch<RawFeature[]>('/api/public/features', { default: () => [] })
+const { data: liveHighlightsRaw } = await useFetch<RawHighlight[]>('/api/public/highlights', { default: () => [] })
+const { data: liveNewsRaw } = await useFetch<{ data: RawNews[] }>('/api/public/news', { default: () => ({ data: [] }) })
+
+const liveWeapons = computed(() =>
+  (liveWeaponsRaw.value || [])
+    .filter((w) => w.visible !== false)
+    .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+    .map((w) => ({
+      id: String(w.id),
+      nameEn: w.nameEn || w.name,
+      nameTh: w.name || w.nameEn || '',
+      roleEn: '',
+      roleTh: '',
+      descriptionEn: w.descriptionEn || '',
+      descriptionTh: w.descriptionTh || '',
+      image: w.portrait || w.backgroundImage || w.infoImage || '/images/weapons/crimson-blade.webp',
+      stats: [
+        { label: 'STR', value: w.statSTR ?? 0 },
+        { label: 'INT', value: w.statINT ?? 0 },
+        { label: 'AGI', value: w.statAGI ?? 0 },
+        { label: 'DEX', value: w.statDEX ?? 0 },
+        { label: 'HP', value: w.statHP ?? 0 },
+      ],
+    })),
+)
+
+const liveFeatures = computed(() =>
+  (liveFeaturesRaw.value || [])
+    .filter((f) => f.visible !== false)
+    .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+    .map((f) => ({
+      id: f.key,
+      titleEn: f.titleEn,
+      titleTh: f.titleTh,
+      descriptionEn: f.descriptionEn || '',
+      descriptionTh: f.descriptionTh || '',
+      image: f.image || '/images/features/tower.webp',
+    })),
+)
+
+const liveHighlights = computed(() =>
+  (liveHighlightsRaw.value || [])
+    .filter((h) => h.visible !== false)
+    .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+    .map((h) => ({
+      id: h.key,
+      titleEn: h.titleEn,
+      titleTh: h.titleTh,
+      kickerEn: '',
+      kickerTh: '',
+      descriptionEn: h.descriptionEn || '',
+      descriptionTh: h.descriptionTh || '',
+      image: h.image || '/images/highlight/reel-1.webp',
+    })),
+)
+
+const liveNews = computed(() =>
+  (liveNewsRaw.value?.data || []).map((n) => ({
+    id: String(n.id),
+    titleEn: n.titleEn,
+    titleTh: n.titleTh,
+    excerptEn: n.excerptEn || '',
+    excerptTh: n.excerptTh || '',
+    categoryEn: n.category,
+    categoryTh: n.category,
+    image: n.featuredImage || '/images/news/closed-beta.webp',
+    date: n.publishedAt || new Date().toISOString(),
+    href: `/news/${n.slug}`,
+    featured: false,
+  })),
 )
 
 // ── Marketing banners (orchestrated) ──
