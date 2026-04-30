@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test'
 
-const ADMIN_EMAIL = process.env.TEST_ADMIN_EMAIL || 'admin@eternaltowersaga.com'
+const ADMIN_EMAIL = process.env.TEST_ADMIN_EMAIL || 'admin@example.com'
 const ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD || 'change-me'
 
 async function gotoAdminLogin(page: Page, waitUntil: 'domcontentloaded' | 'networkidle' = 'domcontentloaded') {

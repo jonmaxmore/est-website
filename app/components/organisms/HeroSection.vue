@@ -23,7 +23,9 @@
         loading="eager"
       />
       <div class="absolute inset-x-0 top-0 h-[40%] bg-gradient-to-b from-bg-0 to-transparent" />
-      <div class="absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-bg-0 via-bg-0/85 to-transparent" />
+      <!-- Bottom: solid bg-0 at very bottom + smooth fade above (prevents bg image bleed-through into next section) -->
+      <div class="absolute inset-x-0 bottom-0 h-[28%] bg-bg-0" />
+      <div class="absolute inset-x-0 bottom-[28%] h-[40%] bg-gradient-to-t from-bg-0 to-transparent" />
       <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_60%,transparent,rgba(7,5,12,0.6))]" />
     </div>
 

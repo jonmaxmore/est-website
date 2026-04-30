@@ -73,6 +73,8 @@
     "subtitle": "Stay updated with the latest game news",
     "readMore": "Read More",
     "allNews": "View All News",
+    "viewAll": "View All",
+    "featured": "Featured",
     "noNews": "No news yet",
     "categories": {
       "all": "All",
@@ -82,6 +84,12 @@
       "media": "Media",
       "maintenance": "Maintenance"
     }
+  },
+  "cta": {
+    "title": "Begin Your Saga",
+    "subtitle": "Pre-register now to claim launch rewards and play among the first climbers.",
+    "preRegister": "Pre-register",
+    "download": "Download Now"
   },
   "event": {
     "title": "Pre-Registration",

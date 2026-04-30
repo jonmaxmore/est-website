@@ -22,6 +22,13 @@
           v-else-if="section.type === 'weapons'"
           :items="getSectionItems(section, 'items', weaponsFallback)"
         />
+        <!-- Inline marketing banner sits between Weapons and Features (matches fallback order) -->
+        <SiteMarketingBannerSlot
+          v-if="section.type === 'weapons' && bannerMap.homepage_inline"
+          class="mx-auto my-12 max-w-7xl px-6"
+          placement="homepage_inline"
+          :banner="bannerMap.homepage_inline"
+        />
         <OrganismsGameGuildSection
           v-else-if="section.type === 'features'"
           :items="getSectionItems(section, 'items', featuresFallback)"
