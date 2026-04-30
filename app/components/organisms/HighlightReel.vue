@@ -152,21 +152,17 @@ interface ReelSlide {
 }
 
 const props = withDefaults(defineProps<{
-  slides?: ReelSlide[]
+  slides: ReelSlide[]
   autoAdvanceMs?: number
 }>(), { autoAdvanceMs: 6500 })
 
 const { t, locale } = useI18n()
 
-const fallback: ReelSlide[] = [
-  { id: '1', titleEn: 'The Climb Begins', titleTh: 'การปีนเริ่มต้น', kickerEn: 'Chapter 01', kickerTh: 'บทที่ 01', image: '/images/highlight/reel-1.webp' },
-  { id: '2', titleEn: 'Forge of Heroes', titleTh: 'เตาหลอมวีรบุรุษ', kickerEn: 'Chapter 02', kickerTh: 'บทที่ 02', image: '/images/highlight/reel-2.webp' },
-  { id: '3', titleEn: 'Shadows of the Tower', titleTh: 'เงามืดแห่งหอคอย', kickerEn: 'Chapter 03', kickerTh: 'บทที่ 03', image: '/images/highlight/reel-3.webp' },
-]
-
-const slides = computed<ReelSlide[]>(() => (props.slides?.length ? props.slides : fallback))
+const slides = computed<ReelSlide[]>(() => props.slides)
 const activeIdx = ref(0)
-const activeSlide = computed(() => slides.value[activeIdx.value] || slides.value[0])
+// Parent guards `slides.length > 0` before rendering; we use a non-null
+// assertion here so the template doesn't have to deal with `undefined`.
+const activeSlide = computed<ReelSlide>(() => slides.value[activeIdx.value] ?? slides.value[0]!)
 
 let timer: ReturnType<typeof setInterval> | null = null
 
