@@ -1,7 +1,7 @@
 <template>
   <div id="app-root" class="min-h-screen bg-surface-primary text-white">
     <SiteNavigation />
-    <main>
+    <main id="main-content">
       <slot />
     </main>
     <SiteFooter />
