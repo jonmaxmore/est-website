@@ -1,0 +1,62 @@
+-- Idempotent seed for the 8 reserved system pages. Runs on every fresh
+-- DB so the public routes (/faq, /support, /story, etc.) always render
+-- something instead of 404'ing on a clean install.
+--
+-- Admins can edit titles/content/SEO via /admin/pages — the upsert here
+-- only fills missing rows, never overwrites existing ones.
+INSERT INTO page_contents (
+  key, slug, "titleEn", "titleTh", description, template,
+  "contentEn", "contentTh", icon, status,
+  "showInHeader", "showInFooter", "headerOrder", "footerOrder",
+  "isSystemPage", "seoTitle", "seoTitleTh", "seoDesc", "seoDescTh",
+  "updatedAt"
+) VALUES
+  ('faq', 'faq', 'FAQ', 'คำถามที่พบบ่อย', 'Frequently asked questions', 'default',
+   '<p>FAQ content can be edited from the admin panel.</p>',
+   '<p>เนื้อหา FAQ สามารถแก้ไขได้จากแผงผู้ดูแล</p>',
+   'i-lucide-help-circle', 'PUBLISHED', false, true, 0, 3, true,
+   'FAQ', 'คำถามที่พบบ่อย',
+   'Frequently asked questions', 'คำถามที่พบบ่อย', NOW()),
+  ('terms', 'terms', 'Terms of Service', 'เงื่อนไขการใช้งาน', 'Terms and conditions', 'default',
+   '<p>Terms of service can be edited from the admin panel.</p>',
+   '<p>เงื่อนไขการใช้งานสามารถแก้ไขได้จากแผงผู้ดูแล</p>',
+   'i-lucide-file-text', 'PUBLISHED', false, true, 0, 4, true,
+   'Terms of Service', 'เงื่อนไขการใช้งาน',
+   'Terms and conditions', 'เงื่อนไขการใช้งาน', NOW()),
+  ('privacy', 'privacy', 'Privacy Policy', 'นโยบายความเป็นส่วนตัว', 'Privacy and data policy', 'default',
+   '<p>Privacy policy can be edited from the admin panel.</p>',
+   '<p>นโยบายความเป็นส่วนตัวสามารถแก้ไขได้จากแผงผู้ดูแล</p>',
+   'i-lucide-shield', 'PUBLISHED', false, true, 0, 5, true,
+   'Privacy Policy', 'นโยบายความเป็นส่วนตัว',
+   'Privacy and data policy', 'นโยบายความเป็นส่วนตัว', NOW()),
+  ('support', 'support', 'Support', 'ศูนย์ช่วยเหลือ', 'Customer support', 'default',
+   '<p>Need help? Contact our support team via the admin-configured channels.</p>',
+   '<p>ต้องการความช่วยเหลือ? ติดต่อทีมสนับสนุนของเรา</p>',
+   'i-lucide-headphones', 'PUBLISHED', false, true, 0, 2, true,
+   'Support', 'ศูนย์ช่วยเหลือ',
+   'Get help', 'รับความช่วยเหลือ', NOW()),
+  ('story', 'story', 'Story', 'เนื้อเรื่อง', 'Game story and lore', 'default',
+   '<p>The story can be edited from the admin panel.</p>',
+   '<p>เนื้อเรื่องสามารถแก้ไขได้จากแผงผู้ดูแล</p>',
+   'i-lucide-book-open', 'PUBLISHED', false, false, 0, 0, true,
+   'Story', 'เนื้อเรื่อง',
+   'Game story', 'เนื้อเรื่อง', NOW()),
+  ('game-guide', 'game-guide', 'Game Guide', 'คู่มือเกม', 'Game guide and tutorials', 'default',
+   '<p>Game guide content can be edited from the admin panel.</p>',
+   '<p>คู่มือเกมสามารถแก้ไขได้จากแผงผู้ดูแล</p>',
+   'i-lucide-map', 'PUBLISHED', false, true, 0, 1, true,
+   'Game Guide', 'คู่มือเกม',
+   'Game guide and tutorials', 'คู่มือเกม', NOW()),
+  ('gallery', 'gallery', 'Gallery', 'แกลเลอรี', 'Screenshots and artwork', 'default',
+   '<p>Gallery content can be edited from the admin panel.</p>',
+   '<p>แกลเลอรีสามารถแก้ไขได้จากแผงผู้ดูแล</p>',
+   'i-lucide-image', 'PUBLISHED', false, false, 0, 0, true,
+   'Gallery', 'แกลเลอรี',
+   'Screenshots and artwork', 'ภาพหน้าจอและงานศิลป์', NOW()),
+  ('download', 'download', 'Download', 'ดาวน์โหลด', 'Download links', 'default',
+   '<p>Download links are configured from the admin panel.</p>',
+   '<p>ลิงก์ดาวน์โหลดถูกกำหนดจากแผงผู้ดูแล</p>',
+   'i-lucide-download', 'PUBLISHED', false, false, 0, 0, true,
+   'Download', 'ดาวน์โหลด',
+   'Download', 'ดาวน์โหลด', NOW())
+ON CONFLICT (key) DO NOTHING;
