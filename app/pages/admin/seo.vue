@@ -36,7 +36,7 @@
         <div class="mt-5 rounded-lg border border-white/6 bg-white/2 p-4">
           <p class="mb-3 text-xs font-medium text-white/30">Google Preview</p>
           <p class="text-sm text-blue-400 truncate">{{ seo.siteTitle || 'Site Title' }}</p>
-          <p class="text-xs text-emerald-400 font-mono truncate">{{ seo.canonicalUrl || 'https://eternaltowersaga.com' }}</p>
+          <p class="text-xs text-emerald-400 font-mono truncate">{{ seo.canonicalUrl || 'https://your-domain.example' }}</p>
           <p class="mt-1 text-xs text-white/40 line-clamp-2">{{ seo.metaDesc || 'Meta description will appear here...' }}</p>
         </div>
       </div>
@@ -64,14 +64,14 @@
           <USelect v-model="seo.schemaType" :items="['VideoGame', 'WebApplication', 'SoftwareApplication']" />
         </UFormField>
         <UFormField label="Canonical URL" class="mt-3">
-          <UInput v-model="seo.canonicalUrl" placeholder="https://eternaltowersaga.com" class="font-mono" />
+          <UInput v-model="seo.canonicalUrl" placeholder="https://your-domain.example" class="font-mono" />
         </UFormField>
 
         <h3 class="panel-title mt-8">Social Preview</h3>
         <div class="overflow-hidden rounded-lg border border-white/6">
           <div v-if="seo.ogImage" class="h-32 bg-cover bg-center" :style="{ backgroundImage: `url(${seo.ogImage})` }" />
           <div class="bg-white/2 p-3">
-            <p class="text-xs text-white/30">eternaltowersaga.com</p>
+            <p class="text-xs text-white/30">{{ seo.canonicalUrl || 'your-domain.example' }}</p>
             <p class="text-sm font-semibold">{{ seo.siteTitle || 'Eternal Tower Saga' }}</p>
             <p class="text-xs text-white/40 line-clamp-2">{{ seo.metaDesc || 'Description' }}</p>
           </div>
@@ -98,7 +98,7 @@ const seo = ref({
   metaDescTh: 'Eternal Tower Saga — เกม Mobile MMORPG แนว K-Fantasy สุดมหากาพย์',
   ogImage: '/images/og-cover.png',
   gaId: '', gscVerification: '',
-  schemaType: 'VideoGame', canonicalUrl: 'https://eternaltowersaga.com',
+  schemaType: 'VideoGame', canonicalUrl: '',
 })
 
 const { toast, showToast } = useAdminToast()
