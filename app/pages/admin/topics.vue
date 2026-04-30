@@ -249,7 +249,8 @@ async function deleteTopic(topic: Topic) {
   showToast('Topic deleted')
 }
 
-await loadTopics()
+// SSR-safe: admin auth is client-cookie based, so fetch on client only
+onMounted(loadTopics)
 </script>
 
 <style scoped>
