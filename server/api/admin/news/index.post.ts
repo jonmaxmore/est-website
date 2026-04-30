@@ -5,7 +5,9 @@ import { toDuplicateConflictError } from '../../../utils/prisma-errors'
 import { sanitizeRichTextOptional } from '../../../utils/sanitize'
 
 const emptyToNull = (value: unknown) => (value === '' ? null : value)
-const nullableStringSchema = z.preprocess(emptyToNull, z.string().optional().nullable())
+// Zod 4: the preprocess wrapper itself is required by default; chain .optional()
+// AFTER preprocess so a missing field is accepted (not just '' or null).
+const nullableStringSchema = z.preprocess(emptyToNull, z.string().nullable()).optional()
 
 const newsSchema = z.object({
   titleEn: z.string().min(1),
