@@ -35,7 +35,7 @@ export default defineNuxtConfig({
   ],
 
   // ── CSS ──
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/admin.css'],
 
   // ── ระบบภาษา (i18n) ──
   // ภาษาไทยเป็น default → URL ไม่มี prefix เช่น /download

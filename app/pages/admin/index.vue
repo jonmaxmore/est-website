@@ -266,43 +266,47 @@ function formatDate(d: string) { return new Date(d).toLocaleDateString('en-US', 
 </script>
 
 <style scoped>
+/* Dashboard-specific patterns built on top of admin.css design tokens */
 .quick-action-card {
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  padding: 16px 12px; border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.04);
-  background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-  text-decoration: none; color: rgba(255,255,255,0.5);
-  transition: all 0.25s; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: var(--adm-sp-2);
+  padding: var(--adm-sp-4) var(--adm-sp-3); border-radius: var(--adm-radius-lg);
+  border: 1px solid var(--adm-border-soft);
+  background: linear-gradient(135deg, var(--adm-surface-2), var(--adm-surface-1));
+  text-decoration: none; color: var(--adm-ink-soft);
+  transition: all var(--adm-dur) var(--adm-ease); cursor: pointer;
 }
 .quick-action-card:hover {
-  border-color: rgba(212,168,67,0.2);
-  background: rgba(212,168,67,0.04);
-  color: #d4a843;
+  border-color: var(--adm-gold-medium);
+  background: var(--adm-gold-soft);
+  color: var(--adm-gold-light);
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 .stat-card {
-  display: flex; align-items: center; gap: 16px;
-  padding: 20px; border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.06);
-  background: rgba(255,255,255,0.03);
+  display: flex; align-items: center; gap: var(--adm-sp-4);
+  padding: var(--adm-sp-5); border-radius: var(--adm-radius-lg);
+  border: 1px solid var(--adm-border-soft);
+  background: var(--adm-surface-1);
+  transition: transform var(--adm-dur) var(--adm-ease), border-color var(--adm-dur) var(--adm-ease);
 }
+.stat-card:hover { transform: translateY(-2px); border-color: var(--adm-border-default); }
 .stat-icon {
-  display: flex; width: 48px; height: 48px; flex-shrink: 0;
+  display: flex; width: 44px; height: 44px; flex-shrink: 0;
   align-items: center; justify-content: center;
-  border-radius: 12px; font-size: 1.5rem;
+  border-radius: var(--adm-radius);
 }
 .panel {
-  border-radius: 16px; border: 1px solid rgba(255,255,255,0.06);
-  background: rgba(255,255,255,0.03); padding: 24px;
+  border-radius: var(--adm-radius-lg); border: 1px solid var(--adm-border-soft);
+  background: var(--adm-surface-1); padding: var(--adm-sp-6);
 }
 .panel-title {
-  margin-bottom: 20px; font-size: 0.6875rem; font-weight: 700;
+  margin: 0 0 var(--adm-sp-5); font-size: var(--adm-text-xs); font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.12em;
-  color: rgba(255,255,255,0.4);
+  color: var(--adm-ink-mute);
 }
 .th-cell {
-  padding: 8px 12px; text-align: left; font-size: 0.6875rem;
-  font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.3);
+  padding: var(--adm-sp-2) var(--adm-sp-3); text-align: left; font-size: var(--adm-text-xs);
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--adm-ink-mute);
 }
 </style>
