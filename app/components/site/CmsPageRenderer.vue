@@ -37,6 +37,10 @@ const props = defineProps<{
 
 const route = useRoute()
 const { locale } = useI18n()
+// ⚠️ All Nuxt composables MUST be called in setup, not inside reactive callbacks.
+// Calling useRuntimeConfig() inside useHead(() => ...) throws "[nuxt] instance unavailable".
+const runtimeConfig = useRuntimeConfig()
+const siteUrl = String(runtimeConfig.public.siteUrl || 'https://eternaltowersaga.com').replace(/\/$/, '')
 
 const isThai = computed(() => locale.value === 'th')
 const localizedTitle = computed(() => (isThai.value ? props.page.titleTh || props.page.titleEn : props.page.titleEn || props.page.titleTh))
@@ -46,7 +50,7 @@ const renderedHtml = computed(() => sanitizeRichHtml(isThai.value ? props.page.c
 
 useHead(() => ({
   title: localizedSeoTitle.value.includes('Eternal Tower Saga') ? localizedSeoTitle.value : `${localizedSeoTitle.value} | Eternal Tower Saga`,
-  link: [{ rel: 'canonical', href: `${String(useRuntimeConfig().public.siteUrl || 'https://eternaltowersaga.com').replace(/\/$/, '')}${route.path}` }],
+  link: [{ rel: 'canonical', href: `${siteUrl}${route.path}` }],
   meta: [
     { name: 'description', content: localizedDescription.value },
     { property: 'og:title', content: localizedSeoTitle.value },
