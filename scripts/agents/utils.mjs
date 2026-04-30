@@ -1,17 +1,32 @@
 /**
  * Shared utilities for AI Agent Teams
+ *
+ * Reads BASE + admin credentials from env vars.
+ * Required env (set in .env or shell):
+ *   AGENT_BASE_URL    — e.g. http://178.128.127.161 or http://localhost:3000
+ *   AGENT_ADMIN_EMAIL — admin login email
+ *   AGENT_ADMIN_PASSWORD — admin login password
  */
-const BASE = 'http://178.128.127.161'
+const BASE = process.env.AGENT_BASE_URL || 'http://localhost:3000'
+const ADMIN_EMAIL = process.env.AGENT_ADMIN_EMAIL
+const ADMIN_PASSWORD = process.env.AGENT_ADMIN_PASSWORD
+
 let cookie = ''
 let results = []
 
 export { BASE, results }
 
 export async function login() {
+  if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+    throw new Error(
+      'Missing AGENT_ADMIN_EMAIL or AGENT_ADMIN_PASSWORD env vars — refuse to embed credentials in source.',
+    )
+  }
+
   const res = await fetch(`${BASE}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'admin@eternaltowersaga.com', password: 'wErew@lf17john' }),
+    body: JSON.stringify({ email: ADMIN_EMAIL, password: ADMIN_PASSWORD }),
   })
   const setCookie = res.headers.get('set-cookie')
   if (setCookie) cookie = setCookie.split(';')[0]
