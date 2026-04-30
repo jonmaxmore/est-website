@@ -313,7 +313,8 @@ async function save() {
   }
 }
 
-await loadMenus()
+// SSR-safe: admin auth is client-cookie based, so fetch on client only
+onMounted(loadMenus)
 </script>
 
 <style scoped>
