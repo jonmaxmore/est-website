@@ -303,7 +303,8 @@ async function savePage() {
   }
 }
 
-await loadPages()
+// SSR-safe: admin auth is client-cookie based, so fetch on client only
+onMounted(loadPages)
 </script>
 
 <style scoped>
