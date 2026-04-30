@@ -1,7 +1,7 @@
 <template>
   <section
     id="features"
-    class="relative overflow-hidden bg-bg-1 py-32"
+    class="relative overflow-hidden bg-bg-1 py-20 md:py-24"
     data-screen-label="02 Game Guild"
   >
     <!-- Top gradient seam -->

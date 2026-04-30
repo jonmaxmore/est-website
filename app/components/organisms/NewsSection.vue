@@ -1,7 +1,7 @@
 <template>
   <section
     id="news"
-    class="relative overflow-hidden bg-bg-1 py-32"
+    class="relative overflow-hidden bg-bg-1 py-20 md:py-24"
     data-screen-label="04 News"
   >
     <div class="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bg-0 to-transparent" />

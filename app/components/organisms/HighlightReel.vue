@@ -1,7 +1,7 @@
 <template>
   <section
     id="highlight"
-    class="relative overflow-hidden bg-bg-0 py-32"
+    class="relative overflow-hidden bg-bg-0 py-20 md:py-24"
     data-screen-label="03 Highlight Reel"
   >
     <span

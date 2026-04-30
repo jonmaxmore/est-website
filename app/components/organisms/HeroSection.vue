@@ -87,7 +87,7 @@
       </h1>
 
       <p
-        class="text-ink-soft text-[clamp(0.95rem,1.4vw,1.125rem)] max-w-[560px] leading-relaxed mt-2"
+        class="text-ink-soft text-[clamp(1rem,1.4vw,1.125rem)] max-w-[600px] leading-[1.7] mt-3 px-4 sm:px-0"
         v-motion
         :initial="{ opacity: 0, y: 20 }"
         :enter="{ opacity: 1, y: 0, transition: { duration: 1100, delay: 600 } }"
