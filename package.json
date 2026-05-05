@@ -27,6 +27,9 @@
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
   },
+  "overrides": {
+    "@hono/node-server": "^1.19.13"
+  },
   "lint-staged": {
     "*.{ts,vue}": [
       "eslint --max-warnings 0"
