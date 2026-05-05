@@ -11,6 +11,7 @@
  */
 import { createHash } from 'node:crypto'
 import { redactReferrer, truncateUserAgent } from '../utils/privacy'
+import { extractUtmFromUrl } from '../utils/utm'
 
 export default defineEventHandler(async (event) => {
   const path = getRequestURL(event).pathname
@@ -45,6 +46,9 @@ export default defineEventHandler(async (event) => {
     const safeReferrer = redactReferrer(getRequestHeader(event, 'referer'))
     const safeUserAgent = truncateUserAgent(ua)
 
+    // ── UTM tags from the inbound request URL ──
+    const utm = extractUtmFromUrl(getRequestURL(event))
+
     // Fire-and-forget — ห้ามทำให้หน้าเว็บพัง
     prisma.pageView
       .create({
@@ -54,6 +58,9 @@ export default defineEventHandler(async (event) => {
           visitorId,
           referrer: safeReferrer,
           userAgent: safeUserAgent,
+          utmSource: utm.utmSource,
+          utmMedium: utm.utmMedium,
+          utmCampaign: utm.utmCampaign,
         },
       })
       .catch(() => {

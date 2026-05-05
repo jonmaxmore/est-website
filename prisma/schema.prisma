@@ -198,27 +198,37 @@ model Milestone {
 // ══════════ ANALYTICS ══════════
 
 model PageView {
-  id        String   @id @default(cuid())
-  path      String
-  sessionId String
-  visitorId String
-  referrer  String?
-  userAgent String?
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  path        String
+  sessionId   String
+  visitorId   String
+  referrer    String?
+  userAgent   String?
+  // UTM attribution: parsed from query string at request time. Capped at
+  // 64 chars in app code; trim happens before insert.
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  createdAt   DateTime @default(now())
 
   @@index([createdAt])
+  @@index([utmCampaign])
   @@map("page_views")
 }
 
 model ConversionEvent {
-  id        String   @id @default(cuid())
-  eventName String
-  eventData Json?
-  sessionId String
-  validated Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  eventName   String
+  eventData   Json?
+  sessionId   String
+  validated   Boolean  @default(false)
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  createdAt   DateTime @default(now())
 
   @@index([eventName, createdAt])
+  @@index([utmCampaign])
   @@map("conversion_events")
 }
 

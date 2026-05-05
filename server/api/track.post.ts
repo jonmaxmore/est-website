@@ -1,5 +1,6 @@
 import { toStoredTrackingPayload } from '../../app/shared/tracking/events'
 import { redactReferrer, truncateUserAgent } from '../utils/privacy'
+import { extractUtmFromUrl } from '../utils/utm'
 
 const TRACKING_EVENT_LIMIT_PER_MINUTE = 120
 
@@ -43,6 +44,18 @@ export default defineEventHandler(async (event) => {
   const safeReferrer = redactReferrer(getRequestHeader(event, 'referer'))
   const safeUserAgent = truncateUserAgent(getRequestHeader(event, 'user-agent'))
 
+  // ── UTM: prefer client-supplied (page URL parsed at dispatch time) ──
+  // fall back to extracting from the Referer header so a beacon fired without
+  // explicit UTM in the body still gets attributed to the originating page's
+  // campaign tags.
+  const clientUtm = extractUtmFromQueryShape(input)
+  const referrerUtm = extractUtmFromUrl(getRequestHeader(event, 'referer') ?? '')
+  const utm = {
+    utmSource: clientUtm.utmSource ?? referrerUtm.utmSource,
+    utmMedium: clientUtm.utmMedium ?? referrerUtm.utmMedium,
+    utmCampaign: clientUtm.utmCampaign ?? referrerUtm.utmCampaign,
+  }
+
   await prisma.conversionEvent.create({
     data: {
       eventName: payload.eventName,
@@ -53,8 +66,29 @@ export default defineEventHandler(async (event) => {
       },
       sessionId,
       validated: true,
+      utmSource: utm.utmSource,
+      utmMedium: utm.utmMedium,
+      utmCampaign: utm.utmCampaign,
     },
   })
 
   return { success: true }
 })
+
+/** Read utm_* keys from the loose body shape if the client included them. */
+function extractUtmFromQueryShape(input: { utm?: unknown }): {
+  utmSource: string | null
+  utmMedium: string | null
+  utmCampaign: string | null
+} {
+  const utm = (input.utm ?? null) as Record<string, unknown> | null
+  if (!utm || typeof utm !== 'object') {
+    return { utmSource: null, utmMedium: null, utmCampaign: null }
+  }
+  const clean = (v: unknown) => (typeof v === 'string' ? v.trim().slice(0, 64) || null : null)
+  return {
+    utmSource: clean(utm.source),
+    utmMedium: clean(utm.medium),
+    utmCampaign: clean(utm.campaign),
+  }
+}
