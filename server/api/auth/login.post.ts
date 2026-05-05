@@ -13,6 +13,8 @@
  */
 import { z } from 'zod'
 
+import { SESSION_TTL_MS } from '../../utils/session-policy'
+
 const loginSchema = z.object({
   email: z.string().email().max(255),
   password: z.string().min(1).max(255),
@@ -72,6 +74,9 @@ export default defineEventHandler(async (event) => {
     data: { lastLoginAt: new Date() },
   })
 
+  // 12-hour idle TTL — admin-auth.ts middleware enforces it on every
+  // /api/admin/* request and slides expiresAt forward on activity.
+  const now = Date.now()
   await setUserSession(event, {
     user: {
       id: user.id,
@@ -79,6 +84,8 @@ export default defineEventHandler(async (event) => {
       displayName: user.displayName,
       role: user.role,
     },
+    expiresAt: now + SESSION_TTL_MS,
+    issuedAt: now,
   })
 
   await logActivity(event, 'LOGIN', 'auth', `Admin login: ${user.email}`, user.id)
