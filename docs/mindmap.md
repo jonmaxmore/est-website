@@ -68,16 +68,17 @@ mindmap
     Database
       PostgreSQL
         AdminUser
-        PreRegistration
+        Subscriber
         NewsArticle
+        NewsArticleRevision
         MediaAsset
         Weapon
         Feature
         Highlight
-        GameEvent
         PageContent
         SiteConfig
         Milestone
+        MarketingBanner
         PageView
         ConversionEvent
         ActivityLog
@@ -117,8 +118,8 @@ graph TB
             H2[PUT/DELETE /api/admin/highlights/:id]
             W1[GET/POST /api/admin/weapons]
             W2[PUT/DELETE /api/admin/weapons/:id]
-            E1[GET/POST /api/admin/events]
-            E2[PUT/DELETE /api/admin/events/:id]
+            B1[GET/POST /api/admin/banners]
+            B2[PUT/DELETE /api/admin/banners/:id]
         end
 
         subgraph "Media"
@@ -132,8 +133,8 @@ graph TB
             S2[GET /api/admin/stats]
             S3[GET /api/admin/analytics]
             S4[GET /api/admin/activity]
-            S5[GET /api/admin/registrations]
-            S6[GET /api/admin/registrations/export]
+            S5[POST /api/admin/backup/export]
+            S6[POST /api/admin/backup/import]
         end
 
         subgraph "Users — SUPER_ADMIN only"
@@ -189,12 +190,12 @@ flowchart LR
 | Features | `/admin/features` | `/admin/features` | Feature | CRUD + MediaPicker |
 | Highlights | `/admin/highlights` | `/admin/highlights` | Highlight | CRUD + MediaPicker |
 | Weapons | `/admin/weapons` | `/admin/weapons` | Weapon | CRUD + MediaPicker + Stats |
-| Events | `/admin/events` | `/admin/events` | GameEvent | CRUD + Hot Time |
+| Banners | `/admin/banners` | `/admin/banners` | MarketingBanner | CRUD + scheduling |
 | FAQ | `/admin/faq` | `/admin/pages/faq` | PageContent (JSON) | CRUD items |
 | Pages | `/admin/pages` | `/admin/pages/:key` | PageContent | CMS static pages |
 | Media | `/admin/media` | `/admin/media` | MediaAsset | Upload + Delete |
 | Homepage | `/admin/homepage` | `/admin/config` | SiteConfig | Section builder |
-| Registrations | `/admin/registrations` | `/admin/registrations` | PreRegistration | View + Export CSV |
+| Topics | `/admin/topics` | `/admin/config` (webzine_topics) | SiteConfig JSON | Webzine taxonomy |
 | Users | `/admin/users` | `/admin/users` | AdminUser | CRUD (SUPER_ADMIN) |
 | Settings | `/admin/settings` | `/admin/config` | SiteConfig | Nav, SEO, Social |
 | Activity | `/admin/activity` | `/admin/activity` | ActivityLog | Audit trail |

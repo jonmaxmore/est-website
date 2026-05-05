@@ -23,7 +23,7 @@
 | # | งาน | ไฟล์ | สถานะ |
 |---|---|---|---|
 | 2.1 | PDPA: hash IP, truncate UA, redact referrer + retention purge | [server/utils/privacy.ts](server/utils/privacy.ts), [server/api/track.post.ts](server/api/track.post.ts), [server/middleware/track-pageview.ts](server/middleware/track-pageview.ts) | ✅ |
-| 2.2 | Article ↔ Event sync ใน $transaction + FK validation | [server/api/admin/events/](server/api/admin/events/) | ✅ |
+| 2.2 | Article ↔ Event sync ใน $transaction + FK validation | server/api/admin/events/ | ⊘ Removed in migration 20260505100000 — events feature retired |
 | 2.3 | Banner auto-expire (lazy reconcile, throttled 60s) | [server/utils/banner-expiry.ts](server/utils/banner-expiry.ts), [server/api/public/banners.get.ts](server/api/public/banners.get.ts) | ✅ |
 | 2.4 | Webhook: HMAC ทุก type + zod + idempotency + replay window | [server/api/integration/webhook.post.ts](server/api/integration/webhook.post.ts) | ✅ |
 | 2.5 | WP import: per-row transaction + sanitize HTML + per-row error log | [server/api/admin/backup/import-wp.post.ts](server/api/admin/backup/import-wp.post.ts) | ✅ |
@@ -124,8 +124,8 @@ CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_news_excerpt_trgm
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_news_pinned_published
   ON news_articles (pinned DESC, "publishedAt" DESC NULLS LAST);
 
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_pre_reg_referred_by
-  ON pre_registrations ("referredBy") WHERE "referredBy" IS NOT NULL;
+-- (idx_pre_reg_referred_by removed — pre_registrations table dropped in
+-- migration 20260505100000_remove_event_and_pre_registration)
 
 -- 3. Partial index — only published articles
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_news_published_only

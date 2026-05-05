@@ -2,24 +2,24 @@
 
 สรุปว่า admin tools ครอบคลุมระบบทั้งหมดของ EST Website แค่ไหน + จุดที่ควรพัฒนาต่อ
 
-อ้างอิง: รายงาน audit 2026-04-30
+อ้างอิง: รายงาน audit 2026-04-30, อัปเดตหลัง migration `20260505100000_remove_event_and_pre_registration` (GameEvent + PreRegistration ถูกลบออกจาก schema)
 
 ---
 
-## ✅ Coverage Matrix (12/13 models ครบ + 46 endpoints)
+## ✅ Coverage Matrix (12 models ครบ + 46 endpoints)
 
 | Model | List | Get | Create | Update | Delete | Admin Page | Status |
 |---|---|---|---|---|---|---|---|
 | AdminUser | ✅ | — | ✅ | ✅ | ✅ | [users.vue](app/pages/admin/users.vue) | ครบ |
-| PreRegistration | ✅ | — | — | — | — | [registrations.vue](app/pages/admin/registrations.vue) | Read-only (ตามจุดประสงค์) |
-| NewsArticle | ✅ | — | ✅ | ✅ | ✅ | [news/index.vue](app/pages/admin/news/index.vue) | ครบ |
+| Subscriber | (planned) | — | (public form) | — | (unsubscribe link) | (planned) | Public-only signup ตอนนี้, admin UI Q3 |
+| NewsArticle | ✅ | — | ✅ | ✅ | ✅ | [news/index.vue](app/pages/admin/news/index.vue) | ครบ + revision history (audit-2 fix) |
+| NewsArticleRevision | (planned) | — | auto on update | — | retention cleanup | (planned) | Schema-ready; revert UI Q3 |
 | MediaAsset | ✅ | ✅ | ✅ (upload) | ✅ patch | ✅ | [media.vue](app/pages/admin/media.vue) | ครบ |
 | Weapon | ✅ | — | ✅ | ✅ | ✅ | [weapons.vue](app/pages/admin/weapons.vue) | ครบ |
-| GameEvent | ✅ | — | ✅ | ✅ | ✅ | [events.vue](app/pages/admin/events.vue) | ครบ |
 | Feature | ✅ | — | ✅ | ✅ | ✅ | [features.vue](app/pages/admin/features.vue) | ครบ |
 | Highlight | ✅ | — | ✅ | ✅ | ✅ | [highlights.vue](app/pages/admin/highlights.vue) | ครบ |
 | Milestone | ✅ | — | ✅ | ✅ | ✅ | [milestones.vue](app/pages/admin/milestones.vue) | ครบ |
-| MarketingBanner | ✅ | — | ✅ | ✅ | ✅ | [banners.vue](app/pages/admin/banners.vue) | ครบ |
+| MarketingBanner | ✅ | — | ✅ | ✅ | ✅ | [banners.vue](app/pages/admin/banners.vue) | ครบ + startsAt/endsAt UI (audit-2 fix) |
 | PageContent | ✅ | ✅ | ✅ | ✅ | — | [pages.vue](app/pages/admin/pages.vue) | ขาด Delete (เหลือไว้เพราะระบบ system page) |
 | SiteConfig | ✅ | ✅ | — | ✅ (upsert) | — | settings/menus/seo/integrations | ครบ (ผ่าน upsert) |
 | Topic | — | — | — | ผ่าน config | — | [topics.vue](app/pages/admin/topics.vue) | จัดการผ่าน config JSON |
@@ -72,15 +72,11 @@ CONTENT (เนื้อหา publishable)
   ├─ Weapons
   ├─ Features
   ├─ Highlights
-  ├─ Events & Hot Time
   ├─ Milestones
   ├─ Download Page
   ├─ FAQ
   ├─ Pages
   └─ Media
-
-MARKETING
-  └─ Registrations
 
 APPEARANCE
   ├─ Navigation
@@ -147,7 +143,7 @@ SYSTEM (เฉพาะ SUPER_ADMIN)
 2. **typeCheck: false** ใน nuxt.config — มี `Record<string, any>` หลายจุด (Sprint 3 deferred)
 3. **Translation queue** — ไม่มีหน้ารวม "บทความที่ EN ยังไม่เสร็จ" (suggestion future)
 4. **Live preview** — ไม่มี iframe preview เหมือน Sanity Studio (suggestion future)
-5. **Email campaigns** — ยังไม่มี module (มี registrations data พร้อมส่งแล้ว, แต่ไม่มี UI broadcast)
+5. **Email campaigns** — ยังไม่มี admin broadcast UI (Subscriber model + Resend API ลงพื้นฐานแล้ว — audit-2 sprint E)
 
 ---
 
