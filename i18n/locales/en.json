@@ -130,6 +130,14 @@
     "accept": "Accept",
     "reject": "Reject"
   },
+  "newsletter": {
+    "label": "Get launch updates",
+    "placeholder": "you@email.com",
+    "subscribe": "Subscribe",
+    "sending": "Sending…",
+    "success": "Check your inbox to confirm.",
+    "error": "Could not subscribe. Please try again later."
+  },
   "pages": {
     "faq": "FAQ",
     "gallery": "Gallery",

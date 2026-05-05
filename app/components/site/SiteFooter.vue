@@ -22,6 +22,9 @@
         <div class="mt-4">
           <SiteLanguageSwitcher />
         </div>
+        <div class="mt-6">
+          <SiteNewsletterSignup />
+        </div>
       </div>
 
       <!-- Links — CMS-driven -->

@@ -234,6 +234,32 @@ model ConversionEvent {
 
 // ══════════ ACTIVITY LOG ══════════
 
+model Subscriber {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  locale            String    @default("th") // 'th' | 'en'
+  status            String    @default("PENDING") // PENDING | CONFIRMED | UNSUBSCRIBED
+  confirmedAt       DateTime?
+  unsubscribedAt    DateTime?
+  // Double-opt-in token: random per subscription, single-use, expires after 24h.
+  // Cleared after the user clicks the confirm link.
+  confirmToken      String?   @unique
+  confirmTokenExp   DateTime?
+  // One-click unsubscribe (RFC 8058). Generated at confirm-time, never expires.
+  unsubscribeToken  String?   @unique
+  // UTM at signup time so we can attribute newsletter growth to channels.
+  utmSource         String?
+  utmMedium         String?
+  utmCampaign       String?
+  ipHash            String? // hashIp() at signup; for abuse rate limit lookups
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("subscribers")
+}
+
 model ActivityLog {
   id         String   @id @default(cuid())
   userId     String
