@@ -199,8 +199,7 @@ const heroConfig = {
   backgroundMode: 'image' as const,
   backgroundVideo: '',
   buttons: [
-    { id: 'pre-register', labelEn: 'Pre-register', labelTh: 'ลงทะเบียน', href: '/event', variant: 'primary' as const, visible: true, order: 0, target: '_self' as const },
-    { id: 'download', labelEn: 'Download', labelTh: 'ดาวน์โหลด', href: '/download', variant: 'secondary' as const, visible: true, order: 1, target: '_self' as const },
+    { id: 'download', labelEn: 'Download', labelTh: 'ดาวน์โหลด', href: '/download', variant: 'primary' as const, visible: true, order: 0, target: '_self' as const },
   ],
 }
 

@@ -82,7 +82,7 @@
         </div>
       </div>
 
-      <!-- Dual CTA -->
+      <!-- Primary CTA -->
       <div
         class="flex flex-wrap items-center justify-center gap-4"
         v-motion
@@ -90,26 +90,19 @@
         :visible-once="{ opacity: 1, y: 0, transition: { duration: 900, delay: 800 } }"
       >
         <NuxtLink
-          to="/event"
+          to="/download"
           class="btn-magnetic group relative inline-flex min-h-[60px] items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-gold-bright via-gold to-gold-deep px-12 font-mono text-sm font-bold uppercase tracking-[0.2em] text-bg-0 shadow-[0_0_40px_rgba(232,181,71,0.4)] transition-all duration-500 hover:shadow-[0_0_70px_rgba(232,181,71,0.7)]"
-          @click="() => trackPreRegister()"
+          @click="trackDownload('cta', 'Download')"
         >
           <span class="relative z-[1] flex items-center gap-3">
-            {{ t('cta.preRegister') }}
+            <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2 V11 M4 7 L8 11 L12 7 M3 14 H13" /></svg>
+            {{ t('cta.download') }}
             <svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8 H13 M9 4 L13 8 L9 12" /></svg>
           </span>
           <span
             class="absolute inset-0 -left-full bg-gradient-to-r from-transparent via-white/30 to-transparent"
             style="animation: glow-sweep 3.5s ease-in-out infinite;"
           />
-        </NuxtLink>
-        <NuxtLink
-          to="/download"
-          class="btn-magnetic inline-flex min-h-[60px] items-center justify-center gap-3 rounded-full border border-gold/30 bg-bg-1/40 px-10 font-mono text-sm font-bold uppercase tracking-[0.2em] text-gold backdrop-blur-md transition-all duration-500 hover:border-gold/60 hover:bg-gold/10 hover:text-gold-bright"
-          @click="trackDownload('cta', 'Download')"
-        >
-          <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2 V11 M4 7 L8 11 L12 7 M3 14 H13" /></svg>
-          {{ t('cta.download') }}
         </NuxtLink>
       </div>
 
@@ -140,7 +133,7 @@ const props = withDefaults(defineProps<{
 })
 
 const { t } = useI18n()
-const { trackDownload, trackPreRegister } = useTracking()
+const { trackDownload } = useTracking()
 
 const stats = computed<CTAStat[]>(() => props.stats)
 </script>

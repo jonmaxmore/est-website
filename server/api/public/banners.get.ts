@@ -6,7 +6,6 @@ const routeTypes = new Set<BannerRouteType>([
   'news_index',
   'article_detail',
   'topic_page',
-  'event_page',
 ])
 
 export default defineEventHandler(async (event) => {
@@ -24,9 +23,6 @@ export default defineEventHandler(async (event) => {
     include: {
       article: { select: { id: true, slug: true, titleEn: true, titleTh: true } },
       page: { select: { key: true, slug: true, titleEn: true, titleTh: true } },
-      event: {
-        select: { id: true, titleEn: true, titleTh: true, startsAt: true, endsAt: true },
-      },
     },
     orderBy: [{ placement: 'asc' }, { priority: 'desc' }, { updatedAt: 'desc' }],
   })

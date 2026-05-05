@@ -9,31 +9,6 @@ import {
 } from '../../app/shared/tracking/events'
 
 describe('tracking event mapping', () => {
-  it('maps pre-registration success to GA4 and Meta standard events', () => {
-    const payload = { platform: 'ANDROID', region: 'TH', path: '/event' }
-
-    assert.deepEqual(toGoogleAnalyticsEvent('pre_register_success', payload), {
-      name: 'generate_lead',
-      params: {
-        content_type: 'pre_registration',
-        method: 'ANDROID',
-        region: 'TH',
-        page_path: '/event',
-      },
-    })
-
-    assert.deepEqual(toMetaPixelEvent('pre_register_success', payload), {
-      method: 'track',
-      name: 'CompleteRegistration',
-      params: {
-        content_name: 'pre_registration',
-        content_category: 'conversion',
-        platform: 'ANDROID',
-        region: 'TH',
-      },
-    })
-  })
-
   it('maps download and social clicks to structured engagement events', () => {
     assert.equal(toGoogleAnalyticsEvent('download_click', { platform: 'pc' }).name, 'select_content')
     assert.equal(toMetaPixelEvent('download_click', { platform: 'pc' }).name, 'ViewContent')

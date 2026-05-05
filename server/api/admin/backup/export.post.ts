@@ -4,12 +4,14 @@
  * ⚠️ Disaster recovery ใช้ pg_dump (ดู scripts/backup-db.sh)
  * ไฟล์ JSON นี้เก็บเฉพาะเนื้อหา CMS — ไม่เหมาะสำหรับ full restore
  *
- * Schema version: 2.0 — รวมโมเดล CMS ทั้งหมด (banners, events, milestones)
- *   1.0 → 2.0: เพิ่ม banners, events, milestones
+ * Schema version: 3.0 — dropped events + registrations (post-launch cleanup)
+ *   1.0 → 2.0: added banners, events, milestones
+ *   2.0 → 3.0: removed events + registrations (GameEvent and PreRegistration
+ *              models retired at official launch)
  */
 import { Prisma } from '@prisma/client'
 
-const EXPORT_SCHEMA_VERSION = '2.0'
+const EXPORT_SCHEMA_VERSION = '3.0'
 const FIND_LIMIT = 5000
 
 export default defineEventHandler(async (event) => {
@@ -28,13 +30,6 @@ export default defineEventHandler(async (event) => {
   }
   if (body.weapons) {
     result.weapons = await prisma.weapon.findMany({ orderBy: { id: 'asc' } })
-  }
-  if (body.registrations) {
-    // Registrations มี PII — จำกัดจำนวน + ต้องใช้สำหรับ data export PDPA เท่านั้น
-    result.registrations = await prisma.preRegistration.findMany({
-      take: FIND_LIMIT,
-      orderBy: { createdAt: 'asc' },
-    })
   }
   if (body.config) {
     result.config = await prisma.siteConfig.findMany()
@@ -63,9 +58,6 @@ export default defineEventHandler(async (event) => {
   }
   if (body.banners) {
     result.banners = await prisma.marketingBanner.findMany({ take: FIND_LIMIT, orderBy: { id: 'asc' } })
-  }
-  if (body.events) {
-    result.events = await prisma.gameEvent.findMany({ take: FIND_LIMIT, orderBy: { startsAt: 'asc' } })
   }
   if (body.milestones) {
     result.milestones = await prisma.milestone.findMany({ orderBy: { tier: 'asc' } })

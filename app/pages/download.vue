@@ -26,9 +26,6 @@
           <h2 class="text-2xl font-bold">Choose Platform</h2>
           <p class="mt-2 max-w-2xl text-sm leading-7 text-white/50">{{ localized('primaryNote') }}</p>
         </div>
-        <NuxtLink to="/event" class="text-sm font-semibold text-gold no-underline hover:text-gold-light">
-          Pre-register for launch rewards
-        </NuxtLink>
       </div>
 
       <div class="grid gap-4 md:grid-cols-3">

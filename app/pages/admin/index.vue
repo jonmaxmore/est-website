@@ -28,50 +28,8 @@
       </div>
     </div>
 
-    <!-- Chart + Distribution -->
-    <div class="mb-6 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
-      <!-- Registration Chart -->
-      <div class="panel">
-        <h3 class="panel-title">Registration Trend (14 Days)</h3>
-        <div class="flex h-[180px] items-end gap-1">
-          <div v-for="day in chartData" :key="day.date" class="flex flex-1 flex-col items-center justify-end h-full" :title="`${day.date}: ${day.count}`">
-            <div class="w-full max-w-8 min-h-1 rounded-t bg-gradient-to-t from-gold to-gold-light transition-all duration-500" :style="{ height: barHeight(day.count) }" />
-            <span class="mt-1.5 text-[0.625rem] text-white/30">{{ day.date.slice(-2) }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Distributions -->
-      <div class="panel">
-        <h3 class="panel-title">Platform Distribution</h3>
-        <div class="mb-8 flex flex-col gap-3.5">
-          <div v-for="p in platformData" :key="p.platform" class="flex items-center gap-3">
-            <div class="flex w-[90px] flex-shrink-0 items-center gap-2 text-sm">
-              <span>{{ platformIconLabel(p.platform) }}</span><span>{{ p.platform }}</span>
-            </div>
-            <div class="h-2 flex-1 overflow-hidden rounded-full bg-white/4">
-              <div class="h-full rounded-full bg-gradient-to-r from-blue-500 to-blue-400 transition-all duration-500" :style="{ width: platformPercent(p.count) }" />
-            </div>
-            <span class="w-10 text-right text-xs text-white/30">{{ p.count }}</span>
-          </div>
-        </div>
-        <h3 class="panel-title">Region Distribution</h3>
-        <div class="flex flex-col gap-3.5">
-          <div v-for="r in regionData" :key="r.region" class="flex items-center gap-3">
-            <div class="flex w-[90px] flex-shrink-0 items-center gap-2 text-sm">
-              <span>{{ regionIconLabel(r.region) }}</span><span>{{ r.region }}</span>
-            </div>
-            <div class="h-2 flex-1 overflow-hidden rounded-full bg-white/4">
-              <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500" :style="{ width: regionPercent(r.count) }" />
-            </div>
-            <span class="w-10 text-right text-xs text-white/30">{{ r.count }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Content Status + Recent Activity -->
-    <div class="mb-6 grid gap-4 lg:grid-cols-3">
+    <div class="mb-6 grid gap-4 lg:grid-cols-2">
       <!-- Content Completion -->
       <div class="panel">
         <h3 class="panel-title">Content Status</h3>
@@ -84,31 +42,6 @@
               {{ item.count }}
             </span>
           </div>
-        </div>
-      </div>
-
-      <!-- Recent Registrations -->
-      <div class="panel overflow-hidden">
-        <div class="mb-4 flex items-center justify-between">
-          <h3 class="panel-title !mb-0">Recent Registrations</h3>
-          <NuxtLink to="/admin/registrations" class="text-xs font-medium text-gold no-underline">View all →</NuxtLink>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead><tr class="border-b border-white/6">
-              <th class="th-cell">Email</th><th class="th-cell">Platform</th><th class="th-cell">Date</th>
-            </tr></thead>
-            <tbody>
-              <tr v-for="r in recentRegs" :key="r.id" class="border-b border-white/3">
-                <td class="max-w-[140px] truncate px-3 py-2.5">{{ r.email }}</td>
-                <td class="px-3 py-2.5"><AdminStatusBadge :status="r.platform" /></td>
-                <td class="px-3 py-2.5 text-white/30 whitespace-nowrap">{{ formatDate(r.createdAt) }}</td>
-              </tr>
-              <tr v-if="recentRegs.length === 0">
-                <td colspan="3" class="px-3 py-8 text-center text-white/30">No registrations yet</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
 
@@ -165,12 +98,10 @@
   หน้าแรกของ admin panel — แสดงภาพรวมทั้งหมดในที่เดียว
 
   ส่วนประกอบ:
-  - Quick Actions: ทางลัดไป CMS pages, Webzine, Events
-  - Stat Cards: นับข่าว, อาวุธ, ลงทะเบียน, media, page views
-  - กราฟลงทะเบียนรายวัน (14 วัน) — bar chart
-  - Platform/Region distribution — progress bars
+  - Quick Actions: ทางลัดไป CMS pages, Webzine, Banners
+  - Stat Cards: นับข่าว, อาวุธ, media, page views
   - Content Status: live banners, draft articles, missing assets
-  - Recent: ลงทะเบียน, activity log, บทความ
+  - Recent: activity log, บทความ
 
   ข้อมูลมาจาก: GET /api/admin/stats (ดู stats.get.ts)
 -->
@@ -180,7 +111,7 @@ const { user } = useUserSession()
 
 interface Stats {
   counts: {
-    news: number; publishedNews: number; weapons: number; registrations: number
+    news: number; publishedNews: number; weapons: number
     features: number; highlights: number; media: number; todayPageViews: number
   }
   webzineSummary: {
@@ -190,20 +121,15 @@ interface Stats {
     articlesMissingTopic: number
     articlesMissingFeaturedImage: number
   }
-  platformStats: Array<{ platform: string; count: number }>
-  regionStats: Array<{ region: string; count: number }>
-  dailyRegistrations: Array<{ date: string; count: number }>
-  recentRegistrations: Array<{ id: string; email: string; platform: string; region: string; createdAt: string }>
   recentNews: Array<{ id: number; titleEn: string; status: string; category: string; createdAt: string }>
   recentActivity: Array<{ action: string; resource: string; userName: string; createdAt: string }>
 }
 
 const { data: stats } = await useFetch<Stats>('/api/admin/stats', {
   default: () => ({
-    counts: { news: 0, publishedNews: 0, weapons: 0, registrations: 0, features: 0, highlights: 0, media: 0, todayPageViews: 0 },
+    counts: { news: 0, publishedNews: 0, weapons: 0, features: 0, highlights: 0, media: 0, todayPageViews: 0 },
     webzineSummary: { liveBanners: 0, scheduledBanners: 0, draftArticles: 0, articlesMissingTopic: 0, articlesMissingFeaturedImage: 0 },
-    platformStats: [], regionStats: [], dailyRegistrations: [],
-    recentRegistrations: [], recentNews: [], recentActivity: [],
+    recentNews: [], recentActivity: [],
   }),
 })
 
@@ -222,13 +148,11 @@ const quickActions = [
   { icon: 'i-lucide-newspaper', label: 'Webzine Articles', to: '/admin/news' },
   { icon: 'i-lucide-tags', label: 'Topics', to: '/admin/topics' },
   { icon: 'i-lucide-flag', label: 'Banner Control', to: '/admin/banners' },
-  { icon: 'i-lucide-calendar', label: 'Events', to: '/admin/events' },
   { icon: 'i-lucide-external-link', label: 'View Site', to: '/' },
 ]
 
 // ── Stat Cards: แปลงตัวเลขจาก API เป็น UI cards ──
 const statCards = computed(() => [
-  { icon: 'i-lucide-users', label: 'Registrations', value: stats.value.counts.registrations.toLocaleString('en-US'), bg: 'rgba(59,130,246,0.12)' },
   { icon: 'i-lucide-newspaper', label: 'News', value: stats.value.counts.news.toString(), bg: 'rgba(16,185,129,0.12)' },
   { icon: 'i-lucide-check-circle', label: 'Published', value: stats.value.counts.publishedNews.toString(), bg: 'rgba(245,158,11,0.12)' },
   { icon: 'i-lucide-swords', label: 'Weapons', value: stats.value.counts.weapons.toString(), bg: 'rgba(139,92,246,0.12)' },
@@ -247,21 +171,9 @@ const contentStatus = computed(() => [
   { icon: 'i-lucide-image-off', label: 'Missing Featured Image', count: stats.value.webzineSummary.articlesMissingFeaturedImage },
 ])
 
-const chartData = computed(() => stats.value.dailyRegistrations || [])
-const platformData = computed(() => stats.value.platformStats || [])
-const regionData = computed(() => stats.value.regionStats || [])
-const recentRegs = computed(() => stats.value.recentRegistrations || [])
 const recentArticles = computed(() => stats.value.recentNews || [])
 const recentActivity = computed(() => stats.value.recentActivity || [])
-const maxChart = computed(() => Math.max(1, ...chartData.value.map((d) => d.count)))
-const maxPlatform = computed(() => Math.max(1, ...platformData.value.map((p) => p.count)))
-const maxRegion = computed(() => Math.max(1, ...regionData.value.map((r) => r.count)))
 
-function barHeight(count: number) { return `${(count / maxChart.value) * 100}%` }
-function platformPercent(count: number) { return `${(count / maxPlatform.value) * 100}%` }
-function regionPercent(count: number) { return `${(count / maxRegion.value) * 100}%` }
-function platformIconLabel(p: string) { return p === 'IOS' ? 'iOS' : p === 'ANDROID' ? 'AND' : 'PC' }
-function regionIconLabel(r: string) { return r === 'TH' ? 'TH' : r === 'SEA' ? 'SEA' : 'GLB' }
 function formatDate(d: string) { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) }
 </script>
 

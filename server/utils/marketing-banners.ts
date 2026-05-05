@@ -43,10 +43,9 @@ const bannerPayloadSchema = z.object({
   bodyTh: nullableStringSchema,
   desktopImage: nullableStringSchema,
   mobileImage: nullableStringSchema,
-  targetType: z.enum(['article', 'page', 'event', 'url']),
+  targetType: z.enum(['article', 'page', 'url']),
   targetArticleId: nullableIntSchema,
   targetPageKey: nullableStringSchema,
-  targetEventId: nullableStringSchema,
   targetTopicKey: nullableStringSchema,
   targetUrl: nullableStringSchema,
   targetNewTab: z.boolean().optional().default(false),
@@ -80,10 +79,6 @@ export function parseMarketingBannerPayload(input: unknown) {
 
   if (parsed.targetType === 'page' && !parsed.targetPageKey) {
     throw new Error('Page banners require targetPageKey')
-  }
-
-  if (parsed.targetType === 'event' && !parsed.targetEventId) {
-    throw new Error('Event banners require targetEventId')
   }
 
   if (parsed.targetType === 'url' && !parsed.targetUrl) {

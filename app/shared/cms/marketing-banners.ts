@@ -14,7 +14,6 @@ export const BANNER_SCOPES = [
   'news_index',
   'article_detail',
   'topic_page',
-  'event_page',
   'specific_article',
   'specific_topic',
 ] as const
@@ -31,16 +30,15 @@ export type BannerScope = (typeof BANNER_SCOPES)[number]
  *   news_index:      announcement_bar, popup, sidebar, footer_strip
  *   article_detail:  announcement_bar, popup, sidebar, article_inline, footer_strip
  *   topic_page:      announcement_bar, popup, sidebar, footer_strip
- *   event_page:      announcement_bar, popup, floating, footer_strip
  */
 export const PLACEMENT_ALLOWED_SCOPES: Record<BannerPlacement, readonly BannerScope[]> = {
-  popup: ['global', 'homepage', 'news_index', 'article_detail', 'topic_page', 'event_page'],
-  floating: ['global', 'homepage', 'event_page'],
-  announcement_bar: ['global', 'homepage', 'news_index', 'article_detail', 'topic_page', 'event_page'],
+  popup: ['global', 'homepage', 'news_index', 'article_detail', 'topic_page'],
+  floating: ['global', 'homepage'],
+  announcement_bar: ['global', 'homepage', 'news_index', 'article_detail', 'topic_page'],
   homepage_inline: ['homepage'],
   sidebar: ['news_index', 'article_detail', 'topic_page', 'specific_topic'],
   article_inline: ['article_detail', 'specific_article'],
-  footer_strip: ['global', 'homepage', 'news_index', 'article_detail', 'topic_page', 'event_page'],
+  footer_strip: ['global', 'homepage', 'news_index', 'article_detail', 'topic_page'],
 } as const
 
 export function isAllowedPlacementScope(placement: BannerPlacement, scope: BannerScope): boolean {
@@ -75,14 +73,6 @@ export const BANNER_PRESETS = [
     placement: 'homepage_inline' as const,
     scope: 'homepage' as const,
     description: 'Embedded card on homepage between sections.',
-  },
-  {
-    key: 'event-floating',
-    labelEn: 'Event Floating Card',
-    labelTh: 'การ์ดลอยหน้า Event',
-    placement: 'floating' as const,
-    scope: 'event_page' as const,
-    description: 'Bottom-right corner card on event pages. Auto-hides if popup is showing.',
   },
   {
     key: 'news-sidebar',

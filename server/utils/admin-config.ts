@@ -9,7 +9,7 @@
  *
  * config keys ที่รองรับ:
  * navigation, seo, social, appearance, maintenance,
- * homepage_sections, integrations, event_page, download_page,
+ * homepage_sections, integrations, download_page,
  * webzine_topics, faq
  */
 import { z } from 'zod'
@@ -67,46 +67,6 @@ const heroSectionConfigSchema = z.object({
   backgroundMode: z.enum(HERO_BACKGROUND_MODES).optional().default('image'),
   backgroundVideo: z.string().optional().default(''),
   buttons: z.array(heroButtonSchema).optional().default([]),
-})
-
-const eventRewardSchema = z.object({
-  id: z.string().optional(),
-  titleEn: z.string().optional().default(''),
-  titleTh: z.string().optional().default(''),
-  descriptionEn: z.string().optional().default(''),
-  descriptionTh: z.string().optional().default(''),
-  image: z.string().optional().default(''),
-  label: z.string().optional().default(''),
-  visible: z.boolean().optional().default(true),
-  order: z.number().int().nonnegative().optional().default(0),
-})
-
-const eventPageSchema = z.object({
-  badgeEn: z.string().optional().default('Pre-registration'),
-  badgeTh: z.string().optional().default('Pre-registration'),
-  titleEn: z.string().optional().default('Pre-registration'),
-  titleTh: z.string().optional().default('Pre-registration'),
-  subtitleEn: z.string().optional().default('Join early and unlock launch rewards for everyone.'),
-  subtitleTh: z.string().optional().default('Join early and unlock launch rewards for everyone.'),
-  backgroundImage: z.string().optional().default('/images/hero-bg.webp'),
-  targetDate: z.string().optional().default('2026-10-01T00:00:00+07:00'),
-  countdownLabelEn: z.string().optional().default('Launch target'),
-  countdownLabelTh: z.string().optional().default('Launch target'),
-  registrationLabelEn: z.string().optional().default('Total Pre-Registrations'),
-  registrationLabelTh: z.string().optional().default('Total Pre-Registrations'),
-  registrationDisplayMode: z.enum(['actual', 'manual', 'actual_plus_manual']).optional().default('actual'),
-  manualRegistrationCount: z.number().int().nonnegative().optional().default(0),
-  formTitleEn: z.string().optional().default('Pre-register now'),
-  formTitleTh: z.string().optional().default('Pre-register now'),
-  formDescriptionEn: z.string().optional().default('Get exclusive rewards at launch.'),
-  formDescriptionTh: z.string().optional().default('Get exclusive rewards at launch.'),
-  legalCopyEn: z.string().optional().default('By registering, you agree to receive game updates.'),
-  legalCopyTh: z.string().optional().default('By registering, you agree to receive game updates.'),
-  rewardsTitleEn: z.string().optional().default('Pre-Registration Rewards'),
-  rewardsTitleTh: z.string().optional().default('Pre-Registration Rewards'),
-  rewardsSubtitleEn: z.string().optional().default('Everyone who pre-registers will receive these launch rewards.'),
-  rewardsSubtitleTh: z.string().optional().default('Everyone who pre-registers will receive these launch rewards.'),
-  baseRewards: z.array(eventRewardSchema).optional().default([]),
 })
 
 const downloadPlatformSchema = z.object({
@@ -229,41 +189,7 @@ export const DEFAULT_HERO_SECTION_CONFIG = {
   backgroundMode: 'image' as const,
   backgroundVideo: '',
   buttons: [
-    { id: 'pre-register', labelEn: 'Pre-register', labelTh: 'Pre-register', href: '/event', variant: 'primary' as const, visible: true, order: 0, target: '_self' as const },
-    { id: 'download', labelEn: 'Download', labelTh: 'Download', href: '/download', variant: 'secondary' as const, visible: true, order: 1, target: '_self' as const },
-  ],
-}
-
-export const DEFAULT_EVENT_PAGE_CONFIG = {
-  badgeEn: 'Pre-registration',
-  badgeTh: 'Pre-registration',
-  titleEn: 'Pre-registration',
-  titleTh: 'Pre-registration',
-  subtitleEn: 'Join early and unlock launch rewards for everyone.',
-  subtitleTh: 'Join early and unlock launch rewards for everyone.',
-  backgroundImage: '/images/hero-bg.webp',
-  targetDate: '2026-10-01T00:00:00+07:00',
-  countdownLabelEn: 'Launch target',
-  countdownLabelTh: 'Launch target',
-  registrationLabelEn: 'Total Pre-Registrations',
-  registrationLabelTh: 'Total Pre-Registrations',
-  registrationDisplayMode: 'actual' as const,
-  manualRegistrationCount: 0,
-  formTitleEn: 'Pre-register now',
-  formTitleTh: 'Pre-register now',
-  formDescriptionEn: 'Get exclusive rewards at launch.',
-  formDescriptionTh: 'Get exclusive rewards at launch.',
-  legalCopyEn: 'By registering, you agree to receive game updates.',
-  legalCopyTh: 'By registering, you agree to receive game updates.',
-  rewardsTitleEn: 'Pre-Registration Rewards',
-  rewardsTitleTh: 'Pre-Registration Rewards',
-  rewardsSubtitleEn: 'Everyone who pre-registers will receive these launch rewards.',
-  rewardsSubtitleTh: 'Everyone who pre-registers will receive these launch rewards.',
-  baseRewards: [
-    { id: 'gems', titleEn: 'Gems x1000', titleTh: 'Gems x1000', descriptionEn: 'Premium currency to start strong.', descriptionTh: 'Premium currency to start strong.', image: '', label: 'GEM', visible: true, order: 0 },
-    { id: 'sr-box', titleEn: 'SR Weapon Box', titleTh: 'SR Weapon Box', descriptionEn: 'Choose any SR weapon at launch.', descriptionTh: 'Choose any SR weapon at launch.', image: '', label: 'SR', visible: true, order: 1 },
-    { id: 'title', titleEn: 'Exclusive Title', titleTh: 'Exclusive Title', descriptionEn: 'Limited title for early supporters.', descriptionTh: 'Limited title for early supporters.', image: '', label: 'TTL', visible: true, order: 2 },
-    { id: 'frame', titleEn: 'Avatar Frame', titleTh: 'Avatar Frame', descriptionEn: 'Limited edition profile frame.', descriptionTh: 'Limited edition profile frame.', image: '', label: 'AVT', visible: true, order: 3 },
+    { id: 'download', labelEn: 'Download', labelTh: 'Download', href: '/download', variant: 'primary' as const, visible: true, order: 0, target: '_self' as const },
   ],
 }
 
@@ -363,24 +289,6 @@ function validateHomepageSectionsForWrite(
   }
 }
 
-export function normalizeEventPageConfig(value: unknown) {
-  const parsed = eventPageSchema.safeParse(value)
-  const config = parsed.success ? parsed.data : DEFAULT_EVENT_PAGE_CONFIG
-  const baseRewards = config.baseRewards.length > 0 ? config.baseRewards : DEFAULT_EVENT_PAGE_CONFIG.baseRewards
-
-  return {
-    ...DEFAULT_EVENT_PAGE_CONFIG,
-    ...config,
-    baseRewards: normalizeOrderedItems(baseRewards, 'reward').map((reward) => ({
-      ...reward,
-      titleEn: reward.titleEn || reward.titleTh,
-      titleTh: reward.titleTh || reward.titleEn,
-      descriptionEn: reward.descriptionEn || reward.descriptionTh,
-      descriptionTh: reward.descriptionTh || reward.descriptionEn,
-    })),
-  }
-}
-
 export function normalizeDownloadPageConfig(value: unknown) {
   const parsed = downloadPageSchema.safeParse(value)
   const config = parsed.success ? parsed.data : DEFAULT_DOWNLOAD_PAGE_CONFIG
@@ -466,7 +374,6 @@ const configParsers = {
     return { sections }
   },
   integrations: (value: unknown) => normalizeIntegrationsConfig(value),
-  event_page: (value: unknown) => normalizeEventPageConfig(value),
   download_page: (value: unknown) => normalizeDownloadPageConfig(value),
   webzine_topics: (value: unknown) => normalizeWebzineTopics(webzineTopicsSchema.parse(value)),
   faq: (value: unknown) => faqSchema.parse(value),
@@ -500,10 +407,6 @@ export function readAdminConfigValue(key: string, value: unknown) {
 
   if (key === 'integrations') {
     return normalizeIntegrationsConfig(value)
-  }
-
-  if (key === 'event_page') {
-    return normalizeEventPageConfig(value)
   }
 
   if (key === 'download_page') {

@@ -6,9 +6,6 @@ export default defineEventHandler(async (event) => {
 
   const article = await prisma.newsArticle.findFirst({
     where: { slug, status: 'PUBLISHED' },
-    include: {
-      linkedEvent: true,
-    },
   })
 
   if (!article) {
@@ -17,7 +14,6 @@ export default defineEventHandler(async (event) => {
 
   const relatedFilters = [
     article.campaignCode ? { campaignCode: article.campaignCode } : null,
-    article.linkedEventId ? { linkedEventId: article.linkedEventId } : null,
     article.primaryTopicKey ? { primaryTopicKey: article.primaryTopicKey } : null,
     { contentType: article.contentType },
   ].filter(Boolean) as Array<Record<string, unknown>>

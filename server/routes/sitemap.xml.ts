@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
     { loc: '/', priority: '1.0', changefreq: 'daily', lastmod: new Date().toISOString() },
     { loc: '/weapons', priority: '0.8', changefreq: 'weekly', lastmod: new Date().toISOString() },
     { loc: '/news', priority: '0.9', changefreq: 'daily', lastmod: new Date().toISOString() },
-    { loc: '/event', priority: '0.8', changefreq: 'weekly', lastmod: new Date().toISOString() },
+    { loc: '/download', priority: '0.9', changefreq: 'weekly', lastmod: new Date().toISOString() },
   ]
 
   // ── ดึงข้อมูลจาก DB พร้อมกัน (บทความ + หน้า CMS) ──

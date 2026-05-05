@@ -217,7 +217,7 @@ const props = defineProps<{
 }>()
 
 const { locale } = useI18n()
-const { trackDownload, trackPreRegister, trackSocial } = useTracking()
+const { trackDownload, trackSocial } = useTracking()
 
 const heroRef = ref<HTMLElement>()
 const bgLayer = ref<HTMLElement>()
@@ -238,7 +238,7 @@ const defaultHeroConfig: HeroConfig = {
   backgroundMode: 'image',
   backgroundVideo: '',
   buttons: [
-    { id: 'pre-register', labelEn: 'Pre-register', labelTh: 'ลงทะเบียน', href: '/event', variant: 'primary', visible: true, order: 0, target: '_self' },
+    { id: 'download', labelEn: 'Download', labelTh: 'ดาวน์โหลด', href: '/download', variant: 'primary', visible: true, order: 0, target: '_self' },
     { id: 'trailer', labelEn: 'Watch Trailer', labelTh: 'ดูตัวอย่าง', href: '#trailer', variant: 'ghost', visible: true, order: 1, target: '_self' },
   ],
   platforms: [
@@ -366,8 +366,7 @@ function socialIcon(platform: string) {
 function trackHeroButton(button: HeroButtonConfig) {
   const href = button.href.toLowerCase()
   const label = localizedButtonLabel(button)
-  if (href.includes('/download')) { trackDownload('hero', label); return }
-  if (href.includes('/event')) { trackPreRegister() }
+  if (href.includes('/download')) { trackDownload('hero', label) }
 }
 
 void SITE

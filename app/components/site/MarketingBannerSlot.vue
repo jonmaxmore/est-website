@@ -190,13 +190,11 @@ const href = computed(() => {
   if (props.banner.targetType === 'url') return props.banner.targetUrl || '/'
   if (props.banner.targetType === 'article' && props.banner.article?.slug) return `/news/${props.banner.article.slug}`
   if (props.banner.targetType === 'page' && props.banner.page?.slug) return props.banner.page.slug ? `/${props.banner.page.slug}` : '/'
-  if (props.banner.targetType === 'event') return '/event'
   return '/'
 })
 const target = computed(() => props.banner?.targetNewTab ? '_blank' : undefined)
 const testId = computed(() => `marketing-banner-${props.placement}`)
 const actionLabel = computed(() => {
-  if (props.banner?.targetType === 'event') return 'View Event'
   if (props.banner?.targetType === 'page') return 'Open Page'
   if (props.banner?.targetType === 'url') return 'Learn More'
   return 'Read More'

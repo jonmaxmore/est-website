@@ -26,41 +26,6 @@ enum Role {
   EDITOR
 }
 
-// ══════════ PRE-REGISTRATION ══════════
-
-model PreRegistration {
-  id           String    @id @default(cuid())
-  email        String    @unique
-  platform     Platform
-  region       Region
-  referralCode String?   @unique
-  referredBy   String?
-  ipAddress    String?
-  userAgent    String?
-  utmSource    String?
-  utmMedium    String?
-  utmCampaign  String?
-  confirmedAt  DateTime?
-  createdAt    DateTime  @default(now())
-
-  @@index([createdAt])
-  @@index([platform])
-  @@index([region])
-  @@map("pre_registrations")
-}
-
-enum Platform {
-  IOS
-  ANDROID
-  PC
-}
-
-enum Region {
-  TH
-  SEA
-  GLOBAL
-}
-
 // ══════════ NEWS ══════════
 
 model NewsArticle {
@@ -76,7 +41,6 @@ model NewsArticle {
   contentType        WebzineContentType @default(ANNOUNCEMENT)
   primaryTopicKey    String?
   campaignCode       String?
-  linkedEventId      String?
   pinned             Boolean            @default(false)
   isEvergreen        Boolean            @default(false)
   readingTimeMinutes Int?
@@ -92,21 +56,17 @@ model NewsArticle {
   ogImage            String?
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
-  linkedEvent        GameEvent?         @relation("ArticleLinkedEvent", fields: [linkedEventId], references: [id])
-  featuredForEvents  GameEvent[]        @relation("EventLinkedArticle")
   targetedBanners    MarketingBanner[]  @relation("BannerTargetArticle")
 
   @@index([status, publishedAt(sort: Desc)])
   @@index([contentType, status, publishedAt(sort: Desc)])
   @@index([primaryTopicKey, status, publishedAt(sort: Desc)])
   @@index([campaignCode])
-  @@index([linkedEventId])
   @@map("news_articles")
 }
 
 enum NewsCategory {
   ANNOUNCEMENT
-  EVENT
   UPDATE
   MEDIA
   MAINTENANCE
@@ -120,7 +80,6 @@ enum ContentStatus {
 
 enum WebzineContentType {
   ANNOUNCEMENT
-  EVENT
   PATCH_NOTES
   GUIDE
   LORE
@@ -150,7 +109,6 @@ enum MarketingBannerScope {
   news_index
   article_detail
   topic_page
-  event_page
   specific_article
   specific_topic
 }
@@ -158,7 +116,6 @@ enum MarketingBannerScope {
 enum MarketingBannerTargetType {
   article
   page
-  event
   url
 }
 
@@ -354,57 +311,7 @@ model Highlight {
 }
 
 // ══════════ EVENTS & HOT TIME ══════════
-
-model GameEvent {
-  id              String      @id @default(cuid())
-  titleEn         String
-  titleTh         String
-  descriptionEn   String?     @db.Text
-  descriptionTh   String?     @db.Text
-  type            EventType
-  status          EventStatus @default(SCHEDULED)
-  startsAt        DateTime
-  endsAt          DateTime
-  timezone        String      @default("Asia/Bangkok")
-  campaignCode    String?
-  linkedArticleId Int?        @unique
-
-  // Hot Time specific
-  multiplier Float? // e.g., 2.0 for "2x EXP"
-  bonusType  String? // EXP, GOLD, DROP_RATE, etc.
-
-  // Display
-  bannerImage String?
-  icon        String?
-  color       String? // hex color for event badge
-  visible     Boolean @default(true)
-
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  linkedArticle   NewsArticle?      @relation("EventLinkedArticle", fields: [linkedArticleId], references: [id], onDelete: SetNull)
-  relatedArticles NewsArticle[]     @relation("ArticleLinkedEvent")
-  targetedBanners MarketingBanner[] @relation("BannerTargetEvent")
-
-  @@index([startsAt, endsAt])
-  @@index([status])
-  @@index([campaignCode])
-  @@map("game_events")
-}
-
-enum EventType {
-  EVENT
-  HOT_TIME
-  MAINTENANCE
-  CAMPAIGN
-}
-
-enum EventStatus {
-  DRAFT
-  SCHEDULED
-  ACTIVE
-  ENDED
-  CANCELLED
-}
+// (Removed at official launch — no GameEvent / Hot Time system in use.)
 
 model MarketingBanner {
   id              String                    @id @default(cuid())
@@ -426,7 +333,6 @@ model MarketingBanner {
   targetType      MarketingBannerTargetType
   targetArticleId Int?
   targetPageKey   String?
-  targetEventId   String?
   targetTopicKey  String?
   targetUrl       String?
   targetNewTab    Boolean                   @default(false)
@@ -437,14 +343,12 @@ model MarketingBanner {
   updatedAt       DateTime                  @updatedAt
   article         NewsArticle?              @relation("BannerTargetArticle", fields: [targetArticleId], references: [id], onDelete: SetNull)
   page            PageContent?              @relation("BannerTargetPage", fields: [targetPageKey], references: [key], onDelete: SetNull)
-  event           GameEvent?                @relation("BannerTargetEvent", fields: [targetEventId], references: [id], onDelete: SetNull)
 
   @@index([placement, isActive, status])
   @@index([scope, placement])
   @@index([campaignCode])
   @@index([targetArticleId])
   @@index([targetPageKey])
-  @@index([targetEventId])
   @@index([targetTopicKey])
   @@map("marketing_banners")
 }

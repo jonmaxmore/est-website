@@ -78,7 +78,6 @@ const allItems: PaletteItem[] = [
   { icon: 'FAQ', label: 'FAQ', group: 'Content', to: '/admin/faq' },
   { icon: 'PAGE', label: 'Pages', group: 'Content', to: '/admin/pages' },
   { icon: 'IMG', label: 'Media', group: 'Content', to: '/admin/media' },
-  { icon: 'REG', label: 'Registrations', group: 'Marketing', to: '/admin/registrations' },
   { icon: 'NAV', label: 'Navigation', group: 'Appearance', to: '/admin/menus' },
   { icon: 'THEME', label: 'Theme', group: 'Appearance', to: '/admin/appearance' },
   { icon: 'SEO', label: 'SEO', group: 'Appearance', to: '/admin/seo' },

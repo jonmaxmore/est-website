@@ -6,8 +6,7 @@
  * - Total/Today page views, unique visitors
  * - กราฟรายวัน (30 วัน) พร้อมเติมวันที่ไม่มีข้อมูล = 0
  * - Top 10 หน้าที่เข้าชมมากที่สุด
- * - Conversion events: pre_register, download, social, news
- * - Conversion rate: ลงทะเบียน / page views
+ * - Conversion events: download, social, news
  *
  * ⚠️ ทุก query มี try/catch — ถ้า table ไม่มีจะคืน 0 แทน crash
  */
@@ -16,11 +15,9 @@ export default defineEventHandler(async () => {
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 
-  const [totalViews, todayViews, totalRegs, preRegisterSuccess, downloadClicks, socialClicks, newsClicks] = await Promise.all([
+  const [totalViews, todayViews, downloadClicks, socialClicks, newsClicks] = await Promise.all([
     prisma.pageView.count(),
     prisma.pageView.count({ where: { createdAt: { gte: todayStart } } }),
-    prisma.preRegistration.count(),
-    prisma.conversionEvent.count({ where: { eventName: 'pre_register_success' } }),
     prisma.conversionEvent.count({ where: { eventName: 'download_click' } }),
     prisma.conversionEvent.count({ where: { eventName: 'social_click' } }),
     prisma.conversionEvent.count({ where: { eventName: 'news_click' } }),
@@ -37,7 +34,6 @@ export default defineEventHandler(async () => {
   let dailyViews: { date: string; views: number }[] = []
   try {
     const rawDaily = await prisma.$queryRaw<Array<{ date: string; count: bigint }>>`SELECT DATE("createdAt") as date, COUNT(*) as count FROM page_views WHERE "createdAt" >= ${thirtyDaysAgo} GROUP BY DATE("createdAt") ORDER BY date`
-    // Fill in missing days
     const dailyMap = new Map<string, number>()
     for (let i = 0; i < 30; i++) {
       const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
@@ -71,32 +67,15 @@ export default defineEventHandler(async () => {
     conversions = rawConv.map((c) => ({ name: c.eventName, count: c._count._all }))
   } catch (err) { console.warn('[Analytics] conversions query failed:', (err as Error).message); conversions = [] }
 
-  // ── Conversion rate: ลงทะเบียน / จำนวนเข้าชมทั้งหมด (เปอร์เซ็นต์) ──
-  const conversionRate = totalViews > 0 ? (totalRegs / totalViews) * 100 : 0
-
-  let registrationsByPlatform: { platform: string; count: number }[] = []
-  try {
-    const rawPlatforms = await prisma.preRegistration.groupBy({
-      by: ['platform'],
-      _count: { _all: true },
-      orderBy: { _count: { platform: 'desc' } },
-    })
-    registrationsByPlatform = rawPlatforms.map((row) => ({ platform: row.platform, count: row._count._all }))
-  } catch (err) { console.warn('[Analytics] registrationsByPlatform query failed:', (err as Error).message); registrationsByPlatform = [] }
-
   return {
     totalViews,
     todayViews,
     uniqueVisitors,
-    totalRegistrations: totalRegs,
-    preRegisterSuccess,
     downloadClicks,
     socialClicks,
     newsClicks,
-    conversionRate,
     dailyViews,
     topPages,
     conversions,
-    registrationsByPlatform,
   }
 })

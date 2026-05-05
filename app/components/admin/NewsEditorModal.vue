@@ -68,7 +68,7 @@
               <USelect v-model="form.status" :items="['DRAFT', 'PUBLISHED', 'ARCHIVED']" />
             </UFormField>
             <UFormField label="Category" class="mt-3">
-              <USelect v-model="form.category" :items="['ANNOUNCEMENT', 'EVENT', 'UPDATE', 'MEDIA', 'MAINTENANCE']" />
+              <USelect v-model="form.category" :items="['ANNOUNCEMENT', 'UPDATE', 'MEDIA', 'MAINTENANCE']" />
             </UFormField>
             <UFormField label="Publish Date" class="mt-3">
               <UInput v-model="form.publishedAt" type="datetime-local" />
@@ -202,7 +202,6 @@ const form = reactive({
   titleEn: '', titleTh: '', slug: '', excerptEn: '', excerptTh: '',
   contentEn: '', contentTh: '', category: 'ANNOUNCEMENT',
   contentType: 'ANNOUNCEMENT', primaryTopicKey: '', campaignCode: '',
-  linkedEventId: null as string | null,
   pinned: false, isEvergreen: false,
   status: 'DRAFT',
   featuredImage: '', publishedAt: '', featureOnHome: false, homePriority: 0,
@@ -211,7 +210,7 @@ const form = reactive({
 
 const fieldErrors = reactive<Record<string, string>>({ titleEn: '', titleTh: '', slug: '' })
 
-const contentTypeOptions = ['ANNOUNCEMENT', 'EVENT', 'PATCH_NOTES', 'GUIDE', 'LORE', 'DEV_BLOG']
+const contentTypeOptions = ['ANNOUNCEMENT', 'PATCH_NOTES', 'GUIDE', 'LORE', 'DEV_BLOG']
 
 const topicOptions = computed(() => [
   { label: 'No topic', value: '' },
@@ -253,7 +252,6 @@ function resetForm() {
       contentType: a.contentType || 'ANNOUNCEMENT',
       primaryTopicKey: a.primaryTopicKey || '',
       campaignCode: a.campaignCode || '',
-      linkedEventId: a.linkedEventId || null,
       pinned: a.pinned || false,
       isEvergreen: a.isEvergreen || false,
       status: a.status,
@@ -268,7 +266,7 @@ function resetForm() {
       titleEn: '', titleTh: '', slug: '', excerptEn: '', excerptTh: '',
       contentEn: '', contentTh: '', category: 'ANNOUNCEMENT',
       contentType: 'ANNOUNCEMENT', primaryTopicKey: '', campaignCode: '',
-      linkedEventId: null, pinned: false, isEvergreen: false,
+      pinned: false, isEvergreen: false,
       status: 'DRAFT',
       featuredImage: '', publishedAt: '', featureOnHome: false, homePriority: 0,
       externalUrl: '', openInNewTab: false, seoTitle: '', seoDesc: '',
@@ -297,7 +295,6 @@ function buildPayload() {
     publishedAt: form.publishedAt || null,
     primaryTopicKey: form.primaryTopicKey || null,
     campaignCode: form.campaignCode || null,
-    linkedEventId: form.linkedEventId || null,
     featuredImage: form.featuredImage || null,
     externalUrl: form.externalUrl || null,
     seoTitle: form.seoTitle || null,
