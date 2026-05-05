@@ -114,6 +114,13 @@ export default defineEventHandler(async (event) => {
   const imported: Record<string, number> = {}
   const errors: string[] = []
 
+  // ── FK remap: backup carries the OLD newsArticle.id (autoincrement), but
+  // after upsert-by-slug on a fresh DB the article gets a NEW id. Banners
+  // that referenced the old id would otherwise become orphan FKs (or fail
+  // the constraint outright). We build oldArticleId → newArticleId during
+  // the news pass and remap banners.targetArticleId during their pass.
+  const articleIdMap = new Map<number, number>()
+
   type ImportFn<T> = (item: T) => Promise<void>
 
   async function importBatch<T>(name: string, items: T[] | undefined, fn: ImportFn<T>) {
@@ -130,15 +137,20 @@ export default defineEventHandler(async (event) => {
   }
 
   await importBatch('news', body.news as Array<Record<string, unknown>>, async (article) => {
+    const oldId = (article as { id?: number }).id
     const { id: _id, createdAt: _ca, updatedAt: _ua, ...data } = article as Record<string, unknown>
     const safeContentEn = data.contentEn ? sanitizeRichText(String(data.contentEn)) : null
     const safeContentTh = data.contentTh ? sanitizeRichText(String(data.contentTh)) : null
     const cleanData = { ...data, contentEn: safeContentEn, contentTh: safeContentTh }
-    await prisma.newsArticle.upsert({
+    const upserted = await prisma.newsArticle.upsert({
       where: { slug: data.slug as string },
       update: cleanData as never,
       create: cleanData as never,
+      select: { id: true },
     })
+    if (typeof oldId === 'number') {
+      articleIdMap.set(oldId, upserted.id)
+    }
   })
 
   await importBatch('weapons', body.weapons as Array<Record<string, unknown>>, async (weapon) => {
@@ -194,6 +206,28 @@ export default defineEventHandler(async (event) => {
   // ── v2.0+: banners, milestones (events dropped at official launch) ──
   await importBatch('banners', body.banners as Array<Record<string, unknown>>, async (banner) => {
     const { createdAt: _ca, updatedAt: _ua, ...data } = banner as Record<string, unknown>
+
+    // FK remap: targetArticleId points to OLD article.id (from export).
+    // Look up the new id from the map built during the news pass.
+    const oldArticleId = data.targetArticleId
+    if (typeof oldArticleId === 'number') {
+      const newArticleId = articleIdMap.get(oldArticleId)
+      if (typeof newArticleId === 'number') {
+        data.targetArticleId = newArticleId
+      } else {
+        // Article wasn't part of this import (maybe news section was
+        // unselected, or the article was deleted upstream). Don't fail
+        // the banner row — deactivate it and reset the target so the
+        // FK constraint accepts the row.
+        data.targetArticleId = null
+        if (data.targetType === 'article') {
+          data.targetType = 'url'
+          data.targetUrl = data.targetUrl || ''
+        }
+        data.isActive = false
+      }
+    }
+
     await prisma.marketingBanner.upsert({
       where: { id: data.id as string },
       update: data as never,
