@@ -123,11 +123,11 @@
           >
             <template #th>
               <div class="mb-2 text-sm font-medium text-white/60">Page Content (TH)</div>
-              <AdminRichTextEditor v-model="editForm.contentTh" placeholder="เนื้อหาภาษาไทย..." />
+              <LazyAdminRichTextEditor v-model="editForm.contentTh" placeholder="เนื้อหาภาษาไทย..." />
             </template>
             <template #en>
               <div class="mb-2 text-sm font-medium text-white/60">Page Content (EN)</div>
-              <AdminRichTextEditor v-model="editForm.content" placeholder="English page content..." />
+              <LazyAdminRichTextEditor v-model="editForm.content" placeholder="English page content..." />
             </template>
           </AdminContentLanguageTabs>
         </div>
