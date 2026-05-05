@@ -25,6 +25,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   e2e-local:
     name: E2E smoke + api (local server)
@@ -144,45 +148,66 @@ jobs:
             kill "$(cat nuxt.pid)" 2>/dev/null || true
           fi
 
-      # If anything failed, post a step-by-step status comment on the PR so
-      # the failing step is visible without needing GitHub Actions log access.
-      - name: Post failure summary to PR
-        if: failure()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const steps = {
-              install:      ${{ toJSON(steps.install.outcome) }},
-              pgWait:       ${{ toJSON(steps['pg-wait'].outcome) }},
-              migrate:      ${{ toJSON(steps.migrate.outcome) }},
-              seed:         ${{ toJSON(steps.seed.outcome) }},
-              build:        ${{ toJSON(steps.build.outcome) }},
-              pwInstall:    ${{ toJSON(steps['pw-install'].outcome) }},
-              startServer:  ${{ toJSON(steps['start-server'].outcome) }},
-              e2e:          ${{ toJSON(steps.e2e.outcome) }},
-            };
-            const fs = require('fs');
-            let nuxtLog = '';
-            try {
-              nuxtLog = fs.readFileSync('nuxt.log', 'utf8');
-            } catch (_) {}
-            const lines = ['### PR E2E (local server) — step status', ''];
-            for (const [k, v] of Object.entries(steps)) {
-              const icon = v === 'success' ? '✅' : v === 'failure' ? '❌' : v === 'skipped' ? '⏭️' : '·';
-              lines.push(`- ${icon} \`${k}\`: ${v ?? 'not-run'}`);
-            }
-            if (nuxtLog) {
-              lines.push('', '<details><summary>nuxt.log (last 100 lines)</summary>', '', '```');
-              lines.push(nuxtLog.split('\n').slice(-100).join('\n'));
-              lines.push('```', '</details>');
-            }
-            lines.push('', `Run: ${context.payload.pull_request?.html_url}/checks`);
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.payload.pull_request.number,
-              body: lines.join('\n'),
-            });
+      # Always post a step-status summary to the PR (debug visibility while
+      # this workflow stabilises). Uses raw curl + GITHUB_TOKEN so it cannot
+      # fail silently from a missing action.
+      - name: Post step-status summary to PR
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          OUT_INSTALL: ${{ steps.install.outcome }}
+          OUT_PG_WAIT: ${{ steps.pg-wait.outcome }}
+          OUT_MIGRATE: ${{ steps.migrate.outcome }}
+          OUT_SEED: ${{ steps.seed.outcome }}
+          OUT_BUILD: ${{ steps.build.outcome }}
+          OUT_PW_INSTALL: ${{ steps.pw-install.outcome }}
+          OUT_START_SERVER: ${{ steps.start-server.outcome }}
+          OUT_E2E: ${{ steps.e2e.outcome }}
+        run: |
+          set -e
+          icon() { case "$1" in success) echo "✅";; failure) echo "❌";; skipped) echo "⏭️";; *) echo "·";; esac; }
+          NUXT_TAIL=""
+          if [ -f nuxt.log ]; then
+            NUXT_TAIL=$(tail -100 nuxt.log)
+          fi
+          # Build markdown body
+          {
+            echo "### PR E2E (local server) — step status"
+            echo
+            echo "- $(icon "$OUT_INSTALL") \`install\`: ${OUT_INSTALL:-not-run}"
+            echo "- $(icon "$OUT_PG_WAIT") \`pg-wait\`: ${OUT_PG_WAIT:-not-run}"
+            echo "- $(icon "$OUT_MIGRATE") \`migrate\`: ${OUT_MIGRATE:-not-run}"
+            echo "- $(icon "$OUT_SEED") \`seed\`: ${OUT_SEED:-not-run}"
+            echo "- $(icon "$OUT_BUILD") \`build\`: ${OUT_BUILD:-not-run}"
+            echo "- $(icon "$OUT_PW_INSTALL") \`pw-install\`: ${OUT_PW_INSTALL:-not-run}"
+            echo "- $(icon "$OUT_START_SERVER") \`start-server\`: ${OUT_START_SERVER:-not-run}"
+            echo "- $(icon "$OUT_E2E") \`e2e\`: ${OUT_E2E:-not-run}"
+            echo
+            if [ -n "$NUXT_TAIL" ]; then
+              echo "<details><summary>nuxt.log (last 100 lines)</summary>"
+              echo
+              echo '```'
+              echo "$NUXT_TAIL"
+              echo '```'
+              echo "</details>"
+              echo
+            fi
+            echo "Run: https://github.com/${REPO}/actions/runs/${RUN_ID}"
+          } > body.md
+
+          jq -Rs '{body: .}' < body.md > payload.json
+
+          curl -sS -X POST \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments" \
+            -d @payload.json \
+            -o resp.json -w "HTTP %{http_code}\n"
+          head -c 500 resp.json || true
 
       - name: Upload Nuxt log on failure
         if: failure()
