@@ -41,10 +41,10 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U est_admin"
+          --health-cmd "pg_isready -U est_admin -d est_website"
           --health-interval 5s
           --health-timeout 5s
-          --health-retries 10
+          --health-retries 12
 
       redis:
         image: redis:7-alpine
@@ -54,7 +54,7 @@ jobs:
           --health-cmd "redis-cli ping"
           --health-interval 5s
           --health-timeout 5s
-          --health-retries 10
+          --health-retries 12
 
     env:
       DATABASE_URL: postgresql://est_admin:ci-test-password@localhost:5432/est_website
@@ -77,51 +77,41 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Diagnostics — runner + service health
-        run: |
-          set -x
-          node -v
-          npm -v
-          which curl
-          # postgres service
-          for i in $(seq 1 30); do
-            if pg_isready -h localhost -p 5432 -U est_admin 2>/dev/null; then
-              echo "✅ postgres ready (attempt $i)"
-              break
-            fi
-            echo "waiting for postgres (attempt $i)..."
-            sleep 2
-          done
-          PGPASSWORD=ci-test-password psql -h localhost -p 5432 -U est_admin -d est_website -c 'SELECT version();' || echo "psql failed"
-          # redis service
-          for i in $(seq 1 30); do
-            if (echo > /dev/tcp/localhost/6379) 2>/dev/null; then
-              echo "✅ redis port reachable (attempt $i)"
-              break
-            fi
-            echo "waiting for redis (attempt $i)..."
-            sleep 2
-          done
-
       - name: Install dependencies
-        run: npm ci 2>&1 | tee npm-ci.log
+        id: install
+        run: npm ci --foreground-scripts
 
-      - name: Generate Prisma client
-        run: npx prisma generate
+      - name: Wait for postgres to be reachable
+        id: pg-wait
+        run: |
+          for i in $(seq 1 30); do
+            if (echo > /dev/tcp/localhost/5432) 2>/dev/null; then
+              echo "postgres TCP open after ${i} attempt(s)"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "postgres TCP did not open within 60s"
+          exit 1
 
       - name: Apply database migrations
+        id: migrate
         run: npx prisma migrate deploy
 
       - name: Seed database
+        id: seed
         run: npm run db:seed
 
       - name: Build Nuxt
+        id: build
         run: npm run build
 
       - name: Install Playwright (chromium)
+        id: pw-install
         run: npx playwright install --with-deps chromium
 
       - name: Start Nuxt server
+        id: start-server
         run: |
           node .output/server/index.mjs > nuxt.log 2>&1 &
           echo $! > nuxt.pid
@@ -132,12 +122,13 @@ jobs:
             fi
             sleep 2
           done
-          echo "❌ Server failed to start within 60s"
+          echo "Server failed to start within 60s"
           echo "─── nuxt.log ───"
           cat nuxt.log
           exit 1
 
       - name: Run smoke + api e2e
+        id: e2e
         run: |
           npx playwright test \
             e2e/api/health.spec.ts \
@@ -153,20 +144,45 @@ jobs:
             kill "$(cat nuxt.pid)" 2>/dev/null || true
           fi
 
-      - name: Diagnostics — dump logs on failure
+      # If anything failed, post a step-by-step status comment on the PR so
+      # the failing step is visible without needing GitHub Actions log access.
+      - name: Post failure summary to PR
         if: failure()
-        run: |
-          echo "═══ workspace ═══"
-          ls -la
-          echo "═══ nuxt.log (if any) ═══"
-          [ -f nuxt.log ] && cat nuxt.log || echo "(no nuxt.log)"
-          echo "═══ npm-ci.log tail ═══"
-          [ -f npm-ci.log ] && tail -100 npm-ci.log || echo "(no npm-ci.log)"
-          echo "═══ npm debug logs ═══"
-          ls -la ~/.npm/_logs/ 2>/dev/null || true
-          for f in ~/.npm/_logs/*.log; do
-            [ -f "$f" ] && echo "── $f ──" && tail -100 "$f"
-          done
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const steps = {
+              install:      ${{ toJSON(steps.install.outcome) }},
+              pgWait:       ${{ toJSON(steps['pg-wait'].outcome) }},
+              migrate:      ${{ toJSON(steps.migrate.outcome) }},
+              seed:         ${{ toJSON(steps.seed.outcome) }},
+              build:        ${{ toJSON(steps.build.outcome) }},
+              pwInstall:    ${{ toJSON(steps['pw-install'].outcome) }},
+              startServer:  ${{ toJSON(steps['start-server'].outcome) }},
+              e2e:          ${{ toJSON(steps.e2e.outcome) }},
+            };
+            const fs = require('fs');
+            let nuxtLog = '';
+            try {
+              nuxtLog = fs.readFileSync('nuxt.log', 'utf8');
+            } catch (_) {}
+            const lines = ['### PR E2E (local server) — step status', ''];
+            for (const [k, v] of Object.entries(steps)) {
+              const icon = v === 'success' ? '✅' : v === 'failure' ? '❌' : v === 'skipped' ? '⏭️' : '·';
+              lines.push(`- ${icon} \`${k}\`: ${v ?? 'not-run'}`);
+            }
+            if (nuxtLog) {
+              lines.push('', '<details><summary>nuxt.log (last 100 lines)</summary>', '', '```');
+              lines.push(nuxtLog.split('\n').slice(-100).join('\n'));
+              lines.push('```', '</details>');
+            }
+            lines.push('', `Run: ${context.payload.pull_request?.html_url}/checks`);
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: lines.join('\n'),
+            });
 
       - name: Upload Nuxt log on failure
         if: failure()
