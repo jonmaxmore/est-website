@@ -77,8 +77,34 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Diagnostics — runner + service health
+        run: |
+          set -x
+          node -v
+          npm -v
+          which curl
+          # postgres service
+          for i in $(seq 1 30); do
+            if pg_isready -h localhost -p 5432 -U est_admin 2>/dev/null; then
+              echo "✅ postgres ready (attempt $i)"
+              break
+            fi
+            echo "waiting for postgres (attempt $i)..."
+            sleep 2
+          done
+          PGPASSWORD=ci-test-password psql -h localhost -p 5432 -U est_admin -d est_website -c 'SELECT version();' || echo "psql failed"
+          # redis service
+          for i in $(seq 1 30); do
+            if (echo > /dev/tcp/localhost/6379) 2>/dev/null; then
+              echo "✅ redis port reachable (attempt $i)"
+              break
+            fi
+            echo "waiting for redis (attempt $i)..."
+            sleep 2
+          done
+
       - name: Install dependencies
-        run: npm ci
+        run: npm ci 2>&1 | tee npm-ci.log
 
       - name: Generate Prisma client
         run: npx prisma generate
@@ -127,6 +153,21 @@ jobs:
             kill "$(cat nuxt.pid)" 2>/dev/null || true
           fi
 
+      - name: Diagnostics — dump logs on failure
+        if: failure()
+        run: |
+          echo "═══ workspace ═══"
+          ls -la
+          echo "═══ nuxt.log (if any) ═══"
+          [ -f nuxt.log ] && cat nuxt.log || echo "(no nuxt.log)"
+          echo "═══ npm-ci.log tail ═══"
+          [ -f npm-ci.log ] && tail -100 npm-ci.log || echo "(no npm-ci.log)"
+          echo "═══ npm debug logs ═══"
+          ls -la ~/.npm/_logs/ 2>/dev/null || true
+          for f in ~/.npm/_logs/*.log; do
+            [ -f "$f" ] && echo "── $f ──" && tail -100 "$f"
+          done
+
       - name: Upload Nuxt log on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -134,6 +175,7 @@ jobs:
           name: nuxt-server-log
           path: nuxt.log
           retention-days: 7
+          if-no-files-found: ignore
 
       - name: Upload Playwright report
         if: always()
@@ -142,3 +184,4 @@ jobs:
           name: playwright-pr-report
           path: playwright-report/
           retention-days: 14
+          if-no-files-found: ignore
