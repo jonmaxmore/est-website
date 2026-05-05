@@ -17,7 +17,7 @@
     <div class="min-w-0">
       <div class="mb-2 flex flex-wrap items-center gap-3 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-gold/90">
         <span>{{ contentTypeLabel }}</span>
-        <span v-if="article.readingTimeMinutes" class="text-white/35">{{ article.readingTimeMinutes }} min read</span>
+        <span v-if="article.readingTimeMinutes" class="text-white/35">{{ article.readingTimeMinutes }} {{ t('news.minRead') }}</span>
       </div>
       <h3 class="text-lg font-black leading-tight tracking-tight text-white transition-colors duration-300 group-hover:text-gold">
         {{ title }}
@@ -43,13 +43,14 @@ const props = defineProps<{
   }
 }>()
 
-const { locale } = useI18n()
+const { t, te } = useI18n()
+const { localized } = useLocalizedField()
 
-const title = computed(() => locale.value === 'th'
-  ? props.article.titleTh || props.article.titleEn
-  : props.article.titleEn || props.article.titleTh || '')
-const excerpt = computed(() => locale.value === 'th'
-  ? props.article.excerptTh || props.article.excerptEn
-  : props.article.excerptEn || props.article.excerptTh)
-const contentTypeLabel = computed(() => (props.article.contentType || 'ANNOUNCEMENT').replaceAll('_', ' '))
+const title = computed(() => localized(props.article.titleEn, props.article.titleTh) || '')
+const excerpt = computed(() => localized(props.article.excerptEn, props.article.excerptTh) || '')
+const contentTypeLabel = computed(() => {
+  const ct = props.article.contentType || 'ANNOUNCEMENT'
+  const key = `news.contentTypes.${ct}`
+  return te(key) ? t(key) : ct.replaceAll('_', ' ')
+})
 </script>

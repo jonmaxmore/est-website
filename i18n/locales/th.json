@@ -76,12 +76,45 @@
     "viewAll": "ดูทั้งหมด",
     "featured": "บทความแนะนำ",
     "noNews": "ยังไม่มีข่าวสาร",
+    "minRead": "นาทีอ่าน",
+    "backToChronicle": "กลับสู่หน้ารวมข่าว",
     "categories": {
       "all": "ทั้งหมด",
       "announcement": "ประกาศ",
       "update": "อัปเดต",
       "media": "สื่อ",
       "maintenance": "แจ้งซ่อมบำรุง"
+    },
+    "webzine": {
+      "eyebrow": "เว็บซีนทางการ",
+      "title": "บันทึกหอคอยนิรันดร์",
+      "subtitle": "ประกาศ ข้อมูลแคมเปญ บันทึกแพตช์ คู่มือ ตำนาน และเรื่องราวเบื้องหลังจากหอคอย",
+      "browseGuides": "เลือกอ่านคู่มือ",
+      "topicsHeading": "หมวดเนื้อหา",
+      "topicRegistry": "หมวดหมู่บทความ",
+      "contentPillar": "ประเภทเนื้อหา",
+      "sections": {
+        "latestEyebrow": "สัญญาณล่าสุด",
+        "latestHeading": "ข่าวสดจากหอคอย",
+        "patchNotesEyebrow": "บันทึกแพตช์",
+        "patchNotesHeading": "การปรับสมดุล แก้ไขบั๊ก และอัปเดตการเปิดตัว",
+        "guidesEyebrow": "คู่มือเล่น",
+        "guidesHeading": "เริ่มต้นแข็งแกร่ง ก้าวขึ้นสู่ที่สูง",
+        "loreEyebrow": "ตำนาน",
+        "loreHeading": "การสร้างโลก กลุ่มฝ่าย และเรื่องเล่า",
+        "devBlogsEyebrow": "บันทึกผู้พัฒนา",
+        "devBlogsHeading": "เรื่องเล่าจากทีมงาน"
+      }
+    },
+    "contentTypes": {
+      "ANNOUNCEMENT": "ประกาศ",
+      "PATCH_NOTES": "บันทึกแพตช์",
+      "GUIDE": "คู่มือ",
+      "LORE": "ตำนาน",
+      "DEV_BLOG": "บันทึกผู้พัฒนา",
+      "EVENT": "อีเวนต์",
+      "MEDIA": "สื่อ",
+      "INTERVIEW": "บทสัมภาษณ์"
     }
   },
   "cta": {

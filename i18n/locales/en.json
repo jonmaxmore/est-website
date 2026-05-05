@@ -76,12 +76,45 @@
     "viewAll": "View All",
     "featured": "Featured",
     "noNews": "No news yet",
+    "minRead": "min read",
+    "backToChronicle": "Back to Chronicle",
     "categories": {
       "all": "All",
       "announcement": "Announcement",
       "update": "Update",
       "media": "Media",
       "maintenance": "Maintenance"
+    },
+    "webzine": {
+      "eyebrow": "Official Webzine",
+      "title": "Eternal Tower Saga Chronicle",
+      "subtitle": "Announcements, campaign intel, patch notes, guides, lore, and behind-the-scenes dispatches from the tower.",
+      "browseGuides": "Browse guides",
+      "topicsHeading": "Topics",
+      "topicRegistry": "Topic Registry",
+      "contentPillar": "Content Pillar",
+      "sections": {
+        "latestEyebrow": "Latest Signals",
+        "latestHeading": "Fresh From The Tower",
+        "patchNotesEyebrow": "Patch Notes",
+        "patchNotesHeading": "Balance, Fixes, And Launch Updates",
+        "guidesEyebrow": "Field Guides",
+        "guidesHeading": "Start Strong, Climb Higher",
+        "loreEyebrow": "Lore",
+        "loreHeading": "Worldbuilding, Factions, And Legends",
+        "devBlogsEyebrow": "Dev Blogs",
+        "devBlogsHeading": "Notes From The Team"
+      }
+    },
+    "contentTypes": {
+      "ANNOUNCEMENT": "Announcement",
+      "PATCH_NOTES": "Patch Notes",
+      "GUIDE": "Guide",
+      "LORE": "Lore",
+      "DEV_BLOG": "Dev Blog",
+      "EVENT": "Event",
+      "MEDIA": "Media",
+      "INTERVIEW": "Interview"
     }
   },
   "cta": {

@@ -125,10 +125,15 @@ const { data: siteConfig } = await useFetch<{ navigation: { main: NavItem[]; foo
   { default: () => ({ navigation: { main: defaultLinks, footer: [] } }), pick: ['navigation'] },
 )
 
+// Detect mojibake: UTF-8 bytes misinterpreted as Latin-1 produce characters
+// in the U+0080–U+00FF range (Â, Ã, ¢, etc.). Legitimate Thai labels live in
+// U+0E00–U+0E7F and may contain ASCII punctuation, so reject only on those
+// telltale Latin-1 supplement bytes.
+const MOJIBAKE_PATTERN = /[-ÿ]/
+
 const navLinks = computed(() => {
   const main = siteConfig.value?.navigation?.main
-  // Filter out garbled UTF-8 (legacy data with mojibake)
-  const valid = main?.filter((l) => l.labelEn && l.labelTh && /^[฀-๿a-zA-Z0-9\s/&]+$/u.test(l.labelTh)) || []
+  const valid = main?.filter((l) => l.labelEn && l.labelTh && !MOJIBAKE_PATTERN.test(l.labelTh) && !MOJIBAKE_PATTERN.test(l.labelEn)) || []
   return valid.length > 0 ? valid : defaultLinks
 })
 

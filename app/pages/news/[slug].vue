@@ -9,8 +9,8 @@
         </NuxtLink>
 
         <div class="mb-5 flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-gold">
-          <span>{{ article.contentType?.replaceAll('_', ' ') || article.category }}</span>
-          <span v-if="article.readingTimeMinutes" class="text-white/35">{{ article.readingTimeMinutes }} min read</span>
+          <span>{{ contentTypeLabel }}</span>
+          <span v-if="article.readingTimeMinutes" class="text-white/35">{{ article.readingTimeMinutes }} {{ t('news.minRead') }}</span>
           <time v-if="article.publishedAt" class="text-white/35">{{ localizedDate(article.publishedAt) }}</time>
         </div>
 
@@ -80,7 +80,7 @@ interface NewsResponse {
   related: NewsArticle[]
 }
 
-const { t } = useI18n()
+const { t, te } = useI18n()
 const { localized, localizedDate } = useLocalizedField()
 const route = useRoute()
 const slug = route.params.slug as string
@@ -99,6 +99,12 @@ const { data: banners } = await useResolvedBanners({ routeType: 'article_detail'
 const displayTitle = computed(() => localized(article.value?.titleEn, article.value?.titleTh))
 const displayExcerpt = computed(() => localized(article.value?.excerptEn, article.value?.excerptTh))
 const displayContent = computed(() => localized(article.value?.contentEn, article.value?.contentTh))
+const contentTypeLabel = computed(() => {
+  const ct = article.value?.contentType
+  if (!ct) return article.value?.category || ''
+  const key = `news.contentTypes.${ct}`
+  return te(key) ? t(key) : ct.replaceAll('_', ' ')
+})
 
 // ── Sanitize HTML จาก admin rich text editor ก่อนแสดง ──
 const renderedHtml = computed(() => sanitizeRichHtml(displayContent.value || displayExcerpt.value || ''))
