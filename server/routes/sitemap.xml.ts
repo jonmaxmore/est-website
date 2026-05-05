@@ -44,9 +44,19 @@ export default defineEventHandler(async (event) => {
   ]
 
   // ── ดึงข้อมูลจาก DB พร้อมกัน (บทความ + หน้า CMS) ──
+  // Public news.get filters publishedAt <= now (or null = always-on); the
+  // sitemap should match so scheduled-future articles don't leak into the
+  // crawl before they're listed publicly.
+  const now = new Date()
   const [articles, pages] = await Promise.all([
     prisma.newsArticle.findMany({
-      where: { status: 'PUBLISHED' },
+      where: {
+        status: 'PUBLISHED',
+        OR: [
+          { publishedAt: { lte: now } },
+          { publishedAt: null },
+        ],
+      },
       select: { slug: true, updatedAt: true },
       orderBy: { publishedAt: 'desc' },
     }),
