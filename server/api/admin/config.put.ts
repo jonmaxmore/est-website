@@ -14,6 +14,7 @@ import { z } from 'zod'
 
 import { parseAdminConfigWrite } from '../../utils/admin-config'
 import { cacheInvalidate } from '../../utils/redis'
+import { SUPER_ADMIN_CONFIG_KEYS } from '../../utils/session-policy'
 
 const configSchema = z.object({
   key: z.string().min(1),
@@ -25,6 +26,20 @@ export default defineEventHandler(async (event) => {
   const parsed = configSchema.safeParse(body)
   if (!parsed.success) {
     throw createError({ statusCode: 422, message: 'Validation error', data: parsed.error.flatten() })
+  }
+
+  // ── Per-key RBAC: integrations + maintenance are SUPER_ADMIN-only ──
+  // EDITOR can edit content + appearance keys (seo, social, navigation,
+  // appearance, homepage_sections, webzine_topics, faq, download_page).
+  if (SUPER_ADMIN_CONFIG_KEYS.has(parsed.data.key)) {
+    const session = await getUserSession(event)
+    const role = (session?.user as { role?: string } | undefined)?.role
+    if (role !== 'SUPER_ADMIN') {
+      throw createError({
+        statusCode: 403,
+        message: `Forbidden — config key "${parsed.data.key}" requires SUPER_ADMIN role`,
+      })
+    }
   }
 
   let configInput: ReturnType<typeof parseAdminConfigWrite>
