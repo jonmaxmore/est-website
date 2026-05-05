@@ -6,11 +6,17 @@
  * Errors are swallowed and logged via the structured logger so the audit trail
  * never blocks or breaks the primary admin operation.
  *
+ * IP storage: persisted in the `ipAddress` column AFTER day-salted SHA-256
+ * hashing via hashIp() — raw IPs never reach the DB. Same primitive used for
+ * PageView.visitorId, so cross-table linking remains possible by design but
+ * never yields the underlying address (PDPA/GDPR-aligned, audit-2 finding M-1).
+ *
  * Callers may keep `await logActivity(...)` — the awaited value is undefined,
  * which is harmless.
  */
 import type { H3Event } from 'h3'
 import { logger } from './logger'
+import { hashIp } from './privacy'
 
 const log = logger.child({ scope: 'activity' })
 
@@ -21,8 +27,10 @@ export function logActivity(
   details?: string,
   resourceId?: string,
 ): void {
-  // Snapshot the request-scoped data synchronously before the request goes away
-  const ipAddress = getRequestIP(event, { xForwardedFor: true }) || null
+  // Snapshot the request-scoped data synchronously before the request goes away.
+  // Hash immediately so a raw IP never lives in any in-memory closure for long.
+  const rawIp = getRequestIP(event, { xForwardedFor: true }) || null
+  const ipAddress = rawIp ? hashIp(rawIp) : null
 
   void (async () => {
     try {
