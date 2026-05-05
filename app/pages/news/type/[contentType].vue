@@ -20,7 +20,17 @@
 const route = useRoute()
 const contentType = computed(() => String(route.params.contentType || '').toUpperCase())
 const heading = computed(() => contentType.value.replaceAll('_', ' '))
-const { data } = await useFetch<{ data: { slug: string }[] }>('/api/public/news', {
+interface ArticleCardSummary {
+  slug: string
+  titleEn: string
+  titleTh?: string | null
+  excerptEn?: string | null
+  excerptTh?: string | null
+  contentType?: string | null
+  featuredImage?: string | null
+  readingTimeMinutes?: number | null
+}
+const { data } = await useFetch<{ data: ArticleCardSummary[] }>('/api/public/news', {
   query: { contentType, limit: 50 },
   default: () => ({ data: [] }),
 })
