@@ -26,3 +26,25 @@ export const SUPER_ADMIN_CONFIG_KEYS: ReadonlySet<string> = new Set([
   'integrations',
   'maintenance',
 ])
+
+/**
+ * Path prefixes that require SUPER_ADMIN role for mutating methods. The
+ * middleware uses prefix-startsWith matching, so '/api/admin/users' covers
+ * '/api/admin/users/[id]' too. Add new SUPER_ADMIN-only resources here — this
+ * is the single source of truth, paired with SUPER_ADMIN_CONFIG_KEYS for the
+ * per-key /api/admin/config gate.
+ */
+export const SUPER_ADMIN_ONLY_PATH_PREFIXES: readonly string[] = [
+  '/api/admin/users',
+  '/api/admin/backup/import',
+  '/api/admin/backup/import-wp',
+]
+
+/** Methods that mutate state and therefore must respect SUPER_ADMIN gates. */
+export const MUTATING_METHODS: ReadonlySet<string> = new Set(['POST', 'PUT', 'PATCH', 'DELETE'])
+
+/** True when the given (path, method) combination requires SUPER_ADMIN. */
+export function requiresSuperAdmin(path: string, method: string): boolean {
+  if (!MUTATING_METHODS.has(method)) return false
+  return SUPER_ADMIN_ONLY_PATH_PREFIXES.some((prefix) => path.startsWith(prefix))
+}

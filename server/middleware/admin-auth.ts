@@ -20,7 +20,7 @@
  *   ตอนสร้าง session, middleware ตรวจ expiresAt และ slide ทุก
  *   ~5 นาที (SESSION_SLIDE_INTERVAL_MS).
  */
-import { SESSION_SLIDE_INTERVAL_MS, SESSION_TTL_MS } from '../utils/session-policy'
+import { SESSION_SLIDE_INTERVAL_MS, SESSION_TTL_MS, requiresSuperAdmin } from '../utils/session-policy'
 
 export default defineEventHandler(async (event) => {
   // ใช้เฉพาะ /api/admin paths เท่านั้น
@@ -54,18 +54,10 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // ── RBAC: route ที่ต้องเป็น SUPER_ADMIN เท่านั้น ──
-  const superAdminOnly = [
-    '/api/admin/users',       // POST (สร้าง user), PUT (แก้ user), DELETE (ลบ user)
-    '/api/admin/backup/import',
-    '/api/admin/backup/import-wp',
-  ]
-
-  const isSuperAdminRoute = superAdminOnly.some((route) => path.startsWith(route))
-  const isDestructiveMethod = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(event.method)
-
-  // อนุญาต GET (ดูรายชื่อ user) แต่ปฏิเสธ POST/DELETE ถ้าไม่ใช่ SUPER_ADMIN
-  if (isSuperAdminRoute && isDestructiveMethod && user.role !== 'SUPER_ADMIN') {
+  // ── RBAC: SUPER_ADMIN-only routes are declared in session-policy.ts ──
+  // GET requests pass through (read access for EDITORs); only mutating
+  // methods on those prefixes require SUPER_ADMIN.
+  if (requiresSuperAdmin(path, event.method) && user.role !== 'SUPER_ADMIN') {
     throw createError({ statusCode: 403, message: 'Forbidden — SUPER_ADMIN role required' })
   }
 })
