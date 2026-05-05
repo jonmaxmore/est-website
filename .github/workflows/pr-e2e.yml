@@ -153,11 +153,10 @@ jobs:
             kill "$(cat nuxt.pid)" 2>/dev/null || true
           fi
 
-      # Always post a step-status summary to the PR (debug visibility while
-      # this workflow stabilises). Uses raw curl + GITHUB_TOKEN so it cannot
-      # fail silently from a missing action.
-      - name: Post step-status summary to PR
-        if: always()
+      # On failure only: post a step-status summary to the PR so the
+      # failing step is visible without needing GitHub Actions log access.
+      - name: Post failure summary to PR
+        if: failure()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
