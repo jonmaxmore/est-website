@@ -162,6 +162,15 @@ const pageTitle = computed(() => {
 })
 
 async function handleLogout() {
+  // POST /api/auth/logout for server-side session clear + audit log,
+  // then drop the client-side session cookie via useUserSession().clear()
+  // before redirecting.
+  try {
+    await $fetch('/api/auth/logout', { method: 'POST' })
+  } catch {
+    // Best-effort — even if the server call fails, still clear locally and
+    // redirect so the user isn't trapped.
+  }
   await clear()
   navigateTo('/admin/login')
 }

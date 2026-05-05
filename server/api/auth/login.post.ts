@@ -28,6 +28,7 @@ export default defineEventHandler(async (event) => {
   const ip = getRequestIP(event, { xForwardedFor: true }) || 'unknown'
   const { allowed } = await checkRateLimit(`login:${ip}`, LOGIN_LIMIT_PER_5_MINUTES, 300)
   if (!allowed) {
+    logSecurityEvent(event, 'LOGIN_RATE_LIMITED', 'Login rate limit exceeded')
     throw createError({ statusCode: 429, message: 'Too many login attempts. Please try again later.' })
   }
 
@@ -59,12 +60,20 @@ export default defineEventHandler(async (event) => {
   // ⚠️ ส่ง error เดียวกันไม่ว่าจะเป็น email ผิดหรือ password ผิด
   //    เพื่อไม่ให้รู้ว่า email มีอยู่ในระบบหรือไม่
   if (!user) {
+    logSecurityEvent(event, 'LOGIN_FAILED', `unknown email: ${email}`, {
+      syntheticUserId: 'anon:login',
+      syntheticUserName: email,
+    })
     throw createError({ statusCode: 401, message: 'Invalid email or password' })
   }
 
   // ── ขั้นที่ 4: เทียบ password ──
   const valid = await verifyAdminPassword(password, user.passwordHash)
   if (!valid) {
+    logSecurityEvent(event, 'LOGIN_FAILED', `bad password for ${email}`, {
+      syntheticUserId: `user:${user.id}`,
+      syntheticUserName: user.displayName,
+    })
     throw createError({ statusCode: 401, message: 'Invalid email or password' })
   }
 

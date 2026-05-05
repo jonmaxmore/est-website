@@ -54,3 +54,42 @@ export function logActivity(
     }
   })()
 }
+
+/**
+ * Log a security-relevant event for an UNAUTHENTICATED actor (failed login,
+ * suspicious request, etc.). Uses a synthetic userId so the regular
+ * `logActivity` audit-trail invariant (must have a user) isn't violated.
+ *
+ * Synthetic IDs are namespaced: `anon:<reason>` so the activity feed is still
+ * filterable + greppable. ipAddress is hashed via the same primitive as
+ * regular activity rows so cross-table joins still work.
+ */
+export function logSecurityEvent(
+  event: H3Event,
+  action: string,
+  details: string,
+  options?: { syntheticUserId?: string; syntheticUserName?: string },
+): void {
+  const rawIp = getRequestIP(event, { xForwardedFor: true }) || null
+  const ipAddress = rawIp ? hashIp(rawIp) : null
+  const userId = options?.syntheticUserId || 'anon:unknown'
+  const userName = options?.syntheticUserName || 'Anonymous'
+
+  void (async () => {
+    try {
+      await prisma.activityLog.create({
+        data: {
+          userId,
+          userName,
+          action,
+          resource: 'auth',
+          resourceId: null,
+          details,
+          ipAddress,
+        },
+      })
+    } catch (err) {
+      log.error('security.write.failed', { reason: (err as Error).message, action })
+    }
+  })()
+}
