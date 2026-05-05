@@ -3,7 +3,6 @@ import { test, expect } from '@playwright/test'
 const PAGES_TO_CHECK = [
   { path: '/', name: 'Homepage' },
   { path: '/news', name: 'News' },
-  { path: '/event', name: 'Event' },
   { path: '/faq', name: 'FAQ' },
   { path: '/story', name: 'Story' },
 ]

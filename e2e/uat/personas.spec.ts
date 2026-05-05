@@ -41,7 +41,6 @@ const PUBLIC_PAGES = [
   { path: '/news', name: 'news' },
   { path: '/game-guide', name: 'game-guide' },
   { path: '/support', name: 'support' },
-  { path: '/event', name: 'event' },
   { path: '/download', name: 'download' },
   { path: '/faq', name: 'faq' },
   { path: '/privacy', name: 'privacy' },
@@ -61,13 +60,11 @@ const ADMIN_PAGES = [
   '/admin/weapons',
   '/admin/features',
   '/admin/highlights',
-  '/admin/events',
   '/admin/milestones',
   '/admin/download',
   '/admin/faq',
   '/admin/pages',
   '/admin/media',
-  '/admin/registrations',
   '/admin/menus',
   '/admin/appearance',
   '/admin/seo',
@@ -156,21 +153,19 @@ test.describe('Persona 1: นักเล่นเกมตัวยง (Desktop
       await page.waitForTimeout(500)
     }
 
-    // Click Pre-register CTA (scope to hero section, not nav, to avoid clicking
-    // header "register" button which may be hidden at this viewport)
+    // Click Download CTA from the hero (post-launch primary action)
     await page.goto('/', { waitUntil: 'domcontentloaded' })
     await page.waitForLoadState('networkidle').catch(() => {})
-    const preReg = page.locator('section').first().locator('a[href="/event"]').first()
-    if (await preReg.count() > 0) {
-      await preReg.click({ timeout: 5000 }).catch(() => {})
-      await page.waitForURL(/\/event/, { timeout: 10000 }).catch(() => {})
+    const downloadCta = page.locator('section').first().locator('a[href="/download"]').first()
+    if (await downloadCta.count() > 0) {
+      await downloadCta.click({ timeout: 5000 }).catch(() => {})
+      await page.waitForURL(/\/download/, { timeout: 10000 }).catch(() => {})
     }
-    // Fallback: navigate manually if click didn't fire
-    if (!page.url().includes('/event')) {
-      await page.goto('/event', { waitUntil: 'domcontentloaded' })
+    if (!page.url().includes('/download')) {
+      await page.goto('/download', { waitUntil: 'domcontentloaded' })
     }
-    expect(page.url()).toContain('/event')
-    await captureFullPage(page, 'event-page', 'p1-gamer')
+    expect(page.url()).toContain('/download')
+    await captureFullPage(page, 'download-page', 'p1-gamer')
 
     // Open admin login (don't submit)
     await page.goto('/admin/login')
@@ -311,23 +306,7 @@ test.describe('Persona 3: QA Tester (a11y + admin + edge cases)', () => {
       await captureFullPage(page, 'home-en-locale', 'p3-qa')
     }
 
-    // ── 3. Test pre-register form (invalid email) ──
-    await page.goto('/event')
-    await page.waitForTimeout(500)
-    const emailInput = page.locator('input[type="email"]').first()
-    if (await emailInput.count() > 0) {
-      await emailInput.fill('not-an-email')
-      const submitBtn = page.locator('button[type="submit"]').first()
-      if (await submitBtn.count() > 0) {
-        await submitBtn.click()
-        await page.waitForTimeout(500)
-        // HTML5 validation should block submission OR show error
-        const stillOnEvent = page.url().includes('/event')
-        if (!stillOnEvent) errors.push('⚠️ Invalid email accepted by form')
-      }
-    }
-
-    // ── 4. Login + admin tour ──
+    // ── 3. Login + admin tour ──
     await page.goto('/admin/login')
     // Wait for Vue hydration — form's submit button is disabled until hydrated
     await page.waitForSelector('form[data-ready="true"]', { timeout: 10000 })
@@ -340,7 +319,7 @@ test.describe('Persona 3: QA Tester (a11y + admin + edge cases)', () => {
       errors.push('❌ Admin login failed — bad credentials? Check UAT_ADMIN_PASSWORD env')
       // bail — can't continue admin tour without login
     } else {
-      // ── 5. Tour all admin pages ──
+      // ── 4. Tour all admin pages ──
       for (const adminPath of ADMIN_PAGES) {
         const health = await checkPageHealth(page, adminPath)
         if (health.status >= 400) errors.push(`❌ ${adminPath} → HTTP ${health.status}`)
@@ -350,7 +329,7 @@ test.describe('Persona 3: QA Tester (a11y + admin + edge cases)', () => {
         await captureFullPage(page, `admin-${slug}`, 'p3-qa')
       }
 
-      // ── 6. Test Cmd+K command palette (if exists) ──
+      // ── 5. Test Cmd+K command palette (if exists) ──
       await page.goto('/admin')
       await page.keyboard.press('Control+K')
       await page.waitForTimeout(500)
@@ -362,7 +341,7 @@ test.describe('Persona 3: QA Tester (a11y + admin + edge cases)', () => {
         await page.keyboard.press('Escape')
       }
 
-      // ── 7. Logout (best-effort, don't fail test if button not reachable) ──
+      // ── 6. Logout (best-effort, don't fail test if button not reachable) ──
       await page.goto('/admin').catch(() => {})
       await page.waitForTimeout(500)
       const logoutBtn = page.locator('button.logout-btn, button').filter({ hasText: /logout/i }).first()

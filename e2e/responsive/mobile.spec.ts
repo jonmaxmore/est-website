@@ -32,25 +32,6 @@ test.describe('Responsive / Mobile', () => {
     expect(await nav.count()).toBeGreaterThan(0)
   })
 
-  test('event page form should be usable on mobile', async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 812 })
-    await page.goto('/event', { waitUntil: 'domcontentloaded' })
-    await page.waitForTimeout(1000)
-
-    // Email input should be visible and fillable
-    const emailInput = page.locator('input[type="email"]')
-    if (await emailInput.count() > 0) {
-      await emailInput.scrollIntoViewIfNeeded()
-      await expect(emailInput).toBeVisible()
-      // Check the input is wide enough to be usable
-      const box = await emailInput.boundingBox()
-      if (box) {
-        expect(box.width).toBeGreaterThanOrEqual(200)
-        expect(box.height).toBeGreaterThanOrEqual(30)
-      }
-    }
-  })
-
   test('text should be readable on mobile (no tiny fonts)', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 })
     await page.goto('/', { waitUntil: 'domcontentloaded' })

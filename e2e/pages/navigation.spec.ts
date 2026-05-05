@@ -12,7 +12,6 @@ const PUBLIC_PAGES = [
   { path: '/privacy', name: 'Privacy' },
   { path: '/terms', name: 'Terms' },
   { path: '/game-guide', name: 'Game Guide' },
-  { path: '/event', name: 'Event' },
 ]
 
 test.describe('Page Navigation', () => {
