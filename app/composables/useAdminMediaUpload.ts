@@ -13,6 +13,7 @@ import {
 } from '../shared/cms/media'
 
 type UploadError = ReturnType<typeof buildMediaUploadError>
+type UploadResult = { id: string; url: string; filename: string; mimeType: string; sizeBytes: number }
 
 function normalizeUploadError(responseText: string, statusCode: number): UploadError {
   try {
@@ -20,6 +21,15 @@ function normalizeUploadError(responseText: string, statusCode: number): UploadE
     return parsed?.data ?? parsed
   } catch {
     return buildMediaUploadError('UPLOAD_WRITE_FAILED', `Upload failed (${statusCode})`, 'file')
+  }
+}
+
+function parseUploadResponse(responseText: string): UploadResult | UploadError {
+  try {
+    const parsed = JSON.parse(responseText)
+    return Array.isArray(parsed) ? parsed[0] : parsed
+  } catch {
+    return buildMediaUploadError('UPLOAD_WRITE_FAILED', 'Server returned invalid response', 'file')
   }
 }
 
@@ -44,21 +54,20 @@ export function useAdminMediaUpload() {
     return null
   }
 
-  async function uploadFile(file: File, onProgress?: (percent: number) => void) {
+  function uploadFile(file: File, onProgress?: (percent: number) => void) {
     const validationError = validateFile(file)
     if (validationError) {
-      throw validationError
+      const failed: Promise<UploadResult> = Promise.reject(validationError)
+      // attach a no-op abort so callers can use a uniform shape
+      return Object.assign(failed, { abort: () => {} })
     }
 
     const formData = new FormData()
     formData.append('file', file)
+    const xhr = new XMLHttpRequest()
+    xhr.timeout = 120_000
 
-    // ใช้ XHR เพราะรองรับ upload.progress event
-    // timeout 2 นาที — วิดีโอใหญ่อาจใช้เวลานาน
-    return await new Promise<{ id: string; url: string; filename: string; mimeType: string; sizeBytes: number }>((resolve, reject) => {
-      const xhr = new XMLHttpRequest()
-      xhr.timeout = 120_000 // 2 นาที
-
+    const promise = new Promise<UploadResult>((resolve, reject) => {
       xhr.upload.addEventListener('progress', (event) => {
         if (event.lengthComputable && onProgress) {
           onProgress(Math.round((event.loaded / event.total) * 100))
@@ -67,11 +76,14 @@ export function useAdminMediaUpload() {
 
       xhr.addEventListener('load', () => {
         if (xhr.status >= 200 && xhr.status < 300) {
-          const parsed = JSON.parse(xhr.responseText)
-          resolve(Array.isArray(parsed) ? parsed[0] : parsed)
+          const parsed = parseUploadResponse(xhr.responseText)
+          if ('code' in parsed) {
+            reject(parsed)
+            return
+          }
+          resolve(parsed)
           return
         }
-
         reject(normalizeUploadError(xhr.responseText, xhr.status))
       })
 
@@ -83,10 +95,17 @@ export function useAdminMediaUpload() {
         reject(buildMediaUploadError('UPLOAD_WRITE_FAILED', 'Upload timed out after 2 minutes', 'file'))
       })
 
+      xhr.addEventListener('abort', () => {
+        reject(buildMediaUploadError('UPLOAD_WRITE_FAILED', 'Upload aborted', 'file'))
+      })
+
       xhr.open('POST', '/api/admin/media/upload')
       xhr.withCredentials = true
       xhr.send(formData)
     })
+
+    // Expose abort() so callers can cancel on unmount or user action
+    return Object.assign(promise, { abort: () => xhr.abort() })
   }
 
   return {

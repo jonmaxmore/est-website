@@ -178,6 +178,14 @@
       </template>
     </UModal>
 
+    <AdminConfirmDialog
+      v-model="deleteDialogOpen"
+      title="Delete banner?"
+      :message="deleteTarget ? `Delete &quot;${deleteTarget.titleEn}&quot;? This cannot be undone.` : 'Delete this banner? This cannot be undone.'"
+      confirm-text="Delete"
+      variant="danger"
+      @confirm="confirmDelete"
+    />
     <AdminToast :toast="toast" />
   </div>
 </template>
@@ -216,6 +224,9 @@ const editorOpen = ref(false)
 const saving = ref(false)
 const formError = ref('')
 const { toast, showToast } = useAdminToast()
+
+const deleteDialogOpen = ref(false)
+const deleteTarget = ref<Banner | null>(null)
 
 const filters = reactive({ placement: '', status: '', scope: '' })
 const form = reactive({
@@ -386,10 +397,23 @@ async function saveBanner() {
   }
 }
 
-async function deleteBanner(banner: Banner) {
-  await $fetch(`/api/admin/banners/${banner.id}`, { method: 'DELETE' })
-  showToast('Banner deleted')
-  await loadBanners()
+function deleteBanner(banner: Banner) {
+  deleteTarget.value = banner
+  deleteDialogOpen.value = true
+}
+
+async function confirmDelete() {
+  const target = deleteTarget.value
+  if (!target) return
+  try {
+    await $fetch(`/api/admin/banners/${target.id}`, { method: 'DELETE' })
+    showToast('Banner deleted')
+    await loadBanners()
+  } catch (error: any) {
+    showToast(error?.data?.message || 'Failed to delete banner', 'error')
+  } finally {
+    deleteTarget.value = null
+  }
 }
 
 onMounted(() => {

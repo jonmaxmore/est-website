@@ -114,6 +114,14 @@
       </template>
     </UModal>
 
+    <AdminConfirmDialog
+      v-model="deleteDialogOpen"
+      title="Delete topic?"
+      :message="deleteTarget ? `Delete topic &quot;${deleteTarget.labelEn || deleteTarget.key}&quot;? Articles using this topic will lose their primary topic reference.` : 'Delete this topic?'"
+      confirm-text="Delete"
+      variant="danger"
+      @confirm="confirmDelete"
+    />
     <AdminToast :toast="toast" />
   </div>
 </template>
@@ -139,6 +147,8 @@ const editorOpen = ref(false)
 const editingKey = ref('')
 const saving = ref(false)
 const formError = ref('')
+const deleteDialogOpen = ref(false)
+const deleteTarget = ref<Topic | null>(null)
 const { toast, showToast } = useAdminToast()
 
 const form = reactive<Topic>({
@@ -244,10 +254,25 @@ async function commitTopic() {
   }
 }
 
-async function deleteTopic(topic: Topic) {
-  topics.value = topics.value.filter((item) => item.key !== topic.key)
-  await saveTopics()
-  showToast('Topic deleted')
+function deleteTopic(topic: Topic) {
+  deleteTarget.value = topic
+  deleteDialogOpen.value = true
+}
+
+async function confirmDelete() {
+  const target = deleteTarget.value
+  if (!target) return
+  const previous = [...topics.value]
+  topics.value = topics.value.filter((item) => item.key !== target.key)
+  try {
+    await saveTopics()
+    showToast('Topic deleted')
+  } catch (error: any) {
+    topics.value = previous
+    showToast(error?.data?.message || error?.message || 'Failed to delete topic', 'error')
+  } finally {
+    deleteTarget.value = null
+  }
 }
 
 // SSR-safe: admin auth is client-cookie based, so fetch on client only

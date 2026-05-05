@@ -84,7 +84,14 @@ const { t } = useI18n()
 const { localized, localizedDate } = useLocalizedField()
 const route = useRoute()
 const slug = route.params.slug as string
-const { data } = await useFetch<NewsResponse>(`/api/public/news/${slug}`)
+const { data, error } = await useFetch<NewsResponse>(`/api/public/news/${slug}`)
+if (error.value || !data.value?.article) {
+  throw createError({
+    statusCode: error.value?.statusCode ?? 404,
+    statusMessage: 'Article not found',
+    fatal: true,
+  })
+}
 const article = computed(() => data.value?.article || null)
 const related = computed(() => data.value?.related || [])
 const { data: banners } = await useResolvedBanners({ routeType: 'article_detail', articleId: article.value?.id || null })
