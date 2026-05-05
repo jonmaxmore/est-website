@@ -20,16 +20,16 @@
           </span>
         </div>
         <div class="mb-3">
-          <label class="mb-1 block text-sm text-white/60">Site URL</label>
-          <input v-model="integrations.wordpress.url" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="https://your-wordpress-site.com" />
+          <label for="int-wp-url" class="mb-1 block text-sm text-white/60">Site URL</label>
+          <input id="int-wp-url" v-model="integrations.wordpress.url" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="https://your-wordpress-site.com" />
         </div>
         <div class="mb-3">
-          <label class="mb-1 block text-sm text-white/60">API Key</label>
-          <input v-model="integrations.wordpress.apiKey" type="password" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
+          <label for="int-wp-api-key" class="mb-1 block text-sm text-white/60">API Key</label>
+          <input id="int-wp-api-key" v-model="integrations.wordpress.apiKey" type="password" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
         </div>
         <div class="mb-3 flex items-center gap-3">
-          <label class="text-sm text-white/60">Sync Direction:</label>
-          <select v-model="integrations.wordpress.syncDirection" class="rounded-lg border border-white/10 bg-white/4 px-3 py-1.5 text-sm text-white outline-none">
+          <label for="int-wp-sync-direction" class="text-sm text-white/60">Sync Direction:</label>
+          <select id="int-wp-sync-direction" v-model="integrations.wordpress.syncDirection" class="rounded-lg border border-white/10 bg-white/4 px-3 py-1.5 text-sm text-white outline-none">
             <option value="pull">Pull (WP → ETS)</option>
             <option value="push">Push (ETS → WP)</option>
             <option value="bidirectional">Bidirectional</option>
@@ -54,16 +54,16 @@
           </span>
         </div>
         <div class="mb-3">
-          <label class="mb-1 block text-sm text-white/60">Account ID</label>
-          <input v-model="integrations.wix.accountId" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
+          <label for="int-wix-account-id" class="mb-1 block text-sm text-white/60">Account ID</label>
+          <input id="int-wix-account-id" v-model="integrations.wix.accountId" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
         </div>
         <div class="mb-3">
-          <label class="mb-1 block text-sm text-white/60">API Key</label>
-          <input v-model="integrations.wix.apiKey" type="password" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
+          <label for="int-wix-api-key" class="mb-1 block text-sm text-white/60">API Key</label>
+          <input id="int-wix-api-key" v-model="integrations.wix.apiKey" type="password" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
         </div>
         <div class="mb-3">
-          <label class="mb-1 block text-sm text-white/60">Webhook Secret</label>
-          <input v-model="integrations.wix.webhookSecret" type="password" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
+          <label for="int-wix-webhook-secret" class="mb-1 block text-sm text-white/60">Webhook Secret</label>
+          <input id="int-wix-webhook-secret" v-model="integrations.wix.webhookSecret" type="password" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
         </div>
         <label class="flex items-center gap-2 cursor-pointer text-sm">
           <input type="checkbox" v-model="integrations.wix.enabled" class="accent-gold" /> Enable Wix Integration
@@ -80,8 +80,8 @@
           </div>
         </div>
         <div class="mb-3">
-          <label class="mb-1 block text-sm text-white/60">Shared Webhook Secret</label>
-          <input v-model="integrations.webhookSecret" type="password" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
+          <label for="int-webhook-secret" class="mb-1 block text-sm text-white/60">Shared Webhook Secret</label>
+          <input id="int-webhook-secret" v-model="integrations.webhookSecret" type="password" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
         </div>
         <div class="rounded-lg bg-white/2 p-4 font-mono text-xs text-gold">
           POST {{ siteUrl }}/api/integration/webhook
@@ -104,20 +104,20 @@
         </div>
         <div class="grid gap-3 sm:grid-cols-2">
           <div>
-            <label class="mb-1 block text-sm text-white/60">GA4 Measurement ID</label>
-            <input v-model="integrations.analytics.googleAnalyticsId" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="G-XXXXXXXXXX" />
+            <label for="int-ga4-id" class="mb-1 block text-sm text-white/60">GA4 Measurement ID</label>
+            <input id="int-ga4-id" v-model="integrations.analytics.googleAnalyticsId" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="G-XXXXXXXXXX" />
           </div>
           <div>
-            <label class="mb-1 block text-sm text-white/60">Google Tag Manager ID</label>
-            <input v-model="integrations.analytics.googleTagManagerId" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="GTM-XXXXXXX" />
+            <label for="int-gtm-id" class="mb-1 block text-sm text-white/60">Google Tag Manager ID</label>
+            <input id="int-gtm-id" v-model="integrations.analytics.googleTagManagerId" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="GTM-XXXXXXX" />
           </div>
           <div>
-            <label class="mb-1 block text-sm text-white/60">Meta Pixel / Dataset ID</label>
-            <input v-model="integrations.analytics.metaPixelId" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="1234567890" />
+            <label for="int-meta-pixel-id" class="mb-1 block text-sm text-white/60">Meta Pixel / Dataset ID</label>
+            <input id="int-meta-pixel-id" v-model="integrations.analytics.metaPixelId" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="1234567890" />
           </div>
           <div>
-            <label class="mb-1 block text-sm text-white/60">Meta Conversions API Token</label>
-            <input v-model="integrations.analytics.metaConversionsApiToken" type="password" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
+            <label for="int-meta-capi-token" class="mb-1 block text-sm text-white/60">Meta Conversions API Token</label>
+            <input id="int-meta-capi-token" v-model="integrations.analytics.metaConversionsApiToken" type="password" class="w-full rounded-lg border border-white/10 bg-white/4 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/50 font-mono" />
           </div>
         </div>
         <div class="mt-4 flex flex-wrap gap-4">

@@ -75,6 +75,7 @@ const allItems: PaletteItem[] = [
   { icon: 'WPN', label: 'Weapons', group: 'Content', to: '/admin/weapons' },
   { icon: 'FEAT', label: 'Features', group: 'Content', to: '/admin/features' },
   { icon: 'STAR', label: 'Highlights', group: 'Content', to: '/admin/highlights' },
+  { icon: 'TROPHY', label: 'Milestones', group: 'Content', to: '/admin/milestones' },
   { icon: 'FAQ', label: 'FAQ', group: 'Content', to: '/admin/faq' },
   { icon: 'PAGE', label: 'Pages', group: 'Content', to: '/admin/pages' },
   { icon: 'IMG', label: 'Media', group: 'Content', to: '/admin/media' },
