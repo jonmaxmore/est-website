@@ -39,6 +39,7 @@ Status as of 2026-04-30. Production at `178.128.127.161` (no domain yet).
 - **ufw firewall**: default deny incoming; only 22 (SSH), 80 (HTTP), 443 (HTTPS) allowed
 - **fail2ban**: SSH brute-force defense — 5 fails / 10 min → 1 hour ban; uses `aggressive` mode; jail config at `/etc/fail2ban/jail.local`
 - **No public DB ports** — admin tunnels via SSH if needed (`ssh -L 5432:localhost:5432 root@...`)
+- **Host-header allowlist on nginx**: requests with an unrecognised `Host:` header are answered with `HTTP 403` + `x-deny-reason: host_not_allowed`. This is configured directly on the production server (NOT in the repo's `docker/nginx/*.conf`) and is what blocks bare-IP scanners and arbitrary GitHub Actions runners. Any new scheduled job that needs to hit production must either add its egress IP to the allowlist OR send a recognised `Host:` header.
 
 ### Operational
 - **Pre-deploy validation gate** in `.github/workflows/deploy.yml` (typecheck + build before SSH deploy)
