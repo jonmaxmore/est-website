@@ -36,25 +36,8 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const target = await prisma.adminUser.findUnique({
-    where: { id },
-    select: { id: true, role: true, email: true, displayName: true },
-  })
-  if (!target) {
-    throw createError({ statusCode: 404, statusMessage: 'User not found' })
-  }
-
-  if (parsed.data.role === 'EDITOR' && target.role === 'SUPER_ADMIN') {
-    const superAdminCount = await prisma.adminUser.count({ where: { role: 'SUPER_ADMIN' } })
-    if (superAdminCount <= 1) {
-      throw createError({
-        statusCode: 409,
-        statusMessage: 'Conflict',
-        message: 'Cannot demote the last SUPER_ADMIN — promote another user first',
-      })
-    }
-  }
-
+  // Demotion check + update share an advisory lock with the delete handler so
+  // concurrent demote+delete can't drop the last SUPER_ADMIN between them.
   const data: Record<string, unknown> = {}
   if (parsed.data.displayName !== undefined) data.displayName = parsed.data.displayName
   if (parsed.data.email !== undefined) data.email = parsed.data.email
@@ -64,13 +47,36 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const user = await prisma.adminUser.update({
-      where: { id },
-      data,
-      select: { id: true, email: true, displayName: true, role: true },
+    const user = await prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(74115001)`
+
+      const target = await tx.adminUser.findUnique({
+        where: { id },
+        select: { id: true, role: true, email: true, displayName: true },
+      })
+      if (!target) {
+        throw createError({ statusCode: 404, statusMessage: 'User not found' })
+      }
+
+      if (parsed.data.role === 'EDITOR' && target.role === 'SUPER_ADMIN') {
+        const superAdminCount = await tx.adminUser.count({ where: { role: 'SUPER_ADMIN' } })
+        if (superAdminCount <= 1) {
+          throw createError({
+            statusCode: 409,
+            statusMessage: 'Conflict',
+            message: 'Cannot demote the last SUPER_ADMIN — promote another user first',
+          })
+        }
+      }
+
+      return tx.adminUser.update({
+        where: { id },
+        data,
+        select: { id: true, email: true, displayName: true, role: true },
+      })
     })
 
-    await logActivity(
+    logActivity(
       event,
       'UPDATE',
       'users',
