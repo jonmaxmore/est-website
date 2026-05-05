@@ -10,12 +10,31 @@
  *              models retired at official launch)
  */
 import { Prisma } from '@prisma/client'
+import { z } from 'zod'
 
 const EXPORT_SCHEMA_VERSION = '3.0'
 const FIND_LIMIT = 5000
 
+const exportRequestSchema = z.object({
+  news: z.boolean().optional(),
+  weapons: z.boolean().optional(),
+  config: z.boolean().optional(),
+  users: z.boolean().optional(),
+  features: z.boolean().optional(),
+  highlights: z.boolean().optional(),
+  pages: z.boolean().optional(),
+  media: z.boolean().optional(),
+  banners: z.boolean().optional(),
+  milestones: z.boolean().optional(),
+}).strict()
+
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
+  const raw = await readBody(event)
+  const parsed = exportRequestSchema.safeParse(raw ?? {})
+  if (!parsed.success) {
+    throw createError({ statusCode: 422, message: 'Invalid export selection', data: parsed.error.flatten() })
+  }
+  const body = parsed.data
   const result: Record<string, unknown> = {
     _meta: {
       exportedAt: new Date().toISOString(),

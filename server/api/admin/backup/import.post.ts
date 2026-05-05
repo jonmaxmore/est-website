@@ -3,17 +3,31 @@
  *
  * Compatible schema versions: 1.0, 2.0
  * - 1.0: news, weapons, config, users, features, highlights, pages, media
- * - 2.0: เพิ่ม banners, events, milestones
+ * - 2.0: เพิ่ม banners, milestones (events dropped at official launch)
+ *
+ * Hardening (Step 4 audit fixes):
+ * - Reject bodies over MAX_IMPORT_BYTES (DoS guard)
+ * - Reject non-object body / missing _meta (TypeError guard)
+ * - Whitelist accepted columns per resource (mass-assignment guard)
+ * - Sanitize all rich-text fields across resources, not just news/pages (stored XSS guard)
  *
  * Behaviour:
- * - แต่ละ resource batch รันใน transaction แยก (per-row fault isolation)
- * - sanitize HTML ของ news.contentEn/contentTh และ pages.contentEn/contentTh
- * - คืน per-row error log
+ * - แต่ละ resource batch รันใน loop แยก (per-row fault isolation)
+ * - คืน per-row error log + partialSuccess flag เพื่อให้ client distinguish
+ *   total-failure จาก partial-success ได้
  */
-import { sanitizeRichText } from '../../../utils/sanitize'
+import { sanitizeRichText, sanitizeRichTextOptional } from '../../../utils/sanitize'
 import { SYSTEM_CMS_PAGES, normalizeCmsSlug } from '../../../../app/shared/cms/pages'
 
 const SUPPORTED_VERSIONS = new Set(['1.0', '2.0'])
+const MAX_IMPORT_BYTES = 50 * 1024 * 1024 // 50 MB
+
+const NEWS_FIELDS = ['slug', 'titleEn', 'titleTh', 'excerptEn', 'excerptTh', 'contentEn', 'contentTh', 'status', 'contentType', 'primaryTopicKey', 'category', 'featuredImage', 'ogImage', 'seoTitle', 'seoTitleTh', 'seoDesc', 'seoDescTh', 'publishedAt', 'pinned', 'sortOrder', 'campaignCode', 'readingTimeMinutes'] as const
+const WEAPON_FIELDS = ['id', 'name', 'nameEn', 'descriptionEn', 'descriptionTh', 'portrait', 'infoImage', 'backgroundImage', 'icon', 'videoType', 'videoUrl', 'sortOrder', 'visible', 'statSTR', 'statINT', 'statAGI', 'statDEX', 'statHP'] as const
+const FEATURE_FIELDS = ['key', 'titleEn', 'titleTh', 'descriptionEn', 'descriptionTh', 'detailEn', 'detailTh', 'icon', 'image', 'sortOrder', 'visible'] as const
+const HIGHLIGHT_FIELDS = FEATURE_FIELDS
+const BANNER_FIELDS = ['id', 'placement', 'scope', 'status', 'priority', 'campaignCode', 'badgeEn', 'badgeTh', 'titleEn', 'titleTh', 'bodyEn', 'bodyTh', 'desktopImage', 'mobileImage', 'targetType', 'targetArticleId', 'targetPageKey', 'targetTopicKey', 'targetUrl', 'targetNewTab', 'dismissible', 'isActive', 'config'] as const
+const MILESTONE_FIELDS = ['tier', 'targetCount', 'rewardEn', 'rewardTh', 'icon', 'reached', 'sortOrder'] as const
 
 type LegacyPageBackup = {
   key: string
@@ -40,6 +54,17 @@ type PageBackup = {
   headerOrder?: number
   footerOrder?: number
   isSystemPage?: boolean
+}
+
+/** Pick only allowed fields from input — guards against mass-assignment via crafted backup. */
+function pickKnown<K extends string>(input: unknown, allowed: readonly K[]): Record<K, unknown> {
+  if (!input || typeof input !== 'object') return {} as Record<K, unknown>
+  const src = input as Record<string, unknown>
+  const out = {} as Record<K, unknown>
+  for (const k of allowed) {
+    if (k in src) out[k] = src[k]
+  }
+  return out
 }
 
 function normalizeImportedPage(page: LegacyPageBackup | PageBackup): PageBackup {
@@ -99,10 +124,21 @@ function normalizeImportedPage(page: LegacyPageBackup | PageBackup): PageBackup 
 }
 
 export default defineEventHandler(async (event) => {
+  // ── Body size guard (DoS) ──
+  const contentLength = Number(getRequestHeader(event, 'content-length') || '0')
+  if (contentLength > MAX_IMPORT_BYTES) {
+    throw createError({ statusCode: 413, message: `Backup exceeds ${MAX_IMPORT_BYTES} bytes` })
+  }
+
   const body = await readBody(event)
 
+  // ── Body shape guard ──
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    throw createError({ statusCode: 422, message: 'Backup body must be a JSON object' })
+  }
+
   // ── Schema version check ──
-  const meta = body?._meta || {}
+  const meta = (body as { _meta?: { version?: unknown } })._meta || {}
   const version = String(meta.version || '1.0')
   if (!SUPPORTED_VERSIONS.has(version)) {
     throw createError({
@@ -111,8 +147,10 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const typedBody = body as Record<string, unknown>
   const imported: Record<string, number> = {}
   const errors: string[] = []
+  let totalAttempted = 0
 
   // ── FK remap: backup carries the OLD newsArticle.id (autoincrement), but
   // after upsert-by-slug on a fresh DB the article gets a NEW id. Banners
@@ -123,12 +161,13 @@ export default defineEventHandler(async (event) => {
 
   type ImportFn<T> = (item: T) => Promise<void>
 
-  async function importBatch<T>(name: string, items: T[] | undefined, fn: ImportFn<T>) {
-    if (!items?.length) return
+  async function importBatch<T>(name: string, items: unknown, fn: ImportFn<T>) {
+    if (!Array.isArray(items) || items.length === 0) return
     imported[name] = 0
     for (const item of items) {
+      totalAttempted++
       try {
-        await fn(item)
+        await fn(item as T)
         imported[name] = (imported[name] || 0) + 1
       } catch (error) {
         errors.push(`${name}: ${(error as Error).message}`)
@@ -136,16 +175,18 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  await importBatch('news', body.news as Array<Record<string, unknown>>, async (article) => {
-    const oldId = (article as { id?: number }).id
-    const { id: _id, createdAt: _ca, updatedAt: _ua, ...data } = article as Record<string, unknown>
-    const safeContentEn = data.contentEn ? sanitizeRichText(String(data.contentEn)) : null
-    const safeContentTh = data.contentTh ? sanitizeRichText(String(data.contentTh)) : null
-    const cleanData = { ...data, contentEn: safeContentEn, contentTh: safeContentTh }
+  await importBatch('news', typedBody.news, async (article: Record<string, unknown>) => {
+    const oldId = article.id as number | undefined
+    const data = pickKnown(article, NEWS_FIELDS)
+    data.contentEn = sanitizeRichTextOptional(data.contentEn as string | null | undefined)
+    data.contentTh = sanitizeRichTextOptional(data.contentTh as string | null | undefined)
+    if (!data.slug || typeof data.slug !== 'string') {
+      throw new Error('news article missing slug')
+    }
     const upserted = await prisma.newsArticle.upsert({
       where: { slug: data.slug as string },
-      update: cleanData as never,
-      create: cleanData as never,
+      update: data as never,
+      create: data as never,
       select: { id: true },
     })
     if (typeof oldId === 'number') {
@@ -153,8 +194,11 @@ export default defineEventHandler(async (event) => {
     }
   })
 
-  await importBatch('weapons', body.weapons as Array<Record<string, unknown>>, async (weapon) => {
-    const { createdAt: _ca, updatedAt: _ua, ...data } = weapon as Record<string, unknown>
+  await importBatch('weapons', typedBody.weapons, async (weapon: Record<string, unknown>) => {
+    const data = pickKnown(weapon, WEAPON_FIELDS)
+    if (typeof data.id !== 'number') throw new Error('weapon missing numeric id')
+    data.descriptionEn = sanitizeRichTextOptional(data.descriptionEn as string | null | undefined)
+    data.descriptionTh = sanitizeRichTextOptional(data.descriptionTh as string | null | undefined)
     await prisma.weapon.upsert({
       where: { id: data.id as number },
       update: data as never,
@@ -162,7 +206,10 @@ export default defineEventHandler(async (event) => {
     })
   })
 
-  await importBatch('config', body.config as Array<{ key: string; value: unknown }>, async (cfg) => {
+  await importBatch('config', typedBody.config, async (cfg: { key?: unknown; value?: unknown }) => {
+    if (!cfg || typeof cfg !== 'object' || typeof cfg.key !== 'string') {
+      throw new Error('config row missing key')
+    }
     await prisma.siteConfig.upsert({
       where: { key: cfg.key },
       update: { value: cfg.value as never },
@@ -170,8 +217,11 @@ export default defineEventHandler(async (event) => {
     })
   })
 
-  await importBatch('features', body.features as Array<Record<string, unknown>>, async (feature) => {
-    const { createdAt: _ca, updatedAt: _ua, ...data } = feature as Record<string, unknown>
+  await importBatch('features', typedBody.features, async (feature: Record<string, unknown>) => {
+    const data = pickKnown(feature, FEATURE_FIELDS)
+    data.detailEn = sanitizeRichTextOptional(data.detailEn as string | null | undefined)
+    data.detailTh = sanitizeRichTextOptional(data.detailTh as string | null | undefined)
+    if (typeof data.key !== 'string') throw new Error('feature missing key')
     await prisma.feature.upsert({
       where: { key: data.key as string },
       update: data as never,
@@ -179,20 +229,19 @@ export default defineEventHandler(async (event) => {
     })
   })
 
-  await importBatch(
-    'highlights',
-    body.highlights as Array<Record<string, unknown>>,
-    async (highlight) => {
-      const { createdAt: _ca, updatedAt: _ua, ...data } = highlight as Record<string, unknown>
-      await prisma.highlight.upsert({
-        where: { key: data.key as string },
-        update: data as never,
-        create: data as never,
-      })
-    },
-  )
+  await importBatch('highlights', typedBody.highlights, async (highlight: Record<string, unknown>) => {
+    const data = pickKnown(highlight, HIGHLIGHT_FIELDS)
+    data.detailEn = sanitizeRichTextOptional(data.detailEn as string | null | undefined)
+    data.detailTh = sanitizeRichTextOptional(data.detailTh as string | null | undefined)
+    if (typeof data.key !== 'string') throw new Error('highlight missing key')
+    await prisma.highlight.upsert({
+      where: { key: data.key as string },
+      update: data as never,
+      create: data as never,
+    })
+  })
 
-  await importBatch('pages', body.pages as Array<LegacyPageBackup | PageBackup>, async (page) => {
+  await importBatch('pages', typedBody.pages, async (page: LegacyPageBackup | PageBackup) => {
     const normalized = normalizeImportedPage(page)
     normalized.contentEn = sanitizeRichText(normalized.contentEn ?? '')
     normalized.contentTh = sanitizeRichText(normalized.contentTh ?? '')
@@ -204,8 +253,10 @@ export default defineEventHandler(async (event) => {
   })
 
   // ── v2.0+: banners, milestones (events dropped at official launch) ──
-  await importBatch('banners', body.banners as Array<Record<string, unknown>>, async (banner) => {
-    const { createdAt: _ca, updatedAt: _ua, ...data } = banner as Record<string, unknown>
+  await importBatch('banners', typedBody.banners, async (banner: Record<string, unknown>) => {
+    const data = pickKnown(banner, BANNER_FIELDS)
+    data.bodyEn = sanitizeRichTextOptional(data.bodyEn as string | null | undefined)
+    data.bodyTh = sanitizeRichTextOptional(data.bodyTh as string | null | undefined)
 
     // FK remap: targetArticleId points to OLD article.id (from export).
     // Look up the new id from the map built during the news pass.
@@ -228,6 +279,7 @@ export default defineEventHandler(async (event) => {
       }
     }
 
+    if (typeof data.id !== 'string') throw new Error('banner missing string id')
     await prisma.marketingBanner.upsert({
       where: { id: data.id as string },
       update: data as never,
@@ -235,18 +287,15 @@ export default defineEventHandler(async (event) => {
     })
   })
 
-  await importBatch(
-    'milestones',
-    body.milestones as Array<Record<string, unknown>>,
-    async (milestone) => {
-      const data = milestone as never
-      await prisma.milestone.upsert({
-        where: { tier: (data as { tier: number }).tier },
-        update: data,
-        create: data,
-      })
-    },
-  )
+  await importBatch('milestones', typedBody.milestones, async (milestone: Record<string, unknown>) => {
+    const data = pickKnown(milestone, MILESTONE_FIELDS)
+    if (typeof data.tier !== 'number') throw new Error('milestone missing tier')
+    await prisma.milestone.upsert({
+      where: { tier: data.tier as number },
+      update: data as never,
+      create: data as never,
+    })
+  })
 
   await logActivity(
     event,
@@ -255,10 +304,15 @@ export default defineEventHandler(async (event) => {
     `Imported v${version}: ${JSON.stringify(imported)}${errors.length ? ` (${errors.length} errors)` : ''}`,
   )
 
+  const importedTotal = Object.values(imported).reduce((sum, n) => sum + n, 0)
+
   return {
     success: errors.length === 0,
+    partialSuccess: errors.length > 0 && importedTotal > 0,
     version,
     imported,
+    failed: errors.length,
+    attempted: totalAttempted,
     errors,
   }
 })

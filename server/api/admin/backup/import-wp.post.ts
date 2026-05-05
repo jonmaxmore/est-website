@@ -16,6 +16,45 @@ const inputSchema = z.object({
   perPage: z.number().int().min(1).max(100).default(50),
 })
 
+const WP_FETCH_TIMEOUT_MS = 30_000
+
+/**
+ * Reject SSRF-prone targets: private/loopback/link-local hosts and non-HTTPS schemes.
+ * IPv4-literal hostname matching covers the common attack ranges; for hostnames we
+ * trust DNS resolution to fail at fetch time for internal-only names. Cloud metadata
+ * endpoints (169.254.169.254) and localhost-redis (127.0.0.1:6379) are blocked here.
+ */
+function assertSafePublicUrl(input: string): URL {
+  let url: URL
+  try {
+    url = new URL(input)
+  } catch {
+    throw createError({ statusCode: 422, message: 'Invalid URL' })
+  }
+
+  if (url.protocol !== 'https:' && url.protocol !== 'http:') {
+    throw createError({ statusCode: 422, message: 'Only http(s) URLs are allowed' })
+  }
+
+  const host = url.hostname.toLowerCase()
+  if (
+    host === 'localhost' ||
+    host.endsWith('.local') ||
+    host.endsWith('.internal') ||
+    host === '127.0.0.1' ||
+    host === '0.0.0.0' ||
+    host === '::1' ||
+    /^10\./.test(host) ||
+    /^192\.168\./.test(host) ||
+    /^172\.(1[6-9]|2\d|3[01])\./.test(host) ||
+    /^169\.254\./.test(host)
+  ) {
+    throw createError({ statusCode: 422, message: 'URL points to a private or loopback address' })
+  }
+
+  return url
+}
+
 type WpPost = {
   slug: string
   title: { rendered: string }
@@ -37,11 +76,13 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const wpUrl = parsed.data.url.replace(/\/$/, '')
+  const safeUrl = assertSafePublicUrl(parsed.data.url)
+  const wpUrl = safeUrl.toString().replace(/\/$/, '')
   let posts: WpPost[]
   try {
     posts = await $fetch<WpPost[]>(
       `${wpUrl}/wp-json/wp/v2/posts?per_page=${parsed.data.perPage}&_embed`,
+      { signal: AbortSignal.timeout(WP_FETCH_TIMEOUT_MS) },
     )
   } catch (err) {
     throw createError({
