@@ -1,4 +1,6 @@
 import { z } from 'zod'
+import { parseIdParam } from '../../../utils/response'
+import { toNotFoundError } from '../../../utils/prisma-errors'
 
 const milestoneSchema = z.object({
   tier: z.number().int().positive(),
@@ -11,24 +13,26 @@ const milestoneSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  const id = Number(getRouterParam(event, 'id'))
-  if (!Number.isInteger(id) || id <= 0) {
-    throw createError({ statusCode: 400, message: 'Invalid milestone id' })
-  }
+  const id = parseIdParam(event, 'id')
 
   const parsed = milestoneSchema.safeParse(await readBody(event))
   if (!parsed.success) {
-    throw createError({ statusCode: 400, message: 'Invalid milestone data', data: parsed.error.flatten() })
+    throw createError({ statusCode: 422, message: 'Invalid milestone data', data: parsed.error.flatten() })
   }
 
-  const milestone = await prisma.milestone.update({
-    where: { id },
-    data: {
-      ...parsed.data,
-      icon: parsed.data.icon || null,
-    },
-  })
-
-  await logActivity(event, 'UPDATE', 'milestones', `Updated milestone: ${milestone.targetCount}`, String(milestone.id))
-  return milestone
+  try {
+    const milestone = await prisma.milestone.update({
+      where: { id },
+      data: {
+        ...parsed.data,
+        icon: parsed.data.icon || null,
+      },
+    })
+    await logActivity(event, 'UPDATE', 'milestones', `Updated milestone: ${milestone.targetCount}`, String(milestone.id))
+    return milestone
+  } catch (err) {
+    const notFound = toNotFoundError(err as { code?: string }, { resource: 'Milestone' })
+    if (notFound) throw notFound
+    throw err
+  }
 })

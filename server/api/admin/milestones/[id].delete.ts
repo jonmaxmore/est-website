@@ -1,11 +1,17 @@
+import { ok, parseIdParam } from '../../../utils/response'
+import { toNotFoundError } from '../../../utils/prisma-errors'
+
 export default defineEventHandler(async (event) => {
-  const id = Number(getRouterParam(event, 'id'))
-  if (!Number.isInteger(id) || id <= 0) {
-    throw createError({ statusCode: 400, message: 'Invalid milestone id' })
+  const id = parseIdParam(event, 'id')
+
+  try {
+    await prisma.milestone.delete({ where: { id } })
+  } catch (err) {
+    const notFound = toNotFoundError(err as { code?: string }, { resource: 'Milestone' })
+    if (notFound) throw notFound
+    throw err
   }
 
-  await prisma.milestone.delete({ where: { id } })
   await logActivity(event, 'DELETE', 'milestones', `Deleted milestone: ${id}`, String(id))
-
-  return { success: true }
+  return ok()
 })

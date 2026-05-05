@@ -1,9 +1,18 @@
+import { ok, parseIdParam } from '../../../utils/response'
+import { toNotFoundError } from '../../../utils/prisma-errors'
+
 /** Admin — delete a feature */
 export default defineEventHandler(async (event) => {
-  const id = Number(getRouterParam(event, 'id'))
-  if (!id) throw createError({ statusCode: 400, message: 'Invalid ID' })
+  const id = parseIdParam(event, 'id')
 
-  await prisma.feature.delete({ where: { id } })
+  try {
+    await prisma.feature.delete({ where: { id } })
+  } catch (err) {
+    const notFound = toNotFoundError(err as { code?: string }, { resource: 'Feature' })
+    if (notFound) throw notFound
+    throw err
+  }
+
   await logActivity(event, 'DELETE', 'features', `Deleted feature #${id}`, String(id))
-  return { success: true }
+  return ok()
 })

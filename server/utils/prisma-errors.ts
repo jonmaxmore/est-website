@@ -43,6 +43,15 @@ export function toDuplicateConflictError(
 }
 
 /**
+ * แปลง Prisma P2025 (record not found on update/delete) → HTTP 404
+ * ถ้าไม่ใช่ P2025 → คืน null
+ */
+export function toNotFoundError(error: PrismaLikeError, options: { resource: string }) {
+  if (error?.code !== 'P2025') return null
+  return createError({ statusCode: 404, message: `${options.resource} not found` })
+}
+
+/**
  * เปลี่ยน Prisma error ที่ไม่รู้จักให้เป็น generic 500 — ป้องกัน schema/path
  * leak ออกไปทาง response.message (P1001 connection string, P2003 column name
  * ฯลฯ). คงสำหรับ caller log ไว้เอง.

@@ -1,4 +1,6 @@
 import { z } from 'zod'
+import { parseIdParam } from '../../../utils/response'
+import { toNotFoundError } from '../../../utils/prisma-errors'
 
 const updateSchema = z.object({
   key: z.string().min(1).optional(),
@@ -16,19 +18,21 @@ const updateSchema = z.object({
 
 /** Admin — update a highlight */
 export default defineEventHandler(async (event) => {
-  const id = Number(getRouterParam(event, 'id'))
-  if (!id) throw createError({ statusCode: 400, message: 'Invalid ID' })
+  const id = parseIdParam(event, 'id')
 
   const body = await readBody(event)
   const parsed = updateSchema.safeParse(body)
   if (!parsed.success) {
-    throw createError({ statusCode: 400, message: 'Validation error', data: parsed.error.flatten() })
+    throw createError({ statusCode: 422, message: 'Validation error', data: parsed.error.flatten() })
   }
 
-  const highlight = await prisma.highlight.update({
-    where: { id },
-    data: parsed.data,
-  })
-  await logActivity(event, 'UPDATE', 'highlights', `Updated highlight: ${highlight.titleEn}`, String(id))
-  return highlight
+  try {
+    const highlight = await prisma.highlight.update({ where: { id }, data: parsed.data })
+    await logActivity(event, 'UPDATE', 'highlights', `Updated highlight: ${highlight.titleEn}`, String(id))
+    return highlight
+  } catch (err) {
+    const notFound = toNotFoundError(err as { code?: string }, { resource: 'Highlight' })
+    if (notFound) throw notFound
+    throw err
+  }
 })

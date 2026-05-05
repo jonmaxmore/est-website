@@ -13,7 +13,7 @@ const milestoneSchema = z.object({
 export default defineEventHandler(async (event) => {
   const parsed = milestoneSchema.safeParse(await readBody(event))
   if (!parsed.success) {
-    throw createError({ statusCode: 400, message: 'Invalid milestone data', data: parsed.error.flatten() })
+    throw createError({ statusCode: 422, message: 'Invalid milestone data', data: parsed.error.flatten() })
   }
 
   const milestone = await prisma.milestone.create({

@@ -9,6 +9,7 @@
  *   const { data, meta } = await fetchWithPagination(...)
  *   return paginated(items, { total, page, limit })
  */
+import { createError, getRouterParam, type H3Event } from 'h3'
 
 export type PaginationMeta = {
   total: number
@@ -57,4 +58,26 @@ export function parsePagination(query: Record<string, unknown>, opts?: { default
     skip: (page - 1) * limit,
     take: limit,
   }
+}
+
+/**
+ * Standard success envelope for write operations (POST/PUT/DELETE).
+ * All admin write handlers should return this shape so frontend can rely on
+ * `result.success` and optional `result.data` consistently.
+ */
+export function ok<T = undefined>(data?: T) {
+  return data === undefined ? { success: true as const } : { success: true as const, data }
+}
+
+/**
+ * Parse a positive integer route param (id), throwing 400 on invalid input.
+ * Use as: const id = parseIdParam(event, 'id')
+ */
+export function parseIdParam(event: H3Event, name: string) {
+  const raw = getRouterParam(event, name)
+  const num = Number(raw)
+  if (!Number.isInteger(num) || num <= 0) {
+    throw createError({ statusCode: 400, message: `Invalid ${name}` })
+  }
+  return num
 }

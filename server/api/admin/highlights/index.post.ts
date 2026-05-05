@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const parsed = highlightSchema.safeParse(body)
   if (!parsed.success) {
-    throw createError({ statusCode: 400, message: 'Validation error', data: parsed.error.flatten() })
+    throw createError({ statusCode: 422, message: 'Validation error', data: parsed.error.flatten() })
   }
 
   try {

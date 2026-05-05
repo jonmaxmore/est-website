@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
-import { toDuplicateConflictError } from '../../../utils/prisma-errors'
+import { toDuplicateConflictError, toNotFoundError } from '../../../utils/prisma-errors'
+import { parseIdParam } from '../../../utils/response'
 
 const weaponSchema = z.object({
   name: z.string().min(1).optional(),
@@ -23,13 +24,12 @@ const weaponSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  const id = Number(getRouterParam(event, 'id'))
-  if (!id) throw createError({ statusCode: 400, message: 'Invalid ID' })
+  const id = parseIdParam(event, 'id')
 
   const body = await readBody(event)
   const parsed = weaponSchema.safeParse(body)
   if (!parsed.success) {
-    throw createError({ statusCode: 400, message: 'Validation error', data: parsed.error.flatten() })
+    throw createError({ statusCode: 422, message: 'Validation error', data: parsed.error.flatten() })
   }
 
   try {
@@ -45,10 +45,10 @@ export default defineEventHandler(async (event) => {
 
     return weapon
   } catch (err) {
-    const conflict = toDuplicateConflictError(
-      err as { code?: string; meta?: { target?: string[] | string } },
-      { resource: 'Weapon' },
-    )
+    const typed = err as { code?: string; meta?: { target?: string[] | string } }
+    const notFound = toNotFoundError(typed, { resource: 'Weapon' })
+    if (notFound) throw notFound
+    const conflict = toDuplicateConflictError(typed, { resource: 'Weapon' })
     if (conflict) throw conflict
     throw err
   }
