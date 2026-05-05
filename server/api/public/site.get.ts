@@ -14,7 +14,7 @@ import { normalizeIntegrationsConfig } from '../../utils/admin-config'
  * ⚠️ ไม่ต้อง login — เป็น API สาธารณะ
  * ⚠️ ถ้ายังไม่มี config → ใช้ default navigation
  */
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
   const configs = await prisma.siteConfig.findMany({
     where: {
       key: {
@@ -68,6 +68,12 @@ export default defineEventHandler(async () => {
         return href ? { ...item, href } : null
       })
       .filter((item): item is NonNullable<typeof item> => item !== null)
+
+  // Site config drives nav, footer, SEO defaults — touched on every public
+  // page render. Cache for 1 min at the edge to absorb traffic spikes;
+  // admin/config.put.ts already invalidates `site:*` and `config:*` Redis
+  // keys on save (HTTP cache will follow when CDN purge is wired).
+  setResponseHeader(event, 'Cache-Control', 'public, max-age=30, s-maxage=60, stale-while-revalidate=300')
 
   return {
     navigation: {

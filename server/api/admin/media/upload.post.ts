@@ -23,6 +23,7 @@ import {
   buildMediaUploadError,
   isAllowedMediaUpload,
 } from '../../../../app/shared/cms/media'
+import { rethrowAsInternalError } from '../../../utils/prisma-errors'
 
 const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads')
 
@@ -109,7 +110,7 @@ export default defineEventHandler(async (event) => {
         // cleanup ล้มเหลวไม่เป็นไร — ส่ง error ต้นทางกลับไป
       }
 
-      throw error
+      rethrowAsInternalError(error, 'Admin Media Upload')
     }
   }
 
