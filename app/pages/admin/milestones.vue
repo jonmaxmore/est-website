@@ -166,7 +166,7 @@ onMounted(loadMilestones)
 </script>
 
 <style scoped>
-.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, #d4a843, #b8922e); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: filter 0.15s; }
+.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--adm-gold), var(--adm-gold-deep)); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: filter 0.15s; }
 .gold-btn:hover { filter: brightness(1.1); }
 .th-cell { padding: 12px 16px; text-align: left; font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); }
 .icon-btn { display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 6px; border: none; background: transparent; cursor: pointer; transition: background 0.15s; }

@@ -347,7 +347,7 @@ onMounted(loadMenus)
   border-radius: 10px;
   background: rgba(212, 168, 67, 0.08);
   padding: 0 14px;
-  color: #d4a843;
+  color: var(--adm-gold);
   font-size: 0.8125rem;
   font-weight: 700;
 }

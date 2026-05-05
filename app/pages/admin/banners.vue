@@ -170,15 +170,15 @@
 
           <div class="grid gap-4 sm:grid-cols-4">
             <label class="flex items-center gap-3 text-sm text-white/60">
-              <input v-model="form.isActive" type="checkbox" class="h-4 w-4 accent-[#d4a843]" />
+              <input v-model="form.isActive" type="checkbox" class="h-4 w-4 accent-[var(--adm-gold)]" />
               Active
             </label>
             <label class="flex items-center gap-3 text-sm text-white/60">
-              <input v-model="form.dismissible" type="checkbox" class="h-4 w-4 accent-[#d4a843]" />
+              <input v-model="form.dismissible" type="checkbox" class="h-4 w-4 accent-[var(--adm-gold)]" />
               Dismissible
             </label>
             <label class="flex items-center gap-3 text-sm text-white/60">
-              <input v-model="form.targetNewTab" type="checkbox" class="h-4 w-4 accent-[#d4a843]" />
+              <input v-model="form.targetNewTab" type="checkbox" class="h-4 w-4 accent-[var(--adm-gold)]" />
               Open in new tab
             </label>
           </div>
@@ -440,7 +440,7 @@ onMounted(() => {
 
 <style scoped>
 .th-cell { padding: 12px 16px; text-align: left; font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.3); }
-.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, #d4a843, #b8922e); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: filter 0.15s; }
+.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--adm-gold), var(--adm-gold-deep)); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: filter 0.15s; }
 .gold-btn:hover { filter: brightness(1.1); }
 .icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px; color: rgba(255, 255, 255, 0.45); transition: background 0.15s, color 0.15s; }
 .icon-btn:hover { background: rgba(255, 255, 255, 0.08); color: white; }

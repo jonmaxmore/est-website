@@ -25,7 +25,7 @@
 
           <!-- Icon & Type -->
           <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10 flex-shrink-0">
-            <UIcon :name="sectionIcon(section.type)" class="w-5 h-5 text-[#d4a843]" />
+            <UIcon :name="sectionIcon(section.type)" class="w-5 h-5 text-[var(--adm-gold)]" />
           </div>
 
           <!-- Info -->

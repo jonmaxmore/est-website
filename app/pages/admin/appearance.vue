@@ -27,7 +27,7 @@
             <div class="relative text-center">
               <img :src="appearance.logo" class="mx-auto mb-2 h-12 object-contain" />
               <p class="text-xs text-white/60">{{ appearance.tagline }}</p>
-              <div class="mx-auto mt-2 inline-block rounded-full bg-gradient-to-r from-[#d4a843] to-[#e8c468] px-4 py-1 text-xs font-bold text-black">{{ appearance.ctaText }}</div>
+              <div class="mx-auto mt-2 inline-block rounded-full bg-gradient-to-r from-[var(--adm-gold)] to-[var(--adm-gold-light)] px-4 py-1 text-xs font-bold text-black">{{ appearance.ctaText }}</div>
             </div>
           </div>
         </div>
@@ -71,7 +71,7 @@ const { t } = useI18n()
 const appearance = ref({
   heroBg: '/images/hero-bg.webp', logo: '/images/logo.webp',
   tagline: 'ผจญภัยไปด้วยกัน พิชิตยอดหอคอย', ctaText: 'ลงทะเบียนล่วงหน้าเลย',
-  colorPrimary: '#d4a843', colorBg: '#0a0a0f', colorAccent: '#b8922e',
+  colorPrimary: 'var(--adm-gold)', colorBg: '#0a0a0f', colorAccent: 'var(--adm-gold-deep)',
   facebook: '', twitter: '', youtube: '', discord: '', line: '',
 })
 
@@ -111,7 +111,7 @@ onMounted(load)
 <style scoped>
 .panel { border-radius: 16px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.03); padding: 24px; }
 .panel-title { margin-bottom: 20px; font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); }
-.gold-btn { padding: 10px 28px; border: none; border-radius: 10px; background: linear-gradient(135deg, #d4a843, #b8922e); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: filter 0.15s; }
+.gold-btn { padding: 10px 28px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--adm-gold), var(--adm-gold-deep)); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: filter 0.15s; }
 .gold-btn:hover { filter: brightness(1.1); }
 .ghost-btn { padding: 10px 20px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; background: transparent; color: rgba(255,255,255,0.5); font-size: 0.875rem; cursor: pointer; transition: all 0.15s; }
 .ghost-btn:hover { color: white; border-color: rgba(255,255,255,0.2); }

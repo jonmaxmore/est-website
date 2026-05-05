@@ -299,9 +299,9 @@ function pad(n: number) { return n.toString().padStart(2, '0') }
 .dtrp-day.other-month { color: rgba(255,255,255,0.15); }
 .dtrp-day.is-today { border: 1px solid rgba(212,168,67,0.3); }
 .dtrp-day.is-past { color: rgba(255,255,255,0.1); cursor: not-allowed; }
-.dtrp-day.is-start { background: #d4a843; color: black; font-weight: 700; border-radius: 8px 4px 4px 8px; }
-.dtrp-day.is-end { background: #d4a843; color: black; font-weight: 700; border-radius: 4px 8px 8px 4px; }
-.dtrp-day.in-range { background: rgba(212,168,67,0.12); color: #d4a843; border-radius: 2px; }
+.dtrp-day.is-start { background: var(--adm-gold); color: black; font-weight: 700; border-radius: 8px 4px 4px 8px; }
+.dtrp-day.is-end { background: var(--adm-gold); color: black; font-weight: 700; border-radius: 4px 8px 8px 4px; }
+.dtrp-day.in-range { background: rgba(212,168,67,0.12); color: var(--adm-gold); border-radius: 2px; }
 
 /* Time inputs */
 .dtrp-times {
@@ -332,6 +332,6 @@ function pad(n: number) { return n.toString().padStart(2, '0') }
 
 .dtrp-error {
   margin-top: 8px; text-align: center; font-size: 0.75rem;
-  color: #ef4444; font-weight: 500;
+  color: var(--adm-danger); font-weight: 500;
 }
 </style>

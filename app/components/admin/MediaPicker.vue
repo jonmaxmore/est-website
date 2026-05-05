@@ -327,7 +327,7 @@ function handleFileSelect(event: Event) {
 }
 .mp-browse-btn:hover {
   border-color: rgba(212, 168, 67, 0.3);
-  color: #d4a843;
+  color: var(--adm-gold);
   background: rgba(212, 168, 67, 0.05);
 }
 .mp-overlay {
@@ -386,7 +386,7 @@ function handleFileSelect(event: Event) {
 .mp-filter-tab.active {
   background: rgba(212, 168, 67, 0.15);
   border-color: rgba(212, 168, 67, 0.4);
-  color: #d4a843;
+  color: var(--adm-gold);
 }
 .mp-close {
   width: 32px;
@@ -414,10 +414,10 @@ function handleFileSelect(event: Event) {
   transition: all 0.2s;
 }
 .mp-upload-zone.dragover {
-  border-color: #d4a843;
+  border-color: var(--adm-gold);
   background: rgba(212, 168, 67, 0.05);
 }
-.mp-upload-link { color: #d4a843; cursor: pointer; text-decoration: underline; }
+.mp-upload-link { color: var(--adm-gold); cursor: pointer; text-decoration: underline; }
 .mp-upload-hint { color: rgba(255, 255, 255, 0.25); font-size: 0.75rem; margin-left: 4px; }
 .mp-hidden { display: none; }
 .mp-search { padding: 8px 20px; }
@@ -450,7 +450,7 @@ function handleFileSelect(event: Event) {
   background: rgba(255, 255, 255, 0.03);
 }
 .mp-item:hover { border-color: rgba(255, 255, 255, 0.15); }
-.mp-item.selected { border-color: #d4a843; }
+.mp-item.selected { border-color: var(--adm-gold); }
 .mp-item-media {
   width: 100%;
   height: 90px;
@@ -490,7 +490,7 @@ function handleFileSelect(event: Event) {
   min-width: 24px;
   height: 20px;
   border-radius: 999px;
-  background: #d4a843;
+  background: var(--adm-gold);
   color: black;
   font-size: 0.625rem;
   font-weight: 800;
@@ -530,7 +530,7 @@ function handleFileSelect(event: Event) {
   padding: 8px 20px;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(135deg, #d4a843, #b8922e);
+  background: linear-gradient(135deg, var(--adm-gold), var(--adm-gold-deep));
   color: black;
   font-size: 0.8125rem;
   font-weight: 700;

@@ -74,7 +74,7 @@
               <UInput v-model="form.publishedAt" type="datetime-local" />
             </UFormField>
             <label class="mt-3 flex items-center gap-3 text-sm text-white/60">
-              <input v-model="form.pinned" type="checkbox" class="h-4 w-4 accent-[#d4a843]" />
+              <input v-model="form.pinned" type="checkbox" class="h-4 w-4 accent-[var(--adm-gold)]" />
               Pin in webzine
             </label>
           </div>
@@ -91,7 +91,7 @@
               <UInput v-model="form.campaignCode" placeholder="launch-week" />
             </UFormField>
             <label class="mt-3 flex items-center gap-3 text-sm text-white/60">
-              <input v-model="form.isEvergreen" type="checkbox" class="h-4 w-4 accent-[#d4a843]" />
+              <input v-model="form.isEvergreen" type="checkbox" class="h-4 w-4 accent-[var(--adm-gold)]" />
               Evergreen guide
             </label>
           </div>
@@ -100,7 +100,7 @@
             <h4 class="sidebar-card-title">Featured Image</h4>
             <AdminMediaPicker v-model="form.featuredImage" label="" />
             <label class="mt-3 flex items-center gap-2 text-sm text-white/50">
-              <input v-model="form.featureOnHome" type="checkbox" class="accent-[#d4a843]" /> Show on homepage
+              <input v-model="form.featureOnHome" type="checkbox" class="accent-[var(--adm-gold)]" /> Show on homepage
             </label>
           </div>
 
@@ -143,7 +143,7 @@
             {{ previewLang === 'th' ? (form.titleTh || 'ยังไม่ได้ใส่ชื่อ') : (form.titleEn || 'No title set') }}
           </h1>
 
-          <p v-if="previewExcerpt" class="text-sm text-white/50 mb-6 italic border-l-2 border-[#d4a843]/30 pl-4">
+          <p v-if="previewExcerpt" class="text-sm text-white/50 mb-6 italic border-l-2 border-[var(--adm-gold)]/30 pl-4">
             {{ previewExcerpt }}
           </p>
 
@@ -401,14 +401,14 @@ onBeforeUnmount(() => clearInterval(autosaveTimer))
   cursor: pointer; transition: all 0.2s;
 }
 .mode-toggle-btn:hover { color: rgba(255,255,255,0.7); }
-.mode-toggle-btn.active { background: rgba(212,168,67,0.1); color: #d4a843; border-color: rgba(212,168,67,0.2); }
+.mode-toggle-btn.active { background: rgba(212,168,67,0.1); color: var(--adm-gold); border-color: rgba(212,168,67,0.2); }
 
 .preview-container { min-height: 400px; }
 .preview-lang-btn {
   padding: 5px 12px; border: 1px solid rgba(255,255,255,0.06); border-radius: 6px;
   background: transparent; color: rgba(255,255,255,0.4); font-size: 0.75rem; cursor: pointer; transition: all 0.15s;
 }
-.preview-lang-btn.active { background: rgba(212,168,67,0.08); color: #d4a843; border-color: rgba(212,168,67,0.15); }
+.preview-lang-btn.active { background: rgba(212,168,67,0.08); color: var(--adm-gold); border-color: rgba(212,168,67,0.15); }
 .preview-article {
   padding: 24px; border-radius: 16px;
   border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02);
@@ -420,7 +420,7 @@ onBeforeUnmount(() => clearInterval(autosaveTimer))
 .preview-body :deep(ul), .preview-body :deep(ol) { padding-left: 1.5em; }
 .preview-body :deep(blockquote) { border-left: 3px solid rgba(212,168,67,0.4); padding-left: 1em; color: rgba(255,255,255,0.5); }
 .preview-body :deep(img) { max-width: 100%; border-radius: 8px; margin: 1em 0; }
-.preview-body :deep(a) { color: #d4a843; }
+.preview-body :deep(a) { color: var(--adm-gold); }
 .preview-body :deep(table) { width: 100%; border-collapse: collapse; margin: 1em 0; }
 .preview-body :deep(th), .preview-body :deep(td) { border: 1px solid rgba(255,255,255,0.1); padding: 8px 12px; }
 </style>

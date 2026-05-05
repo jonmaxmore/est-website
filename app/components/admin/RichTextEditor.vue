@@ -331,7 +331,7 @@ onBeforeUnmount(() => {
 }
 .rte-btn.active {
   background: rgba(212, 168, 67, 0.15);
-  color: #d4a843;
+  color: var(--adm-gold);
 }
 .rte-btn:disabled {
   opacity: 0.25;
@@ -402,7 +402,7 @@ onBeforeUnmount(() => {
   margin: 1em 0;
 }
 .rte-content :deep(.tiptap a.rte-link) {
-  color: #d4a843;
+  color: var(--adm-gold);
   text-decoration: underline;
 }
 .rte-content :deep(.tiptap hr) {

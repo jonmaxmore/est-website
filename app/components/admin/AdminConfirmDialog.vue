@@ -81,11 +81,11 @@ function cancel() {
   padding: 9px 24px; border: none; border-radius: 8px; font-size: 0.8125rem;
   font-weight: 600; cursor: pointer; transition: all 0.15s;
 }
-.acd-btn-confirm.danger { background: #ef4444; color: white; }
+.acd-btn-confirm.danger { background: var(--adm-danger); color: white; }
 .acd-btn-confirm.danger:hover { background: #dc2626; }
-.acd-btn-confirm.warning { background: #f59e0b; color: black; }
+.acd-btn-confirm.warning { background: var(--adm-warning); color: black; }
 .acd-btn-confirm.warning:hover { background: #d97706; }
-.acd-btn-confirm.info { background: #3b82f6; color: white; }
+.acd-btn-confirm.info { background: var(--adm-info); color: white; }
 .acd-btn-confirm.info:hover { background: #2563eb; }
 
 .confirm-fade-enter-active, .confirm-fade-leave-active { transition: opacity 0.2s; }

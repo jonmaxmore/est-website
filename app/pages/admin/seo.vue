@@ -124,7 +124,7 @@ onMounted(loadData)
 <style scoped>
 .panel { border-radius: 16px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.03); padding: 24px; }
 .panel-title { margin-bottom: 20px; font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); }
-.gold-btn { padding: 10px 28px; border: none; border-radius: 10px; background: linear-gradient(135deg, #d4a843, #b8922e); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: filter 0.15s; }
+.gold-btn { padding: 10px 28px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--adm-gold), var(--adm-gold-deep)); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: filter 0.15s; }
 .gold-btn:hover { filter: brightness(1.1); }
 .ghost-btn { padding: 10px 20px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; background: transparent; color: rgba(255,255,255,0.5); font-size: 0.875rem; cursor: pointer; }
 .ghost-btn:hover { color: white; border-color: rgba(255,255,255,0.2); }

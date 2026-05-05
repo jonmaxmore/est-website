@@ -18,7 +18,7 @@
 
     <div
       class="mb-4 flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-10 text-center transition-all"
-      :class="dragActive ? 'border-[#d4a843] bg-[#d4a843]/5' : 'border-white/10 hover:border-white/20'"
+      :class="dragActive ? 'border-[var(--adm-gold)] bg-[var(--adm-gold)]/5' : 'border-white/10 hover:border-white/20'"
       @dragover.prevent="onDragOver"
       @dragleave="dragActive = false"
       @drop.prevent="handleDrop"
@@ -27,7 +27,7 @@
       <input ref="hiddenFileInput" type="file" multiple accept="image/*,video/*" class="hidden" @change="handleFileSelect" />
       <UIcon :name="uploadQueue.length > 0 ? 'i-lucide-loader' : 'i-lucide-folder-open'" class="mx-auto mb-3 block h-8 w-8 opacity-40" />
       <p v-if="uploadQueue.length === 0" class="text-sm text-white/50">
-        Drag and drop files here, or click to <span class="font-medium text-[#d4a843]">browse</span>
+        Drag and drop files here, or click to <span class="font-medium text-[var(--adm-gold)]">browse</span>
       </p>
       <p class="mt-1 text-xs text-white/25">PNG, JPG, WebP, AVIF, GIF, MP4 | Max 100MB each</p>
     </div>
@@ -43,11 +43,11 @@
           <p class="truncate text-sm font-medium">{{ item.name }}</p>
           <p class="text-[0.625rem] text-white/30">{{ formatBytes(item.size) }}</p>
           <div v-if="item.status === 'uploading'" class="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
-            <div class="h-full rounded-full bg-gradient-to-r from-[#d4a843] to-[#e8c468] transition-all duration-200" :style="{ width: `${item.progress}%` }" />
+            <div class="h-full rounded-full bg-gradient-to-r from-[var(--adm-gold)] to-[var(--adm-gold-light)] transition-all duration-200" :style="{ width: `${item.progress}%` }" />
           </div>
           <p v-if="item.status === 'error'" class="mt-1 text-xs text-red-400">{{ item.error }}</p>
         </div>
-        <span v-if="item.status === 'uploading'" class="flex-shrink-0 font-mono text-xs tabular-nums text-[#d4a843]">{{ item.progress }}%</span>
+        <span v-if="item.status === 'uploading'" class="flex-shrink-0 font-mono text-xs tabular-nums text-[var(--adm-gold)]">{{ item.progress }}%</span>
         <span v-else-if="item.status === 'done'" class="flex-shrink-0 text-xs text-emerald-400">Done</span>
       </div>
     </div>
@@ -59,7 +59,7 @@
         <button class="view-btn" :class="{ active: viewMode === 'list' }" @click="viewMode = 'list'"><UIcon name="i-lucide-list" class="h-4 w-4" /></button>
       </div>
       <label class="flex items-center gap-2 text-xs text-white/40">
-        <input type="checkbox" :checked="allSelected" @change="toggleSelectAll" class="accent-[#d4a843]" />
+        <input type="checkbox" :checked="allSelected" @change="toggleSelectAll" class="accent-[var(--adm-gold)]" />
         Select All
       </label>
     </div>
@@ -69,10 +69,10 @@
         v-for="asset in filteredAssets"
         :key="asset.id"
         class="group relative cursor-pointer overflow-hidden rounded-2xl border bg-white/4 transition-all hover:-translate-y-0.5"
-        :class="selectedIds.has(asset.id) ? 'border-[#d4a843] bg-[#d4a843]/5' : 'border-white/6 hover:border-white/15'"
+        :class="selectedIds.has(asset.id) ? 'border-[var(--adm-gold)] bg-[var(--adm-gold)]/5' : 'border-white/6 hover:border-white/15'"
       >
         <div class="absolute left-2 top-2 z-10">
-          <input type="checkbox" :checked="selectedIds.has(asset.id)" class="h-4 w-4 accent-[#d4a843]" @change.stop="toggleSelect(asset.id)" @click.stop />
+          <input type="checkbox" :checked="selectedIds.has(asset.id)" class="h-4 w-4 accent-[var(--adm-gold)]" @change.stop="toggleSelect(asset.id)" @click.stop />
         </div>
         <div class="h-[140px] overflow-hidden bg-black/20" @click="selectAsset(asset)">
           <img
@@ -173,7 +173,7 @@
           <UButton color="error" variant="soft" @click="confirmDeleteSingle(selectedAsset!)">Delete</UButton>
           <div class="flex gap-2">
             <UButton variant="ghost" @click="detailOpen = false">Close</UButton>
-            <UButton :loading="savingAltText" class="bg-gradient-to-br from-[#d4a843] to-[#b8922e] font-bold text-black" @click="saveAltText">Save</UButton>
+            <UButton :loading="savingAltText" class="bg-gradient-to-br from-[var(--adm-gold)] to-[var(--adm-gold-deep)] font-bold text-black" @click="saveAltText">Save</UButton>
           </div>
         </div>
       </template>
@@ -500,12 +500,12 @@ onMounted(loadAssets)
 </script>
 
 <style scoped>
-.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, #d4a843, #b8922e); color: black; font-size: 0.875rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--adm-gold), var(--adm-gold-deep)); color: black; font-size: 0.875rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
 .gold-btn:hover { filter: brightness(1.1); }
-.danger-btn { padding: 9px 16px; border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; background: rgba(239,68,68,0.08); color: #ef4444; font-size: 0.8125rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.danger-btn { padding: 9px 16px; border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; background: rgba(239,68,68,0.08); color: var(--adm-danger); font-size: 0.8125rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
 .danger-btn:hover { background: rgba(239,68,68,0.15); }
 .view-btn { padding: 6px 10px; border: none; background: transparent; color: rgba(255,255,255,0.3); font-size: 1rem; cursor: pointer; transition: all 0.15s; }
-.view-btn.active { background: rgba(212,168,67,0.1); color: #d4a843; }
+.view-btn.active { background: rgba(212,168,67,0.1); color: var(--adm-gold); }
 .view-btn:hover:not(.active) { color: white; }
 .th-cell { padding: 8px 12px; text-align: left; font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); }
 .icon-btn { display: flex; width: 28px; height: 28px; align-items: center; justify-content: center; border-radius: 6px; border: none; background: transparent; cursor: pointer; transition: background 0.15s; }

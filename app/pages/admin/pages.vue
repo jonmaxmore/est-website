@@ -21,7 +21,7 @@
       >
         <div class="mb-4 flex items-start justify-between gap-3">
           <div class="flex items-center gap-3">
-            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-gold/10 text-[#d4a843]">
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-gold/10 text-[var(--adm-gold)]">
               <UIcon :name="page.icon || 'i-lucide-file-text'" class="h-5 w-5" />
             </div>
             <div>

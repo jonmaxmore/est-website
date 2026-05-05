@@ -27,7 +27,7 @@
             <div v-for="stat in ['STR','INT','AGI','DEX','HP']" :key="stat" class="flex-1">
               <div class="text-[0.5rem] text-white/20 text-center">{{ stat }}</div>
               <div class="h-1.5 rounded-full bg-white/5 overflow-hidden">
-                <div class="h-full rounded-full bg-gradient-to-r from-[#d4a843] to-[#e8c468] transition-all duration-500" :style="{width: `${weapon['stat'+stat] || 50}%`}" />
+                <div class="h-full rounded-full bg-gradient-to-r from-[var(--adm-gold)] to-[var(--adm-gold-light)] transition-all duration-500" :style="{width: `${weapon['stat'+stat] || 50}%`}" />
               </div>
             </div>
           </div>
@@ -36,7 +36,7 @@
           <button class="icon-btn" @click="openEditor(weapon)"><UIcon name="i-lucide-pencil" class="w-4 h-4" /></button>
           <button class="icon-btn danger" @click="confirmDeleteItem(weapon)"><UIcon name="i-lucide-trash-2" class="w-4 h-4" /></button>
           <label class="flex items-center justify-center mt-1">
-            <input type="checkbox" :checked="weapon.visible" @change="toggleVisibility(weapon)" class="accent-[#d4a843]" />
+            <input type="checkbox" :checked="weapon.visible" @change="toggleVisibility(weapon)" class="accent-[var(--adm-gold)]" />
           </label>
         </div>
       </div>
@@ -82,7 +82,7 @@
             <div class="flex flex-col gap-3">
               <div v-for="stat in statFields" :key="stat.key" class="flex items-center gap-3">
                 <span class="w-10 text-xs font-bold text-white/40 text-right">{{ stat.label }}</span>
-                <input type="range" :min="0" :max="100" v-model.number="form[stat.key]" class="flex-1 accent-[#d4a843] h-2" />
+                <input type="range" :min="0" :max="100" v-model.number="form[stat.key]" class="flex-1 accent-[var(--adm-gold)] h-2" />
                 <span class="w-8 text-xs text-white/30 text-right font-mono">{{ form[stat.key] }}</span>
               </div>
             </div>
@@ -227,7 +227,7 @@ onMounted(loadWeapons)
 </script>
 
 <style scoped>
-.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, #d4a843, #b8922e); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
+.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--adm-gold), var(--adm-gold-deep)); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
 .gold-btn:hover { filter: brightness(1.1); }
 .sort-btn { border: none; background: transparent; color: rgba(255,255,255,0.3); font-size: 0.625rem; cursor: pointer; padding: 2px; }
 .sort-btn:hover { color: white; }

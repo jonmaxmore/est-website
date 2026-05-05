@@ -149,6 +149,6 @@ onMounted(() => {
 .icon-btn { display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 6px; border: none; background: transparent; cursor: pointer; transition: background 0.15s; }
 .icon-btn:hover { background: rgba(255, 255, 255, 0.08); }
 .icon-btn.danger:hover { background: rgba(239, 68, 68, 0.15); }
-.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, #d4a843, #b8922e); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: filter 0.15s; }
+.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--adm-gold), var(--adm-gold-deep)); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: filter 0.15s; }
 .gold-btn:hover { filter: brightness(1.1); }
 </style>

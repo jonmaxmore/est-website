@@ -20,7 +20,7 @@
         </div>
         <AdminStatusBadge :status="item.visible ? 'VISIBLE' : 'HIDDEN'" />
         <label class="flex items-center">
-          <input type="checkbox" :checked="item.visible" @change="toggleVisibility(index)" class="accent-[#d4a843]" />
+          <input type="checkbox" :checked="item.visible" @change="toggleVisibility(index)" class="accent-[var(--adm-gold)]" />
         </label>
         <div class="flex gap-1">
           <button class="icon-btn" @click="openEditor(item, index)"><UIcon name="i-lucide-pencil" class="w-4 h-4" /></button>
@@ -169,7 +169,7 @@ onMounted(loadItems)
 </script>
 
 <style scoped>
-.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, #d4a843, #b8922e); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
+.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--adm-gold), var(--adm-gold-deep)); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
 .gold-btn:hover { filter: brightness(1.1); }
 .sort-btn { border: none; background: transparent; color: rgba(255,255,255,0.3); font-size: 0.625rem; cursor: pointer; padding: 2px; }
 .sort-btn:hover { color: white; }

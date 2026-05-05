@@ -122,14 +122,14 @@ defineExpose({ activeTab, focusFirstError })
 }
 .clt-tab.active {
   background: rgba(212, 168, 67, 0.1);
-  color: #d4a843;
+  color: var(--adm-gold);
 }
 .clt-tab.has-errors {
   animation: tab-shake 0.4s ease;
 }
 .clt-tab.has-errors.active {
   background: rgba(239, 68, 68, 0.08);
-  color: #ef4444;
+  color: var(--adm-danger);
 }
 
 .clt-flag { font-size: 0.875rem; }
@@ -146,11 +146,11 @@ defineExpose({ activeTab, focusFirstError })
 }
 .clt-status.filled {
   background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
+  color: var(--adm-success);
 }
 .clt-status.empty {
   background: rgba(245, 158, 11, 0.15);
-  color: #f59e0b;
+  color: var(--adm-warning);
 }
 
 .clt-badge-error {
@@ -164,7 +164,7 @@ defineExpose({ activeTab, focusFirstError })
   font-size: 0.5625rem;
   font-weight: 800;
   background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
+  color: var(--adm-danger);
   cursor: help;
 }
 
@@ -180,7 +180,7 @@ defineExpose({ activeTab, focusFirstError })
   transition: all 0.15s;
 }
 .clt-copy-btn:hover {
-  color: #d4a843;
+  color: var(--adm-gold);
   border-color: rgba(212, 168, 67, 0.2);
 }
 

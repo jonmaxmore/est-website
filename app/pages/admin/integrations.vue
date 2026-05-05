@@ -73,7 +73,7 @@
       <!-- Webhook Endpoint -->
       <div class="rounded-2xl border border-white/6 bg-white/4 p-6">
         <div class="mb-4 flex items-center gap-3">
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10"><UIcon name="i-lucide-link" class="w-6 h-6 text-[#d4a843]" /></div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10"><UIcon name="i-lucide-link" class="w-6 h-6 text-[var(--adm-gold)]" /></div>
           <div>
             <h3 class="text-lg font-bold">Webhook Endpoint</h3>
             <p class="text-xs text-white/40">Receive signed events from external services</p>

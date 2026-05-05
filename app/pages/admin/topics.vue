@@ -23,7 +23,7 @@
           <tr v-for="topic in topics" :key="topic.key" class="border-b border-white/3 transition-colors hover:bg-white/2">
             <td class="px-4 py-3">
               <div class="flex items-center gap-3">
-                <span class="h-3 w-3 rounded-full" :style="{ background: topic.color || '#d4a843' }" />
+                <span class="h-3 w-3 rounded-full" :style="{ background: topic.color || 'var(--adm-gold)' }" />
                 <div>
                   <p class="font-medium">{{ topic.labelEn || topic.key }}</p>
                   <p class="text-xs text-white/30">{{ topic.descriptionEn || 'No description' }}</p>
@@ -101,7 +101,7 @@
               <input id="topic-color" v-model="form.color" type="color" class="h-10 w-full rounded-lg border border-white/10 bg-white/4 p-1" />
             </div>
             <label class="mt-7 flex items-center gap-3 text-sm text-white/60">
-              <input v-model="form.visible" type="checkbox" class="h-4 w-4 accent-[#d4a843]" />
+              <input v-model="form.visible" type="checkbox" class="h-4 w-4 accent-[var(--adm-gold)]" />
               Visible to editors and public pages
             </label>
           </div>
@@ -159,7 +159,7 @@ const form = reactive<Topic>({
   descriptionEn: '',
   descriptionTh: '',
   icon: '',
-  color: '#d4a843',
+  color: 'var(--adm-gold)',
   visible: true,
 })
 
@@ -180,7 +180,7 @@ function normalizeTopic(topic: Topic): Topic {
     descriptionEn: topic.descriptionEn.trim(),
     descriptionTh: topic.descriptionTh.trim(),
     icon: topic.icon.trim(),
-    color: topic.color || '#d4a843',
+    color: topic.color || 'var(--adm-gold)',
   }
 }
 
@@ -209,7 +209,7 @@ function resetForm() {
     descriptionEn: '',
     descriptionTh: '',
     icon: '',
-    color: '#d4a843',
+    color: 'var(--adm-gold)',
     visible: true,
   })
 }
@@ -281,7 +281,7 @@ onMounted(loadTopics)
 
 <style scoped>
 .th-cell { padding: 12px 16px; text-align: left; font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.3); }
-.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, #d4a843, #b8922e); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: filter 0.15s; }
+.gold-btn { padding: 9px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--adm-gold), var(--adm-gold-deep)); color: black; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: filter 0.15s; }
 .gold-btn:hover { filter: brightness(1.1); }
 .icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px; color: rgba(255, 255, 255, 0.45); transition: background 0.15s, color 0.15s; }
 .icon-btn:hover { background: rgba(255, 255, 255, 0.08); color: white; }
