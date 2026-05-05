@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="mb-6">
-      <h2 class="text-2xl font-bold">Theme & Appearance</h2>
-      <p class="mt-1 text-sm text-white/50">Customize hero section, logo, branding, and social links</p>
+      <h2 class="text-2xl font-bold">{{ t('admin.appearance.title') }}</h2>
+      <p class="mt-1 text-sm text-white/50">{{ t('admin.appearance.subtitle') }}</p>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-2">
@@ -66,6 +66,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 const appearance = ref({
   heroBg: '/images/hero-bg.webp', logo: '/images/logo.webp',

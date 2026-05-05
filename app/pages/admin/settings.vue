@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="mb-6">
-      <h2 class="text-2xl font-bold">Site Settings</h2>
-      <p class="mt-1 text-sm text-white/50">Configure global site defaults.</p>
+      <h2 class="text-2xl font-bold">{{ t('admin.settings.title') }}</h2>
+      <p class="mt-1 text-sm text-white/50">{{ t('admin.settings.subtitle') }}</p>
     </div>
 
     <div class="grid gap-6" style="grid-template-columns: repeat(auto-fit, minmax(420px, 1fr))">
@@ -134,6 +134,7 @@
 -->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 type LoadingKey = 'savingSeo' | 'savingSocial' | 'savingMaint'
 

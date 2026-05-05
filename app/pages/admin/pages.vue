@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-start justify-between gap-4">
       <div>
-        <h2 class="text-2xl font-bold">Pages</h2>
-        <p class="mt-1 text-sm text-white/50">Create, edit, and publish system or custom pages from one CMS registry.</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.pages.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.pages.subtitle') }}</p>
       </div>
       <UButton class="bg-gradient-to-br from-gold to-gold-light font-bold text-black" @click="createOpen = true">
         <UIcon name="i-lucide-file-plus" class="mr-2 h-4 w-4" />
@@ -148,6 +148,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 interface AdminPageItem {
   key: string

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mb-6 flex items-center justify-between">
-      <div><h2 class="text-2xl font-bold">User Management</h2><p class="mt-1 text-sm text-white/50">Manage admin users and roles</p></div>
+      <div><h2 class="text-2xl font-bold">{{ t('admin.users.title') }}</h2><p class="mt-1 text-sm text-white/50">{{ t('admin.users.subtitle') }}</p></div>
       <button class="gold-btn" @click="openEditor(null)">+ Add User</button>
     </div>
 
@@ -133,6 +133,7 @@
 -->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 interface AdminUser { id: string; email: string; displayName: string; role: string; lastLoginAt: string | null }
 
 const users = ref<AdminUser[]>([])
@@ -225,7 +226,8 @@ async function doDelete() {
   catch { showToast('Delete failed', 'error') }
 }
 
-function formatDate(d: string) { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }
+const { localizedDate } = useLocalizedField()
+function formatDate(d: string) { return localizedDate(d, { month: 'short', day: 'numeric', year: 'numeric' }) }
 // SSR-safe: admin auth is client-cookie based, so fetch on client only
 onMounted(loadUsers)
 </script>

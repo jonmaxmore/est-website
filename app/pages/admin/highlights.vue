@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Highlights</h2>
-        <p class="mt-1 text-sm text-white/50">Manage homepage highlight cards</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.highlights.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.highlights.subtitle') }}</p>
       </div>
       <button class="gold-btn" @click="openEditor(null)">+ New Highlight</button>
     </div>
@@ -103,6 +103,7 @@
 -->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 interface HighlightItem {
   id: number; key: string; titleEn: string; titleTh: string

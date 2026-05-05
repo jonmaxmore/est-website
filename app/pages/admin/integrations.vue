@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="mb-6">
-      <h2 class="text-2xl font-bold">Integrations</h2>
-      <p class="mt-1 text-sm text-white/50">Connect with WordPress, Wix, and external services</p>
+      <h2 class="text-2xl font-bold">{{ t('admin.integrations.title') }}</h2>
+      <p class="mt-1 text-sm text-white/50">{{ t('admin.integrations.subtitle') }}</p>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-2">
@@ -169,6 +169,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 const config = useRuntimeConfig()
 const siteUrl = String(config.public.siteUrl || '')
 

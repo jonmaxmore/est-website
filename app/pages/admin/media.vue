@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Media Library</h2>
-        <p class="mt-1 text-sm text-white/50">{{ assets.length }} assets | {{ totalSize }}</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.media.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.media.subtitleCount', { count: assets.length, size: totalSize }) }}</p>
       </div>
       <div class="flex gap-2">
         <button v-if="selectedIds.size > 0" class="danger-btn" @click="bulkDeleteOpen = true">
@@ -211,6 +211,8 @@
 -->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
+const { localizedDate } = useLocalizedField()
 
 interface MediaAssetItem {
   id: string
@@ -490,7 +492,7 @@ function formatBytes(bytes: number) {
 }
 
 function formatDate(date: string) {
-  return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return localizedDate(date, { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
 // SSR-safe: admin auth is client-cookie based, so fetch on client only

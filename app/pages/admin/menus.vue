@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-start justify-between gap-4">
       <div>
-        <h2 class="text-2xl font-bold">Navigation Menu</h2>
-        <p class="mt-1 text-sm text-white/50">Manage page-backed and custom links.</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.menus.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.menus.subtitle') }}</p>
       </div>
       <button
         type="button"
@@ -123,6 +123,7 @@
 -->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 type NavTarget = 'main' | 'footer'
 
