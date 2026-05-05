@@ -15,7 +15,7 @@
           <button class="sort-btn" :disabled="index === items.length - 1" @click="reorder(index, 1)">▼</button>
         </div>
         <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-white/4 text-2xl">{{ item.icon }}</div>
-        <img v-if="item.image" :src="item.image" class="h-12 w-20 rounded-lg object-cover" />
+        <img v-if="item.image" :src="item.image" :alt="item.titleEn || ''" class="h-12 w-20 rounded-lg object-cover" />
         <div class="flex-1 min-w-0">
           <p class="font-semibold">{{ item.titleEn }}</p>
           <p class="text-xs text-white/40 truncate">{{ item.titleTh }} · {{ item.key }}</p>

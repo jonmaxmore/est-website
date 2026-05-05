@@ -36,7 +36,7 @@
 
           <!-- Background Preview -->
           <div v-if="section.background" class="h-10 w-20 rounded-lg overflow-hidden border border-white/10 flex-shrink-0">
-            <img :src="section.background" class="h-full w-full object-cover" />
+            <img :src="section.background" alt="Section background preview" class="h-full w-full object-cover" />
           </div>
 
           <!-- Actions -->
@@ -69,7 +69,7 @@
             <AdminMediaPicker v-model="editingSection.background" label="" accept="image" />
             <!-- Preview -->
             <div v-if="editingSection.background" class="mt-2 h-24 overflow-hidden rounded-lg border border-white/10">
-              <img :src="editingSection.background" class="h-full w-full object-cover" />
+              <img :src="editingSection.background" alt="Background image preview" class="h-full w-full object-cover" />
             </div>
           </div>
 
