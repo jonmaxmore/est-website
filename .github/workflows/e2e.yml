@@ -4,7 +4,14 @@
 # ═══════════════════════════════════════
 #
 # Runs Playwright E2E tests against the production server.
-# Triggers on push to main and on pull requests.
+# Triggers on push to main only.
+#
+# NOTE: PR trigger was removed because production enforces a Host header
+# allowlist (`x-deny-reason: host_not_allowed`) that blocks GitHub Actions
+# runners — every PR run hit the 15-min timeout. PR-time E2E should test
+# the PR's code on a local server (TODO), not unrelated production state.
+# Production is still covered by uat.yml (scheduled + post-deploy) and the
+# push-to-main trigger here.
 #
 # Required secrets:
 #   TEST_ADMIN_EMAIL    — Admin email for login tests
@@ -14,8 +21,6 @@ name: E2E Tests
 
 on:
   push:
-    branches: [main]
-  pull_request:
     branches: [main]
 
 env:
