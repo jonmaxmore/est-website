@@ -8,7 +8,9 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY prisma ./prisma/
 COPY prisma.config.ts ./
-RUN npm install --frozen-lockfile 2>/dev/null || npm install
+# `npm ci` is the deterministic, lockfile-strict install — fails loudly on
+# lockfile mismatch instead of silently degrading to `npm install`.
+RUN npm ci
 RUN npx prisma generate
 
 # ── Stage 2: Build ──
@@ -48,8 +50,10 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 # ── Healthcheck ──
-# ใช้ public endpoint ที่ไม่ต้อง auth + เร็ว
+# Hits the dedicated /api/health endpoint (shallow mode = no DB query, just
+# Node-up confirmation). Use `?deep=1` from external probes if DB readiness
+# matters; here we want fast container-level liveness only.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost:3000/api/public/site || exit 1
+  CMD wget --quiet --tries=1 --spider http://localhost:3000/api/health || exit 1
 
 CMD ["node", ".output/server/index.mjs"]

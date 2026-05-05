@@ -122,11 +122,16 @@ done
 log "✅ PostgreSQL ready"
 
 # ── Run Prisma migrations ──
+# Fail-loudly on migration error. NEVER fall back to `prisma db push --accept-data-loss`:
+# that is a destructive, schema-drift recovery mode that can drop columns silently
+# in production. If migrate deploy fails, the operator must investigate the error
+# (e.g. shadow-DB drift, locked table, FK violation) — not paper over it.
 log "Running database migrations..."
-docker compose exec -T app npx prisma migrate deploy 2>/dev/null || {
-  warn "Migrations may have failed or schema push needed. Trying prisma db push..."
-  docker compose exec -T app npx prisma db push --accept-data-loss 2>/dev/null || true
-}
+if ! docker compose exec -T app npx prisma migrate deploy; then
+  error "prisma migrate deploy failed — refusing to fall back to db push (data loss risk)."
+  error "Investigate: check migrations folder, shadow DB, or restore from pre-deploy backup."
+  exit 1
+fi
 
 # ── Seed database ──
 log "Seeding database..."
