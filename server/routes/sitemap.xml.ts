@@ -20,6 +20,7 @@ const SITEMAP_TTL_SECONDS = 600 // 10 นาที
 
 export default defineEventHandler(async (event) => {
   setResponseHeader(event, 'content-type', 'application/xml')
+  setResponseHeader(event, 'Cache-Control', 'public, max-age=600, s-maxage=600')
 
   // ── ลอง cache ก่อน ──
   try {

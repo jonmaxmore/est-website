@@ -13,5 +13,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, message: 'Page not found' })
   }
 
+  setResponseHeader(event, 'Cache-Control', 'public, max-age=60, s-maxage=120, stale-while-revalidate=600')
   return page
 })

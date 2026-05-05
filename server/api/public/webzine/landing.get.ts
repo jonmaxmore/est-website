@@ -5,7 +5,8 @@ const publishedWhere = () => ({
   OR: [{ publishedAt: { lte: new Date() } }, { publishedAt: null }],
 })
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
+  setResponseHeader(event, 'Cache-Control', 'public, max-age=30, s-maxage=60, stale-while-revalidate=300')
   const [topicConfig, pinnedArticles, latestArticles, patchNotes, guides, lore, devBlogs] = await Promise.all([
     prisma.siteConfig.findUnique({ where: { key: 'webzine_topics' } }),
     prisma.newsArticle.findMany({
