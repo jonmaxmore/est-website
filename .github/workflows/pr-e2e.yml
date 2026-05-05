@@ -70,8 +70,13 @@ jobs:
       ADMIN_SEED_PASSWORD: ciTestAdmin_pwd!2026
       NUXT_PUBLIC_SITE_URL: http://localhost:3000
       NUXT_PUBLIC_SITE_NAME: Eternal Tower Saga
-      NODE_ENV: production
       BASE_URL: http://localhost:3000
+      # NODE_ENV is intentionally NOT set at job level. Setting it to
+      # 'production' makes npm skip optionalDependencies, which breaks
+      # esbuild's platform-specific binary install (and any other native
+      # bin install relying on optional deps). Only set NODE_ENV on the
+      # specific steps that need it (currently none — Nuxt's runtime is
+      # configured via runtimeConfig, not NODE_ENV).
 
     steps:
       - uses: actions/checkout@v4
@@ -83,7 +88,7 @@ jobs:
 
       - name: Install dependencies
         id: install
-        run: npm ci --foreground-scripts
+        run: npm ci
 
       - name: Wait for postgres to be reachable
         id: pg-wait
