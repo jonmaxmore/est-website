@@ -39,7 +39,7 @@ describe('marketing banner payload parsing', () => {
 
   it('accepts specific-topic scope when targetTopicKey is provided', () => {
     const payload = parseMarketingBannerPayload({
-      placement: 'homepage_inline',
+      placement: 'sidebar',
       status: 'LIVE',
       scope: 'specific_topic',
       titleEn: 'Starter Topic Banner',

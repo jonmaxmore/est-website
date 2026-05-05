@@ -35,28 +35,24 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 422, message: (error as Error).message })
   }
 
-  try {
-    const config = await prisma.siteConfig.upsert({
-      where: { key: configInput.key },
-      update: { value: configInput.value as object },
-      create: { key: configInput.key, value: configInput.value as object },
-    })
+  const config = await prisma.siteConfig.upsert({
+    where: { key: configInput.key },
+    update: { value: configInput.value as object },
+    create: { key: configInput.key, value: configInput.value as object },
+  })
 
-    // ── Invalidate cache ของ config ──
-    await cacheInvalidate(`config:${configInput.key}*`)
-    await cacheInvalidate('site:*')
+  // ── Invalidate cache ของ config ──
+  await cacheInvalidate(`config:${configInput.key}*`)
+  await cacheInvalidate('site:*')
 
-    await logActivity(
-      event,
-      'UPDATE',
-      'config',
-      `Updated config: ${configInput.key}`,
-      configInput.key,
-    )
+  await logActivity(
+    event,
+    'UPDATE',
+    'config',
+    `Updated config: ${configInput.key}`,
+    configInput.key,
+  )
 
-    return config
-  } catch (err) {
-    throw err
-  }
+  return config
 })
 

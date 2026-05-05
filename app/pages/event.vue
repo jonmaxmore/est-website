@@ -32,7 +32,7 @@
 
         <!-- Countdown -->
         <div class="mt-10 flex items-center justify-center gap-3 sm:gap-5" v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 300 } }">
-          <div v-for="(unit, idx) in countdown" :key="unit.label" class="flex flex-col items-center">
+          <div v-for="unit in countdown" :key="unit.label" class="flex flex-col items-center">
             <div class="flex h-[72px] w-[72px] sm:h-[84px] sm:w-[84px] items-center justify-center rounded-2xl border border-gold/25 bg-black/60 backdrop-blur-xl font-mono text-3xl sm:text-4xl font-bold text-gold shadow-[0_0_40px_rgba(212,168,67,0.15),inset_0_1px_0_rgba(255,255,255,0.05)]">
               {{ String(unit.value).padStart(2, '0') }}
             </div>

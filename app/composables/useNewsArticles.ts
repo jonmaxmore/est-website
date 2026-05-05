@@ -113,7 +113,8 @@ export function useNewsArticles() {
   }
 
   function toggleSelect(id: number) {
-    selectedIds.value.has(id) ? selectedIds.value.delete(id) : selectedIds.value.add(id)
+    if (selectedIds.value.has(id)) selectedIds.value.delete(id)
+    else selectedIds.value.add(id)
     selectedIds.value = new Set(selectedIds.value)
   }
 
