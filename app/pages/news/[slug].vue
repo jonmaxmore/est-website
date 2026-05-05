@@ -5,24 +5,24 @@
     <section class="mx-auto grid max-w-7xl gap-10 px-6 pt-24 pb-14 lg:grid-cols-[minmax(0,1fr)_320px]">
       <article v-if="article" class="min-w-0">
         <NuxtLink to="/news" class="mb-8 inline-block text-sm font-semibold text-white/45 no-underline transition-colors hover:text-gold">
-          Back to Chronicle
+          {{ t('news.viewAll') }}
         </NuxtLink>
 
         <div class="mb-5 flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-gold">
           <span>{{ article.contentType?.replaceAll('_', ' ') || article.category }}</span>
           <span v-if="article.readingTimeMinutes" class="text-white/35">{{ article.readingTimeMinutes }} min read</span>
-          <time v-if="article.publishedAt" class="text-white/35">{{ formatDate(article.publishedAt) }}</time>
+          <time v-if="article.publishedAt" class="text-white/35">{{ localizedDate(article.publishedAt) }}</time>
         </div>
 
         <h1 class="max-w-4xl text-[clamp(2.2rem,6vw,5.4rem)] font-black leading-[0.98] tracking-[-0.055em]">
-          {{ article.titleEn }}
+          {{ displayTitle }}
         </h1>
-        <p v-if="article.excerptEn" class="mt-6 max-w-2xl text-lg leading-8 text-white/58">{{ article.excerptEn }}</p>
+        <p v-if="displayExcerpt" class="mt-6 max-w-2xl text-lg leading-8 text-white/58">{{ displayExcerpt }}</p>
 
         <img
           v-if="article.featuredImage"
           :src="article.featuredImage"
-          :alt="article.titleEn"
+          :alt="displayTitle"
           class="mt-10 max-h-[520px] w-full rounded-[2rem] object-cover shadow-[0_30px_90px_rgba(0,0,0,0.38)]"
         />
 
@@ -54,12 +54,12 @@
   หน้าแสดงบทความข่าว (dynamic route: /news/:slug)
 
   โครงสร้างหน้า:
-  - Header: category badge, reading time, publish date
+  - Header: category badge, reading time, publish date (locale-aware)
   - Featured image
-  - Rich content (sanitized HTML)
+  - Rich content (sanitized HTML, locale-aware: contentTh ↔ contentEn)
   - Marketing banners: announcement_bar, article_inline, sidebar, footer_strip
   - Related articles (Continue The Thread)
-  - SEO: ตั้ง title, description, OG image จากข้อมูลบทความ
+  - SEO: ตั้ง title, description, OG image จากข้อมูลบทความ — locale-aware
 -->
 <script setup lang="ts">
 import { sanitizeRichHtml } from '../../shared/cms/sanitize-html'
@@ -71,7 +71,7 @@ interface NewsArticle {
   readingTimeMinutes?: number | null; category?: string | null
   id?: number; publishedAt?: string | null
   seoTitle?: string | null; seoDesc?: string | null; ogImage?: string | null
-  contentEn?: string | null
+  contentEn?: string | null; contentTh?: string | null
   [key: string]: unknown
 }
 
@@ -80,24 +80,26 @@ interface NewsResponse {
   related: NewsArticle[]
 }
 
+const { t } = useI18n()
+const { localized, localizedDate } = useLocalizedField()
 const route = useRoute()
 const slug = route.params.slug as string
 const { data } = await useFetch<NewsResponse>(`/api/public/news/${slug}`)
 const article = computed(() => data.value?.article || null)
 const related = computed(() => data.value?.related || [])
 const { data: banners } = await useResolvedBanners({ routeType: 'article_detail', articleId: article.value?.id || null })
+
+const displayTitle = computed(() => localized(article.value?.titleEn, article.value?.titleTh))
+const displayExcerpt = computed(() => localized(article.value?.excerptEn, article.value?.excerptTh))
+const displayContent = computed(() => localized(article.value?.contentEn, article.value?.contentTh))
+
 // ── Sanitize HTML จาก admin rich text editor ก่อนแสดง ──
-const renderedHtml = computed(() => sanitizeRichHtml(article.value?.contentEn || article.value?.excerptEn || ''))
+const renderedHtml = computed(() => sanitizeRichHtml(displayContent.value || displayExcerpt.value || ''))
 
 usePageSeo({
-  title: article.value?.seoTitle || article.value?.titleEn || 'News',
-  description: article.value?.seoDesc || article.value?.excerptEn || 'Read the latest news from Eternal Tower Saga.',
+  title: article.value?.seoTitle || displayTitle.value || 'News',
+  description: article.value?.seoDesc || displayExcerpt.value || 'Read the latest news from Eternal Tower Saga.',
   image: article.value?.ogImage || article.value?.featuredImage || null,
   type: 'article',
 })
-
-function formatDate(date: string | null | undefined): string {
-  if (!date) return ''
-  return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-}
 </script>
