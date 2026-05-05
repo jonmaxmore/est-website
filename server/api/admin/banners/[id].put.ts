@@ -1,5 +1,5 @@
 import { parseMarketingBannerPayload } from '../../../utils/marketing-banners'
-import { toDuplicateConflictError } from '../../../utils/prisma-errors'
+import { rethrowAsInternalError, toDuplicateConflictError } from '../../../utils/prisma-errors'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
@@ -37,6 +37,6 @@ export default defineEventHandler(async (event) => {
     }
     const conflict = toDuplicateConflictError(err as never, { resource: 'MarketingBanner' })
     if (conflict) throw conflict
-    throw err
+    rethrowAsInternalError(err, 'Admin Banners PUT')
   }
 })

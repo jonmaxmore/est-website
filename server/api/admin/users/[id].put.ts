@@ -7,7 +7,7 @@
  * - ตรวจ enum role ผ่าน zod (กัน privilege escalation ผ่าน body injection)
  */
 import { z } from 'zod'
-import { toDuplicateConflictError } from '../../../utils/prisma-errors'
+import { rethrowAsInternalError, toDuplicateConflictError } from '../../../utils/prisma-errors'
 
 const updateUserSchema = z
   .object({
@@ -82,6 +82,6 @@ export default defineEventHandler(async (event) => {
   } catch (err) {
     const conflict = toDuplicateConflictError(err as never, { resource: 'AdminUser' })
     if (conflict) throw conflict
-    throw err
+    rethrowAsInternalError(err, 'Admin Users PUT')
   }
 })

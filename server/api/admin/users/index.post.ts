@@ -3,7 +3,7 @@
  * เฉพาะ SUPER_ADMIN เท่านั้น (บังคับใน middleware/admin-auth.ts)
  */
 import { z } from 'zod'
-import { toDuplicateConflictError } from '../../../utils/prisma-errors'
+import { rethrowAsInternalError, toDuplicateConflictError } from '../../../utils/prisma-errors'
 
 const createUserSchema = z.object({
   displayName: z.string().trim().min(1).max(100),
@@ -45,6 +45,6 @@ export default defineEventHandler(async (event) => {
   } catch (err) {
     const conflict = toDuplicateConflictError(err as never, { resource: 'AdminUser' })
     if (conflict) throw conflict
-    throw err
+    rethrowAsInternalError(err, 'Admin Users POST')
   }
 })

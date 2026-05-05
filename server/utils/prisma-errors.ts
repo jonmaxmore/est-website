@@ -41,3 +41,22 @@ export function toDuplicateConflictError(
     data: fields.length > 0 ? { fields } : undefined,
   })
 }
+
+/**
+ * เปลี่ยน Prisma error ที่ไม่รู้จักให้เป็น generic 500 — ป้องกัน schema/path
+ * leak ออกไปทาง response.message (P1001 connection string, P2003 column name
+ * ฯลฯ). คงสำหรับ caller log ไว้เอง.
+ *
+ * Usage: ใน catch block ของ admin endpoints หลังตรวจ P2002/P2025 แล้วยังไม่
+ * เจอที่ตรง → throw rethrowAsInternalError(err, 'Resource X')
+ */
+export function rethrowAsInternalError(error: unknown, scope: string): never {
+  // Already an H3-shaped error (createError) — surface as-is, the framework
+  // will use its own statusCode/message.
+  const e = error as { statusCode?: number }
+  if (typeof e?.statusCode === 'number') {
+    throw error
+  }
+  console.error(`[${scope}] unexpected error:`, error)
+  throw createError({ statusCode: 500, message: 'Internal server error' })
+}

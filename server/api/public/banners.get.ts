@@ -27,6 +27,10 @@ export default defineEventHandler(async (event) => {
     orderBy: [{ placement: 'asc' }, { priority: 'desc' }, { updatedAt: 'desc' }],
   })
 
+  // Time-sensitive (LIVE banners can flip every minute via reconcile).
+  // Short s-maxage so CDN doesn't cache past a status transition window.
+  setResponseHeader(event, 'Cache-Control', 'public, max-age=10, s-maxage=30, stale-while-revalidate=60')
+
   return resolveMarketingBanners({
     now: new Date(),
     routeType,
