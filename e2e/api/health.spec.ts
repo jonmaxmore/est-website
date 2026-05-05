@@ -9,7 +9,6 @@ test.describe('API Health Checks', () => {
     '/api/public/highlights',
     '/api/public/news',
     '/api/public/weapons',
-    '/api/public/stats',
     '/api/public/site',
   ]
 
@@ -36,15 +35,4 @@ test.describe('API Health Checks', () => {
     expect([401, 429]).toContain(response.status())
   })
 
-  test('POST /api/register with invalid body should return 4xx', async ({ request }) => {
-    const response = await request.post(`${BASE}/api/register`, {
-      data: {
-        email: 'not-an-email',
-        platform: 'INVALID',
-      },
-    })
-    // Accept 400 (validation error) or 429 (rate limit) — both indicate proper server handling
-    expect(response.status()).toBeGreaterThanOrEqual(400)
-    expect(response.status()).toBeLessThan(500)
-  })
 })

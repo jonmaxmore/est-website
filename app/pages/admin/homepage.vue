@@ -118,7 +118,7 @@
                 <div class="grid gap-3 sm:grid-cols-2">
                   <input v-model="button.labelTh" class="rounded-lg border border-white/10 bg-white/4 px-3 py-2 text-sm text-white outline-none focus:border-gold/50" placeholder="Label TH" />
                   <input v-model="button.labelEn" class="rounded-lg border border-white/10 bg-white/4 px-3 py-2 text-sm text-white outline-none focus:border-gold/50" placeholder="Label EN" />
-                  <input v-model="button.href" class="rounded-lg border border-white/10 bg-white/4 px-3 py-2 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="/event" />
+                  <input v-model="button.href" class="rounded-lg border border-white/10 bg-white/4 px-3 py-2 text-sm text-white outline-none focus:border-gold/50 font-mono" placeholder="/download" />
                   <select v-model="button.variant" class="rounded-lg border border-white/10 bg-white/4 px-3 py-2 text-sm text-white outline-none focus:border-gold/50">
                     <option value="primary">Primary</option>
                     <option value="secondary">Secondary</option>
@@ -266,7 +266,7 @@ function defaultHeroConfig() {
     backgroundMode: 'image' as const,
     backgroundVideo: '',
     buttons: [
-      { id: 'pre-register', labelEn: 'Pre-register', labelTh: 'Pre-register', href: '/event', variant: 'primary', visible: true, order: 0, target: '_self' },
+      { id: 'download', labelEn: 'Download', labelTh: 'Download', href: '/download', variant: 'primary', visible: true, order: 0, target: '_self' },
       { id: 'trailer', labelEn: 'Watch Trailer', labelTh: 'Watch Trailer', href: '#trailer', variant: 'ghost', visible: true, order: 1, target: '_self' },
     ],
     platforms: [

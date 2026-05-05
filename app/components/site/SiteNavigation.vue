@@ -47,10 +47,10 @@
       <div class="hidden items-center gap-3 lg:flex">
         <SiteLanguageSwitcher />
         <NuxtLink
-          to="/event"
+          to="/download"
           class="inline-flex h-10 items-center justify-center rounded-full bg-gradient-to-br from-gold-bright via-gold to-gold-deep px-7 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-bg-0 shadow-[0_0_20px_rgba(232,181,71,0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_35px_rgba(232,181,71,0.6)]"
         >
-          {{ t('nav.register') }}
+          {{ t('nav.download') }}
         </NuxtLink>
       </div>
 
@@ -89,11 +89,11 @@
           <SiteLanguageSwitcher />
         </div>
         <NuxtLink
-          to="/event"
+          to="/download"
           class="mt-4 inline-flex h-12 w-full max-w-[280px] items-center justify-center rounded-full bg-gradient-to-br from-gold-bright via-gold to-gold-deep font-mono text-sm font-bold uppercase tracking-[0.2em] text-bg-0 shadow-[0_0_30px_rgba(232,181,71,0.4)]"
           @click="mobileOpen = false"
         >
-          {{ t('nav.register') }}
+          {{ t('nav.download') }}
         </NuxtLink>
       </div>
     </Transition>

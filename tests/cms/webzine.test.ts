@@ -9,7 +9,7 @@ import {
 
 describe('webzine helpers', () => {
   it('exports the approved webzine content types', () => {
-    assert.deepEqual(WEBZINE_CONTENT_TYPES, ['ANNOUNCEMENT', 'EVENT', 'PATCH_NOTES', 'GUIDE', 'LORE', 'DEV_BLOG'])
+    assert.deepEqual(WEBZINE_CONTENT_TYPES, ['ANNOUNCEMENT', 'PATCH_NOTES', 'GUIDE', 'LORE', 'DEV_BLOG'])
   })
 
   it('normalizes topics with slug and localized fallbacks', () => {

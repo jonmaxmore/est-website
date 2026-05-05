@@ -127,7 +127,6 @@
               <select id="banner-target-type" v-model="form.targetType" class="field-select">
                 <option value="article">Article</option>
                 <option value="page">Page</option>
-                <option value="event">Event</option>
                 <option value="url">URL</option>
               </select>
             </div>
@@ -141,10 +140,6 @@
             <div v-else-if="form.targetType === 'page'">
               <label for="banner-target-page" class="field-label">Target Page Key</label>
               <input id="banner-target-page" v-model="form.targetPageKey" class="field-input" placeholder="game-guide" />
-            </div>
-            <div v-else-if="form.targetType === 'event'">
-              <label for="banner-target-event" class="field-label">Target Event ID</label>
-              <input id="banner-target-event" v-model="form.targetEventId" class="field-input" />
             </div>
             <div v-else>
               <label for="banner-target-url" class="field-label">Target URL</label>
@@ -240,7 +235,6 @@ const form = reactive({
   targetType: 'article',
   targetArticleId: null as number | null,
   targetPageKey: '',
-  targetEventId: '',
   targetUrl: '',
   targetNewTab: false,
   dismissible: true,
@@ -267,8 +261,7 @@ function resetForm() {
     targetType: 'article',
     targetArticleId: null,
     targetPageKey: '',
-    targetEventId: '',
-    targetUrl: '',
+      targetUrl: '',
     targetNewTab: false,
     dismissible: true,
     isActive: true,
@@ -283,7 +276,6 @@ function formatPlacement(value: string) {
 function targetLabel(banner: Banner) {
   if (banner.targetType === 'article') return banner.article?.titleEn || `Article #${banner.targetArticleId || ''}`
   if (banner.targetType === 'page') return banner.page?.titleEn || banner.targetPageKey || 'Page'
-  if (banner.targetType === 'event') return banner.event?.titleEn || banner.targetEventId || 'Event'
   return banner.targetUrl || 'URL'
 }
 
@@ -330,7 +322,6 @@ function openEditBanner(banner: Banner) {
     targetType: banner.targetType,
     targetArticleId: banner.targetArticleId || null,
     targetPageKey: banner.targetPageKey || '',
-    targetEventId: banner.targetEventId || '',
     targetUrl: banner.targetUrl || '',
     targetNewTab: banner.targetNewTab,
     dismissible: banner.dismissible,
@@ -363,7 +354,6 @@ function toPayload() {
     targetType: form.targetType,
     targetArticleId: form.targetType === 'article' ? form.targetArticleId : null,
     targetPageKey: form.targetType === 'page' ? form.targetPageKey : null,
-    targetEventId: form.targetType === 'event' ? form.targetEventId : null,
     targetTopicKey: form.scope === 'specific_topic' ? form.targetTopicKey : null,
     targetUrl: form.targetType === 'url' ? form.targetUrl : null,
     targetNewTab: form.targetNewTab,

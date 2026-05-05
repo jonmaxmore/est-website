@@ -11,7 +11,7 @@
     <div class="mb-4 flex flex-wrap gap-3 rounded-2xl border border-white/6 bg-white/4 p-4">
       <UInput v-model="filters.search" placeholder="Search articles..." class="min-w-[200px] flex-1" @input="debounceLoad" />
       <USelect v-model="filters.status" :items="[{ label: 'All Status', value: 'all' }, { label: 'Draft', value: 'DRAFT' }, { label: 'Published', value: 'PUBLISHED' }, { label: 'Archived', value: 'ARCHIVED' }]" value-key="value" class="w-36" @update:model-value="loadArticles" />
-      <USelect v-model="filters.category" :items="[{ label: 'All Categories', value: 'all' }, { label: 'Announcement', value: 'ANNOUNCEMENT' }, { label: 'Event', value: 'EVENT' }, { label: 'Update', value: 'UPDATE' }, { label: 'Media', value: 'MEDIA' }]" value-key="value" class="w-40" @update:model-value="loadArticles" />
+      <USelect v-model="filters.category" :items="[{ label: 'All Categories', value: 'all' }, { label: 'Announcement', value: 'ANNOUNCEMENT' }, { label: 'Update', value: 'UPDATE' }, { label: 'Media', value: 'MEDIA' }]" value-key="value" class="w-40" @update:model-value="loadArticles" />
       <USelect v-model="filters.contentType" :items="contentTypeFilterOptions" value-key="value" class="w-44" @update:model-value="loadArticles" />
       <USelect v-model="filters.topic" :items="topicFilterOptions" value-key="value" class="w-44" @update:model-value="loadArticles" />
       <UInput v-model="filters.campaignCode" placeholder="Campaign code" class="w-44" @input="debounceLoad" />

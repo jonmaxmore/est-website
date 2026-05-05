@@ -79,8 +79,5 @@ export function useTracking() {
     trackDownload: (platform: string, label?: string) => trackEvent('download_click', { platform, label }),
     trackSocial: (platform: string, label?: string) => trackEvent('social_click', { platform, label }),
     trackNews: (slug: string, label?: string) => trackEvent('news_click', { slug, label }),
-    trackPreRegister: (platform?: string, region?: string) => trackEvent('pre_register', { platform, region }),
-    trackPreRegisterSuccess: (platform?: string, region?: string) => trackEvent('pre_register_success', { platform, region }),
-    trackReferralCopy: () => trackEvent('referral_copy'),
   }
 }

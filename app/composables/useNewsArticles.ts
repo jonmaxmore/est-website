@@ -15,7 +15,7 @@ export interface NewsArticle {
   contentEn?: string | null; contentTh?: string | null
   category: string; status: string; featuredImage?: string | null
   contentType?: string; primaryTopicKey?: string | null; campaignCode?: string | null
-  linkedEventId?: string | null; pinned?: boolean; isEvergreen?: boolean
+  pinned?: boolean; isEvergreen?: boolean
   readingTimeMinutes?: number | null
   publishedAt?: string | null; featureOnHome: boolean; homePriority: number
   externalUrl?: string | null; openInNewTab: boolean
@@ -123,7 +123,7 @@ export function useNewsArticles() {
     selectedIds.value = checked ? new Set(articles.value.map((a) => a.id)) : new Set()
   }
 
-  const contentTypeOptions = ['ANNOUNCEMENT', 'EVENT', 'PATCH_NOTES', 'GUIDE', 'LORE', 'DEV_BLOG']
+  const contentTypeOptions = ['ANNOUNCEMENT', 'PATCH_NOTES', 'GUIDE', 'LORE', 'DEV_BLOG']
   const contentTypeFilterOptions = computed(() => [
     { label: 'All Types', value: 'all' },
     ...contentTypeOptions.map((value) => ({ label: value.replaceAll('_', ' '), value })),

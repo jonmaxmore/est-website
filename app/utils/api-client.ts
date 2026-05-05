@@ -57,7 +57,6 @@ export const publicApi = {
   weapons: () => request<unknown[]>('/api/public/weapons'),
   banners: (query?: { routeType?: string; articleId?: number; topicKey?: string }) =>
     request<unknown>('/api/public/banners', { query }),
-  stats: () => request<unknown>('/api/public/stats'),
   milestones: () => request<unknown[]>('/api/public/milestones'),
 }
 
@@ -86,7 +85,6 @@ function makeCrud<TList = unknown[], TItem = unknown, TCreate = unknown, TUpdate
 export const adminApi = {
   news: makeCrud('/api/admin/news'),
   banners: makeCrud('/api/admin/banners'),
-  events: makeCrud('/api/admin/events'),
   features: makeCrud('/api/admin/features'),
   highlights: makeCrud('/api/admin/highlights'),
   weapons: makeCrud('/api/admin/weapons'),
@@ -121,13 +119,6 @@ export const adminApi = {
   analytics: (query?: { range?: string }) => request<unknown>('/api/admin/analytics', { query }),
   activity: (query?: { page?: number; limit?: number }) =>
     request<unknown>('/api/admin/activity', { query }),
-
-  registrations: {
-    list: (query?: { page?: number; limit?: number; platform?: string; region?: string }) =>
-      request<unknown>('/api/admin/registrations', { query }),
-    export: (query?: Record<string, unknown>) =>
-      request<unknown>('/api/admin/registrations/export', { query }),
-  },
 
   backup: {
     export: (selection: Record<string, boolean>) =>

@@ -10,12 +10,10 @@ export const API = {
     news: '/api/admin/news',
     media: '/api/admin/media',
     weapons: '/api/admin/weapons',
-    registrations: '/api/admin/registrations',
     config: '/api/admin/config',
   },
   auth: {
     login: '/api/auth/login',
   },
-  register: '/api/register',
   track: '/api/track',
 } as const

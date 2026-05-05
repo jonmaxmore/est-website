@@ -6,7 +6,7 @@ const publishedWhere = () => ({
 })
 
 export default defineEventHandler(async () => {
-  const [topicConfig, pinnedArticles, latestArticles, patchNotes, guides, lore, devBlogs, activeEvents] = await Promise.all([
+  const [topicConfig, pinnedArticles, latestArticles, patchNotes, guides, lore, devBlogs] = await Promise.all([
     prisma.siteConfig.findUnique({ where: { key: 'webzine_topics' } }),
     prisma.newsArticle.findMany({
       where: { ...publishedWhere(), pinned: true },
@@ -38,14 +38,6 @@ export default defineEventHandler(async () => {
       orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
       take: 4,
     }),
-    prisma.gameEvent.findMany({
-      where: {
-        visible: true,
-        OR: [{ status: 'ACTIVE' }, { status: 'SCHEDULED', startsAt: { gte: new Date() } }],
-      },
-      orderBy: { startsAt: 'asc' },
-      take: 3,
-    }),
   ])
 
   return {
@@ -58,6 +50,5 @@ export default defineEventHandler(async () => {
       lore,
       devBlogs,
     },
-    activeEvents,
   }
 })

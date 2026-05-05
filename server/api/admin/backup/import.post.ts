@@ -191,19 +191,10 @@ export default defineEventHandler(async (event) => {
     })
   })
 
-  // ── v2.0 only: banners, events, milestones ──
+  // ── v2.0+: banners, milestones (events dropped at official launch) ──
   await importBatch('banners', body.banners as Array<Record<string, unknown>>, async (banner) => {
     const { createdAt: _ca, updatedAt: _ua, ...data } = banner as Record<string, unknown>
     await prisma.marketingBanner.upsert({
-      where: { id: data.id as string },
-      update: data as never,
-      create: data as never,
-    })
-  })
-
-  await importBatch('events', body.events as Array<Record<string, unknown>>, async (gameEvent) => {
-    const { createdAt: _ca, updatedAt: _ua, ...data } = gameEvent as Record<string, unknown>
-    await prisma.gameEvent.upsert({
       where: { id: data.id as string },
       update: data as never,
       create: data as never,

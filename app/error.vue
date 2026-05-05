@@ -7,7 +7,7 @@
         <p class="mb-8 text-sm text-white/50">The page you're looking for doesn't exist or has been moved.</p>
         <div class="flex flex-col items-center gap-4">
           <NuxtLink to="/" class="inline-flex h-11 items-center justify-center rounded-full bg-gradient-to-br from-gold to-gold-light px-8 text-sm font-bold text-black no-underline">Back to Home</NuxtLink>
-          <NuxtLink to="/event" class="text-sm text-white/50 no-underline transition-colors duration-200 hover:text-gold">Pre-Register →</NuxtLink>
+          <NuxtLink to="/download" class="text-sm text-white/50 no-underline transition-colors duration-200 hover:text-gold">Download →</NuxtLink>
         </div>
       </div>
     </div>

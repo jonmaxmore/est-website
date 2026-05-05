@@ -79,7 +79,6 @@
     "categories": {
       "all": "All",
       "announcement": "Announcement",
-      "event": "Event",
       "update": "Update",
       "media": "Media",
       "maintenance": "Maintenance"
@@ -87,32 +86,8 @@
   },
   "cta": {
     "title": "Begin Your Saga",
-    "subtitle": "Pre-register now to claim launch rewards and play among the first climbers.",
-    "preRegister": "Pre-register",
+    "subtitle": "Download now and start climbing the eternal tower.",
     "download": "Download Now"
-  },
-  "event": {
-    "title": "Pre-Registration",
-    "preRegister": "Join the pre-registration",
-    "countdown": "Time Remaining",
-    "days": "Days",
-    "hours": "Hours",
-    "minutes": "Minutes",
-    "seconds": "Seconds",
-    "milestoneTitle": "Event Rewards",
-    "registeredUsers": "Registered Users",
-    "start": "Start",
-    "emailPlaceholder": "Enter your email",
-    "selectPlatform": "Select your platform",
-    "selectRegion": "Select your region",
-    "registerButton": "Register",
-    "successTitle": "Registration complete",
-    "successMessage": "Your registration has been recorded.",
-    "referralTitle": "Share with Friends",
-    "referralDesc": "Invite friends to register for bonus rewards",
-    "copyLink": "Copy Link",
-    "copied": "Copied!",
-    "share": "Share"
   },
   "pages": {
     "faq": "FAQ",

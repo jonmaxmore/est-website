@@ -3,7 +3,6 @@ import { describe, it } from 'node:test'
 
 import {
   normalizeDownloadPageConfig,
-  normalizeEventPageConfig,
   normalizeHeroSectionConfig,
   normalizeIntegrationsConfig,
   parseAdminConfigWrite,
@@ -85,22 +84,6 @@ describe('admin config validation', () => {
     assert.equal(result.buttons.length, 2)
     assert.deepEqual(result.buttons.map((button) => button.id), ['primary', 'secondary'])
     assert.equal(result.showSocialLinks, true)
-  })
-
-  it('normalizes event landing controls with real and marketing registration counts', () => {
-    const result = normalizeEventPageConfig({
-      targetDate: '2026-10-01T00:00:00+07:00',
-      registrationDisplayMode: 'actual_plus_manual',
-      manualRegistrationCount: 5000,
-      baseRewards: [
-        { id: 'sr-box', titleEn: 'SR Weapon Box', titleTh: 'กล่องอาวุธ SR', descriptionEn: 'Choose one SR weapon', descriptionTh: 'เลือกอาวุธ SR ได้หนึ่งชิ้น', order: 2, visible: true },
-        { id: 'gems', titleEn: 'Gems x1000', titleTh: 'เจม x1000', descriptionEn: 'Premium currency', descriptionTh: 'สกุลเงินพรีเมียม', order: 1, visible: true },
-      ],
-    })
-
-    assert.equal(result.registrationDisplayMode, 'actual_plus_manual')
-    assert.equal(result.manualRegistrationCount, 5000)
-    assert.deepEqual(result.baseRewards.map((reward) => reward.id), ['gems', 'sr-box'])
   })
 
   it('normalizes cross-platform download buttons', () => {

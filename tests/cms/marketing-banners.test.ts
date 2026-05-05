@@ -27,7 +27,6 @@ describe('marketing banner helpers', () => {
       'news_index',
       'article_detail',
       'topic_page',
-      'event_page',
       'specific_article',
       'specific_topic',
     ])

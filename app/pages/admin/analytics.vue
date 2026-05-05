@@ -52,21 +52,6 @@
           <p v-if="conversionEvents.length === 0" class="py-4 text-center text-sm text-white/30">No conversion events yet</p>
         </div>
       </div>
-
-      <!-- Registration Platforms -->
-      <div class="rounded-2xl border border-white/6 bg-white/4 p-6">
-        <h3 class="mb-4 text-xs font-semibold uppercase tracking-widest text-white/50">Registration Platforms</h3>
-        <div class="flex flex-col gap-3">
-          <div v-for="platform in registrationsByPlatform" :key="platform.platform" class="flex items-center gap-3">
-            <span class="w-20 text-sm font-semibold">{{ platform.platform }}</span>
-            <div class="h-2 flex-1 overflow-hidden rounded-full bg-white/4">
-              <div class="h-full rounded-full bg-gold" :style="{ width: `${(platform.count / (registrationsByPlatform[0]?.count || 1)) * 100}%` }" />
-            </div>
-            <span class="w-12 text-right text-xs text-white/40">{{ platform.count }}</span>
-          </div>
-          <p v-if="registrationsByPlatform.length === 0" class="py-4 text-center text-sm text-white/30">No registrations yet</p>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -74,14 +59,13 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
 const { data } = await useFetch<{
-  totalViews: number; todayViews: number; uniqueVisitors: number; conversionRate: number;
-  totalRegistrations: number; preRegisterSuccess: number; downloadClicks: number; socialClicks: number; newsClicks: number;
+  totalViews: number; todayViews: number; uniqueVisitors: number;
+  downloadClicks: number; socialClicks: number; newsClicks: number;
   dailyViews: { date: string; views: number }[];
   topPages: { path: string; views: number }[];
   conversions: { name: string; count: number }[];
-  registrationsByPlatform: { platform: string; count: number }[];
 }>('/api/admin/analytics', {
-  default: () => ({ totalViews: 0, todayViews: 0, uniqueVisitors: 0, conversionRate: 0, totalRegistrations: 0, preRegisterSuccess: 0, downloadClicks: 0, socialClicks: 0, newsClicks: 0, dailyViews: [], topPages: [], conversions: [], registrationsByPlatform: [] })
+  default: () => ({ totalViews: 0, todayViews: 0, uniqueVisitors: 0, downloadClicks: 0, socialClicks: 0, newsClicks: 0, dailyViews: [], topPages: [], conversions: [] })
 })
 const weeklyChange = computed(() => {
   const days = data.value.dailyViews || []
@@ -96,13 +80,12 @@ const statCards = computed(() => [
   { label: 'Total Page Views', value: data.value.totalViews.toLocaleString('en-US'), change: weeklyChange.value },
   { label: 'Today', value: data.value.todayViews.toLocaleString('en-US'), change: 'Last 24 hours' },
   { label: 'Unique Visitors', value: data.value.uniqueVisitors.toLocaleString('en-US'), change: 'All time' },
-  { label: 'Registrations', value: data.value.totalRegistrations.toLocaleString('en-US'), change: `${data.value.conversionRate.toFixed(1)}% view conversion` },
   { label: 'Downloads', value: data.value.downloadClicks.toLocaleString('en-US'), change: 'Tracked clicks' },
   { label: 'Social Clicks', value: data.value.socialClicks.toLocaleString('en-US'), change: 'Community outbound' },
+  { label: 'News Clicks', value: data.value.newsClicks.toLocaleString('en-US'), change: 'Webzine outbound' },
 ])
 const chartData = computed(() => data.value.dailyViews || [])
 const maxViews = computed(() => Math.max(1, ...chartData.value.map((d) => d.views)))
 const topPages = computed(() => data.value.topPages || [])
 const conversionEvents = computed(() => data.value.conversions || [])
-const registrationsByPlatform = computed(() => data.value.registrationsByPlatform || [])
 </script>

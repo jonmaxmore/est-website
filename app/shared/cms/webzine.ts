@@ -1,6 +1,6 @@
 import sanitizeHtml from 'sanitize-html'
 
-export const WEBZINE_CONTENT_TYPES = ['ANNOUNCEMENT', 'EVENT', 'PATCH_NOTES', 'GUIDE', 'LORE', 'DEV_BLOG'] as const
+export const WEBZINE_CONTENT_TYPES = ['ANNOUNCEMENT', 'PATCH_NOTES', 'GUIDE', 'LORE', 'DEV_BLOG'] as const
 
 export type WebzineContentType = (typeof WEBZINE_CONTENT_TYPES)[number]
 

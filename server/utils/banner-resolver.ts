@@ -15,11 +15,10 @@ type BannerScope =
   | 'news_index'
   | 'article_detail'
   | 'topic_page'
-  | 'event_page'
   | 'specific_article'
   | 'specific_topic'
 
-export type BannerRouteType = 'homepage' | 'news_index' | 'article_detail' | 'topic_page' | 'event_page'
+export type BannerRouteType = 'homepage' | 'news_index' | 'article_detail' | 'topic_page'
 
 export type BannerRecord = {
   id: string
