@@ -1,30 +1,82 @@
 # Admin Tools Coverage Map
 
-สรุปว่า admin tools ครอบคลุมระบบทั้งหมดของ EST Website แค่ไหน + จุดที่ควรพัฒนาต่อ
+สรุปว่า admin tools ครอบคลุมระบบทั้งหมดของ EST Website แค่ไหน + by-design patterns
 
-อ้างอิง: รายงาน audit 2026-04-30
+อ้างอิงเดิม: รายงาน audit 2026-04-30
+อัปเดตล่าสุด: 2026-05-05 (post-launch cleanup — ลบ Event + PreRegistration ใน PR #29; เพิ่ม `DELETE /api/admin/pages/[key]` ใน PR #31)
 
 ---
 
-## ✅ Coverage Matrix (12/13 models ครบ + 46 endpoints)
+## ✅ Coverage Matrix
 
 | Model | List | Get | Create | Update | Delete | Admin Page | Status |
 |---|---|---|---|---|---|---|---|
-| AdminUser | ✅ | — | ✅ | ✅ | ✅ | [users.vue](app/pages/admin/users.vue) | ครบ |
-| PreRegistration | ✅ | — | — | — | — | [registrations.vue](app/pages/admin/registrations.vue) | Read-only (ตามจุดประสงค์) |
-| NewsArticle | ✅ | — | ✅ | ✅ | ✅ | [news/index.vue](app/pages/admin/news/index.vue) | ครบ |
-| MediaAsset | ✅ | ✅ | ✅ (upload) | ✅ patch | ✅ | [media.vue](app/pages/admin/media.vue) | ครบ |
-| Weapon | ✅ | — | ✅ | ✅ | ✅ | [weapons.vue](app/pages/admin/weapons.vue) | ครบ |
-| GameEvent | ✅ | — | ✅ | ✅ | ✅ | [events.vue](app/pages/admin/events.vue) | ครบ |
-| Feature | ✅ | — | ✅ | ✅ | ✅ | [features.vue](app/pages/admin/features.vue) | ครบ |
-| Highlight | ✅ | — | ✅ | ✅ | ✅ | [highlights.vue](app/pages/admin/highlights.vue) | ครบ |
-| Milestone | ✅ | — | ✅ | ✅ | ✅ | [milestones.vue](app/pages/admin/milestones.vue) | ครบ |
-| MarketingBanner | ✅ | — | ✅ | ✅ | ✅ | [banners.vue](app/pages/admin/banners.vue) | ครบ |
-| PageContent | ✅ | ✅ | ✅ | ✅ | — | [pages.vue](app/pages/admin/pages.vue) | ขาด Delete (เหลือไว้เพราะระบบ system page) |
-| SiteConfig | ✅ | ✅ | — | ✅ (upsert) | — | settings/menus/seo/integrations | ครบ (ผ่าน upsert) |
-| Topic | — | — | — | ผ่าน config | — | [topics.vue](app/pages/admin/topics.vue) | จัดการผ่าน config JSON |
+| AdminUser | ✅ | — | ✅ | ✅ | ✅ | [users.vue](../app/pages/admin/users.vue) | ครบ (SUPER_ADMIN-only) |
+| NewsArticle | ✅ | — | ✅ | ✅ | ✅ | [news/index.vue](../app/pages/admin/news/index.vue) | ครบ |
+| MediaAsset | ✅ | ✅ | ✅ (upload) | ✅ patch | ✅ | [media.vue](../app/pages/admin/media.vue) | ครบ |
+| Weapon | ✅ | — | ✅ | ✅ | ✅ | [weapons.vue](../app/pages/admin/weapons.vue) | ครบ |
+| Feature | ✅ | — | ✅ | ✅ | ✅ | [features.vue](../app/pages/admin/features.vue) | ครบ |
+| Highlight | ✅ | — | ✅ | ✅ | ✅ | [highlights.vue](../app/pages/admin/highlights.vue) | ครบ |
+| Milestone | ✅ | — | ✅ | ✅ | ✅ | [milestones.vue](../app/pages/admin/milestones.vue) | ครบ |
+| MarketingBanner | ✅ | — | ✅ | ✅ | ✅ | [banners.vue](../app/pages/admin/banners.vue) | ครบ |
+| PageContent | ✅ | ✅ | ✅ | ✅ | ✅ (ห้ามลบ system pages) | [pages.vue](../app/pages/admin/pages.vue) | ครบ |
+| SiteConfig | ✅ | ✅ | — | ✅ (upsert) | — | settings/menus/seo/integrations/faq/topics | ครบ (ผ่าน upsert) |
+| ActivityLog | ✅ | — | (auto) | — | — | [activity.vue](../app/pages/admin/activity.vue) | Read-only — เขียนผ่าน `logActivity()` ใน mutation handlers |
 
-**Summary:** 24 admin pages, 46 endpoints, ครอบคลุมทุก content type ที่ schema มี
+**Removed at official launch (PR #29):**
+- `GameEvent` (model + admin page + API + 'event_page'/'event'/'EVENT' enum values)
+- `PreRegistration` (model + admin page + /api/register + Platform/Region enums)
+
+**Summary:** 11 active models, ~50 admin endpoints, ครอบคลุมทุก content type ที่ schema มี
+
+---
+
+## 🧠 By-design patterns (อย่าเพิ่ง refactor)
+
+These look like missing features at first glance but are intentional choices.
+
+### 1. `Topic` + `FAQ` — array-as-config, ไม่มี per-row CRUD endpoint
+ทั้งคู่เก็บใน `siteConfig` (key = `webzine_topics`, `faq`) เป็น JSON array
+ไม่ใช่ table แยก. หน้า admin/topics + admin/faq อ่านทั้ง array, แก้ใน
+memory, แล้ว PUT ทั้งก้อนกลับไปที่ `/api/admin/config`. ผลคือ:
+- ไม่มี `DELETE /api/admin/topics/:id` (ลบ = filter out + PUT)
+- ไม่มี `POST /api/admin/topics` (เพิ่ม = push + PUT)
+- เหมาะกับ list ที่สั้น (< ~30 รายการ) และไม่มี FK relation
+
+ถ้าต้อง scale เกิน ~50 รายการ หรือต้อง relation ที่มี FK ค่อยย้ายเป็น
+table จริง.
+
+### 2. `MarketingBanner.targetType` ↔ `target*` field consistency
+รับประกันโดย Zod (`server/utils/marketing-banners.ts:parseMarketingBannerPayload`)
+ไม่ใช่ DB constraint. กล่าวคือ:
+- `targetType='article'` → ต้องส่ง `targetArticleId`
+- `targetType='page'` → ต้องส่ง `targetPageKey`
+- `targetType='url'` → ต้องส่ง `targetUrl`
+
+ระดับ DB columns ทั้ง 3 nullable + ไม่มี check constraint cross-column.
+ทุกการเขียนผ่าน admin/webhook ผ่าน Zod อยู่แล้ว เลยไม่เพิ่มความซับซ้อน
+ของ migration. ถ้าจะ tighten ในอนาคต ใช้ Postgres `CHECK` คู่กับ
+`ALTER TABLE` แต่ enum-aware check + nullable mix ทำได้ลำบากมากใน Prisma.
+
+### 3. `POST /api/integration/webhook` — last-write-wins on `slug`
+Webhook ingress รับ news article จาก upstream (WordPress, Wix, …) แล้ว
+upsert by `slug`. ถ้ามี 2 source ส่ง slug เดียวกัน, source ที่มาทีหลัง
+ทับ source แรกแบบเงียบ. การออกแบบนี้เลือกเพราะ:
+- slug ของ ETS เป็น URL path (unique, stable) — ผู้ดูแลเป็นคนเลือก
+- ถ้าจะ "merge" จาก 2 source ต้องเลือกกฎ (ใครชนะ, รวม field ไหน)
+- ปัจจุบัน upstream แต่ละตัวมี secret + role แยก (ดู
+  `server/utils/admin-config.ts` integrationsSchema) ไม่ใช่ pattern free-for-all
+
+ถ้าต้องการแยก source ในอนาคต ให้เพิ่ม `source` column (`'wordpress'` /
+`'wix'` / `'manual'`) แล้วเปลี่ยน upsert key เป็น `(source, sourceId)`
+แทน `slug`.
+
+### 4. `MarketingBanner` per-key RBAC ใน `/api/admin/config` (PR #36)
+EDITOR แก้ navigation/seo/social/appearance/homepage_sections/
+webzine_topics/faq/download_page ได้, แต่ `integrations` + `maintenance`
+ต้อง SUPER_ADMIN. การ gate อยู่ใน handler (`config.put.ts`) ไม่ใช่
+middleware path-match เพราะ path เดียวกัน (`/api/admin/config`) ใช้กับ
+ทุก key.
 
 ---
 
@@ -72,15 +124,11 @@ CONTENT (เนื้อหา publishable)
   ├─ Weapons
   ├─ Features
   ├─ Highlights
-  ├─ Events & Hot Time
   ├─ Milestones
   ├─ Download Page
   ├─ FAQ
   ├─ Pages
   └─ Media
-
-MARKETING
-  └─ Registrations
 
 APPEARANCE
   ├─ Navigation
