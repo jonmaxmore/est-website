@@ -16,7 +16,6 @@ const KEY_PAGES = [
   { path: '/news', expectedTitlePattern: /(news|chronicle|ข่าว)/i },
   { path: '/game-guide', expectedTitlePattern: /(guide|คู่มือ)/i },
   { path: '/support', expectedTitlePattern: /(support|ช่วยเหลือ|ศูนย์)/i },
-  { path: '/event', expectedTitlePattern: /(event|register|registration|ลงทะเบียน)/i },
   { path: '/download', expectedTitlePattern: /(download|ดาวน์โหลด)/i },
   { path: '/faq', expectedTitlePattern: /faq|คำถาม/i },
   { path: '/admin/login', expectedTitlePattern: /Eternal Tower Saga/i },
@@ -43,11 +42,11 @@ test.describe('Homepage — Hero section', () => {
     await expect(page.locator('a.ets-platform').filter({ hasText: 'Windows' })).toBeVisible()
   })
 
-  test('Pre-register button links to /event', async ({ page }) => {
+  test('Download CTA links to /download', async ({ page }) => {
     await page.goto('/')
-    const cta = page.locator('a').filter({ hasText: /Pre-register|ลงทะเบียน/i }).first()
+    const cta = page.locator('a').filter({ hasText: /Download|ดาวน์โหลด/i }).first()
     await expect(cta).toBeVisible()
-    await expect(cta).toHaveAttribute('href', /\/event/)
+    await expect(cta).toHaveAttribute('href', /\/download/)
   })
 
   test('Hero does not overflow viewport (max-h fits content)', async ({ page }) => {
