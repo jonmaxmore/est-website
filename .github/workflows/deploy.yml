@@ -26,6 +26,10 @@ on:
       - 'tests/**'
       - 'e2e/**'
       - 'docs/**'
+  # PRs run validate only (deploy job is gated below). This is the gate that
+  # blocks broken lint/tests/build from landing on main.
+  pull_request:
+    branches: [main]
 
 concurrency:
   group: deploy-production
@@ -60,6 +64,8 @@ jobs:
   deploy:
     name: Deploy to Production
     needs: validate
+    # Deploy only runs on push to main / manual dispatch — never on PR.
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment: production
