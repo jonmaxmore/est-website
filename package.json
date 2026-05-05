@@ -73,6 +73,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@iconify-json/lucide": "^1.2.102",
     "@playwright/test": "^1.59.1",
     "@types/bcryptjs": "^2.4.6",
@@ -88,6 +89,7 @@
     "tailwindcss": "^4.2.2",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.2",
     "vue-tsc": "^3.2.6"
   }
 }

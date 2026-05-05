@@ -136,7 +136,8 @@ onMounted(() => {
   const handler = (e: KeyboardEvent) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
       e.preventDefault()
-      isOpen.value ? close() : open()
+      if (isOpen.value) close()
+      else open()
     }
   }
   window.addEventListener('keydown', handler)
