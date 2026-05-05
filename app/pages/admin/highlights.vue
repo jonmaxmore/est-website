@@ -58,7 +58,7 @@
               </UFormField>
               <UFormField label="Description (TH)" class="mb-3"><UTextarea v-model="form.descriptionTh" :rows="2" /></UFormField>
               <div class="mb-2 text-sm font-medium text-white/60">Detail (TH)</div>
-              <AdminRichTextEditor v-model="form.detailTh" placeholder="รายละเอียด..." />
+              <LazyAdminRichTextEditor v-model="form.detailTh" placeholder="รายละเอียด..." />
             </template>
             <template #en>
               <UFormField label="Title (EN) *" class="mb-3">
@@ -67,7 +67,7 @@
               </UFormField>
               <UFormField label="Description (EN)" class="mb-3"><UTextarea v-model="form.descriptionEn" :rows="2" /></UFormField>
               <div class="mb-2 text-sm font-medium text-white/60">Detail (EN)</div>
-              <AdminRichTextEditor v-model="form.detailEn" placeholder="Details..." />
+              <LazyAdminRichTextEditor v-model="form.detailEn" placeholder="Details..." />
             </template>
           </AdminContentLanguageTabs>
           <AdminMediaPicker v-model="form.image" label="Highlight Image" />

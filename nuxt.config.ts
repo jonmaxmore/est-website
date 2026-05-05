@@ -83,10 +83,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // ── GSAP (client-only) ──
-  build: {
-    transpile: ['gsap'],
-  },
 
   // ── App Meta ──
   app: {

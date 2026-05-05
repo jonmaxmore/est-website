@@ -45,7 +45,7 @@
                 <UTextarea v-model="form.excerptTh" :rows="2" placeholder="สรุปข่าวสั้นๆ" />
               </UFormField>
               <div class="mb-2 text-sm font-medium text-white/60">Content (TH)</div>
-              <AdminRichTextEditor v-model="form.contentTh" placeholder="เนื้อหาข่าวภาษาไทย..." />
+              <LazyAdminRichTextEditor v-model="form.contentTh" placeholder="เนื้อหาข่าวภาษาไทย..." />
             </template>
             <template #en>
               <UFormField label="Title (EN) *" class="mb-4">
@@ -56,7 +56,7 @@
                 <UTextarea v-model="form.excerptEn" :rows="2" placeholder="Short summary" />
               </UFormField>
               <div class="mb-2 text-sm font-medium text-white/60">Content (EN)</div>
-              <AdminRichTextEditor v-model="form.contentEn" placeholder="English article content..." />
+              <LazyAdminRichTextEditor v-model="form.contentEn" placeholder="English article content..." />
             </template>
           </AdminContentLanguageTabs>
         </div>

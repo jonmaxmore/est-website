@@ -37,12 +37,12 @@
             <template #th>
               <UFormField label="Question (TH) *" class="mb-4"><UInput v-model="form.labelTh" placeholder="คำถามภาษาไทย?" /></UFormField>
               <div class="mb-2 text-sm font-medium text-white/60">Answer (TH) *</div>
-              <AdminRichTextEditor v-model="form.contentTh" placeholder="คำตอบภาษาไทย..." />
+              <LazyAdminRichTextEditor v-model="form.contentTh" placeholder="คำตอบภาษาไทย..." />
             </template>
             <template #en>
               <UFormField label="Question (EN) *" class="mb-4"><UInput v-model="form.labelEn" placeholder="English question?" /></UFormField>
               <div class="mb-2 text-sm font-medium text-white/60">Answer (EN) *</div>
-              <AdminRichTextEditor v-model="form.contentEn" placeholder="English answer..." />
+              <LazyAdminRichTextEditor v-model="form.contentEn" placeholder="English answer..." />
             </template>
           </AdminContentLanguageTabs>
           <p v-if="formError" class="text-center text-sm text-red-400">{{ formError }}</p>
