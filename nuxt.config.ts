@@ -80,6 +80,11 @@ export default defineNuxtConfig({
       gtmId: process.env.NUXT_PUBLIC_GTM_ID || '',
       metaPixelId: process.env.NUXT_PUBLIC_META_PIXEL_ID || '',
       recaptchaSiteKey: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY || '',
+      // Sentry browser DSN — separate from server SENTRY_DSN. Both are optional;
+      // when unset, the corresponding plugin (sentry.client.ts / sentry.ts) no-ops.
+      sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN || '',
+      env: process.env.NODE_ENV || 'development',
+      gitCommit: process.env.GIT_COMMIT_SHA || '',
     },
   },
 
