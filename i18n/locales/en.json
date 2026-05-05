@@ -134,5 +134,32 @@
     "backToHome": "Back to Home",
     "language": "Language",
     "switchLanguage": "Switch Language"
+  },
+  "admin": {
+    "dashboard": {
+      "welcome": "Welcome back, {name}",
+      "subtitle": "Here's what's happening with your portal today."
+    },
+    "analytics": { "title": "Analytics", "subtitle": "Track page views, conversions, and visitor behavior" },
+    "homepage": { "title": "Homepage Builder", "subtitle": "Arrange, configure, and style homepage sections" },
+    "news": { "title": "News Articles", "subtitleCount": "{count} articles total" },
+    "topics": { "title": "Webzine Topics", "subtitle": "Maintain the controlled topic registry used by public webzine pages and editors." },
+    "banners": { "title": "Banner Control", "subtitle": "Schedule and target announcement bars, popups, sidebar promos, and article placements." },
+    "weapons": { "title": "Weapons", "subtitle": "Manage game weapon data and stats" },
+    "features": { "title": "Features", "subtitle": "Manage homepage feature cards" },
+    "highlights": { "title": "Highlights", "subtitle": "Manage homepage highlight cards" },
+    "milestones": { "title": "Milestones", "subtitle": "Configure pre-registration reward tiers." },
+    "download": { "title": "Download Page", "subtitle": "Control official mobile and PC download links." },
+    "faq": { "title": "FAQ Management", "subtitle": "Manage frequently asked questions (bilingual)" },
+    "pages": { "title": "Pages", "subtitle": "Create, edit, and publish system or custom pages from one CMS registry." },
+    "media": { "title": "Media Library", "subtitleCount": "{count} assets | {size}" },
+    "menus": { "title": "Navigation Menu", "subtitle": "Manage page-backed and custom links." },
+    "appearance": { "title": "Theme & Appearance", "subtitle": "Customize hero section, logo, branding, and social links" },
+    "seo": { "title": "SEO Settings", "subtitle": "Search engine optimization and meta configuration" },
+    "users": { "title": "User Management", "subtitle": "Manage admin users and roles" },
+    "integrations": { "title": "Integrations", "subtitle": "Connect with WordPress, Wix, and external services" },
+    "activity": { "title": "Activity Log", "subtitleCount": "{count} total actions recorded" },
+    "backup": { "title": "Backup & Restore", "subtitle": "Export and import your site data" },
+    "settings": { "title": "Site Settings", "subtitle": "Configure global site defaults." }
   }
 }

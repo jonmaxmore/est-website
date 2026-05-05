@@ -103,11 +103,12 @@ const endDate = computed(() => props.end ? new Date(props.end) : null)
 const startTime = computed(() => startDate.value ? `${pad(startDate.value.getHours())}:${pad(startDate.value.getMinutes())}` : '00:00')
 const endTime = computed(() => endDate.value ? `${pad(endDate.value.getHours())}:${pad(endDate.value.getMinutes())}` : '23:59')
 
-const startDateDisplay = computed(() => startDate.value ? startDate.value.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Select')
-const endDateDisplay = computed(() => endDate.value ? endDate.value.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Select')
+const { localizedDate } = useLocalizedField()
+const startDateDisplay = computed(() => startDate.value ? localizedDate(startDate.value, { month: 'short', day: 'numeric' }) : 'Select')
+const endDateDisplay = computed(() => endDate.value ? localizedDate(endDate.value, { month: 'short', day: 'numeric' }) : 'Select')
 
 const monthLabel = computed(() => {
-  return viewDate.value.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  return localizedDate(viewDate.value, { month: 'long', year: 'numeric' })
 })
 
 const errorMessage = computed(() => {

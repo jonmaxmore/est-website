@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Milestones</h2>
-        <p class="mt-1 text-sm text-white/50">Configure pre-registration reward tiers.</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.milestones.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.milestones.subtitle') }}</p>
       </div>
       <button class="gold-btn" @click="openEditor(null)">+ New Milestone</button>
     </div>
@@ -76,6 +76,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 interface Milestone {
   id: number

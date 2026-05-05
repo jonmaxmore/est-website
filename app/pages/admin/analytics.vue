@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="mb-6">
-      <h2 class="text-2xl font-bold">Analytics</h2>
-      <p class="mt-1 text-sm text-white/50">Track page views, conversions, and visitor behavior</p>
+      <h2 class="text-2xl font-bold">{{ t('admin.analytics.title') }}</h2>
+      <p class="mt-1 text-sm text-white/50">{{ t('admin.analytics.subtitle') }}</p>
     </div>
 
     <!-- Stats Cards -->
@@ -58,6 +58,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 const { data } = await useFetch<{
   totalViews: number; todayViews: number; uniqueVisitors: number;
   downloadClicks: number; socialClicks: number; newsClicks: number;

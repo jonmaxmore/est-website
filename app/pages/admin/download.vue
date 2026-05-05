@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Download Page</h2>
-        <p class="mt-1 text-sm text-white/50">Control official mobile and PC download links.</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.download.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.download.subtitle') }}</p>
       </div>
       <UButton :loading="saving" class="bg-gradient-to-br from-gold to-gold-light font-bold text-black" @click="save">
         Save Download Page
@@ -78,6 +78,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 interface DownloadPlatform {
   id: string

@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold">FAQ Management</h2>
-        <p class="mt-1 text-sm text-white/50">Manage frequently asked questions (bilingual)</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.faq.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.faq.subtitle') }}</p>
       </div>
       <button class="gold-btn" @click="openEditor(null)">+ New FAQ</button>
     </div>
@@ -77,6 +77,7 @@
 -->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 interface FaqItem { labelEn: string; labelTh: string; contentEn: string; contentTh: string; visible: boolean }
 

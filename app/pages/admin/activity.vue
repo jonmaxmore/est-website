@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Activity Log</h2>
-        <p class="mt-1 text-sm text-white/50">{{ total }} total actions recorded</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.activity.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.activity.subtitleCount', { count: total }) }}</p>
       </div>
       <button @click="refresh" class="rounded-lg border border-white/10 bg-transparent px-4 py-2 text-sm text-white/50 cursor-pointer hover:text-gold hover:border-gold/30 transition-colors">
         <UIcon name="i-lucide-refresh-cw" class="w-4 h-4" /> Refresh
@@ -65,6 +65,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 interface ActivityLog {
   id: string; userName: string; action: string; resource: string

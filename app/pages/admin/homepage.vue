@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Homepage Builder</h2>
-        <p class="mt-1 text-sm text-white/50">Arrange, configure, and style homepage sections</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.homepage.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.homepage.subtitle') }}</p>
       </div>
       <button @click="addSection" class="rounded-lg bg-gold px-5 py-2.5 text-sm font-bold text-black cursor-pointer border-none hover:bg-gold-light transition-colors">+ Add Section</button>
     </div>
@@ -206,6 +206,7 @@
   ⚠️ ดู homepage.ts สำหรับ type และ constants
 -->
 <script setup lang="ts">
+const { t } = useI18n()
 import { SUPPORTED_HOMEPAGE_SECTION_TYPES } from '../../shared/cms/homepage'
 
 definePageMeta({ layout: 'admin' })

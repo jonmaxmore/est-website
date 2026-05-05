@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="mb-6">
-      <h2 class="text-2xl font-bold">SEO Settings</h2>
-      <p class="mt-1 text-sm text-white/50">Search engine optimization and meta configuration</p>
+      <h2 class="text-2xl font-bold">{{ t('admin.seo.title') }}</h2>
+      <p class="mt-1 text-sm text-white/50">{{ t('admin.seo.subtitle') }}</p>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-2">
@@ -90,6 +90,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 const seo = ref({
   siteTitle: 'Eternal Tower Saga — Mobile MMORPG',

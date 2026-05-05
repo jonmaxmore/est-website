@@ -3,8 +3,8 @@
     <!-- Welcome header -->
     <div class="mb-6 flex items-start justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Welcome back, {{ (user as any)?.displayName || 'Admin' }}</h2>
-        <p class="mt-1 text-sm text-white/50">Here's what's happening with your portal today.</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.dashboard.welcome', { name: (user as any)?.displayName || 'Admin' }) }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.dashboard.subtitle') }}</p>
       </div>
       <div class="text-sm text-white/30 whitespace-nowrap">{{ todayFormatted }}</div>
     </div>
@@ -107,6 +107,8 @@
 -->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t, locale } = useI18n()
+const { localizedDate } = useLocalizedField()
 const { user } = useUserSession()
 
 interface Stats {
@@ -138,9 +140,17 @@ const { data: stats } = await useFetch<Stats>('/api/admin/stats', {
 // Hydration mismatch otherwise.
 const todayFormatted = ref('')
 onMounted(() => {
-  todayFormatted.value = new Date().toLocaleDateString('en-US', {
+  todayFormatted.value = localizedDate(new Date(), {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   })
+})
+// Re-format when user switches locale.
+watch(locale, () => {
+  if (todayFormatted.value) {
+    todayFormatted.value = localizedDate(new Date(), {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+    })
+  }
 })
 
 const quickActions = [
@@ -174,7 +184,7 @@ const contentStatus = computed(() => [
 const recentArticles = computed(() => stats.value.recentNews || [])
 const recentActivity = computed(() => stats.value.recentActivity || [])
 
-function formatDate(d: string) { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) }
+function formatDate(d: string) { return localizedDate(d, { month: 'short', day: 'numeric' }) }
 </script>
 
 <style scoped>

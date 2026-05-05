@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold">News Articles</h2>
-        <p class="mt-1 text-sm text-white/50">{{ total }} articles total</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.news.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.news.subtitleCount', { count: total }) }}</p>
       </div>
       <button class="gold-btn" @click="openEditor(null)">+ New Article</button>
     </div>
@@ -102,6 +102,8 @@
 import type { NewsArticle } from '../../../composables/useNewsArticles'
 
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
+const { localizedDate } = useLocalizedField()
 
 const {
   articles, total, totalPages, page, topics, filters, selectedIds,
@@ -133,7 +135,7 @@ async function doDelete() {
 }
 
 function formatDate(d: string) {
-  return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return localizedDate(d, { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
 onMounted(() => {

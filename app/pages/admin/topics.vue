@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Webzine Topics</h2>
-        <p class="mt-1 text-sm text-white/50">Maintain the controlled topic registry used by public webzine pages and editors.</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.topics.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.topics.subtitle') }}</p>
       </div>
       <button class="gold-btn" @click="openNewTopic">+ New Topic</button>
     </div>
@@ -120,6 +120,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 type Topic = {
   key: string

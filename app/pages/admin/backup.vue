@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="mb-6">
-      <h2 class="text-2xl font-bold">Backup & Restore</h2>
-      <p class="mt-1 text-sm text-white/50">Export and import your site data</p>
+      <h2 class="text-2xl font-bold">{{ t('admin.backup.title') }}</h2>
+      <p class="mt-1 text-sm text-white/50">{{ t('admin.backup.subtitle') }}</p>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-2">
@@ -100,6 +100,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 const exportOptions = ref({
   news: true, weapons: true, features: true, highlights: true,
   pages: true, registrations: true, config: true, media: false, users: false,

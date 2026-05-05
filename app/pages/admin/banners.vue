@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Banner Control</h2>
-        <p class="mt-1 text-sm text-white/50">Schedule and target announcement bars, popups, sidebar promos, and article placements.</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.banners.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.banners.subtitle') }}</p>
       </div>
       <button class="gold-btn" @click="openNewBanner">+ New Banner</button>
     </div>
@@ -199,6 +199,7 @@
   ⚠️ ดู marketing-banners.ts สำหรับ Zod validation
 -->
 <script setup lang="ts">
+const { t } = useI18n()
 import { BANNER_PLACEMENTS, BANNER_SCOPES } from '../../shared/cms/marketing-banners'
 
 definePageMeta({ layout: 'admin' })

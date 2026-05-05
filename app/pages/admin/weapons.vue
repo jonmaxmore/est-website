@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Weapons</h2>
-        <p class="mt-1 text-sm text-white/50">Manage game weapon data and stats</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.weapons.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.weapons.subtitle') }}</p>
       </div>
       <button class="gold-btn" @click="openEditor(null)">+ New Weapon</button>
     </div>
@@ -119,6 +119,7 @@
 -->
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 interface Weapon {
   id: number; name: string; nameEn?: string | null; descriptionEn?: string | null; descriptionTh?: string | null
