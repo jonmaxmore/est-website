@@ -155,6 +155,19 @@
             </div>
           </div>
 
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label for="banner-starts-at" class="field-label">Starts at (optional)</label>
+              <input id="banner-starts-at" v-model="form.startsAt" type="datetime-local" class="field-input" />
+              <p class="mt-1 text-xs text-white/35">Banner auto-promotes to LIVE at this time when status is SCHEDULED. Leave empty to start immediately.</p>
+            </div>
+            <div>
+              <label for="banner-ends-at" class="field-label">Ends at (optional)</label>
+              <input id="banner-ends-at" v-model="form.endsAt" type="datetime-local" class="field-input" />
+              <p class="mt-1 text-xs text-white/35">Banner auto-transitions to EXPIRED at this time. Leave empty for no end date.</p>
+            </div>
+          </div>
+
           <div class="grid gap-4 sm:grid-cols-4">
             <label class="flex items-center gap-3 text-sm text-white/60">
               <input v-model="form.isActive" type="checkbox" class="h-4 w-4 accent-[#d4a843]" />
@@ -229,39 +242,16 @@ const deleteDialogOpen = ref(false)
 const deleteTarget = ref<Banner | null>(null)
 
 const filters = reactive({ placement: '', status: '', scope: '' })
-const form = reactive({
-  id: '',
-  placement: 'announcement_bar',
-  scope: 'global',
-  status: 'DRAFT',
-  priority: 0,
-  campaignCode: '',
-  badgeEn: '',
-  badgeTh: '',
-  titleEn: '',
-  titleTh: '',
-  bodyEn: '',
-  bodyTh: '',
-  desktopImage: '',
-  mobileImage: '',
-  targetType: 'article',
-  targetArticleId: null as number | null,
-  targetPageKey: '',
-  targetUrl: '',
-  targetNewTab: false,
-  dismissible: true,
-  isActive: true,
-  targetTopicKey: '',
-})
-
-function resetForm() {
-  Object.assign(form, {
+function createEmptyForm() {
+  return {
     id: '',
     placement: 'announcement_bar',
     scope: 'global',
     status: 'DRAFT',
     priority: 0,
     campaignCode: '',
+    startsAt: '',
+    endsAt: '',
     badgeEn: '',
     badgeTh: '',
     titleEn: '',
@@ -271,14 +261,20 @@ function resetForm() {
     desktopImage: '',
     mobileImage: '',
     targetType: 'article',
-    targetArticleId: null,
+    targetArticleId: null as number | null,
     targetPageKey: '',
-      targetUrl: '',
+    targetUrl: '',
     targetNewTab: false,
     dismissible: true,
     isActive: true,
     targetTopicKey: '',
-  })
+  }
+}
+
+const form = reactive(createEmptyForm())
+
+function resetForm() {
+  Object.assign(form, createEmptyForm())
 }
 
 function formatPlacement(value: string) {
@@ -314,15 +310,28 @@ function openNewBanner() {
   editorOpen.value = true
 }
 
+// Convert ISO timestamp to the YYYY-MM-DDTHH:mm format expected by
+// <input type="datetime-local"> in the user's local timezone.
+function toDateTimeLocal(iso: string | null | undefined): string {
+  if (!iso) return ''
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return ''
+  const tzOffset = d.getTimezoneOffset() * 60_000
+  return new Date(d.getTime() - tzOffset).toISOString().slice(0, 16)
+}
+
 function openEditBanner(banner: Banner) {
   formError.value = ''
   Object.assign(form, {
+    ...createEmptyForm(),
     id: banner.id,
     placement: banner.placement,
     scope: banner.scope,
     status: banner.status,
     priority: banner.priority,
     campaignCode: banner.campaignCode || '',
+    startsAt: toDateTimeLocal(banner.startsAt),
+    endsAt: toDateTimeLocal(banner.endsAt),
     badgeEn: banner.badgeEn || '',
     badgeTh: banner.badgeTh || '',
     titleEn: banner.titleEn || '',
@@ -348,6 +357,12 @@ function openEditBanner(banner: Banner) {
  * ⚠️ ต้อง null ค่าที่ไม่ใช้ตาม targetType/scope
  *    ไม่งั้น DB จะเก็บค่าเก่าค้าง
  */
+function toIsoOrNull(local: string): string | null {
+  if (!local) return null
+  const d = new Date(local)
+  return Number.isNaN(d.getTime()) ? null : d.toISOString()
+}
+
 function toPayload() {
   return {
     placement: form.placement,
@@ -355,6 +370,8 @@ function toPayload() {
     status: form.status,
     priority: Number(form.priority) || 0,
     campaignCode: form.campaignCode || null,
+    startsAt: toIsoOrNull(form.startsAt),
+    endsAt: toIsoOrNull(form.endsAt),
     badgeEn: form.badgeEn || null,
     badgeTh: form.badgeTh || null,
     titleEn: form.titleEn,
