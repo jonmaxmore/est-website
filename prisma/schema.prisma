@@ -237,6 +237,10 @@ model ActivityLog {
 
   @@index([createdAt])
   @@index([userId])
+  // Filtering the admin Activity page by resource + action is the
+  // dominant non-recency query path; an explicit composite keeps it
+  // fast as the table grows past the per-table-scan threshold.
+  @@index([resource, action])
   @@map("activity_logs")
 }
 
