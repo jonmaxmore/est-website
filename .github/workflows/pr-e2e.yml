@@ -1,0 +1,144 @@
+# ═══════════════════════════════════════
+# PR E2E — local-server smoke + api
+# ═══════════════════════════════════════
+#
+# Runs Playwright e2e/smoke + e2e/api against a Nuxt server spun up
+# locally inside the runner, with postgres + redis service containers.
+#
+# This is the PR-time complement to:
+#   - e2e.yml  (push-to-main, against production)
+#   - uat.yml  (scheduled + post-deploy, against production)
+#
+# Scope intentionally excludes:
+#   - "Security headers" describe in smoke (asserts nginx-only behaviour
+#     like server_tokens off — won't pass without nginx in front)
+#   - e2e/admin/* (would require seeded admin credentials in CI secrets)
+#   - e2e/uat/*   (covered by uat.yml against real production)
+#
+# Test admin credentials are baked into the workflow env (the DB is
+# disposable and lives only for the run), so no GitHub secrets are
+# required.
+
+name: PR E2E (local server)
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  e2e-local:
+    name: E2E smoke + api (local server)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: est_admin
+          POSTGRES_PASSWORD: ci-test-password
+          POSTGRES_DB: est_website
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U est_admin"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://est_admin:ci-test-password@localhost:5432/est_website
+      REDIS_URL: redis://localhost:6379
+      NUXT_SESSION_PASSWORD: ci-session-password-padded-to-32-chars-min
+      ANALYTICS_IP_SALT: ci-analytics-salt-fake-value-32-chars
+      WEBHOOK_SECRET: ci-webhook-secret-fake-value-32-chars
+      ADMIN_SEED_EMAIL: admin@example.dev
+      ADMIN_SEED_PASSWORD: ciTestAdmin_pwd!2026
+      NUXT_PUBLIC_SITE_URL: http://localhost:3000
+      NUXT_PUBLIC_SITE_NAME: Eternal Tower Saga
+      NODE_ENV: production
+      BASE_URL: http://localhost:3000
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Apply database migrations
+        run: npx prisma migrate deploy
+
+      - name: Seed database
+        run: npm run db:seed
+
+      - name: Build Nuxt
+        run: npm run build
+
+      - name: Install Playwright (chromium)
+        run: npx playwright install --with-deps chromium
+
+      - name: Start Nuxt server
+        run: |
+          node .output/server/index.mjs > nuxt.log 2>&1 &
+          echo $! > nuxt.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000/api/public/site > /dev/null 2>&1; then
+              echo "Server ready after ${i} attempts"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "❌ Server failed to start within 60s"
+          echo "─── nuxt.log ───"
+          cat nuxt.log
+          exit 1
+
+      - name: Run smoke + api e2e
+        run: |
+          npx playwright test \
+            e2e/api/health.spec.ts \
+            e2e/smoke/production.spec.ts \
+            --grep-invert "Security headers" \
+            --project='Desktop Chrome' \
+            --reporter=list,html
+
+      - name: Stop Nuxt server
+        if: always()
+        run: |
+          if [ -f nuxt.pid ]; then
+            kill "$(cat nuxt.pid)" 2>/dev/null || true
+          fi
+
+      - name: Upload Nuxt log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuxt-server-log
+          path: nuxt.log
+          retention-days: 7
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-pr-report
+          path: playwright-report/
+          retention-days: 14
