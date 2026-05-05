@@ -122,6 +122,14 @@
     "subtitle": "Download now and start climbing the eternal tower.",
     "download": "Download Now"
   },
+  "consent": {
+    "aria": "Cookie consent",
+    "title": "We use marketing cookies",
+    "body": "Help us improve the site and reach the right players. Analytics and ad pixels load only after you accept.",
+    "learnMore": "Read our privacy policy",
+    "accept": "Accept",
+    "reject": "Reject"
+  },
   "pages": {
     "faq": "FAQ",
     "gallery": "Gallery",
