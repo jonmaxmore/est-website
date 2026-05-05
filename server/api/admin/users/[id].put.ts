@@ -14,7 +14,7 @@ const updateUserSchema = z
     displayName: z.string().trim().min(1).max(100).optional(),
     email: z.string().trim().toLowerCase().email().max(255).optional(),
     password: z.string().min(8).max(200).optional(),
-    role: z.enum(['SUPER_ADMIN', 'EDITOR']).optional(),
+    role: z.enum(['SUPER_ADMIN', 'EDITOR', 'REVIEWER']).optional(),
   })
   .refine((data) => Object.keys(data).length > 0, {
     message: 'At least one field is required',

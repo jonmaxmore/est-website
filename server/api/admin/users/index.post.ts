@@ -9,7 +9,7 @@ const createUserSchema = z.object({
   displayName: z.string().trim().min(1).max(100),
   email: z.string().trim().toLowerCase().email().max(255),
   password: z.string().min(8).max(200),
-  role: z.enum(['SUPER_ADMIN', 'EDITOR']).default('EDITOR'),
+  role: z.enum(['SUPER_ADMIN', 'EDITOR', 'REVIEWER']).default('EDITOR'),
 })
 
 export default defineEventHandler(async (event) => {

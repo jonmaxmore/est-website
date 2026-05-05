@@ -29,7 +29,7 @@ const fields = {
   campaignCode: nullableStringSchema,
   pinned: z.boolean(),
   isEvergreen: z.boolean(),
-  status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']),
+  status: z.enum(['DRAFT', 'IN_REVIEW', 'SCHEDULED', 'PUBLISHED', 'ARCHIVED']),
   featuredImage: nullableStringSchema,
   publishedAt: nullableStringSchema,
   featureOnHome: z.boolean(),

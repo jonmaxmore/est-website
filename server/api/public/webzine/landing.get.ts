@@ -1,4 +1,5 @@
 import { normalizeWebzineTopics } from '../../../../app/shared/cms/webzine'
+import { reconcileScheduledArticles } from '../../../utils/news-scheduler'
 
 const publishedWhere = () => ({
   status: 'PUBLISHED' as const,
@@ -7,6 +8,11 @@ const publishedWhere = () => ({
 
 export default defineEventHandler(async (event) => {
   setResponseHeader(event, 'Cache-Control', 'public, max-age=30, s-maxage=60, stale-while-revalidate=300')
+
+  // Auto-promote SCHEDULED articles whose publishedAt has passed (throttled — at
+  // most once per 60s). Trade-off documented in news-scheduler.ts.
+  await reconcileScheduledArticles()
+
   const [topicConfig, pinnedArticles, latestArticles, patchNotes, guides, lore, devBlogs] = await Promise.all([
     prisma.siteConfig.findUnique({ where: { key: 'webzine_topics' } }),
     prisma.newsArticle.findMany({

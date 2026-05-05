@@ -1,6 +1,7 @@
 import { estimateReadingTimeMinutes } from '../../../../app/shared/cms/webzine'
 import { toDuplicateConflictError } from '../../../utils/prisma-errors'
 import { cacheInvalidate } from '../../../utils/redis'
+import { recordNewsRevision } from '../../../utils/news-revisions'
 import { sanitizeRichTextOptional } from '../../../utils/sanitize'
 import { newsUpdateSchema } from '../../../utils/schemas-news'
 
@@ -61,6 +62,9 @@ export default defineEventHandler(async (event) => {
       `Updated article: ${article.titleEn} (${article.slug})`,
       String(id),
     )
+
+    // Snapshot post-update state into the revision history
+    recordNewsRevision(event, article)
 
     await cacheInvalidate('cache:sitemap-xml')
     await cacheInvalidate('news:*')

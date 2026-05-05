@@ -1,6 +1,10 @@
 import { paginated, parsePagination } from '../../utils/response'
+import { reconcileScheduledArticles } from '../../utils/news-scheduler'
 
 export default defineEventHandler(async (event) => {
+  // Throttled: promote SCHEDULED articles whose publishedAt has passed
+  await reconcileScheduledArticles()
+
   const query = getQuery(event)
   const { page, limit, skip, take } = parsePagination(query, { defaultLimit: 12, maxLimit: 50 })
   const contentType = (query.contentType as string) || ''
