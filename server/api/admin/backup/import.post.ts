@@ -17,6 +17,7 @@
  *   total-failure จาก partial-success ได้
  */
 import { sanitizeRichText, sanitizeRichTextOptional } from '../../../utils/sanitize'
+import { pickKnown } from '../../../utils/pick-known'
 import { SYSTEM_CMS_PAGES, normalizeCmsSlug } from '../../../../app/shared/cms/pages'
 
 const SUPPORTED_VERSIONS = new Set(['1.0', '2.0'])
@@ -54,17 +55,6 @@ type PageBackup = {
   headerOrder?: number
   footerOrder?: number
   isSystemPage?: boolean
-}
-
-/** Pick only allowed fields from input — guards against mass-assignment via crafted backup. */
-function pickKnown<K extends string>(input: unknown, allowed: readonly K[]): Record<K, unknown> {
-  if (!input || typeof input !== 'object') return {} as Record<K, unknown>
-  const src = input as Record<string, unknown>
-  const out = {} as Record<K, unknown>
-  for (const k of allowed) {
-    if (k in src) out[k] = src[k]
-  }
-  return out
 }
 
 function normalizeImportedPage(page: LegacyPageBackup | PageBackup): PageBackup {
