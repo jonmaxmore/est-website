@@ -22,6 +22,23 @@ test.describe('API Health Checks', () => {
     })
   }
 
+  test('GET /api/health (shallow) returns ok', async ({ request }) => {
+    const response = await request.get(`${BASE}/api/health`)
+    expect(response.status()).toBe(200)
+    const body = await response.json()
+    expect(body.status).toBe('ok')
+    expect(body.mode).toBe('shallow')
+  })
+
+  test('GET /api/health?deep=1 reports DB ping', async ({ request }) => {
+    const response = await request.get(`${BASE}/api/health?deep=1`)
+    expect([200, 503]).toContain(response.status())
+    const body = await response.json()
+    expect(body.mode).toBe('deep')
+    expect(body.db).toBeTruthy()
+    expect(['ok', 'fail']).toContain(body.db.status)
+  })
+
   test('POST /api/auth/login with bad credentials should return 401 (or 429 if rate-limited)', async ({ request }) => {
     const response = await request.post(`${BASE}/api/auth/login`, {
       data: {
