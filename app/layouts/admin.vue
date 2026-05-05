@@ -5,14 +5,11 @@
     class="admin-root"
     :class="{ 'sidebar-collapsed': sidebarCollapsed, 'sidebar-mobile-open': mobileMenuOpen }"
   >
-    <!-- Mobile Overlay -->
     <Transition name="fade">
       <div v-if="mobileMenuOpen" class="mobile-overlay" @click="mobileMenuOpen = false" />
     </Transition>
 
-    <!-- Sidebar -->
     <aside class="sidebar" :class="{ collapsed: sidebarCollapsed }">
-      <!-- Brand -->
       <div class="sidebar-brand">
         <NuxtLink to="/admin" class="brand-link">
           <img src="/images/logo.webp" alt="ETS" class="brand-logo" />
@@ -25,7 +22,6 @@
         </button>
       </div>
 
-      <!-- Nav Groups -->
       <nav class="sidebar-nav">
         <template v-for="group in navGroups" :key="group.title">
           <p v-if="!sidebarCollapsed" class="nav-group-title">{{ group.title }}</p>
@@ -43,12 +39,11 @@
             <Transition name="nav-label">
               <span v-if="!sidebarCollapsed" class="nav-label">{{ item.label }}</span>
             </Transition>
-            <span v-if="(item as any).badge && !sidebarCollapsed" class="nav-badge">{{ (item as any).badge }}</span>
+            <span v-if="item.badge && !sidebarCollapsed" class="nav-badge">{{ item.badge }}</span>
           </NuxtLink>
         </template>
       </nav>
 
-      <!-- Sidebar Footer -->
       <div class="sidebar-footer">
         <NuxtLink
           to="/"
@@ -70,9 +65,7 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
     <div class="main-wrapper">
-      <!-- Topbar -->
       <header class="topbar">
         <div class="topbar-left">
           <button class="mobile-menu-btn" @click="mobileMenuOpen = !mobileMenuOpen">
@@ -81,34 +74,30 @@
           <AdminBreadcrumb />
         </div>
         <div class="topbar-right">
-          <!-- Search Trigger -->
           <button class="topbar-search-btn" @click="commandPalette?.open()" title="Search (Ctrl+K)">
             <UIcon name="i-lucide-search" class="search-icon-svg" />
             <span class="search-label">Search...</span>
             <kbd class="search-kbd">⌘K</kbd>
           </button>
 
-          <!-- Admin Language Toggle -->
           <div class="admin-lang-toggle">
             <button
-              v-for="l in ['TH', 'EN']"
+              v-for="l in (['TH', 'EN'] as const)"
               :key="l"
               class="admin-lang-btn"
               :class="{ active: adminLang === l }"
-              @click="adminLang = l as 'TH' | 'EN'"
+              @click="adminLang = l"
             >
               {{ l }}
             </button>
           </div>
 
-          <!-- User Info — ClientOnly: useUserSession() resolves async on client only,
-               wrapping prevents SSR/client hydration mismatch on every admin page -->
           <ClientOnly>
             <div class="topbar-user">
-              <div class="user-avatar">{{ ((user as { displayName?: string })?.displayName || 'A').charAt(0).toUpperCase() }}</div>
+              <div class="user-avatar">{{ userInitial }}</div>
               <div class="user-info">
-                <span class="user-name">{{ (user as { displayName?: string })?.displayName || 'Admin' }}</span>
-                <span class="user-role-badge">{{ (user as { role?: string })?.role || 'ADMIN' }}</span>
+                <span class="user-name">{{ userName }}</span>
+                <span class="user-role-badge">{{ userRole }}</span>
               </div>
             </div>
             <template #fallback>
@@ -124,7 +113,6 @@
         </div>
       </header>
 
-      <!-- Page Title -->
       <div class="page-header">
         <h1 class="page-title">{{ pageTitle }}</h1>
         <div class="env-badge">
@@ -133,18 +121,20 @@
         </div>
       </div>
 
-      <!-- Page Content -->
       <div class="page-content">
         <slot />
       </div>
     </div>
 
-    <!-- Command Palette -->
     <AdminCommandPalette ref="commandPalette" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ADMIN_NAV_GROUPS, ADMIN_NAV_ITEMS } from '../shared/constants/admin-nav'
+
+interface AdminUser { id?: string; displayName?: string; role?: string }
+
 const { user, clear } = useUserSession()
 const route = useRoute()
 
@@ -154,52 +144,12 @@ const adminLang = ref<'TH' | 'EN'>('EN')
 const commandPalette = ref<{ open: () => void } | null>(null)
 const hydrated = ref(false)
 
-const navGroups = [
-  {
-    title: 'Overview',
-    items: [
-      { to: '/admin', icon: 'i-lucide-layout-dashboard', label: 'Dashboard' },
-      { to: '/admin/analytics', icon: 'i-lucide-bar-chart-3', label: 'Analytics' },
-    ],
-  },
-  {
-    title: 'Content',
-    items: [
-      { to: '/admin/homepage', icon: 'i-lucide-home', label: 'Homepage' },
-      { to: '/admin/news', icon: 'i-lucide-newspaper', label: 'Webzine Articles' },
-      { to: '/admin/topics', icon: 'i-lucide-tags', label: 'Topics' },
-      { to: '/admin/banners', icon: 'i-lucide-flag', label: 'Banner Control' },
-      { to: '/admin/weapons', icon: 'i-lucide-swords', label: 'Weapons' },
-      { to: '/admin/features', icon: 'i-lucide-sparkles', label: 'Features' },
-      { to: '/admin/highlights', icon: 'i-lucide-star', label: 'Highlights' },
-      { to: '/admin/milestones', icon: 'i-lucide-trophy', label: 'Milestones' },
-      { to: '/admin/download', icon: 'i-lucide-download', label: 'Download Page' },
-      { to: '/admin/faq', icon: 'i-lucide-help-circle', label: 'FAQ' },
-      { to: '/admin/pages', icon: 'i-lucide-file-text', label: 'Pages' },
-      { to: '/admin/media', icon: 'i-lucide-image', label: 'Media' },
-    ],
-  },
-  {
-    title: 'Appearance',
-    items: [
-      { to: '/admin/menus', icon: 'i-lucide-menu', label: 'Navigation' },
-      { to: '/admin/appearance', icon: 'i-lucide-palette', label: 'Theme' },
-      { to: '/admin/seo', icon: 'i-lucide-search', label: 'SEO' },
-    ],
-  },
-  {
-    title: 'System',
-    items: [
-      { to: '/admin/users', icon: 'i-lucide-user', label: 'Users' },
-      { to: '/admin/integrations', icon: 'i-lucide-plug', label: 'Integrations' },
-      { to: '/admin/activity', icon: 'i-lucide-clipboard-list', label: 'Activity Log' },
-      { to: '/admin/backup', icon: 'i-lucide-hard-drive', label: 'Backup' },
-      { to: '/admin/settings', icon: 'i-lucide-settings', label: 'Settings' },
-    ],
-  },
-]
+const navGroups = ADMIN_NAV_GROUPS
 
-const allNavItems = navGroups.flatMap((g) => g.items)
+const userTyped = computed(() => user.value as AdminUser | null | undefined)
+const userName = computed(() => userTyped.value?.displayName || 'Admin')
+const userInitial = computed(() => (userTyped.value?.displayName || 'A').charAt(0).toUpperCase())
+const userRole = computed(() => userTyped.value?.role || 'ADMIN')
 
 function isActive(to: string) {
   if (to === '/admin') return route.path === '/admin'
@@ -207,7 +157,7 @@ function isActive(to: string) {
 }
 
 const pageTitle = computed(() => {
-  const match = allNavItems.find((item) => isActive(item.to))
+  const match = ADMIN_NAV_ITEMS.find((item) => isActive(item.to))
   return match?.label || 'Admin'
 })
 
@@ -216,10 +166,8 @@ async function handleLogout() {
   navigateTo('/admin/login')
 }
 
-// Close mobile menu on route change
 watch(() => route.path, () => { mobileMenuOpen.value = false })
 
-// Close mobile menu on resize to desktop
 onMounted(() => {
   hydrated.value = true
   const handler = () => { if (window.innerWidth > 1024) mobileMenuOpen.value = false }
@@ -227,499 +175,3 @@ onMounted(() => {
   onBeforeUnmount(() => window.removeEventListener('resize', handler))
 })
 </script>
-
-<style scoped>
-/* ═══════════════════════════════════ */
-/* VARIABLES                         */
-/* ═══════════════════════════════════ */
-.admin-root {
-  --sidebar-width: 264px;
-  --sidebar-collapsed-width: 72px;
-  --topbar-height: 60px;
-  --gold: var(--adm-gold);
-  --gold-light: var(--adm-gold-light);
-  display: flex;
-  min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 0% 0%, rgba(212, 168, 67, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 100% 100%, rgba(59, 130, 246, 0.025) 0%, transparent 50%),
-    var(--adm-surface-base);
-  color: var(--adm-ink);
-  font-feature-settings: 'cv11', 'ss01';
-}
-
-/* ═══════════════════════════════════ */
-/* SIDEBAR                            */
-/* ═══════════════════════════════════ */
-.sidebar {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 40;
-  width: var(--sidebar-width);
-  display: flex;
-  flex-direction: column;
-  background: rgba(10, 10, 15, 0.78);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  backdrop-filter: blur(24px) saturate(160%);
-  border-right: 1px solid var(--adm-border-soft);
-  transition: width var(--adm-dur-slow) var(--adm-ease);
-  overflow: hidden;
-  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.02);
-}
-.sidebar.collapsed {
-  width: var(--sidebar-collapsed-width);
-}
-
-/* Brand */
-.sidebar-brand {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  min-height: 60px;
-}
-.brand-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  overflow: hidden;
-}
-.brand-logo {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-.brand-name {
-  font-size: 0.8125rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--adm-ink);
-  white-space: nowrap;
-}
-.collapse-btn {
-  width: 24px;
-  height: 24px;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.2);
-  font-size: 0.5rem;
-  cursor: pointer;
-  transition: all 0.15s;
-  flex-shrink: 0;
-}
-.collapse-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.5);
-}
-
-/* Nav */
-.sidebar-nav {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 8px;
-}
-.nav-group-title {
-  margin: 18px 0 6px;
-  padding: 0 12px;
-  font-size: 0.625rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--adm-ink-faint);
-  white-space: nowrap;
-}
-.nav-group-title:first-child { margin-top: 6px; }
-.nav-group-dot {
-  margin: 12px auto 6px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-}
-.nav-item {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 9px 12px;
-  border-radius: 10px;
-  text-decoration: none;
-  color: var(--adm-ink-soft);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  transition: background var(--adm-dur) var(--adm-ease), color var(--adm-dur) var(--adm-ease);
-  white-space: nowrap;
-  margin-bottom: 2px;
-}
-.nav-item:hover {
-  background: var(--adm-surface-2);
-  color: var(--adm-ink);
-}
-.nav-item.active {
-  background: var(--adm-gold-soft);
-  color: var(--adm-gold-light);
-  font-weight: 600;
-  box-shadow: inset 0 0 0 1px var(--adm-gold-medium);
-}
-.nav-item.active::before {
-  content: '';
-  position: absolute;
-  left: -8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 18px;
-  border-radius: 2px;
-  background: var(--adm-gold);
-  box-shadow: 0 0 12px var(--adm-gold-strong);
-}
-.nav-icon {
-  width: 22px;
-  text-align: center;
-  font-size: 0.9375rem;
-  flex-shrink: 0;
-}
-.nav-icon-svg {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  opacity: 0.7;
-}
-.nav-item.active .nav-icon-svg {
-  opacity: 1;
-  color: var(--gold);
-}
-.sidebar-icon {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-}
-.search-icon-svg {
-  width: 14px;
-  height: 14px;
-  opacity: 0.5;
-}
-.nav-label { font-weight: 500; }
-.nav-badge {
-  margin-left: auto;
-  padding: 1px 7px;
-  border-radius: 10px;
-  background: rgba(212, 168, 67, 0.15);
-  color: var(--gold);
-  font-size: 0.5625rem;
-  font-weight: 700;
-}
-
-/* Sidebar Footer */
-.sidebar-footer {
-  padding: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
-}
-.sidebar-footer-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-radius: 8px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.35);
-  font-size: 0.8125rem;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.2s;
-  margin-bottom: 4px;
-}
-.view-site-btn:hover {
-  border-color: rgba(212, 168, 67, 0.2);
-  color: var(--gold);
-}
-.logout-btn:hover {
-  border-color: rgba(239, 68, 68, 0.2);
-  background: rgba(239, 68, 68, 0.05);
-  color: #ef4444;
-}
-
-/* ═══════════════════════════════════ */
-/* MAIN WRAPPER                       */
-/* ═══════════════════════════════════ */
-.main-wrapper {
-  flex: 1;
-  margin-left: var(--sidebar-width);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.sidebar-collapsed .main-wrapper {
-  margin-left: var(--sidebar-collapsed-width);
-}
-
-/* ═══════════════════════════════════ */
-/* TOPBAR                             */
-/* ═══════════════════════════════════ */
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: var(--topbar-height);
-  padding: 0 24px;
-  background: rgba(10, 10, 15, 0.65);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  backdrop-filter: blur(20px) saturate(160%);
-  border-bottom: 1px solid var(--adm-border-soft);
-}
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* Mobile Menu Button */
-.mobile-menu-btn {
-  display: none;
-  width: 36px;
-  height: 36px;
-  border: none;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 1.125rem;
-  cursor: pointer;
-}
-
-/* Search Button */
-.topbar-search-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  height: 36px;
-  padding: 0 14px;
-  border: 1px solid var(--adm-border-soft);
-  border-radius: 10px;
-  background: var(--adm-surface-2);
-  color: var(--adm-ink-mute);
-  font-size: 0.8125rem;
-  cursor: pointer;
-  transition: all var(--adm-dur) var(--adm-ease);
-  min-width: 220px;
-}
-.topbar-search-btn:hover {
-  border-color: var(--adm-border-default);
-  color: var(--adm-ink-soft);
-  background: var(--adm-surface-3);
-}
-.search-icon { font-size: 0.75rem; }
-.search-label { flex: 1; text-align: left; }
-.search-kbd {
-  padding: 2px 8px;
-  border: 1px solid var(--adm-border-default);
-  border-radius: 5px;
-  background: var(--adm-surface-3);
-  color: var(--adm-ink-mute);
-  font-size: 0.625rem;
-  font-weight: 600;
-  font-family: ui-monospace, 'JetBrains Mono', monospace;
-}
-
-/* Admin Language Toggle */
-.admin-lang-toggle {
-  display: flex;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  overflow: hidden;
-}
-.admin-lang-btn {
-  padding: 5px 10px;
-  border: none;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.3);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.admin-lang-btn.active {
-  background: rgba(212, 168, 67, 0.1);
-  color: var(--gold);
-}
-.admin-lang-btn:hover:not(.active) {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-/* User */
-.topbar-user {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 8px 4px 4px;
-  border-radius: 10px;
-  transition: background 0.15s;
-}
-.topbar-user:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
-.user-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--adm-gold-medium), var(--adm-gold-soft));
-  color: var(--adm-gold-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.875rem;
-  font-weight: 700;
-  box-shadow: inset 0 0 0 1px var(--adm-gold-medium);
-}
-.user-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  line-height: 1.1;
-}
-.user-name {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--adm-ink);
-}
-.user-role-badge {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: var(--adm-gold-light);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-/* ═══════════════════════════════════ */
-/* PAGE HEADER                        */
-/* ═══════════════════════════════════ */
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 24px 28px 0;
-}
-.page-title {
-  font-size: 1.375rem;
-  font-weight: 700;
-  margin: 0;
-  color: var(--adm-ink);
-  letter-spacing: -0.01em;
-}
-.env-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: rgba(16, 185, 129, 0.08);
-  color: #34d399;
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  border: 1px solid rgba(16, 185, 129, 0.2);
-}
-.env-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #10b981;
-  animation: pulse-dot 2s infinite;
-}
-
-/* ═══════════════════════════════════ */
-/* PAGE CONTENT                       */
-/* ═══════════════════════════════════ */
-.page-content {
-  flex: 1;
-  padding: 24px 28px 40px;
-  max-width: 1600px;
-  width: 100%;
-  margin: 0 auto;
-}
-
-/* ═══════════════════════════════════ */
-/* MOBILE OVERLAY                     */
-/* ═══════════════════════════════════ */
-.mobile-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 35;
-  background: rgba(0, 0, 0, 0.6);
-}
-
-/* ═══════════════════════════════════ */
-/* TRANSITIONS                        */
-/* ═══════════════════════════════════ */
-.brand-text-enter-active, .brand-text-leave-active { transition: opacity 0.2s, transform 0.2s; }
-.brand-text-enter-from, .brand-text-leave-to { opacity: 0; transform: translateX(-8px); }
-.nav-label-enter-active, .nav-label-leave-active { transition: opacity 0.15s; }
-.nav-label-enter-from, .nav-label-leave-to { opacity: 0; }
-.fade-enter-active, .fade-leave-active { transition: opacity 0.2s; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-/* ═══════════════════════════════════ */
-/* RESPONSIVE                         */
-/* ═══════════════════════════════════ */
-@media (max-width: 1024px) {
-  .admin-root {
-    --sidebar-width: 250px;
-  }
-  .sidebar {
-    transform: translateX(-100%);
-  }
-  .sidebar-mobile-open .sidebar {
-    transform: translateX(0);
-    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.5);
-  }
-  .sidebar-mobile-open .mobile-overlay {
-    display: block;
-  }
-  .main-wrapper {
-    margin-left: 0 !important;
-  }
-  .mobile-menu-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .collapse-btn { display: none; }
-  .desktop-only { display: none; }
-  .topbar-search-btn { min-width: auto; }
-  .search-label, .search-kbd { display: none; }
-  .user-info { display: none; }
-}
-
-@media (max-width: 640px) {
-  .page-content { padding: 16px; }
-  .page-header { padding: 16px 16px 0; }
-  .topbar { padding: 0 12px; }
-  .admin-lang-toggle { display: none; }
-  .env-badge { display: none; }
-}
-</style>
