@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { toDuplicateConflictError } from '../../../utils/prisma-errors'
+
 const weaponSchema = z.object({
   name: z.string().min(1).optional(),
   nameEn: z.string().optional().nullable(),
@@ -30,5 +32,24 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Validation error', data: parsed.error.flatten() })
   }
 
-  return prisma.weapon.update({ where: { id }, data: parsed.data })
+  try {
+    const weapon = await prisma.weapon.update({ where: { id }, data: parsed.data })
+
+    await logActivity(
+      event,
+      'UPDATE',
+      'weapons',
+      `Updated weapon: ${weapon.name}`,
+      String(id),
+    )
+
+    return weapon
+  } catch (err) {
+    const conflict = toDuplicateConflictError(
+      err as { code?: string; meta?: { target?: string[] | string } },
+      { resource: 'Weapon' },
+    )
+    if (conflict) throw conflict
+    throw err
+  }
 })

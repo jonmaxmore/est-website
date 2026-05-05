@@ -13,9 +13,8 @@
  * Persona B — Marketing Manager (Power User)
  *   - ใช้ Cmd+K command palette navigate เร็ว
  *   - กระโจนระหว่าง pages โดยใช้ shortcuts
- *   - ตรวจ Banners, Events, Registrations, Analytics เร็วๆ
+ *   - ตรวจ Banners + Analytics เร็วๆ
  *   - Filter + sort ใน list views
- *   - Export registrations CSV
  *
  * Persona C — Site Admin / SuperAdmin (Tech-savvy)
  *   - System pages: Users, Integrations, Activity Log, Backup, Settings, SEO
@@ -53,13 +52,11 @@ const ALL_ADMIN_PAGES = [
   '/admin/weapons',
   '/admin/features',
   '/admin/highlights',
-  '/admin/events',
   '/admin/milestones',
   '/admin/download',
   '/admin/faq',
   '/admin/pages',
   '/admin/media',
-  '/admin/registrations',
   '/admin/menus',
   '/admin/appearance',
   '/admin/seo',
@@ -184,7 +181,7 @@ test.describe('Persona A: Content Editor (Junior, ระมัดระวัง
 test.describe('Persona B: Marketing Manager (Power User, fast)', () => {
   test.use({ viewport: { width: 1440, height: 900 } })
 
-  test('Cmd+K shortcuts + analytics + banners + registrations', async ({ page }) => {
+  test('Cmd+K shortcuts + analytics + banners', async ({ page }) => {
     const errors: string[] = []
     const startTime = Date.now()
 
@@ -215,29 +212,12 @@ test.describe('Persona B: Marketing Manager (Power User, fast)', () => {
     await page.waitForTimeout(1000)
     await captureFullPage(page, '04-banners-list', 'pB-marketing')
 
-    // ── 4. Events list ──
-    await visitAdminPage(page, '/admin/events', errors)
-    await page.waitForTimeout(800)
-    await captureFullPage(page, '05-events-list', 'pB-marketing')
-
-    // ── 5. Registrations — preview total + filter ──
-    await visitAdminPage(page, '/admin/registrations', errors)
-    await page.waitForTimeout(1500)
-    await captureFullPage(page, '06-registrations-list', 'pB-marketing')
-    // Try export button if present
-    const exportBtn = page.locator('button, a').filter({ hasText: /export|csv/i }).first()
-    if (await exportBtn.count() > 0) {
-      // Don't actually click (don't want to download)
-      await exportBtn.hover().catch(() => {})
-      await page.waitForTimeout(300)
-    }
-
-    // ── 6. Homepage builder ──
+    // ── 4. Homepage builder ──
     await visitAdminPage(page, '/admin/homepage', errors)
     await page.waitForTimeout(1000)
-    await captureFullPage(page, '07-homepage-builder', 'pB-marketing')
+    await captureFullPage(page, '05-homepage-builder', 'pB-marketing')
 
-    // ── 7. Quick tour rest ──
+    // ── 5. Quick tour rest ──
     const fastPages = ['/admin/highlights', '/admin/features', '/admin/weapons', '/admin/milestones', '/admin/media', '/admin/news', '/admin/pages', '/admin/topics']
     for (const path of fastPages) {
       await visitAdminPage(page, path, errors)
