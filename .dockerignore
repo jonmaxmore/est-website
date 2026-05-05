@@ -1,10 +1,42 @@
+# Build artifacts + deps
 node_modules
 .nuxt
 .output
+test-results
+coverage
+*.log
+
+# VCS + tooling
 .git
+.github
+.husky
+.claude
+.vscode
+.idea
+
+# Docs
 *.md
+docs
+
+# Tests / e2e (not needed in image)
+tests
+e2e
+playwright.config.ts
+
+# Local config + scripts that bloat the build context
+.env
 .env.local
 .env.*.local
+.env.production
+.env.production.local
 deploy.sh
 deploy-cmd.bat
-test-results
+deploy-now.bat
+deploy-webzine-release.bat
+remote-deploy.ps1
+setup-ssh.ps1
+setup-ssl.sh
+
+# OS noise
+.DS_Store
+Thumbs.db
