@@ -69,7 +69,9 @@ model NewsArticle {
   category           NewsCategory
   contentType        WebzineContentType @default(ANNOUNCEMENT)
   primaryTopicKey    String?
-  campaignCode       String?
+  campaignCode       String?            // legacy free-text; new code prefers campaignId FK
+  campaignId         String?
+  campaign           Campaign?          @relation(fields: [campaignId], references: [id], onDelete: SetNull)
   pinned             Boolean            @default(false)
   isEvergreen        Boolean            @default(false)
   readingTimeMinutes Int?
@@ -292,6 +294,50 @@ model Subscriber {
   @@map("subscribers")
 }
 
+/**
+ * First-class Campaign entity. Replaces the loose `campaignCode` free-text
+ * field on NewsArticle + MarketingBanner (which they keep as a denormalized
+ * shortcut for legacy analytics queries — see UTM columns).
+ *
+ * Editorial workflow:
+ *   - Marketer creates a Campaign row with name + slug + start/end window
+ *   - Articles + banners attach via campaignId (preferred); campaignCode
+ *     stays as a free-text fallback for one-off / external campaigns.
+ *   - Performance dashboard rolls up impressions/clicks per Campaign by
+ *     joining ConversionEvent.utmCampaign → Campaign.slug.
+ *
+ * Audit-2 (C-5) close.
+ */
+model Campaign {
+  id          String           @id @default(cuid())
+  name        String
+  slug        String           @unique
+  description String?
+  ownerEmail  String?
+  startsAt    DateTime?
+  endsAt      DateTime?
+  // Goals as JSON so marketers can declare KPIs without a schema change
+  // (e.g. {"downloads": 10000, "signups": 500}).
+  kpis        Json?
+  status      CampaignStatus   @default(DRAFT)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  banners     MarketingBanner[]
+  articles    NewsArticle[]
+
+  @@index([status])
+  @@index([startsAt])
+  @@map("campaigns")
+}
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
 model ActivityLog {
   id         String   @id @default(cuid())
   userId     String
@@ -387,7 +433,9 @@ model MarketingBanner {
   status          MarketingBannerStatus     @default(DRAFT)
   scope           MarketingBannerScope
   priority        Int                       @default(0)
-  campaignCode    String?
+  campaignCode    String?                   // legacy free-text; new code prefers campaignId FK
+  campaignId      String?
+  campaign        Campaign?                 @relation(fields: [campaignId], references: [id], onDelete: SetNull)
   startsAt        DateTime?
   endsAt          DateTime?
   badgeEn         String?

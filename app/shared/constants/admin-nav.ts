@@ -41,6 +41,13 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
     ],
   },
   {
+    title: 'Marketing',
+    items: [
+      { to: '/admin/campaigns', icon: 'i-lucide-megaphone', label: 'Campaigns' },
+      { to: '/admin/calendar', icon: 'i-lucide-calendar', label: 'Editorial Calendar' },
+    ],
+  },
+  {
     title: 'Appearance',
     items: [
       { to: '/admin/menus', icon: 'i-lucide-menu', label: 'Navigation' },
