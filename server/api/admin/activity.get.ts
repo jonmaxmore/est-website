@@ -1,9 +1,9 @@
+import { paginated, parsePagination } from '../../utils/response'
+
 /** Activity log — returns admin actions with pagination and filtering */
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
-  const limit = Math.min(Number(query.limit) || 50, 200)
-  const page = Math.max(Number(query.page) || 1, 1)
-  const skip = (page - 1) * limit
+  const { page, limit, skip, take } = parsePagination(query, { defaultLimit: 50, maxLimit: 200 })
   const action = (query.action as string) || ''
   const resource = (query.resource as string) || ''
 
@@ -15,14 +15,11 @@ export default defineEventHandler(async (event) => {
     prisma.activityLog.findMany({
       where,
       orderBy: { createdAt: 'desc' },
-      take: limit,
+      take,
       skip,
     }),
     prisma.activityLog.count({ where }),
   ])
 
-  return {
-    data: rows,
-    meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
-  }
+  return paginated(rows, { total, page, limit })
 })

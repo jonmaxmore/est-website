@@ -13,7 +13,7 @@
  *
  * Cache-Control: no-store — health responses must always reflect current state.
  */
-import { isRedisHealthy } from '../utils/redis'
+import { getRedis, isRedisHealthy } from '../utils/redis'
 import { logger } from '../utils/logger'
 
 const log = logger.child({ scope: 'health' })
@@ -30,10 +30,28 @@ async function probeDb(): Promise<ProbeResult> {
   }
 }
 
-function probeRedis(): ProbeResult {
-  // isRedisHealthy() reflects the singleton client's last-known state — Redis
-  // is best-effort cache, so a 'fail' here doesn't 503 by default.
-  return isRedisHealthy() ? { status: 'ok' } : { status: 'fail', reason: 'redis client not healthy' }
+// Audit-3 (DevOps-2 M3): isRedisHealthy() reflects the *cached* connection
+// state — it goes stale on partial network failures (server unreachable but
+// socket not yet errored). Issue an actual PING to confirm the round-trip
+// works. Wrap in 1.5s timeout so a frozen Redis can't hang the readiness probe.
+async function probeRedis(): Promise<ProbeResult> {
+  if (!isRedisHealthy()) {
+    return { status: 'fail', reason: 'redis client not healthy' }
+  }
+  const started = Date.now()
+  try {
+    const client = getRedis()
+    const result = await Promise.race([
+      client.ping(),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error('ping timeout')), 1500)),
+    ])
+    if (result !== 'PONG') {
+      return { status: 'fail', latencyMs: Date.now() - started, reason: `unexpected reply: ${String(result)}` }
+    }
+    return { status: 'ok', latencyMs: Date.now() - started }
+  } catch (err) {
+    return { status: 'fail', latencyMs: Date.now() - started, reason: (err as Error).message }
+  }
 }
 
 export default defineEventHandler(async (event) => {
@@ -46,7 +64,7 @@ export default defineEventHandler(async (event) => {
     return { status: 'ok', mode: 'shallow', uptimeSeconds: Math.round(process.uptime()) }
   }
 
-  const [db, redis] = [await probeDb(), probeRedis()]
+  const [db, redis] = await Promise.all([probeDb(), probeRedis()])
   const dbOk = db.status === 'ok'
 
   if (!dbOk) {

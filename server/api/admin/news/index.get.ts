@@ -1,9 +1,9 @@
+import { paginated, parsePagination } from '../../../utils/response'
+
 /** Admin: List all news (including drafts) with search + filter */
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
-  const limit = Math.min(Number(query.limit) || 20, 100)
-  const page = Math.max(Number(query.page) || 1, 1)
-  const skip = (page - 1) * limit
+  const { page, limit, skip, take } = parsePagination(query, { defaultLimit: 20, maxLimit: 100 })
   const search = (query.search as string) || ''
   const status = (query.status as string) || ''
   const category = (query.category as string) || ''
@@ -29,11 +29,11 @@ export default defineEventHandler(async (event) => {
     prisma.newsArticle.findMany({
       where,
       orderBy: [{ pinned: 'desc' }, { publishedAt: 'desc' }, { createdAt: 'desc' }],
-      take: limit,
+      take,
       skip,
     }),
     prisma.newsArticle.count({ where }),
   ])
 
-  return { data: articles, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } }
+  return paginated(articles, { total, page, limit })
 })

@@ -83,7 +83,43 @@ if [ "$SIZE" -lt 1024 ]; then
   exit 2
 fi
 
-echo "[Backup] ✅ Wrote ${BACKUP_FILE} (${SIZE} bytes)"
+# Audit-3 (DevOps-3 M3): integrity verification BEFORE upload.
+# Size check alone catches gross truncation but not corrupt streams or partial
+# pg_dump failures. Verify:
+#   1. gzip -t on the gzipped artefact (plaintext path) — confirms CRC32
+#   2. For encrypted artefacts, decrypt+gunzip pipeline test
+#   3. Last bytes contain pg_dump trailer "-- PostgreSQL database dump complete"
+INTEGRITY_LOG="${BACKUP_FILE}.integrity.log"
+if [ "$ENCRYPTED" = "true" ]; then
+  if ! openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -salt \
+        -pass env:BACKUP_GPG_PASSPHRASE -in "$BACKUP_FILE" 2>/dev/null \
+       | gzip -t 2>"$INTEGRITY_LOG"; then
+    echo "[Backup] FAILED — integrity check (decrypt+gunzip -t) failed:" >&2
+    cat "$INTEGRITY_LOG" >&2
+    rm -f "$BACKUP_FILE" "$INTEGRITY_LOG"
+    exit 3
+  fi
+  TRAILER=$(openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -salt \
+              -pass env:BACKUP_GPG_PASSPHRASE -in "$BACKUP_FILE" 2>/dev/null \
+            | gzip -d 2>/dev/null | tail -c 4096 || true)
+else
+  if ! gzip -t "$BACKUP_FILE" 2>"$INTEGRITY_LOG"; then
+    echo "[Backup] FAILED — gzip -t integrity check failed:" >&2
+    cat "$INTEGRITY_LOG" >&2
+    rm -f "$BACKUP_FILE" "$INTEGRITY_LOG"
+    exit 3
+  fi
+  TRAILER=$(gzip -dc "$BACKUP_FILE" 2>/dev/null | tail -c 4096 || true)
+fi
+rm -f "$INTEGRITY_LOG"
+
+if ! echo "$TRAILER" | grep -q 'PostgreSQL database dump complete'; then
+  echo "[Backup] FAILED — pg_dump trailer missing (truncated dump)" >&2
+  rm -f "$BACKUP_FILE"
+  exit 3
+fi
+
+echo "[Backup] ✅ Wrote ${BACKUP_FILE} (${SIZE} bytes, integrity verified)"
 
 # ── Upload to S3-compatible storage (DigitalOcean Spaces, AWS S3, etc.) ──
 # Required unless explicitly opted out (the early invariant guard above
