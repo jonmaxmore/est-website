@@ -96,12 +96,17 @@ export default defineEventHandler(async (event) => {
   const signatureHeader = getHeader(event, 'x-webhook-signature')
   const providedSecret = getHeader(event, 'x-webhook-secret') || ''
 
+  // Read raw body once and reuse for both HMAC verification AND payload
+  // validation. Audit-3 (BE-5 M1) flagged that calling readBody() after
+  // readRawBody() depends on h3 cache semantics — parse the verified bytes
+  // directly to ensure HMAC and processing see the same payload.
+  const rawBodyBuf = await readRawBody(event, 'utf8')
+  const rawBody = typeof rawBodyBuf === 'string' ? rawBodyBuf : ''
+
   let authMode: 'hmac' | 'shared-secret' | null = null
   if (signatureHeader) {
     // PREFERRED mode: HMAC over timestamp.body. Requires the timestamp header
     // to also be present and fresh.
-    const rawBodyBuf = await readRawBody(event, 'utf8')
-    const rawBody = typeof rawBodyBuf === 'string' ? rawBodyBuf : ''
     if (verifySignature(configuredSecret, rawBody, timestampHeader, signatureHeader)) {
       authMode = 'hmac'
     } else {
@@ -139,7 +144,11 @@ export default defineEventHandler(async (event) => {
   }
 
   // ── 4. Validate payload ──
-  const raw = await readBody(event).catch(() => null)
+  // Parse the same bytes the HMAC verified — never re-read the body.
+  let raw: unknown = null
+  if (rawBody) {
+    try { raw = JSON.parse(rawBody) } catch { raw = null }
+  }
   const parsed = webhookSchema.safeParse(raw)
   if (!parsed.success) {
     throw createError({

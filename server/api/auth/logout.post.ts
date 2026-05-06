@@ -5,17 +5,23 @@
  * couldn't be revoked from the user side because the admin-auth middleware
  * only cleared sessions on TTL expiry, not on demand.
  *
- * Idempotent: returns success whether or not a session existed. Logs a
- * LOGOUT activity row only when an authenticated session is actually
- * cleared (so unauthenticated probe requests don't pollute the audit feed).
+ * Idempotent: returns success whether or not a session existed.
+ *
+ * Audit-3 (QA-2 MAJOR): use logSecurityEvent with synchronously-snapshotted
+ * user info instead of logActivity. logActivity reads the session inside an
+ * async IIFE that may run after clearUserSession completes — losing the
+ * LOGOUT row. logSecurityEvent takes synthetic actor data eagerly so the
+ * audit trail is durable regardless of fire-and-forget timing.
  */
 export default defineEventHandler(async (event) => {
   const session = await getUserSession(event)
-  const user = session?.user as { id: string; email?: string } | undefined
+  const user = session?.user as { id: string; email?: string; displayName?: string } | undefined
 
   if (user) {
-    // Log BEFORE clearing the session so logActivity can read it
-    logActivity(event, 'LOGOUT', 'auth', `Admin logout: ${user.email ?? user.id}`, user.id)
+    logSecurityEvent(event, 'LOGOUT', `Admin logout: ${user.email ?? user.id}`, {
+      syntheticUserId: `user:${user.id}`,
+      syntheticUserName: user.displayName || user.email || 'Unknown',
+    })
   }
 
   await clearUserSession(event)

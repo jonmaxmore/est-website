@@ -15,12 +15,15 @@ const RECONCILE_INTERVAL_MS = 60_000
 let inFlight: Promise<void> | null = null
 
 async function doReconcile(now: Date): Promise<void> {
+  // Audit-3 (BE-3 M3): banners with null startsAt should auto-LIVE immediately on
+  // SCHEDULED → LIVE reconcile (treat null as "start now"). Without this clause
+  // banners with no explicit start date are stranded in SCHEDULED until manually flipped.
   await prisma.$transaction([
     prisma.marketingBanner.updateMany({
       where: {
         status: 'SCHEDULED',
-        startsAt: { not: null, lte: now },
-        OR: [{ endsAt: null }, { endsAt: { gt: now } }],
+        OR: [{ startsAt: null }, { startsAt: { lte: now } }],
+        AND: [{ OR: [{ endsAt: null }, { endsAt: { gt: now } }] }],
       },
       data: { status: 'LIVE' },
     }),
