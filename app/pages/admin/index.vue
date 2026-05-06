@@ -110,6 +110,8 @@ definePageMeta({ layout: 'admin' })
 const { t, locale } = useI18n()
 const { localizedDate } = useLocalizedField()
 const { user } = useUserSession()
+// Audit-3 (FE-2 M3): use locale-aware number formatting.
+const numLocale = computed(() => (locale.value === 'th' ? 'th-TH' : 'en-US'))
 
 interface Stats {
   counts: {
@@ -169,7 +171,7 @@ const statCards = computed(() => [
   { icon: 'i-lucide-sparkles', label: 'Features', value: stats.value.counts.features.toString(), bg: 'rgba(236,72,153,0.12)' },
   { icon: 'i-lucide-star', label: 'Highlights', value: stats.value.counts.highlights.toString(), bg: 'rgba(14,165,233,0.12)' },
   { icon: 'i-lucide-image', label: 'Media', value: stats.value.counts.media.toString(), bg: 'rgba(168,85,247,0.12)' },
-  { icon: 'i-lucide-eye', label: 'Views Today', value: stats.value.counts.todayPageViews.toLocaleString('en-US'), bg: 'rgba(251,146,60,0.12)' },
+  { icon: 'i-lucide-eye', label: 'Views Today', value: stats.value.counts.todayPageViews.toLocaleString(numLocale.value), bg: 'rgba(251,146,60,0.12)' },
 ])
 
 const contentStatus = computed(() => [

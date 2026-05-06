@@ -41,7 +41,7 @@ const sourceLabel = computed(() => props.sourceLabel || 'inline-article')
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: var(--color-gold, #d4a843);
+  color: var(--color-gold);
 }
 .inline-cta-title {
   margin: 0;
@@ -55,7 +55,7 @@ const sourceLabel = computed(() => props.sourceLabel || 'inline-article')
   gap: 4px;
   padding: 11px 22px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #d4a843, #b8922e);
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-deep));
   color: black;
   font-size: 0.8125rem;
   font-weight: 700;

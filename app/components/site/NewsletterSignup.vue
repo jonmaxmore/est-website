@@ -97,7 +97,7 @@ function readUtmFromUrl() {
   padding: 10px 18px;
   border: none;
   border-radius: 10px;
-  background: linear-gradient(135deg, #d4a843, #b8922e);
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-deep));
   color: black;
   font-size: 0.8125rem;
   font-weight: 700;
@@ -110,6 +110,6 @@ function readUtmFromUrl() {
   margin-top: 10px;
   font-size: 0.8125rem;
 }
-.newsletter-message.success { color: #34d399; }
-.newsletter-message.error { color: #f87171; }
+.newsletter-message.success { color: var(--color-success); }
+.newsletter-message.error { color: var(--color-danger); }
 </style>

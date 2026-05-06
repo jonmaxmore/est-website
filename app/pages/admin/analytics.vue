@@ -58,7 +58,9 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
-const { t } = useI18n()
+const { t, locale } = useI18n()
+// Audit-3 (FE-2 M3): derive BCP 47 from active i18n locale instead of hardcoding 'en-US'.
+const numLocale = computed(() => (locale.value === 'th' ? 'th-TH' : 'en-US'))
 const { data } = await useFetch<{
   totalViews: number; todayViews: number; uniqueVisitors: number;
   downloadClicks: number; socialClicks: number; newsClicks: number;
@@ -78,12 +80,12 @@ const weeklyChange = computed(() => {
   return `${Number(change) >= 0 ? '+' : ''}${change}% vs last week`
 })
 const statCards = computed(() => [
-  { label: 'Total Page Views', value: data.value.totalViews.toLocaleString('en-US'), change: weeklyChange.value },
-  { label: 'Today', value: data.value.todayViews.toLocaleString('en-US'), change: 'Last 24 hours' },
-  { label: 'Unique Visitors', value: data.value.uniqueVisitors.toLocaleString('en-US'), change: 'All time' },
-  { label: 'Downloads', value: data.value.downloadClicks.toLocaleString('en-US'), change: 'Tracked clicks' },
-  { label: 'Social Clicks', value: data.value.socialClicks.toLocaleString('en-US'), change: 'Community outbound' },
-  { label: 'News Clicks', value: data.value.newsClicks.toLocaleString('en-US'), change: 'Webzine outbound' },
+  { label: 'Total Page Views', value: data.value.totalViews.toLocaleString(numLocale.value), change: weeklyChange.value },
+  { label: 'Today', value: data.value.todayViews.toLocaleString(numLocale.value), change: 'Last 24 hours' },
+  { label: 'Unique Visitors', value: data.value.uniqueVisitors.toLocaleString(numLocale.value), change: 'All time' },
+  { label: 'Downloads', value: data.value.downloadClicks.toLocaleString(numLocale.value), change: 'Tracked clicks' },
+  { label: 'Social Clicks', value: data.value.socialClicks.toLocaleString(numLocale.value), change: 'Community outbound' },
+  { label: 'News Clicks', value: data.value.newsClicks.toLocaleString(numLocale.value), change: 'Webzine outbound' },
 ])
 const chartData = computed(() => data.value.dailyViews || [])
 const maxViews = computed(() => Math.max(1, ...chartData.value.map((d) => d.views)))

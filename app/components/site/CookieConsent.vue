@@ -81,7 +81,7 @@ function reject() { rejectConsent() }
 }
 .cookie-consent-link {
   font-size: 0.75rem;
-  color: var(--color-gold, #d4a843);
+  color: var(--color-gold);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -111,7 +111,7 @@ function reject() { rejectConsent() }
 }
 .cookie-consent-btn-primary {
   border: none;
-  background: linear-gradient(135deg, #d4a843, #b8922e);
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-deep));
   color: black;
 }
 .cookie-consent-btn-primary:hover {
