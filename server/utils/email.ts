@@ -33,8 +33,14 @@ export async function sendEmail(msg: EmailMessage): Promise<{ id: string | null 
   const apiKey = process.env.RESEND_API_KEY
   const from = process.env.RESEND_FROM_ADDRESS
   if (!apiKey || !from) {
+    // In production, a missing key is a real misconfiguration — fail loudly so
+    // the operator notices. In dev/CI, log and no-op so the codebase remains
+    // runnable without an account (audit-3 FullStack-1 M2).
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('[Email] RESEND_API_KEY and RESEND_FROM_ADDRESS must be set in production')
+    }
     log.warn('skipped', {
-      reason: 'RESEND_API_KEY or RESEND_FROM_ADDRESS not set',
+      reason: 'RESEND_API_KEY or RESEND_FROM_ADDRESS not set (dev no-op)',
       to: msg.to,
       subject: msg.subject,
     })

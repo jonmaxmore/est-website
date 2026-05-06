@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Campaigns</h2>
-        <p class="mt-1 text-sm text-white/50">First-class marketing campaign entity. Articles + banners attach via campaignId for performance rollup.</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.campaigns.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.campaigns.subtitle') }}</p>
       </div>
       <button class="gold-btn" @click="openNewCampaign">+ New Campaign</button>
     </div>
@@ -145,6 +145,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 type Campaign = {
   id: string

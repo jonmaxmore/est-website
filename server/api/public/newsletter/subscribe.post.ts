@@ -57,9 +57,12 @@ export default defineEventHandler(async (event) => {
     where: { email },
     update: {
       // Re-subscription: regenerate the confirm flow regardless of prior status.
+      // Also invalidate the prior unsubscribeToken so a leaked old link can't
+      // silently undo the new subscription (audit-3 FullStack-1 M1).
       status: 'PENDING',
       confirmToken,
       confirmTokenExp,
+      unsubscribeToken: null,
       utmSource: utm?.source ?? null,
       utmMedium: utm?.medium ?? null,
       utmCampaign: utm?.campaign ?? null,

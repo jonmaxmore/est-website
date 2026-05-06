@@ -46,9 +46,15 @@ export default defineEventHandler(async (event) => {
     return { email, generated_at: new Date().toISOString(), data: null, note: 'no record found or token invalid' }
   }
 
+  // Confirm token must also be unexpired — otherwise stale 6-month-old phished
+  // confirm links would still authorize DSAR. Audit-3 (FullStack-5) finding.
+  const confirmStillValid =
+    !!subscriber.confirmToken &&
+    !!subscriber.confirmTokenExp &&
+    subscriber.confirmTokenExp > new Date()
   const validToken =
     (subscriber.unsubscribeToken && safeEqualToken(token, subscriber.unsubscribeToken)) ||
-    (subscriber.confirmToken && safeEqualToken(token, subscriber.confirmToken))
+    (confirmStillValid && safeEqualToken(token, subscriber.confirmToken!))
 
   if (!validToken) {
     return { email, generated_at: new Date().toISOString(), data: null, note: 'no record found or token invalid' }

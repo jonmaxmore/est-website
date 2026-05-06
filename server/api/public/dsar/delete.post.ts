@@ -41,9 +41,14 @@ export default defineEventHandler(async (event) => {
     return { success: true, note: 'request acknowledged' }
   }
 
+  // Confirm token must be unexpired (audit-3 FullStack-5 finding).
+  const confirmStillValid =
+    !!subscriber.confirmToken &&
+    !!subscriber.confirmTokenExp &&
+    subscriber.confirmTokenExp > new Date()
   const validToken =
     (subscriber.unsubscribeToken && safeEqualToken(token, subscriber.unsubscribeToken)) ||
-    (subscriber.confirmToken && safeEqualToken(token, subscriber.confirmToken))
+    (confirmStillValid && safeEqualToken(token, subscriber.confirmToken!))
 
   if (!validToken) {
     return { success: true, note: 'request acknowledged' }

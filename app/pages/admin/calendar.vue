@@ -2,8 +2,8 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold">Editorial Calendar</h2>
-        <p class="mt-1 text-sm text-white/50">Banners + articles + campaigns active in {{ monthLabel }}.</p>
+        <h2 class="text-2xl font-bold">{{ t('admin.calendar.title') }}</h2>
+        <p class="mt-1 text-sm text-white/50">{{ t('admin.calendar.subtitle') }} — {{ monthLabel }}</p>
       </div>
       <div class="flex items-center gap-2">
         <button class="icon-btn" @click="step(-1)"><UIcon name="i-lucide-chevron-left" class="h-4 w-4" /></button>
@@ -53,6 +53,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'admin' })
+const { t } = useI18n()
 
 interface Timeline {
   window: { from: string; to: string }
