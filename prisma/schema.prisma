@@ -269,11 +269,17 @@ model ConversionEvent {
 
 // ══════════ ACTIVITY LOG ══════════
 
+enum SubscriberStatus {
+  PENDING
+  CONFIRMED
+  UNSUBSCRIBED
+}
+
 model Subscriber {
-  id                String    @id @default(cuid())
-  email             String    @unique
-  locale            String    @default("th") // 'th' | 'en'
-  status            String    @default("PENDING") // PENDING | CONFIRMED | UNSUBSCRIBED
+  id                String           @id @default(cuid())
+  email             String           @unique
+  locale            String           @default("th") // 'th' | 'en'
+  status            SubscriberStatus @default(PENDING)
   confirmedAt       DateTime?
   unsubscribedAt    DateTime?
   // Double-opt-in token: random per subscription, single-use, expires after 24h.
