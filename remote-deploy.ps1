@@ -65,4 +65,4 @@ Write-Host "Please enter the root password when prompted." -ForegroundColor Yell
 Write-Host ""
 
 # Execute via SSH
-ssh -o StrictHostKeyChecking=no -o ConnectTimeout=15 "${user}@${server}" $commands
+ssh -o StrictHostKeyChecking=yes -o UserKnownHostsFile=~/.ssh/known_hosts -o ConnectTimeout=15 "${user}@${server}" $commands

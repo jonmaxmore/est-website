@@ -16,7 +16,7 @@ Write-Host ""
 # Use ssh with the command to append key
 $cmd = "mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo '$pubKey' >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && echo 'SSH KEY ADDED SUCCESSFULLY'"
 
-ssh -o StrictHostKeyChecking=no root@$server $cmd
+ssh -o StrictHostKeyChecking=yes -o UserKnownHostsFile=~/.ssh/known_hosts root@$server $cmd
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host ""

@@ -1,0 +1,34 @@
+# ═══ Optional observability extension ═══
+# Use:
+#   docker compose -f docker-compose.yml -f docker-compose.observability.yml up -d
+#
+# Adds Vector — tails Docker JSON logs from app + nginx, parses the structured
+# JSON the app emits via server/utils/logger.ts, and ships to a Loki endpoint
+# (or any sink supported by Vector via vector.yaml override).
+#
+# Audit-2 (I-5) — closes "no log aggregator" finding for self-hosted deploys.
+
+services:
+  vector:
+    image: timberio/vector:0.45.0-alpine
+    restart: unless-stopped
+    volumes:
+      # Mount the docker socket so vector can list containers + tail logs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Application log dir for fallback file-tailing if needed
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      # Vector config — override at deploy time
+      - ./docker/vector/vector.yaml:/etc/vector/vector.yaml:ro
+    networks:
+      - est_internal
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 64M
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"

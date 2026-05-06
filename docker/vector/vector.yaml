@@ -1,0 +1,42 @@
+# Vector config — tails docker stdout JSON, parses structured logs, ships
+# to Loki. Override LOKI_ENDPOINT in .env (or replace this file) to point
+# at your aggregator.
+#
+# See https://vector.dev/docs/reference/configuration/ for full schema.
+
+sources:
+  docker_logs:
+    type: docker_logs
+    include_containers:
+      - est-website-app-1
+      - est-website-app
+      - est-website-nginx-1
+      - est-website-nginx
+
+transforms:
+  parse_json:
+    type: remap
+    inputs:
+      - docker_logs
+    source: |
+      structured = parse_json(.message) ?? {}
+      if exists(structured.msg) {
+        . |= object!(structured)
+        .level = structured.level || "info"
+      } else {
+        .level = .stream == "stderr" ? "error" : "info"
+      }
+
+sinks:
+  loki:
+    type: loki
+    inputs:
+      - parse_json
+    endpoint: ${LOKI_ENDPOINT:-http://loki:3100}
+    encoding:
+      codec: json
+    labels:
+      service: "{{ container_name }}"
+      level: "{{ level }}"
+      requestId: "{{ requestId }}"
+    out_of_order_action: rewrite_timestamp
