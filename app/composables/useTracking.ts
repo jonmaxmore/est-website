@@ -79,5 +79,6 @@ export function useTracking() {
     trackDownload: (platform: string, label?: string) => trackEvent('download_click', { platform, label }),
     trackSocial: (platform: string, label?: string) => trackEvent('social_click', { platform, label }),
     trackNews: (slug: string, label?: string) => trackEvent('news_click', { slug, label }),
+    trackVideoPlay: (placement: string, label?: string) => trackEvent('video_play', { placement, label }),
   }
 }

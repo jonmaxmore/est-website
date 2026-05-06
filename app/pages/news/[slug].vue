@@ -27,6 +27,7 @@
         />
 
         <div class="prose prose-invert mt-10 max-w-none text-white/70 [&_h2]:mb-4 [&_h2]:mt-10 [&_h2]:text-2xl [&_h2]:font-black [&_p]:mb-6 [&_p]:leading-[1.9]" v-html="renderedHtml" />
+        <SiteInlineDownloadCta :source-label="article.slug" />
         <SiteMarketingBannerSlot class="mt-10" placement="article_inline" :banner="banners?.article_inline || null" />
 
         <section class="mt-16">

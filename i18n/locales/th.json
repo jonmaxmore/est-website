@@ -78,6 +78,10 @@
     "noNews": "ยังไม่มีข่าวสาร",
     "minRead": "นาทีอ่าน",
     "backToChronicle": "กลับสู่หน้ารวมข่าว",
+    "downloadCtaAria": "ปุ่มดาวน์โหลด",
+    "downloadCtaEyebrow": "พร้อมเล่นแล้วใช่ไหม?",
+    "downloadCtaTitle": "เริ่มผจญภัยในหอคอยนิรันดร์ของคุณวันนี้",
+    "downloadCtaButton": "ดาวน์โหลดเลย",
     "categories": {
       "all": "ทั้งหมด",
       "announcement": "ประกาศ",

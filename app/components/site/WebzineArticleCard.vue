@@ -2,6 +2,7 @@
   <NuxtLink
     :to="`/news/${article.slug}`"
     class="group grid gap-4 border-t border-white/10 py-5 text-white no-underline transition-colors duration-300 hover:border-gold/45 sm:grid-cols-[112px_minmax(0,1fr)]"
+    @click="trackNews(article.slug, article.titleEn)"
   >
     <div class="relative h-28 overflow-hidden rounded-2xl bg-white/5">
       <img
@@ -45,6 +46,7 @@ const props = defineProps<{
 
 const { t, te } = useI18n()
 const { localized } = useLocalizedField()
+const { trackNews } = useTracking()
 
 const title = computed(() => localized(props.article.titleEn, props.article.titleTh) || '')
 const excerpt = computed(() => localized(props.article.excerptEn, props.article.excerptTh) || '')

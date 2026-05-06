@@ -51,6 +51,7 @@
               muted
               playsinline
               class="h-full w-full object-cover"
+              @play="trackVideoPlay('highlight-reel', activeSlide.id || 'unknown')"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-bg-0 via-bg-0/30 to-transparent" />
             <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_70%,transparent,rgba(7,5,12,0.5))]" />
@@ -157,6 +158,7 @@ const props = withDefaults(defineProps<{
 }>(), { autoAdvanceMs: 6500 })
 
 const { t, locale } = useI18n()
+const { trackVideoPlay } = useTracking()
 
 const slides = computed<ReelSlide[]>(() => props.slides)
 const activeIdx = ref(0)

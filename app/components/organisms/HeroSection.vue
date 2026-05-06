@@ -14,6 +14,7 @@
         muted
         playsinline
         class="h-[120%] w-full object-cover object-[center_30%]"
+        @play="onHeroVideoPlay"
       />
       <img
         v-else
@@ -217,7 +218,15 @@ const props = defineProps<{
 }>()
 
 const { locale } = useI18n()
-const { trackDownload, trackSocial } = useTracking()
+const { trackDownload, trackSocial, trackVideoPlay } = useTracking()
+let heroVideoPlayedOnce = false
+function onHeroVideoPlay() {
+  // Hero video autoplay-loops; only fire once per visit so we don't flood
+  // analytics with a play event every loop iteration.
+  if (heroVideoPlayedOnce) return
+  heroVideoPlayedOnce = true
+  trackVideoPlay('hero', 'background-loop')
+}
 
 const heroRef = ref<HTMLElement>()
 const bgLayer = ref<HTMLElement>()
