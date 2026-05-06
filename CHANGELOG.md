@@ -68,6 +68,66 @@ The git log is the source of truth — this file rolls up notable changes per re
 - 40+ hardcoded hex colors across 24 admin files replaced with `--adm-*`
   CSS variables (W-3 audit fix)
 
+### Added (Sprint H — privacy/security, 2026-05-06)
+- DSAR endpoints — `POST /api/public/dsar/export` and `/delete` (subscriber-scoped,
+  token-gated; PDPA Articles 30/33 compliance)
+- HMAC body signing on `/api/integration/webhook` — `x-webhook-signature`
+  `sha256=<hex>` over `<timestamp>.<rawBody>`; legacy shared-secret kept for
+  back-compat with current WordPress / Wix consumers
+
+### Added (Sprint K-L — marketing + experiments, 2026-05-06)
+- `Campaign` model — first-class marketing entity; articles + banners attach
+  via `campaignId` for per-campaign performance rollup
+- Editorial calendar (`/admin/calendar`) — banners + articles + campaigns
+  active in the selected month
+- A/B feature flags via `useFeatureFlag()` composable + `feature_flags`
+  siteConfig key (rollout-percentage support)
+- Inline download CTA component + `news_click` / `video_play` conversion events
+- Test coverage for Campaign zod, feature flags, newsletter, DSAR, RSS
+
+### Added (Sprint M-N — infra hardening, 2026-05-06)
+- SSH host-key pinning via `~/.ssh/known_hosts` in deploy scripts
+- Self-hosted cert renewal + uptime probe + log shipper helpers
+
+### Fixed (audit-3, 2026-05-06)
+- 4 critical regressions caught by 45-reviewer pass (Campaign FK feature broken,
+  feature-flag composable dead, migration enum-name mismatch, deploy.sh sed
+  miss) (commit `cce8898`)
+- 5 high-priority items: DSAR token expiry validation, stale unsubscribeToken
+  on re-subscription, email throws in production when `RESEND_API_KEY` missing,
+  schema indexes for hot queries, admin i18n holdouts (commit `38c56d0`)
+
+### Added (Sprint A — audit-3 deferred close-out, 2026-05-06)
+- `enum SubscriberStatus { PENDING | CONFIRMED | UNSUBSCRIBED }` — typed FK
+  replaces free-form String column
+- Lifecycle retention crons: `NewsArticleRevision` 365d, orphan PENDING
+  subscribers 14d, UNSUBSCRIBED tombstones 90d
+- Translation gate is now DB-aware on PUT — body-only `{ status: PUBLISHED }`
+  cannot publish an article that is missing one of the 4 bilingual fields in DB
+- Public select-field whitelists on `/news/[slug]`, `/pages/[...slug]`, and
+  `/webzine/landing` (drop `createdById` / `updatedById` / internal flags)
+- Banner reconciler treats `startsAt: null` as "start now" (was stranded in
+  SCHEDULED forever)
+- Logout audit row uses `logSecurityEvent` with eager-snapshotted user info
+  (was lost via async-IIFE race after `clearUserSession`)
+- Webhook handler reads raw body once and reuses for both HMAC verify and
+  JSON parse (no h3 cache dependency)
+- `parsePagination()` + `paginated()` helpers adopted by `/admin/news` and
+  `/admin/activity` (was inline math)
+- `/api/health?deep=1` issues a real `redis.PING` with 1.5 s timeout (was
+  reading a cached boolean)
+- `backup-db.sh` integrity check: `gzip -t` + `pg_dump` trailer presence
+  before declaring success
+- Maintenance-mode middleware — `siteConfig.maintenance.enabled` now returns
+  503 + bilingual page (or JSON for `/api`); bypasses `/admin`, authenticated
+  sessions, and `MAINTENANCE_BYPASS_TOKEN` header
+- a11y: `AdminConfirmDialog` focus trap + Escape + ARIA + focus restoration;
+  `AdminToast` aria-live + role="alert"/"status"; `CookieConsent` role
+  correction; chevron buttons get aria-labels
+- Hex holdouts in 3 site components replaced with `--color-*` tokens
+- `toLocaleString('en-US')` in admin analytics/index/milestones now derives
+  BCP 47 from active i18n locale
+
 ## 2026-05-05 — pre-audit baseline
 
 See git history before commit `0be51a4` for the prior state.
