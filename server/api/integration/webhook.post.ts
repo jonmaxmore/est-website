@@ -1,13 +1,25 @@
 /**
  * POST /api/integration/webhook — รับ event จาก external system (CMS/integrations)
  *
- * Security:
- *   - HMAC signature verification ทุก request (header: x-webhook-secret)
+ * Security (two auth modes — both supported until consumers migrate):
+ *   1. HMAC body signing (PREFERRED): consumer sends `x-webhook-signature`
+ *      = `sha256=<hex>` where the HMAC is over `<timestamp>.<raw-body>` keyed
+ *      by the shared secret. Resistant to replay even if a valid signed
+ *      request leaks (timestamp window + idempotency cache).
+ *   2. Shared-secret header (LEGACY): `x-webhook-secret` matches the
+ *      configured secret directly. Kept for backward-compat with existing
+ *      WordPress / Wix consumers; new consumers should use mode 1.
+ *
+ *   Both modes additionally enforce:
  *   - Timestamp window 5 นาที (header: x-webhook-timestamp) ป้องกัน replay
  *   - Idempotency key (header: x-webhook-id) — duplicate ภายใน 5 นาทีจะถูก skip
  *   - Zod validation ทุก payload
+ *
+ * Audit-2 (C-2) finding #5: HMAC body signing closes the "leaked-secret =
+ * full content injection" risk because forging a request now requires
+ * computing the HMAC over the exact body the server will read.
  */
-import { timingSafeEqual } from 'node:crypto'
+import { createHmac, timingSafeEqual } from 'node:crypto'
 import { z } from 'zod'
 
 import { normalizeIntegrationsConfig } from '../../utils/admin-config'
@@ -31,6 +43,36 @@ function secretsMatch(expected: string, provided: string) {
   return e.length === p.length && timingSafeEqual(e, p)
 }
 
+/**
+ * Verify x-webhook-signature: 'sha256=<hex>' computed over `<timestamp>.<rawBody>`
+ * keyed by the shared secret. Returns true iff the signature is well-formed,
+ * the keyed digest matches via timingSafeEqual, AND the timestamp is fresh.
+ */
+function verifySignature(
+  secret: string,
+  rawBody: string,
+  timestampHeader: string | undefined,
+  signatureHeader: string | undefined,
+): boolean {
+  if (!secret || !signatureHeader || !timestampHeader) return false
+  const ts = Number(timestampHeader)
+  if (!Number.isFinite(ts) || Math.abs(Date.now() - ts) > REPLAY_WINDOW_MS) return false
+
+  const [scheme, providedHex] = signatureHeader.split('=', 2)
+  if (scheme !== 'sha256' || !providedHex) return false
+
+  const expected = createHmac('sha256', secret)
+    .update(`${timestampHeader}.${rawBody}`)
+    .digest('hex')
+
+  if (expected.length !== providedHex.length) return false
+  try {
+    return timingSafeEqual(Buffer.from(expected), Buffer.from(providedHex))
+  } catch {
+    return false
+  }
+}
+
 export default defineEventHandler(async (event) => {
   const ip = getRequestIP(event, { xForwardedFor: true }) || 'unknown'
   const { allowed } = await checkRateLimit(`webhook:${ip}`, RATE_LIMIT_PER_MINUTE, 60)
@@ -38,23 +80,49 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 429, message: 'Too many webhook requests' })
   }
 
-  // ── 1. Authenticate (always — ทุก type) ──
+  // ── 1. Authenticate ──
+  // Read raw body up front so HMAC mode can compute the digest over the
+  // exact bytes the parser will see. (Body cache is reused on the second
+  // readBody — no double-read overhead.)
   const config = await prisma.siteConfig.findUnique({ where: { key: 'integrations' } })
   const integrations = normalizeIntegrationsConfig(config?.value ?? null)
   const configuredSecret =
     process.env.WEBHOOK_SECRET || integrations.webhookSecret || integrations.wix.webhookSecret
-  const providedSecret = getHeader(event, 'x-webhook-secret') || ''
-
   if (!configuredSecret) {
     throw createError({ statusCode: 503, message: 'Webhook receiver not configured' })
   }
-  if (!secretsMatch(configuredSecret, providedSecret)) {
-    throw createError({ statusCode: 401, message: 'Invalid webhook secret' })
+
+  const timestampHeader = getHeader(event, 'x-webhook-timestamp')
+  const signatureHeader = getHeader(event, 'x-webhook-signature')
+  const providedSecret = getHeader(event, 'x-webhook-secret') || ''
+
+  let authMode: 'hmac' | 'shared-secret' | null = null
+  if (signatureHeader) {
+    // PREFERRED mode: HMAC over timestamp.body. Requires the timestamp header
+    // to also be present and fresh.
+    const rawBodyBuf = await readRawBody(event, 'utf8')
+    const rawBody = typeof rawBodyBuf === 'string' ? rawBodyBuf : ''
+    if (verifySignature(configuredSecret, rawBody, timestampHeader, signatureHeader)) {
+      authMode = 'hmac'
+    } else {
+      throw createError({ statusCode: 401, message: 'Invalid webhook signature' })
+    }
+  } else if (providedSecret) {
+    // LEGACY mode: bare shared secret in header. Kept for back-compat.
+    if (!secretsMatch(configuredSecret, providedSecret)) {
+      throw createError({ statusCode: 401, message: 'Invalid webhook secret' })
+    }
+    authMode = 'shared-secret'
+  } else {
+    throw createError({
+      statusCode: 401,
+      message: 'Missing x-webhook-signature (preferred) or x-webhook-secret (legacy) header',
+    })
   }
 
   // ── 2. Replay protection (timestamp window) ──
-  const timestampHeader = getHeader(event, 'x-webhook-timestamp')
-  if (timestampHeader) {
+  // HMAC mode already verified freshness; legacy mode still checks if header present.
+  if (authMode === 'shared-secret' && timestampHeader) {
     const ts = Number(timestampHeader)
     if (!Number.isFinite(ts) || Math.abs(Date.now() - ts) > REPLAY_WINDOW_MS) {
       throw createError({ statusCode: 401, message: 'Webhook timestamp out of window' })
