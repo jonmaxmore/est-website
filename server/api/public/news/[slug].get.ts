@@ -4,8 +4,37 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Slug is required' })
   }
 
+  // Public select — only fields the public webzine actually renders. Internal
+  // status flags, audit columns, draft-only fields stay server-side.
+  const PUBLIC_ARTICLE_SELECT = {
+    id: true,
+    slug: true,
+    titleEn: true,
+    titleTh: true,
+    excerptEn: true,
+    excerptTh: true,
+    contentEn: true,
+    contentTh: true,
+    category: true,
+    contentType: true,
+    primaryTopicKey: true,
+    featuredImage: true,
+    ogImage: true,
+    seoTitle: true,
+    seoTitleTh: true,
+    seoDesc: true,
+    seoDescTh: true,
+    publishedAt: true,
+    readingTimeMinutes: true,
+    pinned: true,
+    // Internal-but-needed-for-related-query (campaignCode, contentType already in
+    // selection). campaignCode used to derive related; not exposed on render.
+    campaignCode: true,
+  } as const
+
   const article = await prisma.newsArticle.findFirst({
     where: { slug, status: 'PUBLISHED' },
+    select: PUBLIC_ARTICLE_SELECT,
   })
 
   if (!article) {

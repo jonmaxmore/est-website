@@ -7,6 +7,24 @@ export default defineEventHandler(async (event) => {
       slug,
       status: 'PUBLISHED',
     },
+    // Public select — exclude internal flags / audit columns
+    select: {
+      key: true,
+      slug: true,
+      titleEn: true,
+      titleTh: true,
+      description: true,
+      template: true,
+      seoTitle: true,
+      seoTitleTh: true,
+      seoDesc: true,
+      seoDescTh: true,
+      contentEn: true,
+      contentTh: true,
+      icon: true,
+      isSystemPage: true,
+      updatedAt: true,
+    },
   })
 
   if (!page) {
