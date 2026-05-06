@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   const configs = await prisma.siteConfig.findMany({
     where: {
       key: {
-          in: ['navigation', 'social', 'appearance', 'seo', 'faq', 'maintenance', 'integrations', 'webzine_topics'],
+          in: ['navigation', 'social', 'appearance', 'seo', 'faq', 'maintenance', 'integrations', 'webzine_topics', 'feature_flags'],
       },
     },
   })
@@ -103,5 +103,11 @@ export default defineEventHandler(async (event) => {
       messageEn?: string
       messageTh?: string
     },
+    // Feature flags consumed by useFeatureFlag composable. Shape:
+    //   { flagName: true | false | { enabled?: bool, rolloutPct?: 0-100 } }
+    featureFlags: (configMap.get('feature_flags') || {}) as Record<
+      string,
+      boolean | { enabled?: boolean; rolloutPct?: number }
+    >,
   }
 })

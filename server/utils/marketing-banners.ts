@@ -33,6 +33,7 @@ const bannerPayloadSchema = z.object({
   scope: z.enum(BANNER_SCOPES),
   priority: z.coerce.number().int().default(0),
   campaignCode: nullableStringSchema,
+  campaignId: z.string().cuid().nullable().optional(),
   startsAt: nullableDateStringSchema,
   endsAt: nullableDateStringSchema,
   badgeEn: nullableStringSchema,

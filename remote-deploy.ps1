@@ -47,7 +47,7 @@ docker compose up -d
 echo '=== [6/6] Waiting for DB & running migrations ==='
 sleep 8
 docker compose exec -T db pg_isready -U postgres || sleep 5
-docker compose exec -T app npx prisma migrate deploy 2>/dev/null || docker compose exec -T app npx prisma db push --accept-data-loss 2>/dev/null || true
+docker compose exec -T app npx prisma migrate deploy
 docker compose exec -T app npx tsx prisma/seed.ts 2>/dev/null || true
 
 echo ''

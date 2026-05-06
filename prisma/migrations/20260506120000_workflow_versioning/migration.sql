@@ -7,7 +7,7 @@
 -- available to write paths after this migration runs. Articles already in
 -- DRAFT/PUBLISHED/ARCHIVED stay there.
 
-ALTER TYPE "AdminRole" ADD VALUE IF NOT EXISTS 'REVIEWER';
+ALTER TYPE "Role" ADD VALUE IF NOT EXISTS 'REVIEWER';
 
 ALTER TYPE "ContentStatus" ADD VALUE IF NOT EXISTS 'IN_REVIEW';
 ALTER TYPE "ContentStatus" ADD VALUE IF NOT EXISTS 'SCHEDULED';
