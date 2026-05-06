@@ -6,9 +6,9 @@
         <p class="mt-1 text-sm text-white/50">{{ t('admin.calendar.subtitle') }} — {{ monthLabel }}</p>
       </div>
       <div class="flex items-center gap-2">
-        <button class="icon-btn" @click="step(-1)"><UIcon name="i-lucide-chevron-left" class="h-4 w-4" /></button>
-        <span class="px-3 text-sm">{{ monthLabel }}</span>
-        <button class="icon-btn" @click="step(1)"><UIcon name="i-lucide-chevron-right" class="h-4 w-4" /></button>
+        <button class="icon-btn" :aria-label="t('admin.calendar.previousMonth')" @click="step(-1)"><UIcon name="i-lucide-chevron-left" class="h-4 w-4" aria-hidden="true" /></button>
+        <span class="px-3 text-sm" aria-live="polite">{{ monthLabel }}</span>
+        <button class="icon-btn" :aria-label="t('admin.calendar.nextMonth')" @click="step(1)"><UIcon name="i-lucide-chevron-right" class="h-4 w-4" aria-hidden="true" /></button>
         <button class="ml-2 rounded-lg border border-white/10 px-3 py-1.5 text-xs hover:bg-white/5" @click="goToday">Today</button>
       </div>
     </div>

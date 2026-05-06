@@ -1,14 +1,24 @@
 <template>
   <Teleport to="body">
     <Transition name="confirm-fade">
-      <div v-if="modelValue" class="acd-overlay" @click.self="cancel">
+      <div
+        v-if="modelValue"
+        ref="overlayEl"
+        class="acd-overlay"
+        role="dialog"
+        aria-modal="true"
+        :aria-labelledby="titleId"
+        :aria-describedby="messageId"
+        @click.self="cancel"
+        @keydown="onKeydown"
+      >
         <div class="acd-dialog" :class="variant">
-          <UIcon :name="iconName" class="w-10 h-10" :class="variant === 'danger' ? 'text-red-400' : variant === 'warning' ? 'text-amber-400' : 'text-blue-400'" />
-          <h3 class="acd-title">{{ title }}</h3>
-          <p class="acd-message">{{ message }}</p>
+          <UIcon :name="iconName" class="w-10 h-10" :class="variant === 'danger' ? 'text-red-400' : variant === 'warning' ? 'text-amber-400' : 'text-blue-400'" aria-hidden="true" />
+          <h3 :id="titleId" class="acd-title">{{ title }}</h3>
+          <p :id="messageId" class="acd-message">{{ message }}</p>
           <div class="acd-actions">
-            <button type="button" class="acd-btn-cancel" @click="cancel">{{ cancelText }}</button>
-            <button type="button" class="acd-btn-confirm" :class="variant" @click="confirm">{{ confirmText }}</button>
+            <button ref="cancelBtnEl" type="button" class="acd-btn-cancel" @click="cancel">{{ cancelText }}</button>
+            <button ref="confirmBtnEl" type="button" class="acd-btn-confirm" :class="variant" @click="confirm">{{ confirmText }}</button>
           </div>
         </div>
       </div>
@@ -17,6 +27,8 @@
 </template>
 
 <script setup lang="ts">
+import { computed, nextTick, ref, watch } from 'vue'
+
 const props = withDefaults(defineProps<{
   modelValue: boolean
   title?: string
@@ -44,6 +56,16 @@ const iconName = computed(() => {
   return 'i-lucide-info'
 })
 
+// Audit-3 (FE-1 M3) a11y: stable IDs for aria-labelledby / aria-describedby
+const uid = Math.random().toString(36).slice(2, 9)
+const titleId = `acd-title-${uid}`
+const messageId = `acd-msg-${uid}`
+
+const overlayEl = ref<HTMLElement | null>(null)
+const cancelBtnEl = ref<HTMLElement | null>(null)
+const confirmBtnEl = ref<HTMLElement | null>(null)
+let lastFocused: HTMLElement | null = null
+
 function confirm() {
   emit('confirm')
   emit('update:modelValue', false)
@@ -52,6 +74,36 @@ function cancel() {
   emit('cancel')
   emit('update:modelValue', false)
 }
+
+// Focus trap: keep Tab cycling between cancelBtn ↔ confirmBtn while open.
+function onKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape') {
+    e.preventDefault()
+    cancel()
+    return
+  }
+  if (e.key !== 'Tab') return
+  const a = cancelBtnEl.value
+  const b = confirmBtnEl.value
+  if (!a || !b) return
+  const active = document.activeElement
+  if (e.shiftKey && active === a) {
+    e.preventDefault(); b.focus()
+  } else if (!e.shiftKey && active === b) {
+    e.preventDefault(); a.focus()
+  }
+}
+
+watch(() => props.modelValue, async (open) => {
+  if (open) {
+    lastFocused = (document.activeElement as HTMLElement | null) ?? null
+    await nextTick()
+    confirmBtnEl.value?.focus()
+  } else if (lastFocused) {
+    lastFocused.focus()
+    lastFocused = null
+  }
+})
 </script>
 
 <style scoped>

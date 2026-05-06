@@ -3,8 +3,7 @@
     <aside
       v-if="visible"
       class="cookie-consent"
-      role="dialog"
-      aria-modal="false"
+      role="region"
       :aria-label="t('consent.aria')"
     >
       <div class="cookie-consent-inner">

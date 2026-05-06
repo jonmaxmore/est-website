@@ -1,18 +1,25 @@
 <template>
   <Teleport to="body">
-    <TransitionGroup name="toast-stack" tag="div" class="toast-container">
+    <!--
+      Audit-3 (FE-1 M3) a11y: container is aria-live="polite" + role="status" so
+      screen readers announce success/info toasts as they appear; errors get
+      role="alert" with assertive politeness.
+    -->
+    <TransitionGroup name="toast-stack" tag="div" class="toast-container" aria-live="polite" aria-atomic="false">
       <div
         v-for="t in visibleToasts"
         :key="t.id"
         class="toast-item"
         :class="t.type"
+        :role="t.type === 'error' ? 'alert' : 'status'"
+        :aria-live="t.type === 'error' ? 'assertive' : 'polite'"
       >
         <div class="toast-content">
-          <span class="toast-icon">{{ getIcon(t.type) }}</span>
+          <span class="toast-icon" aria-hidden="true">{{ getIcon(t.type) }}</span>
           <span class="toast-msg">{{ t.message }}</span>
-          <button class="toast-close" @click="dismiss(t.id)">✕</button>
+          <button class="toast-close" :aria-label="`Dismiss ${t.type} notification`" @click="dismiss(t.id)">✕</button>
         </div>
-        <div class="toast-progress">
+        <div class="toast-progress" aria-hidden="true">
           <div class="toast-progress-bar" :class="t.type" :style="{ animationDuration: `${t.duration || 3000}ms` }" />
         </div>
       </div>

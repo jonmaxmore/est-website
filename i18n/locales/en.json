@@ -199,7 +199,7 @@
     "topics": { "title": "Webzine Topics", "subtitle": "Maintain the controlled topic registry used by public webzine pages and editors." },
     "banners": { "title": "Banner Control", "subtitle": "Schedule and target announcement bars, popups, sidebar promos, and article placements." },
     "campaigns": { "title": "Campaigns", "subtitle": "First-class marketing campaign entity. Articles + banners attach via campaignId for performance rollup." },
-    "calendar": { "title": "Editorial Calendar", "subtitle": "Banners + articles + campaigns active in the selected month." },
+    "calendar": { "title": "Editorial Calendar", "subtitle": "Banners + articles + campaigns active in the selected month.", "previousMonth": "Previous month", "nextMonth": "Next month" },
     "weapons": { "title": "Weapons", "subtitle": "Manage game weapon data and stats" },
     "features": { "title": "Features", "subtitle": "Manage homepage feature cards" },
     "highlights": { "title": "Highlights", "subtitle": "Manage homepage highlight cards" },
